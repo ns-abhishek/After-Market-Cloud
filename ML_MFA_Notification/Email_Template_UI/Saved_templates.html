@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Templates</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
+            color: #374151;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .template-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background-color: #ffffff;
+        }
+
+        .template-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .template-card p {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+        }
+
+        .template-card button {
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-2xl font-semibold">Saved Templates</h1>
+            <div class="space-x-2">
+                <a href="dashboard.html" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Dashboard
+                </a>
+                <a href="Sample-Email.html" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Create New Template
+                </a>
+            </div>
+        </div>
+        <div id="templates-container">
+            <!-- Templates will be dynamically loaded here -->
+        </div>
+    </div>
+
+    <script>
+        const templatesContainer = document.getElementById('templates-container');
+        let savedTemplates = JSON.parse(localStorage.getItem('emailTemplates')) || [];
+
+        // Function to render saved templates
+        function renderTemplates() {
+            templatesContainer.innerHTML = ''; // Clear the container
+
+            if (savedTemplates.length === 0) {
+                templatesContainer.innerHTML = '<p class="text-gray-500">No templates saved yet.</p>';
+                return;
+            }
+
+            savedTemplates.forEach((template, index) => {
+                const templateCard = document.createElement('div');
+                templateCard.classList.add('template-card');
+
+                templateCard.innerHTML = `
+                    <h3>${template.name}</h3>
+                    <p><strong>Subject:</strong> ${template.subject}</p>
+                    <p><strong>Company:</strong> ${template.company || 'N/A'}</p>
+                    <p><strong>Branch:</strong> ${template.branch || 'N/A'}</p>
+                    <p><strong>Created At:</strong> ${new Date(template.createdAt).toLocaleString()}</p>
+                    <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onclick="editTemplate(${index})">Edit</button>
+                    <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onclick="deleteTemplate(${index})">Delete</button>
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onclick="useTemplate(${index})">Use Template</button>
+                `;
+
+                templatesContainer.appendChild(templateCard);
+            });
+        }
+
+        // Function to edit a template
+        function editTemplate(index) {
+            const template = savedTemplates[index];
+            localStorage.setItem('currentTemplate', JSON.stringify({ ...template, index }));
+            window.location.href = 'Sample-Email.html';
+        }
+
+        // Function to delete a template
+        function deleteTemplate(index) {
+            if (confirm('Are you sure you want to delete this template?')) {
+                savedTemplates.splice(index, 1);
+                localStorage.setItem('emailTemplates', JSON.stringify(savedTemplates));
+                renderTemplates();
+            }
+        }
+
+        // Function to use a template (track usage)
+        function useTemplate(index) {
+            const template = savedTemplates[index];
+
+            // Load template usage data
+            let templateUsage = JSON.parse(localStorage.getItem('templateUsage')) || {};
+            let templateActivity = JSON.parse(localStorage.getItem('templateActivity')) || [];
+
+            // Increment usage count
+            if (!templateUsage[template.id]) {
+                templateUsage[template.id] = 0;
+            }
+            templateUsage[template.id]++;
+
+            // Record activity
+            const activity = {
+                templateId: template.id,
+                templateName: template.name,
+                company: template.company,
+                branch: template.branch,
+                action: 'used',
+                timestamp: new Date().toISOString()
+            };
+
+            templateActivity.push(activity);
+
+            // Save updated data
+            localStorage.setItem('templateUsage', JSON.stringify(templateUsage));
+            localStorage.setItem('templateActivity', JSON.stringify(templateActivity));
+
+            alert(`Template "${template.name}" has been used. Usage count: ${templateUsage[template.id]}`);
+        }
+
+        // Initial render
+        renderTemplates();
+
+// Load the selected template if editing
+const currentTemplate = JSON.parse(localStorage.getItem('currentTemplate'));
+if (currentTemplate) {
+    isEditing = true;
+    editingTemplateIndex = currentTemplate.index;
+
+    // Populate the fields with the template data
+    templateNameInput.value = currentTemplate.name;
+    subjectLineInput.value = currentTemplate.subject;
+    editor.innerHTML = currentTemplate.html;
+    updateHTMLPreview();
+
+    // Populate parameters
+    parameters = currentTemplate.parameters || [];
+    parameters.forEach((param) => {
+        const parameterInput = document.createElement('div');
+        parameterInput.classList.add('parameter-input');
+        parameterInput.innerHTML = `
+            <label for="parameter-${param}" class="text-gray-700 text-sm font-medium">Parameter: ${param}</label>
+            <input type="text" id="parameter-${param}" data-parameter-name="${param}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter value for ${param}" value="${currentTemplate.parameterValues[param] || ''}">
+        `;
+        parameterInputsContainer.appendChild(parameterInput);
+    });
+
+    // Clear the currentTemplate from localStorage after loading
+    localStorage.removeItem('currentTemplate');
+}
+
+    </script>
+</body>
+</html>

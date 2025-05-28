@@ -1,0 +1,1029 @@
+/* Main container styles */
+body {
+    font-family: var(--app-font-family);
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    height: 100vh;
+    overflow: hidden;
+    color: #212121;
+}
+
+.word-editor {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #ffffff;
+}
+
+/* Toolbar styles */
+.toolbar-container {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 2px 5px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.toolbar-group {
+    display: flex;
+    gap: 1px;
+    border-right: 1px solid #e0e0e0;
+    padding-right: 5px;
+}
+
+.toolbar-group:last-child {
+    border-right: none;
+}
+
+.tool-button {
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    cursor: pointer;
+    padding: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+    color: #212121;
+}
+
+.tool-button:hover {
+    background-color: #f5f5f5;
+    border-color: #e0e0e0;
+}
+
+.tool-button.active {
+    background-color: #f5f5f5;
+    border-color: #bdbdbd;
+}
+
+/* Document container styles */
+.document-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    overflow-y: auto;
+    background-color: #f5f5f5;
+}
+
+.layout-selection {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 10px;
+    width: 100%;
+    max-width: 210mm;
+    flex-wrap: wrap;
+}
+
+.layout-selection label {
+    font-weight: bold;
+    color: #212121;
+}
+
+.layout-select {
+    padding: 6px;
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background-color: #ffffff;
+    color: #212121;
+    min-width: 180px;
+}
+
+#customizeLayoutBtn {
+    margin-left: auto;
+    background-color: #ffffff;
+    color: #212121;
+}
+
+.section-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 10px;
+    width: 100%;
+    max-width: 210mm;
+    justify-content: flex-end;
+}
+
+/* Document page styles */
+.document-page {
+    width: 210mm;
+    min-height: 297mm;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Distribute space between header, content, and footer */
+}
+
+/* Header and footer section styles */
+.header-section, .report-header-section {
+    display: none;
+    padding: 8px;
+    background-color: #f5f5f5;
+    border: 1px dashed #999;
+    margin-top: 0px;
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 25mm; /* Reduced minimum height for sections */
+    transition: min-height 0.2s ease; /* Smooth transition when resizing */
+}
+
+.page-header-section {
+    display: none;
+    padding: 15px 8px 8px 8px; /* Added padding at the top for the resize handle */
+    background-color: #f5f5f5;
+    border: 1px dashed #999;
+    margin-bottom: 0px;
+    position: absolute; /* Changed to absolute positioning */
+    bottom: 0; /* Position at the bottom */
+    left: 0;
+    right: 0;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 25mm; /* Reduced minimum height for sections */
+    transition: min-height 0.2s ease; /* Smooth transition when resizing */
+}
+
+.footer-section {
+    display: none;
+    padding: 15px 8px 8px 8px; /* Reduced padding */
+    background-color: #f5f5f5;
+    border: 1px dashed #999;
+    margin-bottom: 0px;
+    position: absolute; /* Changed from relative to absolute */
+    bottom: 0; /* Position at the bottom */
+    left: 0;
+    right: 0;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 25mm; /* Reduced minimum height for sections */
+    transition: min-height 0.2s ease; /* Smooth transition when resizing */
+}
+
+/* Resize handles for header and footer sections */
+.resize-handle-bottom, .resize-handle-top {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background-color: rgba(0, 0, 0, 0.1);
+    cursor: ns-resize;
+    z-index: 10;
+    transition: background-color 0.2s ease;
+}
+
+.resize-handle-bottom:hover, .resize-handle-top:hover {
+    background-color: rgba(33, 33, 33, 0.3);
+}
+
+.resize-handle-bottom {
+    bottom: 0;
+    border-bottom: 2px solid #999;
+}
+
+.resize-handle-top {
+    top: 0;
+    border-top: 2px solid #999;
+}
+
+/* Style for body during resizing */
+body.resizing {
+    cursor: ns-resize !important;
+    user-select: none;
+}
+
+body.resizing * {
+    cursor: ns-resize !important;
+}
+
+.header-section.active, .footer-section.active,
+.report-header-section.active, .page-header-section.active {
+    display: block;
+}
+
+/* Report Header - Full page */
+.report-header-section.full-page {
+    min-height: calc(297mm - 40px);
+    box-sizing: border-box;
+    display: block;
+}
+
+/* Page Header - Full page */
+.page-header-section.full-page {
+    min-height: calc(297mm - 40px);
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+/* Report Header & Page Header - Split page */
+.report-header-section.split-page {
+    min-height: calc(148.5mm - 30px);
+    box-sizing: border-box;
+    display: block;
+    border-bottom: 2px solid #999;
+}
+
+.page-header-section.split-page {
+    min-height: calc(148.5mm - 30px);
+    box-sizing: border-box;
+    margin-top: 10px;
+    display: block;
+    border-top: 2px solid #999;
+}
+
+/* Last Page Container */
+.last-page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 297mm;
+    width: 210mm;
+    margin: 0 auto;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    box-sizing: border-box;
+}
+
+.page-divider {
+    background-color: #f0f0f0;
+    padding: 5px 10px;
+    text-align: center;
+    font-weight: bold;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
+}
+
+/* Report Footer - Full page */
+.report-footer-section.full-page {
+    min-height: calc(297mm - 40px);
+    box-sizing: border-box;
+    display: block;
+}
+
+/* Page Footer - Full page */
+.page-footer-section.full-page {
+    min-height: calc(297mm - 40px);
+    box-sizing: border-box;
+    display: block;
+}
+
+/* Report Footer & Page Footer - Split page */
+.page-footer-section.split-page {
+    min-height: calc(148.5mm - 30px);
+    box-sizing: border-box;
+    display: block;
+    border-bottom: 2px solid #999;
+    position: absolute; /* Changed to absolute for consistent positioning */
+    top: 0; /* Position at the top of the page */
+    bottom: auto; /* Override the default bottom positioning */
+}
+
+.report-footer-section.split-page {
+    min-height: calc(148.5mm - 30px);
+    box-sizing: border-box;
+    display: block;
+    border-top: 2px solid #999;
+    position: absolute; /* Changed to absolute for consistent positioning */
+    bottom: 0; /* Position at the bottom */
+    top: auto; /* Ensure it's not affected by any top positioning */
+}
+
+/* Report Footer and Page Footer sections - base styles */
+.report-footer-section, .page-footer-section {
+    display: none;
+    padding: 20px 10px 10px 10px; /* Added 10px extra padding at the top */
+    background-color: #f9f9f9;
+    border: 1px dashed #ccc;
+    margin-top: 0px;
+    position: absolute; /* Changed from relative to absolute */
+    left: 0;
+    right: 0;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 30mm; /* Minimum height for sections */
+    transition: min-height 0.2s ease; /* Smooth transition when resizing */
+    margin-bottom: 0; /* Ensure bottom margin is zero */
+}
+
+/* Position report footer at the bottom by default */
+.report-footer-section {
+    bottom: 0;
+}
+
+/* Page footer doesn't have a default position - it will be set by specific layouts */
+
+.report-footer-section.active, .page-footer-section.active {
+    display: block;
+}
+
+.section-label {
+    display: none; /* Hide all section labels */
+    font-weight: bold;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.close-section-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+}
+
+.close-section-btn:hover {
+    color: #000;
+}
+
+/* Main content styles */
+.main-content {
+    flex: 1;
+    padding: 15mm;
+    min-height: 100mm;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Editable area styles */
+.editable {
+    min-height: 40px;
+    width: 100%;
+    outline: none;
+    color: #212121;
+}
+
+.editable:focus {
+    outline: none;
+}
+
+/* Font selectors */
+.font-size-select,
+.font-family-select,
+.font-format-select {
+    height: 28px;
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    padding: 0 4px;
+    margin: 0 1px;
+    background-color: #ffffff;
+    color: #212121;
+}
+
+/* Color palette styles */
+.color-palette {
+    display: none;
+    position: absolute;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    padding: 8px;
+    z-index: 100;
+    width: 250px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    flex-wrap: wrap;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.color-palette.show {
+    display: flex;
+}
+
+.color-option {
+    width: 18px;
+    height: 18px;
+    margin: 2px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s;
+    border: 1px solid #e0e0e0;
+}
+
+.color-option:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+    z-index: 2;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow-y: auto; /* Allow scrolling if modal is too tall */
+}
+
+.modal.show {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+}
+
+.modal-content {
+    background-color: #ffffff;
+    color: #212121;
+    margin: 0 auto; /* Center horizontally */
+    padding: 15px;
+    border-radius: 2px;
+    width: 80%;
+    max-width: 500px;
+    max-height: 90vh; /* Increased height to show more content */
+    overflow-y: auto; /* Add scrolling for tall content */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    position: relative; /* Ensure proper stacking context */
+    border: 1px solid #000000;
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+/* Specific styling for table modal */
+#tableModal .modal-content {
+    max-height: 90vh; /* Allow more height for table modal */
+    display: flex;
+    flex-direction: column;
+}
+
+#tableModal .form-group:last-child {
+    margin-top: 10px;
+    position: sticky; /* Make buttons sticky */
+    bottom: 0;
+    background-color: #ffffff;
+    padding: 8px 0;
+    border-top: 1px solid #e0e0e0;
+}
+
+.close {
+    color: #757575;
+    float: right;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #212121;
+}
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: bold;
+    color: #212121;
+}
+
+.form-control {
+    width: 100%;
+    padding: 6px;
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    box-sizing: border-box;
+    background-color: #ffffff;
+    color: #212121;
+}
+
+/* Preview Modal Styles */
+.preview-modal-content {
+    max-width: 700px;
+    width: 80%;
+    max-height: 95vh;
+    overflow-y: auto;
+    padding: 0;
+    margin: 0 auto;
+    background-color: #ffffff;
+    color: #212121;
+    position: relative;
+    border: 1px solid #000000;
+}
+
+.preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #000000;
+    padding: 5px 10px;
+    position: sticky;
+    top: 0;
+    background-color: #ffffff;
+    z-index: 100;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.preview-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+}
+
+/* A4 Page Styles */
+.a4-page {
+    width: 210mm;
+    height: 297mm;
+    padding: 0;
+    margin: 0;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+    box-sizing: border-box;
+    transform: scale(0.8);
+    transform-origin: top center;
+    page-break-after: always;
+}
+
+.page-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    min-height: 20mm;
+    border-bottom: 1px dashed #ccc;
+    padding: 10px;
+    background-color: white; /* Changed from #f9f9f9 to white */
+}
+
+.page-footer {
+    position: absolute;
+    bottom: 15mm; /* Moved up from bottom by 15mm */
+    left: 0;
+    right: 0;
+    min-height: 20mm;
+    border-top: 1px dashed #ccc;
+    padding: 20px 10px 10px 10px; /* Added 10px extra padding at the top */
+    background-color: white; /* Changed from #f9f9f9 to white */
+}
+
+/* Report Header Preview */
+.page-report-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 1px dashed #ccc;
+    padding: 10px;
+    overflow: auto;
+    background-color: white; /* Changed from #f9f9f9 to white */
+}
+
+/* Page Header Preview */
+.page-page-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 1px dashed #ccc;
+    padding: 10px;
+    overflow: auto;
+    background-color: white; /* Changed from #f9f9f9 to white */
+}
+
+/* Split Report Footer Preview */
+.page-report-header-split {
+    position: absolute;
+    bottom: 0;
+    top: auto; /* Ensure it's not affected by any top positioning */
+    left: 0;
+    right: 0;
+    height: 148.5mm;
+    border: 1px dashed #ccc;
+    padding: 10px;
+    overflow: auto;
+    background-color: white; /* Changed from #f9f9f9 to white */
+    border-top: 2px solid #999;
+}
+
+/* Split Page Footer Preview */
+.page-page-header-split {
+    position: absolute;
+    top: 0;
+    bottom: auto; /* Override any bottom positioning */
+    left: 0;
+    right: 0;
+    height: 148.5mm;
+    border: 1px dashed #ccc;
+    padding: 10px;
+    overflow: auto;
+    background-color: white; /* Changed from #f9f9f9 to white */
+    border-bottom: 2px solid #999;
+}
+
+.page-content-placeholder {
+    margin: 0;
+    color: #999;
+    text-align: center;
+    font-style: italic;
+    border: 1px dashed #ccc;
+    padding: 0;
+    height: 297mm; /* Full A4 height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Table Grid Styles */
+.table-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 18px); /* Further reduced size */
+    grid-template-rows: repeat(10, 18px); /* Further reduced size */
+    gap: 1px;
+    margin: 8px auto; /* Reduced margin */
+    width: fit-content;
+    border: 1px solid #e0e0e0;
+    padding: 3px;
+    background-color: #f5f5f5;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    max-width: 100%; /* Ensure it doesn't overflow */
+}
+
+.table-cell {
+    width: 18px; /* Further reduced size */
+    height: 18px; /* Further reduced size */
+    border: 1px solid #e0e0e0;
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: all 0.1s ease;
+}
+
+.table-cell:hover {
+    background-color: #f5f5f5;
+    transform: scale(1.05);
+    z-index: 2;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.table-cell.selected {
+    background-color: #e0e0e0;
+    border-color: #bdbdbd;
+}
+
+.table-dimensions {
+    margin: 4px 0;
+    font-size: 13px;
+    color: #212121;
+    font-weight: bold;
+    text-align: center;
+    padding: 2px;
+    background-color: #f5f5f5;
+    border-radius: 2px;
+    display: inline-block;
+    min-width: 50px;
+}
+
+/* Table Styles */
+.editable table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15px 0;
+}
+
+/* Default table style (full borders) */
+.editable table.full-borders,
+.editable table.full-borders th,
+.editable table.full-borders td {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #ddd;
+}
+
+/* No borders style */
+.editable table.no-borders,
+.editable table.no-borders th,
+.editable table.no-borders td {
+    border: none;
+}
+
+/* Outer border only */
+.editable table.outer-border {
+    border: 1px solid #ddd;
+}
+.editable table.outer-border th,
+.editable table.outer-border td {
+    border: none;
+}
+
+/* Header border only */
+.editable table.header-border,
+.editable table.header-border th {
+    border: 1px solid #ddd;
+}
+.editable table.header-border td {
+    border: none;
+}
+.editable table.header-border tr:first-child {
+    border-bottom: 1px solid #ddd;
+}
+
+/* Border width variations */
+.editable table.border-thin,
+.editable table.border-thin th,
+.editable table.border-thin td {
+    border-width: 1px;
+}
+.editable table.border-medium,
+.editable table.border-medium th,
+.editable table.border-medium td {
+    border-width: 2px;
+}
+.editable table.border-thick,
+.editable table.border-thick th,
+.editable table.border-thick td {
+    border-width: 3px;
+}
+
+/* Header style variations */
+.editable table.header-default th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+.editable table.header-bold th {
+    background-color: transparent;
+    font-weight: bold;
+}
+.editable table.header-none th {
+    background-color: transparent;
+    font-weight: normal;
+}
+
+/* Common table styles */
+.editable th, .editable td {
+    padding: 8px;
+    text-align: left;
+}
+
+.editable tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.editable tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Image Styles */
+.img-wrapper {
+    display: inline-block;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-sizing: border-box;
+}
+
+.editable img {
+    max-width: 100%;
+    height: auto;
+    cursor: default;
+    transition: all 0.2s;
+    display: block; /* Changed to block for better positioning */
+    box-sizing: border-box; /* Include border in width/height calculations */
+    margin: 0; /* Reset margins */
+    padding: 0; /* Reset padding */
+    border: 0; /* Reset border */
+}
+
+.editable img.selected {
+    border: 2px solid #4285f4;
+    box-shadow: 0 0 8px rgba(66, 133, 244, 0.7);
+    cursor: move;
+    min-width: 30px;
+    min-height: 30px;
+    padding: 0; /* Remove padding that could affect handle positioning */
+}
+
+.editable img.resizing {
+    opacity: 0.8;
+}
+
+/* Container for resize handles */
+.resize-handles-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 999;
+    box-sizing: border-box;
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+/* Resize handles */
+.resize-handle {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background-color: #000000;
+    border: 2px solid white;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    transform: translate(-50%, -50%); /* Center the handle on its position */
+    pointer-events: auto; /* Ensure handles receive mouse events */
+    box-sizing: content-box;
+    margin: 0;
+    padding: 0;
+}
+
+.resize-handle.nw {
+    cursor: nwse-resize;
+}
+
+.resize-handle.ne {
+    cursor: nesw-resize;
+}
+
+.resize-handle.sw {
+    cursor: nesw-resize;
+}
+
+.resize-handle.se {
+    cursor: nwse-resize;
+}
+
+/* Text Box Styles */
+.text-box {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    min-height: 50px;
+    position: relative;
+    resize: both;
+    overflow: auto;
+}
+
+.text-box:focus {
+    border-color: #4285f4;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+}
+
+/* Placeholder Text Styles */
+.editable[data-placeholder]:empty:before {
+    content: attr(data-placeholder);
+    color: #888;
+    font-style: italic;
+    text-align: center;
+    display: block;
+    margin: 10px 0;
+    font-size: 14px;
+}
+
+/* Print Styles */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    .preview-container, .a4-page, .a4-page * {
+        visibility: visible;
+    }
+
+    .preview-container {
+        position: static;
+        display: block !important;
+        width: 100%;
+        height: auto;
+        overflow: visible !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .modal-content {
+        overflow: visible !important;
+        height: auto !important;
+        max-height: none !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        width: 100% !important;
+        max-width: none !important;
+    }
+
+    .a4-page {
+        position: relative !important;
+        width: 210mm !important;
+        height: 297mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        transform: none !important;
+        page-break-after: always !important;
+        break-after: page !important;
+        overflow: visible !important;
+        display: block !important;
+        background-color: white !important;
+    }
+
+    #lastPagePreview {
+        page-break-before: always !important;
+        break-before: page !important;
+        display: block !important;
+    }
+
+    .page-separator {
+        display: none !important;
+    }
+
+    .page-header {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        padding: 10px !important;
+        background-color: white !important; /* Changed from #f9f9f9 to white */
+        border-bottom: 1px dashed #ccc !important;
+        min-height: 20mm !important;
+        visibility: visible !important;
+        display: block !important;
+    }
+
+    .page-footer {
+        position: absolute !important;
+        bottom: 15mm !important; /* Moved up from bottom by 15mm */
+        left: 0 !important;
+        right: 0 !important;
+        padding: 20px 10px 10px 10px !important; /* Added 10px extra padding at the top */
+        background-color: white !important; /* Changed from #f9f9f9 to white */
+        border-top: 1px dashed #ccc !important;
+        min-height: 20mm !important;
+        visibility: visible !important;
+        display: block !important;
+    }
+
+    .page-content-placeholder {
+        margin: 0 !important;
+        padding: 0 !important;
+        height: 297mm !important;
+        visibility: visible !important;
+        display: block !important;
+        border: none !important;
+    }
+
+    #previewMainContent {
+        visibility: visible !important;
+        display: block !important;
+    }
+
+    .preview-header, h3 {
+        display: none !important;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .toolbar {
+        flex-wrap: wrap;
+    }
+
+    .toolbar-group {
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 5px;
+        margin-bottom: 5px;
+        width: 100%;
+    }
+
+    .document-page {
+        width: 100%;
+    }
+}

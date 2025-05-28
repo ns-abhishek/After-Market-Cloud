@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
+            color: #374151;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+
+        .stats-card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-label {
+            font-size: 1rem;
+            color: #6b7280;
+        }
+
+        .template-list {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .template-item {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .template-item:last-child {
+            border-bottom: none;
+        }
+
+        .template-name {
+            font-weight: 500;
+        }
+
+        .template-count {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .highlight-section {
+            animation: highlight-pulse 2s ease-in-out;
+        }
+
+        @keyframes highlight-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5); }
+            50% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0.5); }
+            100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+        }
+
+        .stats-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .company-header {
+            background-color: #1e40af;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .search-bar {
+            background-color: white;
+            border-radius: 0 0 8px 8px;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .grid-item {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            transition: transform 0.2s;
+        }
+
+        .grid-item:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Company Header -->
+        <div class="company-header">
+            <div class="flex justify-between items-center">
+                <h1 class="text-3xl font-bold">Company Dashboard</h1>
+                <div class="space-x-4">
+                    <a href="Saved_templates.html" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        View Templates
+                    </a>
+                    <a href="Sample-Email.html" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        Create Template
+                    </a>              
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter Bar -->
+        <div class="search-bar">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Search Input -->
+                <div>
+                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <input type="text" id="search-input" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md" placeholder="Search companies...">
+                    </div>
+                </div>
+
+                <!-- Company Dropdown -->
+                <div>
+                    <label for="company-filter" class="block text-sm font-medium text-gray-700 mb-1">Company</label>
+                    <select id="company-filter" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm">
+                        <option value="">All Companies</option>
+                        <!-- Companies will be loaded dynamically -->
+                    </select>
+                </div>
+
+                <!-- Region Dropdown -->
+                <div>
+                    <label for="region-filter" class="block text-sm font-medium text-gray-700 mb-1">Region</label>
+                    <select id="region-filter" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm">
+                        <option value="">All Regions</option>
+                        <option value="north">North</option>
+                        <option value="south">South</option>
+                        <option value="east">East</option>
+                        <option value="west">West</option>
+                        <option value="central">Central</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Company Count -->
+            <div class="stats-card cursor-pointer hover:shadow-lg transition-shadow" onclick="navigateToCompanies()">
+                <div class="stats-number text-blue-600" id="company-count">0</div>
+                <div class="stats-label">Companies</div>
+            </div>
+
+            <!-- Branch Count -->
+            <div class="stats-card cursor-pointer hover:shadow-lg transition-shadow" onclick="navigateToBranches()">
+                <div class="stats-number text-green-600" id="branch-count">0</div>
+                <div class="stats-label">Branches</div>
+            </div>
+
+            <!-- Total Templates -->
+            <div class="stats-card cursor-pointer hover:shadow-lg transition-shadow" onclick="navigateToTemplates()">
+                <div class="stats-number text-purple-600" id="template-count">0</div>
+                <div class="stats-label">Total Templates</div>
+            </div>
+
+            <!-- Template Usage -->
+            <div class="stats-card cursor-pointer hover:shadow-lg transition-shadow" onclick="navigateToTemplateUsage()">
+                <div class="stats-number text-amber-600" id="template-usage">0</div>
+                <div class="stats-label">Total Template Uses</div>
+            </div>
+        </div>
+
+        <!-- Company Grid -->
+        <h2 class="text-2xl font-semibold mb-4">Companies</h2>
+        <div id="company-grid" class="grid-container">
+            <!-- Company cards will be inserted here dynamically -->
+            <div class="text-gray-500">No companies found</div>
+        </div>
+
+        <!-- Company and Branch Options -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+            <!-- Company Management -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Company Management</h2>
+                <div class="mb-4">
+                    <label for="company-name" class="block text-sm font-medium text-gray-700 mb-2">Add New Company</label>
+                    <div class="flex">
+                        <input type="text" id="company-name" class="flex-1 shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="Company Name">
+                        <button id="add-company-btn" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Add
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-medium mb-2">Existing Companies</h3>
+                    <div id="company-list" class="max-h-60 overflow-y-auto border rounded-md p-2">
+                        <!-- Companies will be listed here -->
+                        <div class="text-gray-500">No companies added yet</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Branch Management -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Branch Management</h2>
+                <div class="mb-4">
+                    <label for="branch-name" class="block text-sm font-medium text-gray-700 mb-2">Add New Branch</label>
+                    <div class="flex">
+                        <input type="text" id="branch-name" class="flex-1 shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="Branch Name">
+                        <button id="add-branch-btn" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            Add
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-medium mb-2">Existing Branches</h3>
+                    <div id="branch-list" class="max-h-60 overflow-y-auto border rounded-md p-2">
+                        <!-- Branches will be listed here -->
+                        <div class="text-gray-500">No branches added yet</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Most Used Templates -->
+        <div class="template-list mt-8">
+            <h2 class="text-xl font-semibold mb-4">Most Used Templates</h2>
+            <div id="most-used-templates">
+                <!-- Template items will be inserted here -->
+                <div class="text-gray-500">No template usage data available</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get DOM elements
+        const companyCountEl = document.getElementById('company-count');
+        const branchCountEl = document.getElementById('branch-count');
+        const templateCountEl = document.getElementById('template-count');
+        const templateUsageEl = document.getElementById('template-usage');
+        const mostUsedTemplatesEl = document.getElementById('most-used-templates');
+        const companyNameInput = document.getElementById('company-name');
+        const addCompanyBtn = document.getElementById('add-company-btn');
+        const companyListEl = document.getElementById('company-list');
+        const branchNameInput = document.getElementById('branch-name');
+        const addBranchBtn = document.getElementById('add-branch-btn');
+        const branchListEl = document.getElementById('branch-list');
+
+        // New dashboard elements
+        const searchInput = document.getElementById('search-input');
+        const companyFilter = document.getElementById('company-filter');
+        const regionFilter = document.getElementById('region-filter');
+        const companyGrid = document.getElementById('company-grid');
+
+        // Initialize data if not exists
+        if (!localStorage.getItem('companyData')) {
+            // Sample company data with regions
+            const sampleCompanyData = [
+                { id: 1, name: 'Acme Corporation', region: 'north', employees: 250, active: true },
+                { id: 2, name: 'Globex Industries', region: 'south', employees: 180, active: true },
+                { id: 3, name: 'Stark Enterprises', region: 'east', employees: 500, active: true },
+                { id: 4, name: 'Wayne Industries', region: 'west', employees: 350, active: true },
+                { id: 5, name: 'Umbrella Corp', region: 'central', employees: 420, active: false },
+                { id: 6, name: 'Cyberdyne Systems', region: 'north', employees: 150, active: true },
+                { id: 7, name: 'Soylent Corp', region: 'south', employees: 90, active: true },
+                { id: 8, name: 'Initech', region: 'east', employees: 120, active: false }
+            ];
+            localStorage.setItem('companyData', JSON.stringify(sampleCompanyData));
+        }
+
+        if (!localStorage.getItem('companies')) {
+            localStorage.setItem('companies', JSON.stringify([]));
+        }
+
+        if (!localStorage.getItem('branches')) {
+            localStorage.setItem('branches', JSON.stringify([]));
+        }
+
+        // Initialize branchData if it doesn't exist
+        if (!localStorage.getItem('branchData')) {
+            // Sample branch data with company associations
+            const sampleBranchData = [
+                { id: 1, name: 'New York', companyId: 1, active: true },
+                { id: 2, name: 'Los Angeles', companyId: 1, active: true },
+                { id: 3, name: 'Chicago', companyId: 2, active: true },
+                { id: 4, name: 'Houston', companyId: 2, active: false },
+                { id: 5, name: 'Miami', companyId: 3, active: true },
+                { id: 6, name: 'Seattle', companyId: 4, active: true },
+                { id: 7, name: 'Boston', companyId: 5, active: true },
+                { id: 8, name: 'Denver', companyId: 6, active: true }
+            ];
+            localStorage.setItem('branchData', JSON.stringify(sampleBranchData));
+        }
+
+        if (!localStorage.getItem('emailTemplates')) {
+            localStorage.setItem('emailTemplates', JSON.stringify([]));
+        }
+
+        if (!localStorage.getItem('templateUsage')) {
+            localStorage.setItem('templateUsage', JSON.stringify({}));
+        }
+
+        // Load data from localStorage
+        const savedTemplates = JSON.parse(localStorage.getItem('emailTemplates')) || [];
+        const templateUsage = JSON.parse(localStorage.getItem('templateUsage')) || {};
+        let companies = JSON.parse(localStorage.getItem('companies')) || [];
+        let branches = JSON.parse(localStorage.getItem('branches')) || [];
+        let companyData = JSON.parse(localStorage.getItem('companyData')) || [];
+        let branchData = JSON.parse(localStorage.getItem('branchData')) || [];
+
+        // Update stats
+        companyCountEl.textContent = companyData.length;
+        branchCountEl.textContent = branchData.length;
+        templateCountEl.textContent = savedTemplates.length;
+
+        // Calculate total template usage
+        const totalUsage = Object.values(templateUsage).reduce((sum, count) => sum + count, 0);
+        templateUsageEl.textContent = totalUsage;
+
+        // Render most used templates chart
+        function renderTemplatesChart() {
+            const ctx = document.getElementById('templates-chart').getContext('2d');
+
+            // Get top 5 most used templates
+            const sortedTemplates = Object.entries(templateUsage)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+
+            const templateNames = sortedTemplates.map(([id]) => {
+                const template = savedTemplates.find(t => t.id === id);
+                return template ? template.name : 'Unknown Template';
+            });
+
+            const usageCounts = sortedTemplates.map(([, count]) => count);
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: templateNames,
+                    datasets: [{
+                        label: 'Usage Count',
+                        data: usageCounts,
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(16, 185, 129, 0.7)',
+                            'rgba(139, 92, 246, 0.7)',
+                            'rgba(245, 158, 11, 0.7)',
+                            'rgba(239, 68, 68, 0.7)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Render companies chart
+        function renderCompaniesChart() {
+            const ctx = document.getElementById('companies-chart').getContext('2d');
+
+            // Count templates per company
+            const companyTemplateCounts = {};
+            savedTemplates.forEach(template => {
+                if (template.company) {
+                    companyTemplateCounts[template.company] = (companyTemplateCounts[template.company] || 0) + 1;
+                }
+            });
+
+            // Get top 5 companies with most templates
+            const sortedCompanies = Object.entries(companyTemplateCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+
+            const companyNames = sortedCompanies.map(([name]) => name);
+            const templateCounts = sortedCompanies.map(([, count]) => count);
+
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: companyNames,
+                    datasets: [{
+                        data: templateCounts,
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(16, 185, 129, 0.7)',
+                            'rgba(139, 92, 246, 0.7)',
+                            'rgba(245, 158, 11, 0.7)',
+                            'rgba(239, 68, 68, 0.7)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        }
+
+        // Render recent activity
+        function renderRecentActivity() {
+            // Sort activity by date (most recent first)
+            const sortedActivity = [...templateActivity].sort((a, b) =>
+                new Date(b.timestamp) - new Date(a.timestamp)
+            ).slice(0, 10); // Get 10 most recent activities
+
+            activityTableBody.innerHTML = '';
+
+            if (sortedActivity.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td colspan="4" class="py-4 px-6 border-b border-gray-200 text-center text-gray-500">
+                        No recent activity
+                    </td>
+                `;
+                activityTableBody.appendChild(row);
+                return;
+            }
+
+            sortedActivity.forEach(activity => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="py-2 px-4 border-b border-gray-200">${activity.templateName}</td>
+                    <td class="py-2 px-4 border-b border-gray-200">${activity.company || 'N/A'}</td>
+                    <td class="py-2 px-4 border-b border-gray-200">${activity.branch || 'N/A'}</td>
+                    <td class="py-2 px-4 border-b border-gray-200">${new Date(activity.timestamp).toLocaleString()}</td>
+                `;
+                activityTableBody.appendChild(row);
+            });
+        }
+
+        // Display most used templates
+        function displayMostUsedTemplates() {
+            // Convert usage data to array for sorting
+            const usageArray = Object.entries(templateUsage).map(([id, count]) => {
+                const template = savedTemplates.find(t => t.id === id) || { name: 'Unknown Template' };
+                return { id, name: template.name, count };
+            });
+
+            // Sort by usage count (descending)
+            usageArray.sort((a, b) => b.count - a.count);
+
+            // Take top 5
+            const topTemplates = usageArray.slice(0, 5);
+
+            if (topTemplates.length === 0) {
+                mostUsedTemplatesEl.innerHTML = '<div class="text-gray-500">No template usage data available</div>';
+                return;
+            }
+
+            mostUsedTemplatesEl.innerHTML = '';
+
+            topTemplates.forEach(template => {
+                const templateItem = document.createElement('div');
+                templateItem.className = 'template-item';
+                templateItem.innerHTML = `
+                    <div class="template-name">${template.name}</div>
+                    <div class="template-count">${template.count} uses</div>
+                `;
+                mostUsedTemplatesEl.appendChild(templateItem);
+            });
+        }
+
+        // Display companies
+        function displayCompanies() {
+            if (companies.length === 0) {
+                companyListEl.innerHTML = '<div class="text-gray-500">No companies added yet</div>';
+                return;
+            }
+
+            companyListEl.innerHTML = '';
+
+            companies.forEach(company => {
+                const companyItem = document.createElement('div');
+                companyItem.className = 'flex justify-between items-center py-2 border-b border-gray-200 last:border-0';
+                companyItem.innerHTML = `
+                    <span>${company}</span>
+                    <button class="text-red-600 hover:text-red-800" data-company="${company}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                `;
+                companyListEl.appendChild(companyItem);
+
+                // Add delete event listener
+                const deleteBtn = companyItem.querySelector('button');
+                deleteBtn.addEventListener('click', () => {
+                    if (confirm(`Are you sure you want to delete the company "${company}"?`)) {
+                        companies = companies.filter(c => c !== company);
+                        localStorage.setItem('companies', JSON.stringify(companies));
+                        displayCompanies();
+                        companyCountEl.textContent = companies.length;
+                    }
+                });
+            });
+        }
+
+        // Display branches
+        function displayBranches() {
+            if (branches.length === 0) {
+                branchListEl.innerHTML = '<div class="text-gray-500">No branches added yet</div>';
+                return;
+            }
+
+            branchListEl.innerHTML = '';
+
+            branches.forEach(branch => {
+                const branchItem = document.createElement('div');
+                branchItem.className = 'flex justify-between items-center py-2 border-b border-gray-200 last:border-0';
+                branchItem.innerHTML = `
+                    <span>${branch}</span>
+                    <button class="text-red-600 hover:text-red-800" data-branch="${branch}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                `;
+                branchListEl.appendChild(branchItem);
+
+                // Add delete event listener
+                const deleteBtn = branchItem.querySelector('button');
+                deleteBtn.addEventListener('click', () => {
+                    if (confirm(`Are you sure you want to delete the branch "${branch}"?`)) {
+                        branches = branches.filter(b => b !== branch);
+                        localStorage.setItem('branches', JSON.stringify(branches));
+                        displayBranches();
+                        branchCountEl.textContent = branches.length;
+                    }
+                });
+            });
+        }
+
+        // Add company event listener
+        addCompanyBtn.addEventListener('click', () => {
+            const companyName = companyNameInput.value.trim();
+            if (companyName) {
+                if (!companies.includes(companyName)) {
+                    companies.push(companyName);
+                    localStorage.setItem('companies', JSON.stringify(companies));
+                    companyNameInput.value = '';
+                    displayCompanies();
+                    companyCountEl.textContent = companies.length;
+                } else {
+                    alert('This company already exists!');
+                }
+            } else {
+                alert('Please enter a company name!');
+            }
+        });
+
+        // Add branch event listener
+        addBranchBtn.addEventListener('click', () => {
+            const branchName = branchNameInput.value.trim();
+            if (branchName) {
+                if (!branches.includes(branchName)) {
+                    branches.push(branchName);
+                    localStorage.setItem('branches', JSON.stringify(branches));
+                    branchNameInput.value = '';
+                    displayBranches();
+                    branchCountEl.textContent = branches.length;
+                } else {
+                    alert('This branch already exists!');
+                }
+            } else {
+                alert('Please enter a branch name!');
+            }
+        });
+
+        // Display company grid
+        function displayCompanyGrid(companies) {
+            if (companies.length === 0) {
+                companyGrid.innerHTML = '<div class="text-gray-500">No companies found</div>';
+                return;
+            }
+
+            companyGrid.innerHTML = '';
+
+            companies.forEach(company => {
+                const companyCard = document.createElement('div');
+                companyCard.className = 'grid-item';
+
+                // Status indicator color
+                const statusColor = company.active ? 'bg-green-500' : 'bg-red-500';
+
+                companyCard.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-lg font-semibold">${company.name}</h3>
+                        <span class="inline-block w-3 h-3 ${statusColor} rounded-full"></span>
+                    </div>
+                    <div class="text-sm text-gray-600 mb-1">
+                        <span class="font-medium">Region:</span> ${company.region.charAt(0).toUpperCase() + company.region.slice(1)}
+                    </div>
+                    <div class="text-sm text-gray-600 mb-4">
+                        <span class="font-medium">Employees:</span> ${company.employees}
+                    </div>
+                    <div class="flex justify-between items-center mt-4">
+                        <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" data-company-id="${company.id}">
+                            View Details
+                        </button>
+                        <span class="text-xs text-gray-500">${company.active ? 'Active' : 'Inactive'}</span>
+                    </div>
+                `;
+
+                companyGrid.appendChild(companyCard);
+
+                // Add view details event listener
+                const viewDetailsBtn = companyCard.querySelector('button');
+                viewDetailsBtn.addEventListener('click', () => {
+                    alert(`Viewing details for ${company.name}`);
+                    // Here you would typically navigate to a company details page
+                });
+            });
+        }
+
+        // Filter companies based on search and filters
+        function filterCompanies() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const selectedCompany = companyFilter.value;
+            const selectedRegion = regionFilter.value;
+
+            let filteredCompanies = [...companyData];
+
+            // Apply search filter
+            if (searchTerm) {
+                filteredCompanies = filteredCompanies.filter(company =>
+                    company.name.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            // Apply company filter
+            if (selectedCompany) {
+                filteredCompanies = filteredCompanies.filter(company =>
+                    company.id.toString() === selectedCompany
+                );
+            }
+
+            // Apply region filter
+            if (selectedRegion) {
+                filteredCompanies = filteredCompanies.filter(company =>
+                    company.region === selectedRegion
+                );
+            }
+
+            displayCompanyGrid(filteredCompanies);
+        }
+
+        // Populate company filter dropdown
+        function populateCompanyFilter() {
+            companyFilter.innerHTML = '<option value="">All Companies</option>';
+
+            companyData.forEach(company => {
+                const option = document.createElement('option');
+                option.value = company.id;
+                option.textContent = company.name;
+                companyFilter.appendChild(option);
+            });
+        }
+
+        // Add event listeners for search and filters
+        searchInput.addEventListener('input', filterCompanies);
+        companyFilter.addEventListener('change', filterCompanies);
+        regionFilter.addEventListener('change', filterCompanies);
+
+        // Navigation functions for stats cards
+        function navigateToCompanies() {
+            // Scroll to companies section
+            document.querySelector('h2').scrollIntoView({ behavior: 'smooth' });
+
+            // Highlight the section
+            const companyGrid = document.getElementById('company-grid');
+            companyGrid.classList.add('highlight-section');
+            setTimeout(() => {
+                companyGrid.classList.remove('highlight-section');
+            }, 2000);
+        }
+
+        function navigateToBranches() {
+            // Create branches page if it doesn't exist
+            if (!document.getElementById('branches-page')) {
+                createBranchesPage();
+            }
+
+            // Show branches page
+            showPage('branches-page');
+        }
+
+        function navigateToTemplates() {
+            // Navigate to templates page
+            window.location.href = 'Saved_templates.html';
+        }
+
+        function navigateToTemplateUsage() {
+            // Create template usage page if it doesn't exist
+            if (!document.getElementById('template-usage-page')) {
+                createTemplateUsagePage();
+            }
+
+            // Show template usage page
+            showPage('template-usage-page');
+        }
+
+        // Function to create branches page
+        function createBranchesPage() {
+            // Create page container
+            const branchesPage = document.createElement('div');
+            branchesPage.id = 'branches-page';
+            branchesPage.className = 'page-container';
+            branchesPage.style.display = 'none';
+
+            // Create page content
+            branchesPage.innerHTML = `
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-semibold">All Branches</h2>
+                        <button id="close-branches-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded">
+                            Back to Dashboard
+                        </button>
+                    </div>
+
+                    <div class="mb-4">
+                        <input type="text" id="branch-search" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Search branches...">
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white">
+                            <thead>
+                                <tr>
+                                    <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Branch Name</th>
+                                    <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Company</th>
+                                    <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Region</th>
+                                    <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="branches-table-body">
+                                <!-- Branch data will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            // Add to document
+            document.querySelector('.container').appendChild(branchesPage);
+
+            // Add event listeners
+            document.getElementById('close-branches-btn').addEventListener('click', () => {
+                showPage('main-content');
+            });
+
+            document.getElementById('branch-search').addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                populateBranchesTable(searchTerm);
+            });
+
+            // Populate branches table
+            populateBranchesTable();
+        }
+
+        // Function to populate branches table
+        function populateBranchesTable(searchTerm = '') {
+            const branchesTableBody = document.getElementById('branches-table-body');
+            branchesTableBody.innerHTML = '';
+
+            // Filter branches by search term
+            let filteredBranches = [...branchData];
+            if (searchTerm) {
+                filteredBranches = filteredBranches.filter(branch =>
+                    branch.name.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            if (filteredBranches.length === 0) {
+                branchesTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="py-4 px-6 border-b border-gray-200 text-center text-gray-500">
+                            No branches found
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            // Sort branches by company and name
+            filteredBranches.sort((a, b) => {
+                const companyA = companyData.find(c => c.id === a.companyId)?.name || '';
+                const companyB = companyData.find(c => c.id === b.companyId)?.name || '';
+
+                if (companyA !== companyB) {
+                    return companyA.localeCompare(companyB);
+                }
+                return a.name.localeCompare(b.name);
+            });
+
+            // Add branches to table
+            filteredBranches.forEach(branch => {
+                const company = companyData.find(c => c.id === branch.companyId);
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+                    <td class="py-2 px-4 border-b border-gray-200">${branch.name}</td>
+                    <td class="py-2 px-4 border-b border-gray-200">${company ? company.name : 'N/A'}</td>
+                    <td class="py-2 px-4 border-b border-gray-200">${company ? company.region.charAt(0).toUpperCase() + company.region.slice(1) : 'N/A'}</td>
+                    <td class="py-2 px-4 border-b border-gray-200">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${branch.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                            ${branch.active ? 'Active' : 'Inactive'}
+                        </span>
+                    </td>
+                `;
+
+                branchesTableBody.appendChild(row);
+            });
+        }
+
+        // Function to create template usage page
+        function createTemplateUsagePage() {
+            // Create page container
+            const templateUsagePage = document.createElement('div');
+            templateUsagePage.id = 'template-usage-page';
+            templateUsagePage.className = 'page-container';
+            templateUsagePage.style.display = 'none';
+
+            // Create page content
+            templateUsagePage.innerHTML = `
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-semibold">Template Usage Statistics</h2>
+                        <button id="close-usage-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded">
+                            Back to Dashboard
+                        </button>
+                    </div>
+
+                    <div class="mb-6">
+                        <h3 class="text-lg font-medium mb-2">Most Used Templates</h3>
+                        <div class="bg-gray-50 p-4 rounded">
+                            <canvas id="usage-chart" height="300"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white">
+                            <thead>
+                                <tr>
+                                    <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Template Name</th>
+                                    <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Company</th>
+                                    <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Usage Count</th>
+                                    <th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Last Used</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usage-table-body">
+                                <!-- Template usage data will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            // Add to document
+            document.querySelector('.container').appendChild(templateUsagePage);
+
+            // Add event listeners
+            document.getElementById('close-usage-btn').addEventListener('click', () => {
+                showPage('main-content');
+            });
+
+            // Populate template usage data
+            populateTemplateUsageData();
+        }
+
+        // Function to populate template usage data
+        function populateTemplateUsageData() {
+            const usageTableBody = document.getElementById('usage-table-body');
+            usageTableBody.innerHTML = '';
+
+            // Convert usage data to array for sorting
+            const usageArray = Object.entries(templateUsage).map(([id, count]) => {
+                const template = savedTemplates.find(t => t.id === id) || { name: 'Unknown Template' };
+                return {
+                    id,
+                    name: template.name,
+                    company: template.company || 'N/A',
+                    count,
+                    lastUsed: getLastUsedDate(id)
+                };
+            });
+
+            // Sort by usage count (descending)
+            usageArray.sort((a, b) => b.count - a.count);
+
+            if (usageArray.length === 0) {
+                usageTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="py-4 px-6 border-b border-gray-200 text-center text-gray-500">
+                            No template usage data available
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            // Add template usage data to table
+            usageArray.forEach(template => {
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+                    <td class="py-2 px-4 border-b border-gray-200">${template.name}</td>
+                    <td class="py-2 px-4 border-b border-gray-200">${template.company}</td>
+                    <td class="py-2 px-4 border-b border-gray-200">${template.count}</td>
+                    <td class="py-2 px-4 border-b border-gray-200">${template.lastUsed}</td>
+                `;
+
+                usageTableBody.appendChild(row);
+            });
+
+            // Create usage chart
+            createUsageChart(usageArray.slice(0, 10)); // Show top 10 templates
+        }
+
+        // Function to get last used date for a template
+        function getLastUsedDate(templateId) {
+            const activities = JSON.parse(localStorage.getItem('templateActivity')) || [];
+
+            // Find the most recent activity for this template
+            const templateActivities = activities.filter(a => a.templateId === templateId);
+            if (templateActivities.length === 0) {
+                return 'Never';
+            }
+
+            // Sort by timestamp (descending)
+            templateActivities.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+            // Return formatted date
+            return new Date(templateActivities[0].timestamp).toLocaleDateString();
+        }
+
+        // Function to create usage chart
+        function createUsageChart(templates) {
+            const ctx = document.getElementById('usage-chart').getContext('2d');
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: templates.map(t => t.name),
+                    datasets: [{
+                        label: 'Usage Count',
+                        data: templates.map(t => t.count),
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(16, 185, 129, 0.7)',
+                            'rgba(139, 92, 246, 0.7)',
+                            'rgba(245, 158, 11, 0.7)',
+                            'rgba(239, 68, 68, 0.7)',
+                            'rgba(6, 182, 212, 0.7)',
+                            'rgba(249, 115, 22, 0.7)',
+                            'rgba(236, 72, 153, 0.7)',
+                            'rgba(132, 204, 22, 0.7)',
+                            'rgba(168, 85, 247, 0.7)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Function to show a specific page
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page-container').forEach(page => {
+                page.style.display = 'none';
+            });
+
+            // Show main content if needed
+            if (pageId === 'main-content') {
+                document.querySelectorAll('.container > *:not(.page-container)').forEach(el => {
+                    el.style.display = '';
+                });
+            } else {
+                // Hide main content
+                document.querySelectorAll('.container > *:not(.page-container)').forEach(el => {
+                    el.style.display = 'none';
+                });
+
+                // Show requested page
+                document.getElementById(pageId).style.display = 'block';
+            }
+        }
+
+        // Add main-content class to existing elements for page switching
+        document.querySelectorAll('.container > *:not(.page-container)').forEach(el => {
+            el.classList.add('main-content');
+        });
+
+        // Initialize displays
+        displayMostUsedTemplates();
+        displayCompanies();
+        displayBranches();
+        populateCompanyFilter();
+        displayCompanyGrid(companyData);
+    </script>
+</body>
+</html>

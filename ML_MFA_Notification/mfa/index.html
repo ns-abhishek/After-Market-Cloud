@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MFA Login System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Language Selector -->
+    <div class="language-selector">
+        <div class="language-dropdown">
+            <button class="language-btn">
+                <i class="fas fa-globe"></i>
+                <span id="current-language">English</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="language-dropdown-content" id="language-menu">
+                <div class="dropdown-header">Select Language</div>
+                <a href="#" data-lang="en" class="active">English</a>
+                <a href="#" data-lang="hi">हिन्दी (Hindi)</a>
+                <a href="#" data-lang="fr">Français (French)</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Theme Toggle Button -->
+    <div class="theme-toggle">
+        <input type="checkbox" id="theme-switch" class="theme-switch">
+        <label for="theme-switch" class="theme-switch-label">
+            <i class="fas fa-moon"></i>
+            <i class="fas fa-sun"></i>
+            <span class="theme-switch-toggle"></span>
+        </label>
+    </div>
+
+    <!-- Combined Login Screen -->
+    <div id="screen-login" class="login-form screen active">
+        <h2>Login Form </h2>
+            <div id="error-message" class="error-message"></div>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Enter your username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="password-container">
+                    <input type="password" id="password" placeholder="Enter your password">
+                    <button id="toggle-password" type="button" class="toggle-password">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+
+
+            </div>
+            <div class="form-group checkbox-group">
+                <input type="checkbox" id="remember-me">
+                <label for="remember-me" class="checkbox-label">Remember me</label>
+                <a href="#" id="forgot-password" class="forgot-link">Forgot password?</a>
+            </div>
+            <div class="form-actions full-width">
+                <button id="login-btn">Log In</button>
+            </div>
+            <div class="register-link">
+                <span>Don't have an account?</span>
+                <a href="#" id="register-link">Register</a>
+            </div>
+        </div>
+
+        <!-- Combined Authentication Selection Screen -->
+        <div id="screen-combined-auth" class="login-form screen combined-auth-screen">
+            <h2>Security Configuration</h2>
+            <div id="combined-auth-error-message" class="error-message"></div>
+
+            <div class="auth-progress-container">
+                <div class="auth-progress-bar">
+                    <div class="auth-progress-step active">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Select Level</div>
+                    </div>
+                    <div class="auth-progress-line"></div>
+                    <div class="auth-progress-step">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Choose Methods</div>
+                    </div>
+                    <div class="auth-progress-line"></div>
+                    <div class="auth-progress-step">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Verify</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Authentication Level Selection Section -->
+            <div class="auth-section" id="auth-level-section">
+                <h3>Select Authentication Level</h3>
+                <p class="info-text">Choose your preferred security level:</p>
+
+                <div class="auth-level-cards">
+                    <div class="auth-level-card" data-level="two-factor">
+                        <div class="auth-level-header">
+                            <div class="auth-level-badge">
+                                <i class="fas fa-shield-alt"></i>
+                                <span class="badge-number">2</span>
+                            </div>
+                            <h4>Standard Security</h4>
+                        </div>
+                        <div class="auth-level-content">
+                            <p>Two-Factor Authentication</p>
+                            <ul>
+                                <li>Basic protection for your account</li>
+                                <li>Requires one verification method</li>
+                                <li>Quick authentication process</li>
+                            </ul>
+                        </div>
+                        <div class="auth-level-footer">
+                            <span class="auth-level-select-btn">Select</span>
+                        </div>
+                    </div>
+
+                    <div class="auth-level-card" data-level="three-factor">
+                        <div class="auth-level-header">
+                            <div class="auth-level-badge">
+                                <i class="fas fa-shield-alt"></i>
+                                <span class="badge-number">3</span>
+                            </div>
+                            <h4>Enhanced Security</h4>
+                        </div>
+                        <div class="auth-level-content">
+                            <p>Three-Factor Authentication</p>
+                            <ul>
+                                <li>Advanced protection for sensitive data</li>
+                                <li>Requires two verification methods</li>
+                                <li>Balanced security and convenience</li>
+                            </ul>
+                        </div>
+                        <div class="auth-level-footer">
+                            <span class="auth-level-select-btn">Select</span>
+                        </div>
+                    </div>
+
+                    <div class="auth-level-card recommended" data-level="four-factor">
+                        <div class="recommended-badge">Recommended</div>
+                        <div class="auth-level-header">
+                            <div class="auth-level-badge">
+                                <i class="fas fa-shield-alt"></i>
+                                <span class="badge-number">4</span>
+                            </div>
+                            <h4>Maximum Security</h4>
+                        </div>
+                        <div class="auth-level-content">
+                            <p>Four-Factor Authentication</p>
+                            <ul>
+                                <li>Highest level of account protection</li>
+                                <li>Requires three verification methods</li>
+                                <li>Ideal for financial transactions</li>
+                            </ul>
+                        </div>
+                        <div class="auth-level-footer">
+                            <span class="auth-level-select-btn">Select</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Verification Methods Selection Section -->
+            <div class="auth-section hidden" id="verification-methods-section">
+                <h3>Choose Verification Methods</h3>
+                <p class="info-text">Select <span id="methods-count-text">one</span> verification method(s) based on your chosen security level:</p>
+                <div class="selection-status-banner">
+                    <div class="selection-status">
+                        <span id="selected-count">0</span>/<span id="required-count">1</span> methods selected
+                    </div>
+                    <div class="selection-progress">
+                        <div id="selection-progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="verification-methods-container">
+                    <h4 class="methods-section-title">Available Verification Methods</h4>
+                    <div class="verification-methods-group" id="all-methods">
+                        <!-- Will be populated dynamically -->
+                    </div>
+                </div>
+
+                <div class="selected-methods-summary">
+                    <h4>Selected Methods</h4>
+                    <div class="selected-methods-list" id="selected-methods-list">
+                        <div class="no-methods-selected">No methods selected yet</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions combined-auth-actions">
+                <button id="back-btn" class="secondary-btn">Back</button>
+                <button id="continue-auth-btn">Continue</button>
+            </div>
+        </div>
+
+        <!-- Legacy screens kept for compatibility -->
+        <div id="screen-auth-level" class="login-form screen hidden">
+            <!-- This screen is kept for compatibility but will be hidden -->
+        </div>
+
+        <div id="screen-mfa-options" class="login-form screen hidden">
+            <!-- This screen is kept for compatibility but will be hidden -->
+        </div>
+
+        <!-- Screen 4: SMS OTP Verification -->
+        <div id="screen-sms-otp" class="login-form screen">
+            <h2>SMS Verification</h2>
+            <div id="sms-error-message" class="error-message"></div>
+            <p class="info-text">Enter the 6-digit code sent to your phone number <span id="masked-phone"></span></p>
+
+            <div class="form-group">
+                <label for="sms-otp">Verification Code</label>
+                <input type="text" id="sms-otp" placeholder="Enter 6-digit code" maxlength="6" inputmode="numeric">
+                <div class="timer">Code expires in: <span id="sms-timer">02:00</span></div>
+            </div>
+
+            <div class="form-actions">
+                <button id="verify-sms-btn">Verify Code</button>
+                <a href="#" id="resend-sms" class="disabled">Resend Code</a>
+            </div>
+            <div class="back-link">
+                <a href="#" id="back-to-mfa-options-from-sms"><i class="fas fa-arrow-left"></i> Back</a>
+            </div>
+        </div>
+
+        <!-- Screen 5: Email OTP Verification -->
+        <div id="screen-email-otp" class="login-form screen">
+            <h2>Email Verification</h2>
+            <div id="email-error-message" class="error-message"></div>
+            <p class="info-text">Enter the verification code sent to your email address <span id="masked-email"></span></p>
+
+            <div class="form-group">
+                <label for="email-otp">Verification Code</label>
+                <input type="text" id="email-otp" placeholder="Enter verification code" maxlength="6" inputmode="numeric">
+                <div class="timer">Code expires in: <span id="email-timer">05:00</span></div>
+            </div>
+
+            <div class="form-actions">
+                <button id="verify-email-btn">Verify Code</button>
+                <a href="#" id="resend-email" class="disabled">Resend Code</a>
+            </div>
+            <div class="back-link">
+                <a href="#" id="back-to-mfa-options-from-email"><i class="fas fa-arrow-left"></i> Back</a>
+            </div>
+        </div>
+
+        <!-- Screen 6: Authenticator App Verification -->
+        <div id="screen-authenticator" class="login-form screen">
+            <h2>Authenticator App</h2>
+            <div id="authenticator-error-message" class="error-message"></div>
+            <p class="info-text">Open your authenticator app (Google Authenticator,Microsoft Authenticator etc.) and enter the current code.</p>
+
+            <div class="form-group">
+                <label for="authenticator-code">Verification Code</label>
+                <input type="text" id="authenticator-code" placeholder="Enter 6-digit code" maxlength="6" inputmode="numeric">
+            </div>
+
+            <div class="form-actions">
+                <button id="verify-authenticator-btn">Verify Code</button>
+            </div>
+            <div class="back-link">
+                <a href="#" id="back-to-mfa-options-from-authenticator"><i class="fas fa-arrow-left"></i> Back</a>
+            </div>
+        </div>
+
+        <!-- Screen 7: MPIN Verification -->
+        <div id="screen-mpin" class="login-form screen">
+            <h2>MPIN Verification</h2>
+            <div id="mpin-error-message" class="error-message"></div>
+            <p class="info-text">Enter your 4-digit MPIN.</p>
+
+            <div class="form-group">
+                <div class="mpin-input-container">
+                    <input type="password" id="mpin-1" class="mpin-input" maxlength="1" inputmode="numeric">
+                    <input type="password" id="mpin-2" class="mpin-input" maxlength="1" inputmode="numeric">
+                    <input type="password" id="mpin-3" class="mpin-input" maxlength="1" inputmode="numeric">
+                    <input type="password" id="mpin-4" class="mpin-input" maxlength="1" inputmode="numeric">
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button id="verify-mpin-btn">Verify MPIN</button>
+            </div>
+            <div class="back-link">
+                <a href="#" id="back-to-mfa-options-from-mpin"><i class="fas fa-arrow-left"></i> Back</a>
+            </div>
+        </div>
+
+        <!-- Screen 8: Face ID Verification -->
+        <div id="screen-faceid" class="login-form screen">
+            <h2>Face ID Verification</h2>
+            <div id="faceid-error-message" class="error-message"></div>
+            <p class="info-text">Please look at the camera to verify your identity.</p>
+
+            <div class="form-group">
+                <div class="biometric-container">
+                    <div class="faceid-animation">
+                        <i class="fas fa-user-circle"></i>
+                        <div class="faceid-scan"></div>
+                    </div>
+                </div>
+                <div class="biometric-status">
+                    <p id="faceid-status">Waiting for camera...</p>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button id="verify-faceid-btn">Start Face ID</button>
+                <button id="cancel-faceid-btn" class="secondary-btn hidden">Cancel</button>
+            </div>
+            <div class="back-link">
+                <a href="#" id="back-to-mfa-options-from-faceid"><i class="fas fa-arrow-left"></i> Back</a>
+            </div>
+        </div>
+
+        <!-- Screen 9: Fingerprint Verification -->
+        <div id="screen-fingerprint" class="login-form screen">
+            <h2>Fingerprint Verification</h2>
+            <div id="fingerprint-error-message" class="error-message"></div>
+            <p class="info-text">Place your finger on the fingerprint sensor to verify your identity.</p>
+
+            <div class="form-group">
+                <div class="biometric-container">
+                    <div class="fingerprint-animation">
+                        <i class="fas fa-fingerprint"></i>
+                        <div class="fingerprint-scan"></div>
+                    </div>
+                </div>
+                <div class="biometric-status">
+                    <p id="fingerprint-status">Waiting for fingerprint...</p>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button id="verify-fingerprint-btn">Start Fingerprint Scan</button>
+                <button id="cancel-fingerprint-btn" class="secondary-btn hidden">Cancel</button>
+            </div>
+            <div class="back-link">
+                <a href="#" id="back-to-mfa-options-from-fingerprint"><i class="fas fa-arrow-left"></i> Back</a>
+            </div>
+        </div>
+
+        <!-- Success Screen -->
+        <div id="screen-success" class="login-form screen">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>Authentication Set</h2>
+
+            <div class="user-profile">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-name" id="summary-username">admin</div>
+            </div>
+
+            <div class="auth-summary-card">
+                <h3>Authentication Summary</h3>
+                <div class="summary-content">
+                    <div class="summary-row">
+                        <span class="summary-label">Authentication Level:</span>
+                        <span class="summary-value" id="summary-auth-level">Four-Factor Authentication</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Verification Methods:</span>
+                        <span class="summary-value" id="summary-methods">SMS OTP, Email OTP, Authenticator App</span>
+                    </div>
+                    <div class="summary-row success-message">
+                        <i class="fas fa-shield-alt"></i> Session secured successfully
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button id="continue-btn">Continue</button>
+            </div>
+        </div>
+
+        <!-- Dashboard Screen -->
+        <div id="screen-dashboard" class="dashboard-container screen">
+            <div class="dashboard-header">
+                <div class="dashboard-logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Secure Dashboard</span>
+                </div>
+                <div class="dashboard-user">
+                    <span id="dashboard-username">User</span>
+                    <i class="fas fa-user-circle"></i>
+                </div>
+            </div>
+            <div class="dashboard-content">
+                <div class="dashboard-welcome">
+                    <h1>Welcome to Your Secure Dashboard</h1>
+                    <p>You have successfully authenticated with multi-factor authentication.</p>
+                </div>
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="card-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Security Status</h3>
+                            <p>Your account is secured with multi-factor authentication.</p>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="card-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Authentication Level</h3>
+                            <p id="dashboard-auth-level">Four-Factor Authentication</p>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="card-icon">
+                            <i class="fas fa-key"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Verification Methods</h3>
+                            <p id="dashboard-methods">SMS OTP, Email OTP, Authenticator App</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <script src="users.js"></script>
+    <script src="translations.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

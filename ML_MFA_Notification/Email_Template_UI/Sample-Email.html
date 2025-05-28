@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Template Creator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .material-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .material-btn:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .material-input {
+            border: none;
+            border-bottom: 1px solid #ccc;
+            padding: 8px 0;
+            background-color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .material-input:focus {
+            border-bottom: 2px solid #6200ee;
+            outline: none;
+        }
+
+        .material-select {
+            border: none;
+            border-bottom: 1px solid #ccc;
+            padding: 8px 0;
+            background-color: transparent;
+            border-radius: 0;
+        }
+
+        .material-select:focus {
+            border-bottom: 2px solid #6200ee;
+            outline: none;
+        }
+
+        .material-tabs {
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .material-tab {
+            padding: 12px 16px;
+            font-weight: 500;
+            color: #757575;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .material-tab.active {
+            color: #6200ee;
+        }
+
+        .material-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #6200ee;
+        }
+
+        /* Standard Professional Theme Variables */
+        .theme-default {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --heading-color: #1a1a1a;
+            --button-bg: #0056b3;
+            --button-hover-bg: #004494;
+            --button-text: #ffffff;
+            --border-color: #d1d5db;
+            --input-bg: #ffffff;
+            --input-text: #333333;
+            --card-bg: #ffffff;
+            --card-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            --accent-color: #0056b3;
+        }
+
+        .theme-corporate {
+            --bg-color: #f8f9fa;
+            --text-color: #212529;
+            --heading-color: #0a2540;
+            --button-bg: #0a2540;
+            --button-hover-bg: #051a30;
+            --button-text: #ffffff;
+            --border-color: #ced4da;
+            --input-bg: #ffffff;
+            --input-text: #212529;
+            --card-bg: #ffffff;
+            --card-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            --accent-color: #0a2540;
+        }
+
+        .theme-modern {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --heading-color: #2c3e50;
+            --button-bg: #3498db;
+            --button-hover-bg: #2980b9;
+            --button-text: #ffffff;
+            --border-color: #e0e0e0;
+            --input-bg: #f5f5f5;
+            --input-text: #333333;
+            --card-bg: #ffffff;
+            --card-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            --accent-color: #3498db;
+        }
+
+        .theme-minimal {
+            --bg-color: #fafafa;
+            --text-color: #424242;
+            --heading-color: #212121;
+            --button-bg: #616161;
+            --button-hover-bg: #424242;
+            --button-text: #ffffff;
+            --border-color: #e0e0e0;
+            --input-bg: #ffffff;
+            --input-text: #424242;
+            --card-bg: #ffffff;
+            --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --accent-color: #757575;
+        }
+
+        .theme-professional {
+            --bg-color: #f5f7fa;
+            --text-color: #2d3748;
+            --heading-color: #1a202c;
+            --button-bg: #4a5568;
+            --button-hover-bg: #2d3748;
+            --button-text: #ffffff;
+            --border-color: #e2e8f0;
+            --input-bg: #ffffff;
+            --input-text: #2d3748;
+            --card-bg: #ffffff;
+            --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+            --accent-color: #4a5568;
+        }
+
+        .theme-enterprise {
+            --bg-color: #f0f4f8;
+            --text-color: #334e68;
+            --heading-color: #102a43;
+            --button-bg: #334e68;
+            --button-hover-bg: #243b53;
+            --button-text: #ffffff;
+            --border-color: #d9e2ec;
+            --input-bg: #ffffff;
+            --input-text: #334e68;
+            --card-bg: #ffffff;
+            --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --accent-color: #486581;
+        }
+
+        /* Apply Theme Variables */
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--heading-color);
+        }
+
+        button {
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: 1px solid var(--button-bg);
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            background-color: var(--button-hover-bg);
+            border-color: var(--button-hover-bg);
+        }
+
+        select {
+            background-color: var(--input-bg);
+            color: var(--input-text);
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+
+        select:hover {
+            border-color: var(--accent-color);
+        }
+
+        select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(var(--accent-color), 0.1);
+            outline: none;
+        }
+
+        input[type="text"] {
+            background-color: var(--input-bg);
+            color: var(--input-text);
+            border: 1px solid var(--border-color);
+            transition: border-color 0.2s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(var(--accent-color), 0.1);
+            outline: none;
+        }
+
+        .editor-container {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
+        }
+
+        /* Save button has explicit green color */
+
+        /* Theme Preview Styles */
+        .theme-preview-bg {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .theme-preview-text {
+            background-color: var(--text-color);
+        }
+
+        .theme-preview-accent {
+            background-color: var(--accent-color);
+        }
+
+        .theme-preview-button {
+            background-color: var(--button-bg);
+        }
+
+        /* Tab Styles */
+        .tab-button {
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button:hover {
+            color: var(--accent-color);
+        }
+
+        .tab-button.active {
+            border-bottom: 2px solid var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* Info Icon Styles - Removed */
+
+        /* Field Tooltip Styles */
+        .field-tooltip {
+            position: relative;
+        }
+
+        .field-tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: normal;
+            max-width: 250px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            z-index: 10;
+        }
+
+        .field-tooltip:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Label Tooltip Styles */
+        label {
+            position: relative;
+        }
+
+        label:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: normal;
+            max-width: 250px;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="theme-default p-4">
+    <div class="container mx-auto">
+        <div class="card flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-2xl font-medium text-gray-800">Create Email Template</h1>
+                <div class="flex items-center mt-3">
+                    <span class="text-sm font-medium mr-2 text-gray-600">Theme:</span>
+                    <select id="theme-selector" class="material-select field-tooltip" data-tooltip="Choose a visual theme for your email template">
+                        <option value="theme-default">Standard (Default)</option>
+                        <option value="theme-corporate">Corporate</option>
+                        <option value="theme-modern">Modern</option>
+                        <option value="theme-minimal">Minimal</option>
+                        <option value="theme-professional">Professional</option>
+                        <option value="theme-enterprise">Enterprise</option>
+                    </select>
+                    <div class="theme-preview-mini flex space-x-1 ml-2">
+                        <div class="w-3 h-3 rounded-full theme-preview-bg border border-gray-300"></div>
+                        <div class="w-3 h-3 rounded-full theme-preview-text"></div>
+                    </div>
+                </div>
+            </div>
+            <a href="dashboard.html" class="material-btn bg-purple-600 text-white field-tooltip" data-tooltip="Go to the main dashboard">
+                <span class="material-icons mr-1 text-sm">dashboard</span>
+                Dashboard
+            </a>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="mb-6">
+            <div class="material-tabs">
+                <button id="tab-general" class="material-tab active" data-tab="general-tab">General</button>
+                <button id="tab-email" class="material-tab" data-tab="email-tab">Email Content</button>
+                <button id="tab-preview" class="material-tab" data-tab="preview-tab">Preview</button>
+            </div>
+        </div>
+
+        <!-- Company and Branch Header -->
+        <div class="card">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <div class="flex items-center mb-2">
+                        <span class="text-sm font-medium text-gray-700">Company:</span>
+
+                    </div>
+                    <div class="flex space-x-2">
+                        <select id="company-selector" class="material-select w-full field-tooltip" data-tooltip="Select a company from the list or add a new one" required>
+                            <option value="">Select a company</option>
+                            <!-- Companies will be loaded dynamically -->
+                        </select>
+                        <button id="add-company" class="material-btn bg-blue-500 text-white">
+                            <span class="material-icons mr-1 text-sm">add</span>
+                            Add New
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex items-center mb-2">
+                        <span class="text-sm font-medium text-gray-700">Branch:</span>
+
+                    </div>
+                    <div class="flex space-x-2">
+                        <select id="branch-selector" class="material-select w-full field-tooltip" data-tooltip="Select a branch for the chosen company" required>
+                            <option value="">Select a branch</option>
+                            <!-- Branches will be loaded dynamically -->
+                        </select>
+                        <button id="add-branch" class="material-btn bg-blue-500 text-white">
+                            <span class="material-icons mr-1 text-sm">add</span>
+                            Add New
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content -->
+        <div id="tab-content">
+            <!-- General Tab -->
+            <div id="general-tab" class="tab-pane active">
+                <div class="card">
+                    <!-- Region Selection -->
+                    <div class="mb-6">
+                        <div class="flex items-center mb-2">
+                            <span class="text-sm font-medium text-gray-700">Region:</span>
+
+                        </div>
+                        <select id="region-selector" class="material-select w-full field-tooltip" data-tooltip="Select the geographic region for this template">
+                            <option value="">Select a region</option>
+                            <option value="north">North</option>
+                            <option value="south">South</option>
+                            <option value="east">East</option>
+                            <option value="west">West</option>
+                            <option value="central">Central</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-6">
+                        <div class="flex items-center mb-2">
+                            <span class="text-sm font-medium text-gray-700">Template Name:</span>
+                            <span class="text-red-500 ml-1">*</span>
+
+                        </div>
+                        <input type="text" id="template-name" class="material-input w-full field-tooltip" data-tooltip="Enter a descriptive name for your template" placeholder="My Email Template" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email Content Tab -->
+            <div id="email-tab" class="tab-pane hidden">
+                <div class="card">
+                    <div class="mb-6">
+                        <div class="flex items-center mb-2">
+                            <span class="text-sm font-medium text-gray-700">Subject:</span>
+                            <span class="text-red-500 ml-1">*</span>
+
+                        </div>
+                        <input type="text" id="subject-line" class="material-input w-full field-tooltip" data-tooltip="Enter the subject line that will appear in the recipient's inbox" placeholder="Subject of the email" required>
+                    </div>
+
+                    <div class="mb-6">
+                        <div class="flex items-center mb-2">
+                            <span class="text-sm font-medium text-gray-700">Parameters:</span>
+
+                        </div>
+                        <div id="parameter-inputs" class="space-y-3"></div>
+                        <button id="add-parameter" class="material-btn bg-blue-500 text-white mt-3">
+                            <span class="material-icons mr-1 text-sm">add</span>
+                            Add Parameter
+                        </button>
+                    </div>
+
+                    <div class="mb-6">
+                        <div class="flex items-center mb-2">
+                            <span class="text-sm font-medium text-gray-700">Email Body:</span>
+
+                        </div>
+                        <div class="toolbar mb-3 flex flex-wrap gap-2">
+                            <select id="font-style" class="material-select px-2">
+                                <option value="">Font Style</option>
+                                <option value="Arial">Arial</option>
+                                <option value="Courier New">Courier New</option>
+                                <option value="Georgia">Georgia</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Verdana">Verdana</option>
+                            </select>
+                            <select id="font-size" class="material-select px-2">
+                                <option value="">Font Size</option>
+                                <option value="12px">12px</option>
+                                <option value="14px">14px</option>
+                                <option value="16px">16px</option>
+                                <option value="18px">18px</option>
+                                <option value="24px">24px</option>
+                            </select>
+                            <button data-command="bold" class="material-btn bg-gray-200 text-gray-800 py-1 px-2">
+                                <span class="material-icons text-sm">format_bold</span>
+                            </button>
+                            <button data-command="italic" class="material-btn bg-gray-200 text-gray-800 py-1 px-2">
+                                <span class="material-icons text-sm">format_italic</span>
+                            </button>
+                            <button data-command="underline" class="material-btn bg-gray-200 text-gray-800 py-1 px-2">
+                                <span class="material-icons text-sm">format_underlined</span>
+                            </button>
+                        </div>
+                        <div id="email-editor" class="bg-white border border-gray-200 rounded-md p-4 min-h-[200px] field-tooltip" data-tooltip="Write the content of your email here. Use the toolbar above to format your text." contenteditable="true">
+                            <p>Start writing your email here...</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <div class="flex items-center mb-2">
+                            <span class="text-sm font-medium text-gray-700">To:</span>
+                            <span class="text-red-500 ml-1">*</span>
+
+                        </div>
+                        <input type="text" id="to-field" class="material-input w-full field-tooltip" data-tooltip="Enter the primary recipients' email addresses (comma-separated)" placeholder="primary@example.com, recipient@example.com" required>
+                    </div>
+
+                    <div class="mb-6">
+                        <div class="flex items-center mb-2">
+                            <span class="text-sm font-medium text-gray-700">CC:</span>
+                            <span class="text-red-500 ml-1">*</span>
+
+                        </div>
+                        <input type="text" id="cc-field" class="material-input w-full field-tooltip" data-tooltip="Enter carbon copy recipients' email addresses (comma-separated)" placeholder="email@example.com, another@example.com" required>
+                    </div>
+
+                    <div class="mb-6">
+                        <div class="flex items-center mb-2">
+                            <span class="text-sm font-medium text-gray-700">BCC:</span>
+
+                        </div>
+                        <input type="text" id="bcc-field" class="material-input w-full field-tooltip" data-tooltip="Enter blind carbon copy recipients' email addresses (comma-separated, recipients won't see each other)" placeholder="hidden@example.com, private@example.com">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preview Tab -->
+            <div id="preview-tab" class="tab-pane hidden">
+                <div class="card">
+                    <div class="mb-4">
+                        <div class="flex items-center mb-2">
+                            <span class="text-sm font-medium text-gray-700">HTML Preview:</span>
+
+                        </div>
+                        <div id="html-preview" class="bg-white border border-gray-200 rounded-md p-4 min-h-[300px] field-tooltip" data-tooltip="This shows a preview of how your email will look to recipients">
+                            <p><em>HTML preview will appear here...</em></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-8">
+            <div class="flex justify-between items-center">
+                <div class="flex space-x-4">
+                    <button id="save-template" class="material-btn bg-green-500 text-white field-tooltip" data-tooltip="Save your email template">
+                        <span class="material-icons mr-1 text-sm">save</span>
+                        Save Template
+                    </button>
+                    <button id="clear-editor" class="material-btn bg-gray-200 text-gray-800 field-tooltip" data-tooltip="Clear all fields">
+                        <span class="material-icons mr-1 text-sm">clear</span>
+                        Clear Editor
+                    </button>
+                </div>
+
+                <div class="flex flex-col items-end">
+                    <h2 class="text-lg font-medium text-gray-800 mb-2">Template Details</h2>
+                    <div class="flex space-x-3">
+                        <a href="Saved_templates.html" class="material-btn bg-blue-500 text-white field-tooltip" data-tooltip="View all your saved email templates">
+                            <span class="material-icons mr-1 text-sm">visibility</span>
+                            View Saved Templates
+                        </a>
+                        <a href="dashboard.html" class="material-btn bg-purple-600 text-white field-tooltip" data-tooltip="Go to the main dashboard">
+                            <span class="material-icons mr-1 text-sm">dashboard</span>
+                            Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const themeSelector = document.getElementById('theme-selector');
+            const editor = document.getElementById('email-editor');
+            const htmlPreview = document.getElementById('html-preview');
+            const parameterInputsContainer = document.getElementById('parameter-inputs');
+            const addParameterButton = document.getElementById('add-parameter');
+            const clearEditorButton = document.getElementById('clear-editor');
+            const templateNameInput = document.getElementById('template-name');
+            const subjectLineInput = document.getElementById('subject-line');
+            const saveButton = document.getElementById('save-template');
+            const fontStyleDropdown = document.getElementById('font-style');
+            const fontSizeDropdown = document.getElementById('font-size');
+            const companySelector = document.getElementById('company-selector');
+            const branchSelector = document.getElementById('branch-selector');
+            const regionSelector = document.getElementById('region-selector');
+            const toField = document.getElementById('to-field');
+            const ccField = document.getElementById('cc-field');
+            const bccField = document.getElementById('bcc-field');
+            const addCompanyButton = document.getElementById('add-company');
+            const addBranchButton = document.getElementById('add-branch');
+
+            let parameters = [];
+            let savedTemplates = JSON.parse(localStorage.getItem('emailTemplates')) || [];
+            let companies = JSON.parse(localStorage.getItem('companies')) || [];
+            let branches = JSON.parse(localStorage.getItem('branches')) || [];
+            let templateUsage = JSON.parse(localStorage.getItem('templateUsage')) || {};
+            let templateActivity = JSON.parse(localStorage.getItem('templateActivity')) || [];
+            let companyData = JSON.parse(localStorage.getItem('companyData')) || [];
+            let isEditing = false;
+            let editingTemplateIndex = null;
+
+            // Initialize companyData if it doesn't exist
+            if (companyData.length === 0) {
+                // Sample company data with regions
+                companyData = [
+                    { id: 1, name: 'Acme Corporation', region: 'north', employees: 250, active: true },
+                    { id: 2, name: 'Globex Industries', region: 'south', employees: 180, active: true },
+                    { id: 3, name: 'Stark Enterprises', region: 'east', employees: 500, active: true },
+                    { id: 4, name: 'Wayne Industries', region: 'west', employees: 350, active: true },
+                    { id: 5, name: 'Umbrella Corp', region: 'central', employees: 420, active: false },
+                    { id: 6, name: 'Cyberdyne Systems', region: 'north', employees: 150, active: true },
+                    { id: 7, name: 'Soylent Corp', region: 'south', employees: 90, active: true },
+                    { id: 8, name: 'Initech', region: 'east', employees: 120, active: false }
+                ];
+                localStorage.setItem('companyData', JSON.stringify(companyData));
+            }
+
+            // Initialize branchData if it doesn't exist
+            let branchData = JSON.parse(localStorage.getItem('branchData')) || [];
+            if (branchData.length === 0) {
+                // Sample branch data with company associations
+                branchData = [
+                    { id: 1, name: 'New York', companyId: 1, active: true },
+                    { id: 2, name: 'Los Angeles', companyId: 1, active: true },
+                    { id: 3, name: 'Chicago', companyId: 2, active: true },
+                    { id: 4, name: 'Houston', companyId: 2, active: false },
+                    { id: 5, name: 'Miami', companyId: 3, active: true },
+                    { id: 6, name: 'Seattle', companyId: 4, active: true },
+                    { id: 7, name: 'Boston', companyId: 5, active: true },
+                    { id: 8, name: 'Denver', companyId: 6, active: true }
+                ];
+                localStorage.setItem('branchData', JSON.stringify(branchData));
+            }
+
+            // Generate a unique ID for templates
+            function generateUniqueId() {
+                return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+            }
+
+            // Change theme dynamically and update preview
+            function updateThemePreview() {
+                const currentTheme = themeSelector.value;
+                document.body.className = currentTheme + ' p-4';
+
+                // Force a repaint of the preview elements to show the new theme colors
+                const previewElements = document.querySelectorAll('.theme-preview-bg, .theme-preview-text, .theme-preview-accent, .theme-preview-button');
+                previewElements.forEach(el => {
+                    el.style.display = 'none';
+                    setTimeout(() => {
+                        el.style.display = 'block';
+                    }, 0);
+                });
+            }
+
+            // Initialize theme preview
+            updateThemePreview();
+
+            // Change theme when selector changes
+            themeSelector.addEventListener('change', updateThemePreview);
+
+            // Update HTML preview
+            function updateHTMLPreview() {
+                htmlPreview.innerHTML = editor.innerHTML;
+            }
+
+            editor.addEventListener('input', updateHTMLPreview);
+
+            // Add Parameter Logic
+            addParameterButton.addEventListener('click', () => {
+                const parameterName = prompt('Enter parameter name (e.g., userName, orderId):');
+                if (parameterName && parameterName.trim() !== '') {
+                    const sanitizedParameterName = parameterName.trim().replace(/[^a-zA-Z0-9_]/g, '');
+                    if (parameters.includes(sanitizedParameterName)) {
+                        alert('Parameter name already exists. Please choose a unique name.');
+                        return;
+                    }
+                    parameters.push(sanitizedParameterName);
+                    editor.focus();
+                    document.execCommand('insertHTML', false, `{{${sanitizedParameterName}}}`);
+                    updateHTMLPreview();
+
+                    const parameterInput = document.createElement('div');
+                    parameterInput.classList.add('parameter-input');
+                    parameterInput.innerHTML = `
+                        <label for="parameter-${sanitizedParameterName}" class="text-gray-700 text-sm font-medium">Parameter: ${sanitizedParameterName}</label>
+                        <input type="text" id="parameter-${sanitizedParameterName}" data-parameter-name="${sanitizedParameterName}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter value for ${sanitizedParameterName}">
+                    `;
+                    parameterInputsContainer.appendChild(parameterInput);
+                } else {
+                    alert('Invalid parameter name. Please use only letters, numbers, and underscores.');
+                }
+            });
+
+            // Font Style and Size
+            fontStyleDropdown.addEventListener('change', (event) => {
+                const fontStyle = event.target.value;
+                if (fontStyle) {
+                    document.execCommand('fontName', false, fontStyle);
+                    updateHTMLPreview();
+                }
+            });
+
+            fontSizeDropdown.addEventListener('change', (event) => {
+                const fontSize = event.target.value;
+                if (fontSize) {
+                    document.execCommand('fontSize', false, '7');
+                    const fontElements = editor.getElementsByTagName('font');
+                    for (let i = 0; i < fontElements.length; i++) {
+                        if (fontElements[i].size === '7') {
+                            fontElements[i].removeAttribute('size');
+                            fontElements[i].style.fontSize = fontSize;
+                        }
+                    }
+                    updateHTMLPreview();
+                }
+            });
+
+            // Text Formatting (Bold, Italic, Underline)
+            document.querySelectorAll('[data-command]').forEach((button) => {
+                button.addEventListener('click', (event) => {
+                    const command = event.target.getAttribute('data-command');
+                    editor.focus();
+                    document.execCommand(command, false, null);
+                    updateHTMLPreview();
+                });
+            });
+
+            // Save Template
+            saveButton.addEventListener('click', () => {
+                const templateName = templateNameInput.value.trim();
+                const subjectLine = subjectLineInput.value.trim();
+                const htmlContent = editor.innerHTML.trim();
+                const toValue = toField.value.trim();
+                const ccValue = ccField.value.trim();
+                const bccValue = bccField.value.trim();
+                const selectedCompany = companySelector.value;
+                const selectedBranch = branchSelector.value;
+
+                // Validate all required fields
+                if (!templateName) {
+                    alert('Please enter a template name.');
+                    templateNameInput.focus();
+                    return;
+                }
+
+                if (!subjectLine) {
+                    alert('Please enter a subject line.');
+                    subjectLineInput.focus();
+                    return;
+                }
+
+                if (!toValue) {
+                    alert('Please enter recipient email addresses in the To field.');
+                    toField.focus();
+                    return;
+                }
+
+                if (!ccValue) {
+                    alert('Please enter CC email addresses.');
+                    ccField.focus();
+                    return;
+                }
+
+                if (!selectedCompany) {
+                    alert('Please select a company.');
+                    companySelector.focus();
+                    return;
+                }
+
+                if (!selectedBranch) {
+                    alert('Please select a branch.');
+                    branchSelector.focus();
+                    return;
+                }
+
+                if (!htmlContent || htmlContent === '<p>Start writing your email here...</p>') {
+                    alert('Please enter email content.');
+                    editor.focus();
+                    return;
+                }
+
+                const parameterValues = {};
+                parameters.forEach((param) => {
+                    const input = document.getElementById(`parameter-${param}`);
+                    if (input) {
+                        parameterValues[param] = input.value.trim();
+                    }
+                });
+
+                // Get company name from either companyData or old companies array
+                let company = '';
+                const companyValue = companySelector.value;
+
+                if (!isNaN(companyValue)) {
+                    // It's from companyData
+                    const selectedCompany = companyData.find(c => c.id.toString() === companyValue);
+                    if (selectedCompany) {
+                        company = selectedCompany.name;
+                    }
+                } else {
+                    // It's from old companies array
+                    company = companyValue;
+                }
+
+                // Get branch name from either branchData or old branches array
+                let branch = '';
+                const branchValue = branchSelector.value;
+
+                if (!isNaN(branchValue)) {
+                    // It's from branchData
+                    const selectedBranch = branchData.find(b => b.id.toString() === branchValue);
+                    if (selectedBranch) {
+                        branch = selectedBranch.name;
+                    }
+                } else {
+                    // It's from old branches array
+                    branch = branchValue;
+                }
+
+                const region = regionSelector.value;
+
+                // Generate a unique ID if this is a new template
+                const templateId = isEditing && savedTemplates[editingTemplateIndex].id
+                    ? savedTemplates[editingTemplateIndex].id
+                    : generateUniqueId();
+
+                const newTemplate = {
+                    id: templateId,
+                    name: templateName,
+                    subject: subjectLine,
+                    to: toValue,
+                    cc: ccValue,
+                    bcc: bccValue,
+                    html: htmlContent,
+                    parameters: parameters,
+                    parameterValues: parameterValues,
+                    company: company,
+                    branch: branch,
+                    region: region,
+                    theme: themeSelector.value,
+                    createdAt: new Date().toISOString()
+                };
+
+                // Track template usage
+                if (!templateUsage[templateId]) {
+                    templateUsage[templateId] = 0;
+                }
+                templateUsage[templateId]++;
+
+                // Record activity
+                const activity = {
+                    templateId: templateId,
+                    templateName: templateName,
+                    company: company,
+                    branch: branch,
+                    region: region,
+                    action: isEditing ? 'updated' : 'created',
+                    timestamp: new Date().toISOString()
+                };
+
+                templateActivity.push(activity);
+
+                if (isEditing && editingTemplateIndex !== null) {
+                    savedTemplates[editingTemplateIndex] = newTemplate;
+                    alert(`Template "${templateName}" updated!`);
+                } else {
+                    savedTemplates.push(newTemplate);
+                    alert(`Template "${templateName}" saved!`);
+                }
+
+                // Save all data to localStorage
+                localStorage.setItem('emailTemplates', JSON.stringify(savedTemplates));
+                localStorage.setItem('templateUsage', JSON.stringify(templateUsage));
+                localStorage.setItem('templateActivity', JSON.stringify(templateActivity));
+
+                clearEditorButton.click();
+            });
+
+            // Load companies into selector
+            function loadCompanies() {
+                companySelector.innerHTML = '<option value="">Select a company</option>';
+
+                // Use companyData instead of companies array
+                companyData.forEach(company => {
+                    const option = document.createElement('option');
+                    option.value = company.id;
+                    option.textContent = company.name;
+                    companySelector.appendChild(option);
+                });
+
+                // Also add any companies from the old array that aren't in companyData
+                companies.forEach(companyName => {
+                    // Check if this company name is already in companyData
+                    const exists = companyData.some(c => c.name === companyName);
+                    if (!exists) {
+                        const option = document.createElement('option');
+                        option.value = companyName;
+                        option.textContent = companyName;
+                        companySelector.appendChild(option);
+                    }
+                });
+            }
+
+            // Load branches into selector based on selected company
+            function loadBranches() {
+                branchSelector.innerHTML = '<option value="">Select a branch</option>';
+
+                const selectedCompanyId = companySelector.value;
+
+                // If no company is selected, don't show any branches
+                if (!selectedCompanyId) {
+                    return;
+                }
+
+                // Filter branches by company ID
+                let filteredBranches = [];
+
+                if (!isNaN(selectedCompanyId)) {
+                    // It's from companyData, filter branchData by companyId
+                    filteredBranches = branchData.filter(branch =>
+                        branch.companyId.toString() === selectedCompanyId && branch.active
+                    );
+
+                    // Add branches to the selector
+                    filteredBranches.forEach(branch => {
+                        const option = document.createElement('option');
+                        option.value = branch.id;
+                        option.textContent = branch.name;
+                        branchSelector.appendChild(option);
+                    });
+
+                    // If only one branch is available, select it automatically
+                    if (filteredBranches.length === 1) {
+                        branchSelector.value = filteredBranches[0].id;
+                    }
+                } else {
+                    // It's from the old companies array, show old branches
+                    // This is for backward compatibility
+                    const oldBranches = [...branches];
+                    oldBranches.forEach(branch => {
+                        const option = document.createElement('option');
+                        option.value = branch;
+                        option.textContent = branch;
+                        branchSelector.appendChild(option);
+                    });
+
+                    // If only one branch is available, select it automatically
+                    if (oldBranches.length === 1) {
+                        branchSelector.value = oldBranches[0];
+                    }
+                }
+            }
+
+            // Update region based on selected company
+            function updateRegionFromCompany() {
+                const selectedCompanyId = companySelector.value;
+
+                // Check if the selected value is a number (from companyData) or string (from old companies array)
+                if (!isNaN(selectedCompanyId)) {
+                    const selectedCompany = companyData.find(c => c.id.toString() === selectedCompanyId);
+                    if (selectedCompany) {
+                        regionSelector.value = selectedCompany.region;
+                    }
+                } else {
+                    // If it's from the old array, clear the region
+                    regionSelector.value = '';
+                }
+            }
+
+            // Add company selection change event
+            companySelector.addEventListener('change', () => {
+                // Update region based on selected company
+                updateRegionFromCompany();
+
+                // Update branches based on selected company
+                loadBranches();
+
+                // Clear branch selection
+                branchSelector.value = '';
+            });
+
+            // Add new company
+            addCompanyButton.addEventListener('click', () => {
+                const companyName = prompt('Enter new company name:');
+                if (companyName && companyName.trim() !== '') {
+                    const trimmedName = companyName.trim();
+
+                    // Check if company already exists in companyData
+                    const existsInCompanyData = companyData.some(c => c.name === trimmedName);
+
+                    // Check if company already exists in old companies array
+                    const existsInCompanies = companies.includes(trimmedName);
+
+                    if (!existsInCompanyData && !existsInCompanies) {
+                        // Ask for region
+                        const region = prompt('Enter region (north, south, east, west, central):');
+
+                        // Create new company in companyData format
+                        const newCompany = {
+                            id: Date.now(),
+                            name: trimmedName,
+                            region: region || '',
+                            employees: 0,
+                            active: true
+                        };
+
+                        companyData.push(newCompany);
+                        localStorage.setItem('companyData', JSON.stringify(companyData));
+                        loadCompanies();
+                        companySelector.value = newCompany.id;
+                        regionSelector.value = newCompany.region;
+                    } else {
+                        alert('Company already exists.');
+                        // Find and select the existing company
+                        const existingCompany = companyData.find(c => c.name === trimmedName);
+                        if (existingCompany) {
+                            companySelector.value = existingCompany.id;
+                            regionSelector.value = existingCompany.region;
+                        } else if (existsInCompanies) {
+                            companySelector.value = trimmedName;
+                        }
+                    }
+                }
+            });
+
+            // Add new branch
+            addBranchButton.addEventListener('click', () => {
+                // Check if a company is selected
+                const selectedCompanyId = companySelector.value;
+
+                if (!selectedCompanyId) {
+                    alert('Please select a company first before adding a branch.');
+                    return;
+                }
+
+                const branchName = prompt('Enter new branch name:');
+                if (branchName && branchName.trim() !== '') {
+                    const trimmedName = branchName.trim();
+
+                    // Check if branch already exists for this company
+                    let branchExists = false;
+
+                    if (!isNaN(selectedCompanyId)) {
+                        // It's from companyData
+                        branchExists = branchData.some(branch =>
+                            branch.name.toLowerCase() === trimmedName.toLowerCase() &&
+                            branch.companyId.toString() === selectedCompanyId
+                        );
+
+                        if (!branchExists) {
+                            // Create new branch in branchData format
+                            const newBranch = {
+                                id: Date.now(),
+                                name: trimmedName,
+                                companyId: parseInt(selectedCompanyId),
+                                active: true
+                            };
+
+                            branchData.push(newBranch);
+                            localStorage.setItem('branchData', JSON.stringify(branchData));
+
+                            // Reload branches and select the new one
+                            loadBranches();
+                            branchSelector.value = newBranch.id;
+                        } else {
+                            alert('Branch already exists for this company.');
+
+                            // Find and select the existing branch
+                            const existingBranch = branchData.find(branch =>
+                                branch.name.toLowerCase() === trimmedName.toLowerCase() &&
+                                branch.companyId.toString() === selectedCompanyId
+                            );
+
+                            if (existingBranch) {
+                                branchSelector.value = existingBranch.id;
+                            }
+                        }
+                    } else {
+                        // It's from the old companies array
+                        if (!branches.includes(trimmedName)) {
+                            branches.push(trimmedName);
+                            localStorage.setItem('branches', JSON.stringify(branches));
+                            loadBranches();
+                            branchSelector.value = trimmedName;
+                        } else {
+                            alert('Branch already exists.');
+                            branchSelector.value = trimmedName;
+                        }
+                    }
+                }
+            });
+
+            // Clear Editor
+            clearEditorButton.addEventListener('click', () => {
+                editor.innerHTML = "<p>Start writing your email here...</p>";
+                updateHTMLPreview();
+                templateNameInput.value = "";
+                subjectLineInput.value = "";
+                toField.value = "";
+                ccField.value = "";
+                bccField.value = "";
+                companySelector.value = "";
+                branchSelector.value = "";
+                regionSelector.value = "";
+                parameters = [];
+                parameterInputsContainer.innerHTML = '';
+                isEditing = false;
+                editingTemplateIndex = null;
+            });
+
+            // Initialize company and branch selectors
+            loadCompanies();
+            loadBranches();
+
+            // Tab functionality
+            const tabButtons = document.querySelectorAll('.material-tab');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+
+            function switchTab(tabId) {
+                // Hide all tab panes
+                tabPanes.forEach(pane => {
+                    pane.classList.remove('active');
+                    pane.classList.add('hidden');
+                });
+
+                // Deactivate all tab buttons
+                tabButtons.forEach(button => {
+                    button.classList.remove('active');
+                });
+
+                // Activate the selected tab
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('active');
+
+                // Activate the selected tab button
+                document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+            }
+
+            // Add click event listeners to tab buttons
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
+
+            // Add keyboard navigation for tabs
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey) {
+                    if (e.key === '1') {
+                        e.preventDefault();
+                        switchTab('general-tab');
+                    } else if (e.key === '2') {
+                        e.preventDefault();
+                        switchTab('email-tab');
+                    } else if (e.key === '3') {
+                        e.preventDefault();
+                        switchTab('preview-tab');
+                    }
+                }
+            });
+
+            // Check if we're editing an existing template
+            const currentTemplate = JSON.parse(localStorage.getItem('currentTemplate'));
+            if (currentTemplate) {
+                isEditing = true;
+                editingTemplateIndex = currentTemplate.index;
+
+                // Populate the fields with the template data
+                templateNameInput.value = currentTemplate.name;
+                subjectLineInput.value = currentTemplate.subject;
+
+                // Set email fields if available
+                if (currentTemplate.to) {
+                    toField.value = currentTemplate.to;
+                }
+                if (currentTemplate.cc) {
+                    ccField.value = currentTemplate.cc;
+                }
+                if (currentTemplate.bcc) {
+                    bccField.value = currentTemplate.bcc;
+                }
+
+                editor.innerHTML = currentTemplate.html;
+                updateHTMLPreview();
+
+                // Set company and region if available
+                if (currentTemplate.company) {
+                    // Try to find the company in companyData
+                    const company = companyData.find(c => c.name === currentTemplate.company);
+                    if (company) {
+                        companySelector.value = company.id;
+                        // Update branches based on selected company
+                        loadBranches();
+                    }
+                }
+
+                // Set region if available
+                if (currentTemplate.region) {
+                    regionSelector.value = currentTemplate.region;
+                }
+
+                // Set theme if available
+                if (currentTemplate.theme) {
+                    themeSelector.value = currentTemplate.theme;
+                    updateThemePreview();
+                }
+
+                // Set branch if available (after company is selected and branches are loaded)
+                setTimeout(() => {
+                    if (currentTemplate.branch) {
+                        // Try to find the branch in branchData
+                        const branch = branchData.find(b => b.name === currentTemplate.branch);
+                        if (branch) {
+                            branchSelector.value = branch.id;
+                        } else {
+                            // If not found in branchData, try to select by name (for backward compatibility)
+                            const branchOption = Array.from(branchSelector.options).find(option =>
+                                option.textContent === currentTemplate.branch
+                            );
+                            if (branchOption) {
+                                branchSelector.value = branchOption.value;
+                            }
+                        }
+                    }
+                }, 100);
+
+                // Populate parameters
+                parameters = currentTemplate.parameters || [];
+                parameters.forEach((param) => {
+                    const parameterInput = document.createElement('div');
+                    parameterInput.classList.add('parameter-input');
+                    parameterInput.innerHTML = `
+                        <label for="parameter-${param}" class="text-gray-700 text-sm font-medium">Parameter: ${param}</label>
+                        <input type="text" id="parameter-${param}" data-parameter-name="${param}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter value for ${param}" value="${currentTemplate.parameterValues[param] || ''}">
+                    `;
+                    parameterInputsContainer.appendChild(parameterInput);
+                });
+
+                // Clear the currentTemplate from localStorage after loading
+                localStorage.removeItem('currentTemplate');
+            }
+        </script>
+    </div>
+</body>
+</html>

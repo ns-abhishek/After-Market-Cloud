@@ -1,0 +1,1183 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SLA Management UI - Grayscale & Bold Links</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <style>
+        /* Optional: Add a filter for a truly grayscale look on images/icons if any were present */
+        /* img, svg { filter: grayscale(100%); } */
+    </style>
+</head>
+<body class="bg-gray-50 font-sans flex">
+    <aside class="w-64 bg-gray-200 text-gray-800 h-screen p-4 fixed">
+        <h1 class="text-2xl font-bold mb-6">SLA Management</h1>
+        <nav>
+            <a href="#dashboard" class="block py-2 px-4 hover:bg-gray-300 rounded" aria-label="Navigate to Dashboard">Dashboard</a>
+            <a href="#sla-definition" class="block py-2 px-4 hover:bg-gray-300 rounded" onclick="openSLADefinitionModal()" aria-label="Navigate to SLA Definition">SLA Definition</a>
+            <a href="#alerts" class="block py-2 px-4 hover:bg-gray-300 rounded" onclick="openAlertRulesModal()" aria-label="Navigate to Alerts">Alerts</a>
+            <a href="#reports" class="block py-2 px-4 hover:bg-gray-300 rounded" onclick="openReportModal()" aria-label="Navigate to Reports">Reports</a>
+            <a href="#enforcement" class="block py-2 px-4 hover:bg-gray-300 rounded" onclick="openEscalationRulesModal()" aria-label="Navigate to Enforcement">Enforcement</a>
+            <a href="#user-portal" class="block py-2 px-4 hover:bg-gray-300 rounded" onclick="openCustomerPortalModal()" aria-label="Navigate to User Portal">User Portal</a>
+            <a href="#integrations" class="block py-2 px-4 hover:bg-gray-300 rounded" onclick="openIntegrationsModal()" aria-label="Navigate to Integrations">Integrations</a>
+            <a href="#settings" class="block py-2 px-4 hover:bg-gray-300 rounded" onclick="openSettingsModal()" aria-label="Navigate to Settings">Settings</a>
+            <a href="#attachments" class="block py-2 px-4 hover:bg-gray-300 rounded" onclick="openAttachmentModal()" aria-label="Navigate to Attachments">Attachments</a>
+        </nav>
+    </aside>
+
+    <main class="ml-64 p-6 w-full">
+        <header class="bg-gray-800 text-white p-4 mb-6 flex justify-between items-center">
+            <h1 class="text-2xl font-bold">SLA Management Dashboard</h1>
+            <button onclick="openGraphModal()" aria-label="View SLA metric graphs">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 13v-7m4 7v-3m4 3v-7m-8 8h8"></path>
+                </svg>
+            </button>
+        </header>
+
+        <section id="dashboard" class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Monitoring Dashboard</h2>
+            <div class="mb-4 flex space-x-4">
+                <select class="border p-2 rounded" aria-label="Filter by customer">
+                    <option>All Customers</option>
+                    <option>Customer A</option>
+                    <option>Customer B</option>
+                </select>
+                <select class="border p-2 rounded" aria-label="Filter by SLA tier">
+                    <option>All Tiers</option>
+                    <option>Premium</option>
+                    <option>Standard</option>
+                </select>
+                <input type="date" class="border p-2 rounded" aria-label="Select date range">
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h3 class="text-sm font-semibold">Uptime</h3>
+                    <p class="text-2xl font-bold text-gray-700">99.98%</p>
+                    <p class="text-xs text-gray-600" title="Target uptime is 99.95%">Target: 99.95%</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h3 class="text-sm font-semibold">Response Time</h3>
+                    <p class="text-2xl font-bold text-gray-600">150ms</p>
+                    <p class="text-xs text-gray-600" title="Target response time is under 200ms">Target: &lt; 200ms</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h3 class="text-sm font-semibold">Breaches</h3>
+                    <p class="text-2xl font-bold text-gray-800">2</p>
+                    <p class="text-xs text-gray-600" title="Number of SLA breaches this month">This Month</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h3 class="text-sm font-semibold">Compliance</h3>
+                    <p class="text-2xl font-bold text-gray-700">98%</p>
+                    <p class="text-xs text-gray-600" title="Percentage of SLAs meeting targets">Overall</p>
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h3 class="text-sm font-semibold mb-2">SLA Performance Trends</h3>
+                <div style="position: relative; height:40vh; width:60vw; max-width: 800px; margin: auto;">
+                    <canvas id="slaTrendChart" aria-label="SLA performance trends over time"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="alerts" class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Alerting & Notification Center</h2>
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h3 class="text-sm font-semibold mb-2">Recent Alerts</h3>
+                <ul id="alertList" class="space-y-2">
+                    <li class="border-l-4 border-gray-800 pl-4">
+                        <p class="font-semibold">SLA Breach: Response Time</p>
+                        <p class="text-xs text-gray-600">Exceeded 200ms at 2025-05-13 10:15</p>
+                    </li>
+                    <li class="border-l-4 border-gray-600 pl-4">
+                        <p class="font-semibold">Warning: Uptime Dropping</p>
+                        <p class="text-xs text-gray-600">Uptime at 99.90% at 2025-05-13 09:45</p>
+                    </li>
+                </ul>
+                <button class="mt-4 text-gray-700 hover:underline font-bold" onclick="openAlertRulesModal()" aria-label="Configure alert rules">Configure Alert Rules</button>
+            </div>
+        </section>
+
+        <section id="enforcement" class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Enforcement & Escalation</h2>
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h3 class="text-sm font-semibold mb-2">Escalation Rules</h3>
+                <ul id="escalationList" class="space-y-2"></ul>
+                <button class="mt-2 text-gray-700 hover:underline font-bold" onclick="openEscalationRulesModal()" aria-label="Configure escalation rules">Configure Rules</button>
+            </div>
+        </section>
+
+        <section id="user-portal" class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Customer Portal</h2>
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <p class="text-sm">View assigned SLAs and track support tickets with SLA timers.</p>
+                <button class="mt-2 text-gray-700 hover:underline font-bold" onclick="openCustomerPortalModal()" aria-label="View customer portal">View Portal</button>
+            </div>
+        </section>
+
+        <section id="integrations" class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Integrations</h2>
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <p class="text-sm">Configure API tokens, webhooks, and integrations with Zendesk, Jira, etc.</p>
+                <button class="mt-2 text-gray-700 hover:underline font-bold" onclick="openIntegrationsModal()" aria-label="Configure integrations">Configure Integrations</button>
+            </div>
+        </section>
+
+        <section id="settings" class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Settings</h2>
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <p class="text-sm">Manage role-based access, audit logs, and language/timezone settings.</p>
+                <button type="button" class="mt-2 text-gray-700 hover:underline font-bold" onclick="openSettingsModal()" aria-label="Configure settings">Configure Settings</button>
+                <button type="button" class="mt-2 text-gray-700 hover:underline font-bold block" onclick="openAuditLogsModal()" aria-label="View audit logs">View Audit Logs</button>
+            </div>
+        </section>
+
+        <section id="attachments" class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Attachments</h2>
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <p class="text-sm">Upload and manage SLA-related documents.</p>
+                <button class="mt-2 text-gray-700 hover:underline font-bold" onclick="openAttachmentModal()" aria-label="Manage attachments">Manage Attachments</button>
+            </div>
+        </section>
+    </main>
+
+    <div id="slaDefinitionModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden" role="dialog" aria-labelledby="slaModalTitle" aria-modal="true">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+            <h2 id="slaModalTitle" class="text-xl font-bold mb-4">Create SLA Template</h2>
+            <form id="slaDefinitionForm">
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="sla-name">SLA Name</label>
+                    <input id="sla-name" type="text" class="w-full border p-2 rounded" placeholder="e.g., Premium Support SLA" aria-required="true">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="metric">Metric</label>
+                    <select id="metric" class="w-full border p-2 rounded" aria-required="true">
+                        <option>Uptime</option>
+                        <option>Response Time</option>
+                        <option>Incident Resolution</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="threshold">Threshold</label>
+                    <input id="threshold" type="text" class="w-full border p-2 rounded" placeholder="e.g., 99.95%" aria-required="true">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="severity">Severity Level</label>
+                    <select id="severity" class="w-full border p-2 rounded" aria-required="true">
+                        <option>P1</option>
+                        <option>P2</option>
+                        <option>P3</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="customer">Assign to Customer</label>
+                    <select id="customer" class="w-full border p-2 rounded" aria-required="true">
+                        <option>Customer A</option>
+                        <option>Customer B</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="terms">Terms & Conditions</label>
+                    <textarea id="terms" class="w-full border p-2 rounded" rows="4" placeholder="Enter SLA terms..." aria-required="true"></textarea>
+                </div>
+                <div id="slaMessage" class="text-gray-700 hidden mb-4">SLA saved successfully!</div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400" onclick="closeSLADefinitionModal()" aria-label="Cancel SLA creation">Cancel</button>
+                    <button type="submit" class="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900 font-bold" aria-label="Save SLA template">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="alertRulesModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden" role="dialog" aria-labelledby="alertRulesModalTitle" aria-modal="true">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+            <h2 id="alertRulesModalTitle" class="text-xl font-bold mb-4">Configure Alert Rules</h2>
+            <form id="alertRulesForm">
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="alert-metric">Metric</label>
+                    <select id="alert-metric" class="w-full border p-2 rounded" aria-required="true">
+                        <option>Uptime</option>
+                        <option>Response Time</option>
+                        <option>Incident Resolution</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="alert-threshold">Threshold</label>
+                    <input id="alert-threshold" type="text" class="w-full border p-2 rounded" placeholder="e.g., &lt; 99.9%" aria-required="true">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1">Notification Channels</label>
+                    <div class="space-y-2">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-2" name="channels" value="email" aria-label="Enable email notifications"> Email
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-2" name="channels" value="in-app" aria-label="Enable in-app notifications"> In-App
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-2" name="channels" value="sms" aria-label="Enable SMS notifications"> SMS
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-2" name="channels" value="webhook" aria-label="Enable webhook notifications"> Webhook
+                        </label>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="recipients">Recipients</label>
+                    <input id="recipients" type="text" class="w-full border p-2 rounded" placeholder="e.g., team@company.com" aria-required="true">
+                </div>
+                <div id="alertMessage" class="text-gray-700 hidden mb-4">Alert rule saved successfully!</div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400" onclick="closeAlertRulesModal()" aria-label="Cancel alert rules configuration">Cancel</button>
+                    <button type="submit" class="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900 font-bold" aria-label="Save alert rules">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="escalationRulesModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden" role="dialog" aria-labelledby="escalationRulesModalTitle" aria-modal="true">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+            <h2 id="escalationRulesModalTitle" class="text-xl font-bold mb-4">Configure Escalation Rules</h2>
+            <form id="escalationRulesForm">
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="escalation-metric">Metric</label>
+                    <select id="escalation-metric" class="w-full border p-2 rounded" aria-required="true">
+                        <option>Uptime</option>
+                        <option>Response Time</option>
+                        <option>Incident Resolution</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="escalation-time">Escalation Time</label>
+                    <input id="escalation-time" type="text" class="w-full border p-2 rounded" placeholder="e.g., 1 hour" aria-required="true">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="escalation-action">Action</label>
+                    <select id="escalation-action" class="w-full border p-2 rounded" aria-required="true">
+                        <option>Create Ticket</option>
+                        <option>Notify Manager</option>
+                        <option>Escalate to Director</option>
+                    </select>
+                </div>
+                <div id="escalationMessage" class="text-gray-700 hidden mb-4">Escalation rule saved successfully!</div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400" onclick="closeEscalationRulesModal()" aria-label="Cancel escalation rules configuration">Cancel</button>
+                    <button type="submit" class="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900 font-bold" aria-label="Save escalation rules">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="customerPortalModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden" role="dialog" aria-labelledby="customerPortalModalTitle" aria-modal="true">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+            <h2 id="customerPortalModalTitle" class="text-xl font-bold mb-4">Customer Portal</h2>
+
+            <div class="mb-4">
+                <h3 class="text-sm font-semibold mb-1">Assign SLA</h3>
+                <select id="assign-sla" class="w-full border p-2 rounded" aria-label="Select SLA to assign">
+                    <option value="">Select SLA</option>
+                    <option value="premium">Premium Support SLA</option>
+                    <option value="standard">Standard SLA</option>
+                    <option value="basic">Basic Service SLA</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <h3 class="text-sm font-semibold mb-1">Assign to Customer</h3>
+                <select id="assign-customer" class="w-full border p-2 rounded" aria-label="Select customer to assign SLA">
+                    <option value="">Select Customer</option>
+                    <option value="customerA">Customer A</option>
+                    <option value="customerB">Customer B</option>
+                    <option value="customerC">Customer C</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <h3 class="text-sm font-semibold">Assigned SLAs</h3>
+                <ul id="slaList" class="space-y-2">
+                    <li class="border-l-4 border-gray-700 pl-4">
+                        <p class="font-semibold">Premium Support SLA</p>
+                        <p class="text-xs text-gray-600">Uptime: 99.98% (Target: 99.95%)</p>
+                    </li>
+                </ul>
+            </div>
+            <div class="mb-4">
+                <h3 class="text-sm font-semibold">Support Tickets</h3>
+                <ul id="ticketList" class="space-y-2">
+                    <li class="border-l-4 border-gray-600 pl-4">
+                        <p class="font-semibold">Ticket #1234</p>
+                        <p class="text-xs text-gray-600">Time to Breach: 2h 15m</p>
+                    </li>
+                </ul>
+            </div>
+            <div class="flex justify-end space-x-2">
+                <button class="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900 font-bold" onclick="saveCustomerPortalChanges()" aria-label="Save changes to customer portal">Save</button>
+                <button class="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900 font-bold" onclick="refreshCustomerPortal()" aria-label="Refresh customer portal data">Refresh</button>
+                <button class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400" onclick="closeCustomerPortalModal()" aria-label="Close customer portal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="integrationsModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden" role="dialog" aria-labelledby="integrationsModalTitle" aria-modal="true">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+            <h2 id="integrationsModalTitle" class="text-xl font-bold mb-4">Configure Integrations</h2>
+            <form id="integrationsForm">
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="api-token">API Token</label>
+                    <input id="api-token" type="text" class="w-full border p-2 rounded" placeholder="Enter API token" aria-required="true">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="webhook-url">Webhook URL</label>
+                    <input id="webhook-url" type="text" class="w-full border p-2 rounded" placeholder="e.g., https://example.com/webhook" aria-required="true">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="ticketing-system">Ticketing System</label>
+                    <select id="ticketing-system" class="w-full border p-2 rounded" aria-required="true">
+                        <option>Zendesk</option>
+                        <option>Jira</option>
+                        <option>ServiceNow</option>
+                    </select>
+                </div>
+                <div id="integrationMessage" class="text-gray-700 hidden mb-4">Integration saved successfully!</div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400" onclick="closeIntegrationsModal()" aria-label="Cancel integrations configuration">Cancel</button>
+                    <button type="submit" class="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900 font-bold" aria-label="Save integrations">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="settingsModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden" role="dialog" aria-labelledby="settingsModalTitle" aria-modal="true">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+            <h2 id="settingsModalTitle" class="text-xl font-bold mb-4">Settings</h2>
+            <form id="settingsForm">
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="user-role">User Role</label>
+                    <select id="user-role" class="w-full border p-2 rounded" aria-required="true">
+                        <option>Admin</option>
+                        <option>Support Agent</option>
+                        <option>Customer</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="timezone">Timezone</label>
+                    <select id="timezone" class="w-full border p-2 rounded" aria-required="true">
+                        <option>UTC</option>
+                        <option>PST</option>
+                        <option>EST</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="language">Language</label>
+                    <select id="language" class="w-full border p-2 rounded" aria-required="true">
+                        <option>English</option>
+                        <option>Spanish</option>
+                        <option>French</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <button type="button" class="text-gray-700 hover:underline font-bold" onclick="openAuditLogsModal()" aria-label="View audit logs">View Audit Logs</button>
+                </div>
+                <div id="settingsMessage" class="text-gray-700 hidden mb-4">Settings saved successfully!</div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400" onclick="closeSettingsModal()" aria-label="Cancel settings configuration">Cancel</button>
+                    <button type="submit" class="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900 font-bold" aria-label="Save settings">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="reportModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden" role="dialog" aria-labelledby="reportModalTitle" aria-modal="true">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl">
+            <h2 id="reportModalTitle" class="text-xl font-bold mb-4">SLA Compliance Report</h2>
+            <div class="mb-4">
+                <label class="block text-sm font-semibold mb-1" for="report-range">Date Range</label>
+                <select id="report-range" class="border p-2 rounded" aria-label="Select report date range">
+                    <option>Daily</option>
+                    <option>Weekly</option>
+                    <option>Monthly</option>
+                </select>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow-md mb-4">
+                <h3 class="text-sm font-semibold mb-2">Compliance Trend</h3>
+                <div style="position: relative; height:40vh; width:100%;">
+                    <canvas id="reportChart" aria-label="SLA compliance trend over time"></canvas>
+                </div>
+            </div>
+            <div class="flex justify-end space-x-2">
+                <button class="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900 font-bold" onclick="downloadReport('pdf')" aria-label="Download report as PDF">Download PDF</button>
+                <button class="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900 font-bold" onclick="downloadReport('csv')" aria-label="Download report as CSV">Download CSV</button>
+                <button class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400" onclick="closeReportModal()" aria-label="Close report modal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="graphModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden" role="dialog" aria-labelledby="graphModalTitle" aria-modal="true">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl">
+            <h2 id="graphModalTitle" class="text-xl font-bold mb-4">SLA Metrics Graphs</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <h3 class="text-sm font-semibold">Uptime (%)</h3>
+                    <div style="position: relative; height:30vh; width:100%;">
+                        <canvas id="uptimeGraph" aria-label="Line graph of uptime percentages"></canvas>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold">Response Time (ms)</h3>
+                    <div style="position: relative; height:30vh; width:100%;">
+                        <canvas id="responseTimeGraph" aria-label="Line graph of response times"></canvas>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold">Compliance (%)</h3>
+                    <div style="position: relative; height:30vh; width:100%;">
+                        <canvas id="complianceGraph" aria-label="Line graph of compliance percentages"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-end mt-4">
+                <button class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400" onclick="closeGraphModal()" aria-label="Close graph modal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="attachmentModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden" role="dialog" aria-labelledby="attachmentModalTitle" aria-modal="true">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl">
+            <h2 id="attachmentModalTitle" class="text-xl font-bold mb-4">Manage Attachments</h2>
+            <form id="attachmentForm" class="grid grid-cols-1 md:grid-cols-1 gap-4 mb-6">
+                <div>
+                    <label class="block text-sm font-semibold mb-1" for="attachment-file">Upload File (Max 10MB)</label>
+                    <input id="attachment-file" type="file" class="w-full border p-2 rounded" accept=".pdf,.docx,.jpg,.png" aria-required="true">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1" for="attachment-description">Description</label>
+                    <textarea id="attachment-description" class="w-full border p-2 rounded" rows="3" placeholder="Describe the attachment..." aria-required="true"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1" for="upload-datetime">Upload Date & Time</label>
+                    <input id="upload-datetime" type="datetime-local" class="w-full border p-2 rounded" aria-required="true">
+                </div>
+                <div class="flex items-end">
+                    <button type="submit" class="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900 font-bold" aria-label="Submit attachment">Submit</button>
+                </div>
+            </form>
+            <div id="attachmentMessage" class="text-gray-700 hidden mb-4">Attachment added successfully!</div>
+            <h3 class="text-sm font-semibold mb-2">Uploaded Attachments</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">File Name</th>
+                            <th scope="col" class="px-6 py-3">Type</th>
+                            <th scope="col" class="px-6 py-3">Description</th>
+                            <th scope="col" class="px-6 py-3">Uploaded By</th>
+                            <th scope="col" class="px-6 py-3">Date & Time</th>
+                            <th scope="col" class="px-6 py-3">Size</th>
+                            <th scope="col" class="px-6 py-3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attachmentList"></tbody>
+                </table>
+            </div>
+            <div class="flex justify-end mt-4">
+                <button class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400" onclick="closeAttachmentModal()" aria-label="Close attachment modal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="auditLogsModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden" role="dialog" aria-labelledby="auditLogsModalTitle" aria-modal="true">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+            <h2 id="auditLogsModalTitle" class="text-xl font-bold mb-4">Audit Logs</h2>
+            <div id="auditLogsList" class="space-y-2 mb-4 max-h-60 overflow-y-auto">
+            </div>
+            <div class="flex justify-end">
+                <button type="button" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400" onclick="closeAuditLogsModal()" aria-label="Close audit logs modal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock data storage
+        let slas = [];
+        let alertRules = [];
+        let escalationRules = [];
+        let integrations = [];
+        let settings = { role: 'Admin' }; // Default role for mock logs
+        let attachments = [];
+
+        // Mock available SLAs and Customers for the dropdowns
+        const availableSLAs = [
+            { value: "premium", name: "Premium Support SLA" },
+            { value: "standard", name: "Standard SLA" },
+            { value: "basic", name: "Basic Service SLA" },
+        ];
+
+        const availableCustomers = [
+            { value: "customerA", name: "Customer A" },
+            { value: "customerB", name: "Customer B" },
+            { value: "customerC", name: "Customer C" },
+        ];
+
+        // Mock Audit Log Data
+        let auditLogs = [
+            { timestamp: '2025-05-14 12:00:00', user: 'Admin', action: 'Updated Settings' },
+            { timestamp: '2025-05-14 11:30:00', user: 'Support Agent', action: 'Viewed Customer Portal' },
+            { timestamp: '2025-05-13 15:00:00', user: 'Admin', action: 'Created SLA: Premium' },
+            { timestamp: '2025-05-13 10:15:00', user: 'System', action: 'SLA Breach: Response Time Exceeded' },
+            { timestamp: '2025-05-12 09:00:00', user: 'Admin', action: 'Configured Integration: Zendesk' },
+            { timestamp: '2025-05-11 14:00:00', user: 'Admin', action: 'Defined Alert Rule: Uptime Drop' },
+        ];
+
+
+        // Store chart instances to destroy and re-create if needed
+        let slaTrendChartInstance = null;
+        let reportChartInstance = null;
+        let uptimeGraphInstance = null;
+        let responseTimeGraphInstance = null;
+        let complianceGraphInstance = null;
+
+        // Ensure DOM is loaded
+        window.addEventListener('DOMContentLoaded', () => {
+            try {
+                // SLA Trend Chart
+                const slaTrendCtx = document.getElementById('slaTrendChart');
+                if (!slaTrendCtx) throw new Error('SLA trend chart canvas not found');
+                slaTrendChartInstance = new Chart(slaTrendCtx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['2025-05-01', '2025-05-02', '2025-05-03', '2025-05-04', '2025-05-05'],
+                        datasets: [
+                            {
+                                label: 'Uptime (%)',
+                                // Changed color to grayscale
+                                borderColor: 'rgba(50, 50, 50, 1)',
+                                data: [99.95, 99.96, 99.94, 99.90, 99.98],
+                                fill: false,
+                            },
+                            {
+                                label: 'Response Time (ms)',
+                                // Changed color to grayscale
+                                borderColor: 'rgba(120, 120, 120, 1)',
+                                data: [120, 130, 140, 160, 150],
+                                fill: false,
+                            },
+                        ],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false, // Added to help control size with parent
+                        scales: {
+                            y: { beginAtZero: false, title: { display: true, text: 'Value' } },
+                            x: { title: { display: true, text: 'Date' } },
+                        },
+                    },
+                });
+
+                // Report Chart
+                function renderReportChart() {
+                    // Destroy existing chart if it exists
+                    if (reportChartInstance) {
+                        reportChartInstance.destroy();
+                    }
+                    const reportCtx = document.getElementById('reportChart');
+                    if (!reportCtx) throw new Error('Report chart canvas not found');
+                    reportChartInstance = new Chart(reportCtx.getContext('2d'), {
+                        type: 'line',
+                        data: {
+                            labels: ['2025-05-01', '2025-05-02', '2025-05-03', '2025-05-04', '2025-05-05'],
+                            datasets: [{
+                                label: 'Compliance (%)',
+                                // Changed color to grayscale
+                                borderColor: 'rgba(80, 80, 80, 1)',
+                                data: [98, 97, 96, 99, 98],
+                                fill: false,
+                            }],
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false, // Added to help control size with parent
+                            scales: {
+                                y: { beginAtZero: false, title: { display: true, text: 'Compliance (%)' } },
+                                x: { title: { display: true, text: 'Date' } },
+                            },
+                        },
+                    });
+                }
+
+                // Graph Modal Charts
+                function renderGraphCharts() {
+                    // Destroy existing charts if they exist
+                    if (uptimeGraphInstance) uptimeGraphInstance.destroy();
+                    if (responseTimeGraphInstance) responseTimeGraphInstance.destroy();
+                    if (complianceGraphInstance) complianceGraphInstance.destroy();
+
+                    const uptimeCtx = document.getElementById('uptimeGraph');
+                    if (!uptimeCtx) throw new Error('Uptime graph canvas not found');
+                    uptimeGraphInstance = new Chart(uptimeCtx.getContext('2d'), {
+                        type: 'line',
+                        data: {
+                            labels: ['2025-05-01', '2025-05-02', '2025-05-03', '2025-05-04', '2025-05-05'],
+                            datasets: [{
+                                label: 'Uptime (%)',
+                                // Changed color to grayscale
+                                borderColor: 'rgba(50, 50, 50, 1)',
+                                data: [99.95, 99.96, 99.94, 99.90, 99.98],
+                                fill: false,
+                            }],
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false, // Added to help control size with parent
+                            scales: {
+                                y: { beginAtZero: false, title: { display: true, text: 'Uptime (%)' } },
+                                x: { title: { display: true, text: 'Date' } },
+                            },
+                        },
+                    });
+
+                    const responseTimeCtx = document.getElementById('responseTimeGraph');
+                    if (!responseTimeCtx) throw new Error('Response time graph canvas not found');
+                    responseTimeGraphInstance = new Chart(responseTimeCtx.getContext('2d'), {
+                        type: 'line',
+                        data: {
+                            labels: ['2025-05-01', '2025-05-02', '2025-05-03', '2025-05-04', '2025-05-05'],
+                            datasets: [{
+                                label: 'Response Time (ms)',
+                                // Changed color to grayscale
+                                borderColor: 'rgba(120, 120, 120, 1)',
+                                data: [120, 130, 140, 160, 150],
+                                fill: false,
+                            }],
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false, // Added to help control size with parent
+                            scales: {
+                                y: { beginAtZero: false, title: { display: true, text: 'Response Time (ms)' } },
+                                x: { title: { display: true, text: 'Date' } },
+                            },
+                        },
+                    });
+
+                    const complianceCtx = document.getElementById('complianceGraph');
+                    if (!complianceCtx) throw new Error('Compliance graph canvas not found');
+                    complianceGraphInstance = new Chart(complianceCtx.getContext('2d'), {
+                        type: 'line',
+                        data: {
+                            labels: ['2025-05-01', '2025-05-02', '2025-05-03', '2025-05-04', '2025-05-05'],
+                            datasets: [{
+                                label: 'Compliance (%)',
+                                // Changed color to grayscale
+                                borderColor: 'rgba(80, 80, 80, 1)',
+                                data: [98, 97, 96, 99, 98],
+                                fill: false,
+                            }],
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false, // Added to help control size with parent
+                            scales: {
+                                y: { beginAtZero: false, title: { display: true, text: 'Compliance (%)' } },
+                                x: { title: { display: true, text: 'Date' } },
+                            },
+                        },
+                    });
+                }
+
+                // Modal Functions
+                window.openSLADefinitionModal = function () {
+                    const modal = document.getElementById('slaDefinitionModal');
+                    if (modal) modal.classList.remove('hidden');
+                };
+
+                window.closeSLADefinitionModal = function () {
+                    const modal = document.getElementById('slaDefinitionModal');
+                    if (modal) modal.classList.add('hidden');
+                    document.getElementById('slaDefinitionForm').reset();
+                    document.getElementById('slaMessage').classList.add('hidden');
+                };
+
+                window.openAlertRulesModal = function () {
+                    const modal = document.getElementById('alertRulesModal');
+                    if (modal) modal.classList.remove('hidden');
+                };
+
+                window.closeAlertRulesModal = function () {
+                    const modal = document.getElementById('alertRulesModal');
+                    if (modal) modal.classList.add('hidden');
+                    document.getElementById('alertRulesForm').reset();
+                    document.getElementById('alertMessage').classList.add('hidden');
+                };
+
+                window.openEscalationRulesModal = function () {
+                    const modal = document.getElementById('escalationRulesModal');
+                    if (modal) modal.classList.remove('hidden');
+                };
+
+                window.closeEscalationRulesModal = function () {
+                    const modal = document.getElementById('escalationRulesModal');
+                    if (modal) modal.classList.add('hidden');
+                    document.getElementById('escalationRulesForm').reset();
+                    document.getElementById('escalationMessage').classList.add('hidden');
+                };
+
+                window.openCustomerPortalModal = function () {
+                    const modal = document.getElementById('customerPortalModal');
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                        populateCustomerPortalDropdowns(); // Populate dropdowns when opening
+                        refreshCustomerPortal();
+                    }
+                };
+
+                window.closeCustomerPortalModal = function () {
+                    const modal = document.getElementById('customerPortalModal');
+                    if (modal) modal.classList.add('hidden');
+                };
+
+                window.openIntegrationsModal = function () {
+                    const modal = document.getElementById('integrationsModal');
+                    if (modal) modal.classList.remove('hidden');
+                };
+
+                window.closeIntegrationsModal = function () {
+                    const modal = document.getElementById('integrationsModal');
+                    if (modal) modal.classList.add('hidden');
+                    document.getElementById('integrationsForm').reset();
+                    document.getElementById('integrationMessage').classList.add('hidden');
+                };
+
+                window.openSettingsModal = function () {
+                    const modal = document.getElementById('settingsModal');
+                    if (modal) modal.classList.remove('hidden');
+                };
+
+                window.closeSettingsModal = function () {
+                    const modal = document.getElementById('settingsModal');
+                    if (modal) modal.classList.add('hidden');
+                    document.getElementById('settingsForm').reset();
+                    document.getElementById('settingsMessage').classList.add('hidden');
+                };
+
+                window.openReportModal = function () {
+                    const modal = document.getElementById('reportModal');
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                        renderReportChart();
+                    }
+                };
+
+                window.closeReportModal = function () {
+                    const modal = document.getElementById('reportModal');
+                    if (modal) modal.classList.add('hidden');
+                    // Destroy chart when closing modal to prevent rendering issues on next open
+                    if (reportChartInstance) {
+                        reportChartInstance.destroy();
+                        reportChartInstance = null;
+                    }
+                };
+
+                window.openGraphModal = function () {
+                    const modal = document.getElementById('graphModal');
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                        renderGraphCharts();
+                    }
+                };
+
+                window.closeGraphModal = function () {
+                    const modal = document.getElementById('graphModal');
+                    if (modal) modal.classList.add('hidden');
+                    // Destroy charts when closing modal
+                    if (uptimeGraphInstance) {
+                        uptimeGraphInstance.destroy();
+                        uptimeGraphInstance = null;
+                    }
+                    if (responseTimeGraphInstance) {
+                        responseTimeGraphInstance.destroy();
+                        responseTimeGraphInstance = null;
+                    }
+                    if (complianceGraphInstance) {
+                        complianceGraphInstance.destroy();
+                        complianceGraphInstance = null;
+                    }
+                };
+
+
+                window.openAttachmentModal = function () {
+                    const modal = document.getElementById('attachmentModal');
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                        renderAttachmentList();
+                        // Set default datetime to current time
+                        const now = new Date().toISOString().slice(0, 16);
+                        document.getElementById('upload-datetime').value = now;
+                    }
+                };
+
+                window.closeAttachmentModal = function () {
+                    const modal = document.getElementById('attachmentModal');
+                    if (modal) modal.classList.add('hidden');
+                    document.getElementById('attachmentForm').reset();
+                    document.getElementById('attachmentMessage').classList.add('hidden');
+                };
+
+                // New Audit Logs Modal Functions
+                window.openAuditLogsModal = function () {
+                    const modal = document.getElementById('auditLogsModal');
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                        renderAuditLogs(); // Render logs when opening the modal
+                    }
+                };
+
+                window.closeAuditLogsModal = function () {
+                    const modal = document.getElementById('auditLogsModal');
+                    if (modal) modal.classList.add('hidden');
+                };
+
+
+                // Function to populate the new dropdowns in Customer Portal
+                function populateCustomerPortalDropdowns() {
+                    const slaSelect = document.getElementById('assign-sla');
+                    const customerSelect = document.getElementById('assign-customer');
+
+                    // Clear existing options except the first one
+                    slaSelect.innerHTML = '<option value="">Select SLA</option>';
+                    customerSelect.innerHTML = '<option value="">Select Customer</option>';
+
+                    // Populate SLA dropdown (using mock data here, in a real app fetch from slas array or API)
+                    availableSLAs.forEach(sla => {
+                        const option = document.createElement('option');
+                        option.value = sla.value;
+                        option.textContent = sla.name;
+                        slaSelect.appendChild(option);
+                    });
+
+                    // Populate Customer dropdown (using mock data here)
+                    availableCustomers.forEach(customer => {
+                        const option = document.createElement('option');
+                        option.value = customer.value;
+                        option.textContent = customer.name;
+                        customerSelect.appendChild(option);
+                    });
+                }
+
+                // Mock function for saving changes (add your logic here)
+                window.saveCustomerPortalChanges = function () {
+                    const selectedSLA = document.getElementById('assign-sla').value;
+                    const selectedCustomer = document.getElementById('assign-customer').value;
+
+                    if (!selectedSLA || !selectedCustomer) {
+                        alert('Please select both an SLA and a Customer.');
+                        return;
+                    }
+
+                    console.log(`Attempting to assign SLA "${selectedSLA}" to Customer "${selectedCustomer}"`);
+                    // Add logic here to actually associate the SLA with the customer
+                    alert(`Simulating assignment of SLA "${selectedSLA}" to Customer "${selectedCustomer}"`);
+
+                    // Optionally, refresh the assigned SLAs list after saving
+                    // refreshCustomerPortal(); // This mock function doesn't handle assignments, so skipping for now
+
+                    // Clear dropdowns after saving (optional)
+                    document.getElementById('assign-sla').value = "";
+                    document.getElementById('assign-customer').value = "";
+                }
+
+                // Function to render Audit Logs
+                window.renderAuditLogs = function () {
+                    const auditLogsList = document.getElementById('auditLogsList');
+                    auditLogsList.innerHTML = ''; // Clear existing logs
+
+                    // Sort logs by timestamp descending
+                    auditLogs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+                    auditLogs.forEach(log => {
+                        const logItem = document.createElement('div');
+                        logItem.className = 'border-b border-gray-200 pb-2 mb-2 last:border-b-0 last:mb-0';
+                        logItem.innerHTML = `
+                                <p class="text-xs text-gray-600">${log.timestamp} - ${log.user}</p>
+                                <p class="font-semibold">${log.action}</p>
+                            `;
+                        auditLogsList.appendChild(logItem);
+                    });
+                };
+
+
+                // Form Handlers
+                document.getElementById('slaDefinitionForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const sla = {
+                        name: document.getElementById('sla-name').value,
+                        metric: document.getElementById('metric').value,
+                        threshold: document.getElementById('threshold').value,
+                        severity: document.getElementById('severity').value,
+                        customer: document.getElementById('customer').value, // This assigns to a customer during definition
+                        terms: document.getElementById('terms').value,
+                    };
+                    slas.push(sla); // Add the newly defined SLA to our mock list
+                    // Add an audit log entry for SLA creation
+                    auditLogs.push({ timestamp: new Date().toLocaleString(), user: settings.role || 'Admin', action: `Created SLA: ${sla.name}` });
+
+                    document.getElementById('slaMessage').classList.remove('hidden');
+                    setTimeout(closeSLADefinitionModal, 1000);
+                    console.log('Saved SLA:', sla);
+                });
+
+                document.getElementById('alertRulesForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const channels = Array.from(document.querySelectorAll('input[name="channels"]:checked')).map(input => input.value);
+                    const rule = {
+                        metric: document.getElementById('alert-metric').value,
+                        threshold: document.getElementById('alert-threshold').value,
+                        channels,
+                        recipients: document.getElementById('recipients').value,
+                    };
+                    alertRules.push(rule);
+                    // Add an audit log entry for Alert Rule creation
+                    auditLogs.push({ timestamp: new Date().toLocaleString(), user: settings.role || 'Admin', action: `Defined Alert Rule for ${rule.metric} (${rule.threshold})` });
+
+                    document.getElementById('alertMessage').classList.remove('hidden');
+                    const alertList = document.getElementById('alertList');
+                    const li = document.createElement('li');
+                    li.className = 'border-l-4 border-gray-700 pl-4';
+                    li.innerHTML = `<p class="font-semibold">${rule.metric} Alert</p><p class="text-xs text-gray-600">Threshold: ${rule.threshold}, Channels: ${rule.channels.join(', ')}</p>`;
+                    alertList.appendChild(li);
+                    setTimeout(closeAlertRulesModal, 1000);
+                    console.log('Saved Alert Rule:', rule);
+                });
+
+                document.getElementById('escalationRulesForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const rule = {
+                        metric: document.getElementById('escalation-metric').value,
+                        time: document.getElementById('escalation-time').value,
+                        action: document.getElementById('escalation-action').value,
+                    };
+                    escalationRules.push(rule);
+                    // Add an audit log entry for Escalation Rule creation
+                    auditLogs.push({ timestamp: new Date().toLocaleString(), user: settings.role || 'Admin', action: `Configured Escalation Rule for ${rule.metric} (${rule.action})` });
+
+                    document.getElementById('escalationMessage').classList.remove('hidden');
+                    const escalationList = document.getElementById('escalationList');
+                    const li = document.createElement('li');
+                    li.className = 'border-l-4 border-gray-700 pl-4';
+                    li.innerHTML = `<p class="font-semibold">${rule.metric} Escalation</p><p class="text-xs text-gray-600">Time: ${rule.time}, Action: ${rule.action}</p>`;
+                    escalationList.appendChild(li);
+                    setTimeout(closeEscalationRulesModal, 1000);
+                    console.log('Saved Escalation Rule:', rule);
+                });
+
+                document.getElementById('integrationsForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const integration = {
+                        apiToken: document.getElementById('api-token').value,
+                        webhookUrl: document.getElementById('webhook-url').value,
+                        ticketingSystem: document.getElementById('ticketing-system').value,
+                    };
+                    integrations.push(integration);
+                    // Add an audit log entry for Integration configuration
+                    auditLogs.push({ timestamp: new Date().toLocaleString(), user: settings.role || 'Admin', action: `Configured Integration: ${integration.ticketingSystem}` });
+
+                    document.getElementById('integrationMessage').classList.remove('hidden');
+                    setTimeout(closeIntegrationsModal, 1000);
+                    console.log('Saved Integration:', integration);
+                });
+
+                document.getElementById('settingsForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    settings = {
+                        role: document.getElementById('user-role').value,
+                        timezone: document.getElementById('timezone').value,
+                        language: document.getElementById('language').value,
+                    };
+                    // Add an audit log entry for Settings update
+                    auditLogs.push({ timestamp: new Date().toLocaleString(), user: settings.role || 'Admin', action: `Updated Settings` });
+
+                    document.getElementById('settingsMessage').classList.remove('hidden');
+                    setTimeout(closeSettingsModal, 1000);
+                    console.log('Saved Settings:', settings);
+                });
+
+                document.getElementById('attachmentForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const fileInput = document.getElementById('attachment-file');
+                    const file = fileInput.files[0];
+                    if (file) {
+                        const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+                        if (file.size > maxSize) {
+                            alert('File size exceeds 10MB limit.');
+                            return;
+                        }
+                        const attachment = {
+                            id: Date.now(),
+                            fileName: file.name,
+                            fileType: file.name.split('.').pop().toUpperCase(),
+                            description: document.getElementById('attachment-description').value,
+                            uploadedBy: settings.role || 'Admin', // Use role from settings or default to Admin
+                            uploadDateTime: document.getElementById('upload-datetime').value,
+                            fileSize: (file.size / 1024).toFixed(2) + ' KB',
+                            file: file, // Store the actual File object
+                        };
+                        attachments.push(attachment);
+                        // Add an audit log entry for Attachment upload
+                        auditLogs.push({ timestamp: new Date().toLocaleString(), user: settings.role || 'Admin', action: `Uploaded Attachment: ${attachment.fileName}` });
+
+                        document.getElementById('attachmentMessage').classList.remove('hidden');
+                        renderAttachmentList();
+                        document.getElementById('attachmentForm').reset();
+                        // Set default datetime to current time after reset
+                        const now = new Date().toISOString().slice(0, 16);
+                        document.getElementById('upload-datetime').value = now;
+                        setTimeout(() => document.getElementById('attachmentMessage').classList.add('hidden'), 1000);
+                        console.log('Saved Attachment:', attachment);
+                    } else {
+                        alert('Please select a file to upload.');
+                    }
+                });
+
+                // Updated viewAuditLogs to open the modal
+                window.viewAuditLogs = function () {
+                    openAuditLogsModal();
+                };
+
+
+                window.refreshCustomerPortal = function () {
+                    const slaList = document.getElementById('slaList');
+                    const ticketList = document.getElementById('ticketList');
+                    // Note: This currently shows placeholder data. To show *assigned* SLAs
+                    // based on the new dropdowns, you would need to add logic here
+                    // to filter or fetch assignments.
+                    slaList.innerHTML = slas.length > 0 ? slas.map(sla => `
+                            <li class="border-l-4 border-gray-700 pl-4">
+                                <p class="font-semibold">${sla.name}</p>
+                                <p class="text-xs text-gray-600">${sla.metric}: ${sla.threshold} (Severity: ${sla.severity})</p>
+                            </li>
+                        `).join('') : `
+                            <li class="border-l-4 border-gray-700 pl-4">
+                                <p class="font-semibold">Premium Support SLA</p>
+                                <p class="text-xs text-gray-600">Uptime: 99.98% (Target: 99.95%)</p>
+                            </li>
+                               <li class="border-l-4 border-gray-700 pl-4">
+                                <p class="font-semibold">Standard SLA</p>
+                                <p class="text-xs text-gray-600">Response Time: 150ms (Target: &lt; 200ms)</p>
+                            </li>
+                        `;
+                    ticketList.innerHTML = `
+                            <li class="border-l-4 border-gray-600 pl-4">
+                                <p class="font-semibold">Ticket #${Math.floor(Math.random() * 10000)}</p>
+                                <p class="text-xs text-gray-600">Time to Breach: ${Math.floor(Math.random() * 3)}h ${Math.floor(Math.random() * 60)}m</p>
+                            </li>
+                             <li class="border-l-4 border-gray-600 pl-4">
+                                <p class="font-semibold">Ticket #${Math.floor(Math.random() * 10000)}</p>
+                                <p class="text-xs text-gray-600">Time to Breach: ${Math.floor(Math.random() * 3)}h ${Math.floor(Math.random() * 60)}m</p>
+                            </li>
+                        `; // Mock ticket data
+                };
+
+                window.downloadReport = function (format) {
+                    console.log(`Downloading report as ${format}`);
+                    alert(`Simulating ${format} download (check console)`);
+                    // Implement actual download logic here (e.g., generate PDF/CSV from chart data or server)
+                };
+
+                window.renderAttachmentList = function () {
+                    const attachmentList = document.getElementById('attachmentList');
+                    attachmentList.innerHTML = attachments.map(attachment => `
+                            <tr>
+                                <td class="px-6 py-4">${attachment.fileName}</td>
+                                <td class="px-6 py-4">${attachment.fileType}</td>
+                                <td class="px-6 py-4">${attachment.description}</td>
+                                <td class="px-6 py-4">${attachment.uploadedBy}</td>
+                                <td class="px-6 py-4">${new Date(attachment.uploadDateTime).toLocaleString()}</td>
+                                <td class="px-6 py-4">${attachment.fileSize}</td>
+                                <td class="px-6 py-4 flex space-x-2">
+                                    <button class="text-gray-700 hover:underline font-bold" onclick="viewAttachment(${attachment.id})" aria-label="View attachment ${attachment.fileName}">View</button>
+                                    <button class="text-gray-700 hover:underline font-bold" onclick="downloadAttachment(${attachment.id})" aria-label="Download attachment ${attachment.fileName}">Download</button>
+                                    <button class="text-gray-800 hover:underline font-bold" onclick="deleteAttachment(${attachment.id})" aria-label="Delete attachment ${attachment.fileName}">Delete</button>
+                                </td>
+                            </tr>
+                        `).join('');
+                };
+
+                window.viewAttachment = function (id) {
+                    const attachment = attachments.find(a => a.id === id);
+                    if (attachment) {
+                        console.log('Viewing attachment:', attachment.fileName, attachment);
+                        // In production, open file in new tab or viewer
+                        // Example for opening a local file (will only work in some browsers/settings):
+                        // const fileUrl = URL.createObjectURL(attachment.file);
+                        // window.open(fileUrl, '_blank');
+                        // Add an audit log entry for viewing attachment
+                        auditLogs.push({ timestamp: new Date().toLocaleString(), user: settings.role || 'Admin', action: `Viewed Attachment: ${attachment.fileName}` });
+                        alert(`Simulating view of ${attachment.fileName} (check console)`);
+                    } else {
+                        console.warn('Attachment not found with ID:', id);
+                        alert('Attachment not found.');
+                    }
+                };
+
+                window.downloadAttachment = function (id) {
+                    const attachment = attachments.find(a => a.id === id);
+                    if (attachment) {
+                        console.log('Downloading attachment:', attachment.fileName, attachment);
+                        // In production, create a download link for the file
+                        // Example for downloading a local file:
+                        // const fileUrl = URL.createObjectURL(attachment.file);
+                        // const link = document.createElement('a');
+                        // link.href = fileUrl;
+                        // link.download = attachment.fileName;
+                        // document.body.appendChild(link);
+                        // link.click();
+                        // document.body.removeChild(link);
+                        // URL.revokeObjectURL(fileUrl); // Clean up
+                        // Add an audit log entry for downloading attachment
+                        auditLogs.push({ timestamp: new Date().toLocaleString(), user: settings.role || 'Admin', action: `Downloaded Attachment: ${attachment.fileName}` });
+                        alert(`Simulating download of ${attachment.fileName} (check console)`);
+                    } else {
+                        console.warn('Attachment not found with ID:', id);
+                        alert('Attachment not found.');
+                    }
+                };
+
+                window.deleteAttachment = function (id) {
+                    const attachmentIndex = attachments.findIndex(a => a.id === id);
+                    if (attachmentIndex > -1) {
+                        const deletedAttachment = attachments.splice(attachmentIndex, 1)[0];
+                        renderAttachmentList();
+                        console.log('Deleted attachment with ID:', id);
+                        // Add an audit log entry for deleting attachment
+                        auditLogs.push({ timestamp: new Date().toLocaleString(), user: settings.role || 'Admin', action: `Deleted Attachment: ${deletedAttachment.fileName}` });
+                    } else {
+                        console.warn('Attachment not found with ID:', id);
+                    }
+                };
+
+
+                // Keyboard Accessibility
+                document.addEventListener('keydown', (event) => {
+                    if (event.key === 'Escape') {
+                        closeSLADefinitionModal();
+                        closeAlertRulesModal();
+                        closeEscalationRulesModal();
+                        closeCustomerPortalModal();
+                        closeIntegrationsModal();
+                        closeSettingsModal();
+                        closeReportModal();
+                        closeGraphModal();
+                        closeAttachmentModal();
+                        closeAuditLogsModal(); // Added the new modal here
+                    }
+                });
+
+                // Initial rendering of audit logs (optional, could render when modal opens)
+                // renderAuditLogs();
+
+            } catch (error) {
+                console.error('Error initializing UI:', error);
+            }
+        });
+    </script>
+</body>
+</html>

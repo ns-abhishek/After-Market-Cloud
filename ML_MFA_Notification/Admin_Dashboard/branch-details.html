@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Branch Details</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
+            color: #374151;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+
+        .stats-card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-label {
+            font-size: 1rem;
+            color: #6b7280;
+        }
+
+        .branch-header {
+            background-color: #1e40af;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .info-section {
+            background-color: white;
+            border-radius: 0 0 8px 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .grid-item {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            transition: transform 0.2s;
+        }
+
+        .grid-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .module-card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .module-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .module-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .module-count {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .search-bar {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .access-list {
+            margin-top: 0.5rem;
+        }
+
+        .access-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.25rem 0;
+            font-size: 0.875rem;
+            color: #4b5563;
+        }
+
+        .access-count {
+            font-weight: 500;
+            color: #1f2937;
+        }
+
+        .branch-status {
+            display: flex;
+            align-items: center;
+            font-size: 0.875rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Branch Header -->
+        <div class="branch-header">
+            <div class="flex justify-between items-center">
+                <h1 class="text-3xl font-bold" id="branch-name">Branch Details</h1>
+                <div class="space-x-4">
+                    <a href="company-details.html" id="back-to-company" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        Back to Company
+                    </a>
+                    <a href="dashboard.html" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Branch Info Section -->
+        <div class="info-section">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
+                <div>
+                    <h2 class="text-xl font-semibold" id="branch-company">Company: <span>Acme Corporation</span></h2>
+                    <p class="text-gray-600" id="branch-status">Status: <span class="text-green-600 font-medium">Active</span></p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800" id="branch-id">
+                        ID: BR-001
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter Bar for Modules -->
+        <div class="search-bar">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Search Input -->
+                <div>
+                    <label for="module-search" class="block text-sm font-medium text-gray-700 mb-1">Search Modules</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <input type="text" id="module-search" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md" placeholder="Search modules...">
+                    </div>
+                </div>
+
+                <!-- Module Type Dropdown -->
+                <div>
+                    <label for="module-filter" class="block text-sm font-medium text-gray-700 mb-1">Module Type</label>
+                    <select id="module-filter" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm">
+                        <option value="">All Modules</option>
+                        <option value="dms">DMS</option>
+                        <option value="fsm">FSM</option>
+                        <option value="logistics">Logistics</option>
+                        <option value="oms">OMS</option>
+                        <option value="reman">Reman</option>
+                    </select>
+                </div>
+
+                <!-- Transaction Status Dropdown -->
+                <div style="display: none;">
+                    <label for="status-filter" class="block text-sm font-medium text-gray-700 mb-1">Transaction Status</label>
+                    <select id="status-filter" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm">
+                        <option value="">All Statuses</option>
+                        <option value="completed">Completed</option>
+                        <option value="pending">Pending</option>
+                        <option value="failed">Failed</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- User Count -->
+            <div class="stats-card">
+                <div class="stats-number text-green-600" id="user-count">0</div>
+                <div class="stats-label">Total Users</div>
+                <div class="flex gap-4 mt-2">
+                    <div class="branch-status">
+                        <div class="status-dot bg-green-500"></div>
+                        <span id="active-users">0 Active</span>
+                    </div>
+                    <div class="branch-status">
+                        <div class="status-dot bg-red-500"></div>
+                        <span id="inactive-users">0 Inactive</span>
+                    </div>
+                </div>
+                <div class="access-list mt-4">
+                    <div class="access-item">
+                        <span>Read Access:</span>
+                        <span id="read-access-users" class="access-count">0</span>
+                    </div>
+                    <div class="access-item">
+                        <span>Read and Write Access:</span>
+                        <span id="write-access-users" class="access-count">0</span>
+                    </div>
+                    <div class="access-item">
+                        <span>Admin Access:</span>
+                        <span id="admin-access-users" class="access-count">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Module Transactions Count -->
+            <div class="stats-card">
+                <div class="stats-number text-blue-600" id="transaction-count">0</div>
+                <div class="stats-label">Total Module Transactions</div>
+                <div class="access-list mt-4">
+                    <div class="access-item">
+                        <span>DMS Module:</span>
+                        <span id="dms-count" class="access-count">0</span>
+                    </div>
+                    <div class="access-item">
+                        <span>FSM Module:</span>
+                        <span id="fsm-count" class="access-count">0</span>
+                    </div>
+                    <div class="access-item">
+                        <span>Logistics Module:</span>
+                        <span id="logistics-count" class="access-count">0</span>
+                    </div>
+                    <div class="access-item">
+                        <span>OMS Module:</span>
+                        <span id="oms-count" class="access-count">0</span>
+                    </div>
+                    <div class="access-item">
+                        <span>Reman Module:</span>
+                        <span id="reman-count" class="access-count">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Module Usage Percentage -->
+            <div class="stats-card">
+                <div class="stats-label mb-2">Module Usage Percentage</div>
+                <div class="chart-container" style="position: relative; height: 220px; width: 100%;">
+                    <canvas id="module-usage-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module Cards -->
+        <h2 class="text-2xl font-semibold mb-4">Modules</h2>
+        <div id="module-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+            <!-- Module cards will be inserted here dynamically -->
+        </div>
+    </div>
+
+    <script>
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const branchId = urlParams.get('id');
+        const companyId = urlParams.get('companyId');
+
+        // Get DOM elements
+        const branchNameEl = document.getElementById('branch-name');
+        const branchCompanyEl = document.getElementById('branch-company');
+        const branchStatusEl = document.getElementById('branch-status');
+        const branchIdEl = document.getElementById('branch-id');
+        const backToCompanyBtn = document.getElementById('back-to-company');
+        const userCountEl = document.getElementById('user-count');
+        const activeUsersEl = document.getElementById('active-users');
+        const inactiveUsersEl = document.getElementById('inactive-users');
+        const readAccessUsersEl = document.getElementById('read-access-users');
+        const writeAccessUsersEl = document.getElementById('write-access-users');
+        const adminAccessUsersEl = document.getElementById('admin-access-users');
+        const transactionCountEl = document.getElementById('transaction-count');
+        const dmsCountEl = document.getElementById('dms-count');
+        const fsmCountEl = document.getElementById('fsm-count');
+        const logisticsCountEl = document.getElementById('logistics-count');
+        const omsCountEl = document.getElementById('oms-count');
+        const remanCountEl = document.getElementById('reman-count');
+        const moduleGridEl = document.getElementById('module-grid');
+        const moduleSearchEl = document.getElementById('module-search');
+        const moduleFilterEl = document.getElementById('module-filter');
+        const statusFilterEl = document.getElementById('status-filter');
+
+        // Load data from localStorage
+        const companyData = JSON.parse(localStorage.getItem('companyData')) || [];
+        const branchData = JSON.parse(localStorage.getItem('branchData')) || [];
+
+        // Set back to company link
+        backToCompanyBtn.href = `company-details.html?id=${companyId}`;
+
+        // Find the branch by ID
+        const branch = branchData.find(b => b.id.toString() === branchId);
+
+        if (!branch) {
+            // Handle case when branch is not found
+            alert('Branch not found!');
+            window.location.href = 'dashboard.html';
+        } else {
+            // Find the company for this branch
+            const company = companyData.find(c => c.id === branch.companyId);
+
+            // Update branch details
+            branchNameEl.textContent = branch.name;
+            branchCompanyEl.innerHTML = `Company: <span>${company ? company.name : 'Unknown'}</span>`;
+            branchStatusEl.innerHTML = `Status: <span class="${branch.active ? 'text-green-600' : 'text-red-600'} font-medium">${branch.active ? 'Active' : 'Inactive'}</span>`;
+            branchIdEl.textContent = `ID: BR-${branch.id.toString().padStart(3, '0')}`;
+
+            // Generate random user counts (in a real app, this would come from your database)
+            const userCount = Math.floor(Math.random() * 50) + 5;
+            const activeUsers = Math.floor(userCount * 0.8); // 80% active
+            const inactiveUsers = userCount - activeUsers;
+
+            // Calculate access type distribution
+            const readAccessUsers = Math.floor(userCount * 0.5); // 50% read access
+            const writeAccessUsers = Math.floor(userCount * 0.3); // 30% read/write access
+            const adminAccessUsers = userCount - readAccessUsers - writeAccessUsers; // remaining are admins
+
+            // Update user count elements
+            userCountEl.textContent = userCount;
+            activeUsersEl.textContent = `${activeUsers} Active`;
+            inactiveUsersEl.textContent = `${inactiveUsers} Inactive`;
+            readAccessUsersEl.textContent = readAccessUsers;
+            writeAccessUsersEl.textContent = writeAccessUsers;
+            adminAccessUsersEl.textContent = adminAccessUsers;
+
+            // Generate random module transaction counts
+            const dmsCount = Math.floor(Math.random() * 100) + 20;
+            const fsmCount = Math.floor(Math.random() * 80) + 15;
+            const logisticsCount = Math.floor(Math.random() * 60) + 10;
+            const omsCount = Math.floor(Math.random() * 70) + 25;
+            const remanCount = Math.floor(Math.random() * 40) + 5;
+            const totalTransactions = dmsCount + fsmCount + logisticsCount + omsCount + remanCount;
+
+            // Update transaction count elements
+            transactionCountEl.textContent = totalTransactions;
+            dmsCountEl.textContent = dmsCount;
+            fsmCountEl.textContent = fsmCount;
+            logisticsCountEl.textContent = logisticsCount;
+            omsCountEl.textContent = omsCount;
+            remanCountEl.textContent = remanCount;
+
+            // Define module data
+            const moduleData = [
+                {
+                    id: 'dms',
+                    name: 'DMS Module',
+                    count: dmsCount,
+                    color: 'bg-blue-500',
+                    icon: 'D',
+                    description: 'Dealer Management System'
+                },
+                {
+                    id: 'fsm',
+                    name: 'FSM Module',
+                    count: fsmCount,
+                    color: 'bg-green-500',
+                    icon: 'F',
+                    description: 'Field Service Management'
+                },
+                {
+                    id: 'logistics',
+                    name: 'Logistics Module',
+                    count: logisticsCount,
+                    color: 'bg-purple-500',
+                    icon: 'L',
+                    description: 'Logistics Management'
+                },
+                {
+                    id: 'oms',
+                    name: 'OMS Module',
+                    count: omsCount,
+                    color: 'bg-amber-500',
+                    icon: 'O',
+                    description: 'Order Management System'
+                },
+                {
+                    id: 'reman',
+                    name: 'Reman Module',
+                    count: remanCount,
+                    color: 'bg-red-500',
+                    icon: 'R',
+                    description: 'Remanufacturing Management'
+                }
+            ];
+
+            // Display modules
+            displayModules(moduleData);
+
+            // Create module usage percentage chart
+            createModuleUsageChart(moduleData);
+
+            // Add event listeners for search and filters
+            moduleSearchEl.addEventListener('input', filterModules);
+            moduleFilterEl.addEventListener('change', filterModules);
+            statusFilterEl.addEventListener('change', filterModules);
+
+            // Function to display modules
+            function displayModules(modules) {
+                moduleGridEl.innerHTML = '';
+
+                if (modules.length === 0) {
+                    moduleGridEl.innerHTML = '<div class="col-span-full text-gray-500">No modules found</div>';
+                    return;
+                }
+
+                modules.forEach(module => {
+                    const moduleCard = document.createElement('div');
+                    moduleCard.className = 'module-card';
+                    moduleCard.dataset.moduleId = module.id;
+
+                    moduleCard.innerHTML = `
+                        <div class="module-icon text-white ${module.color}">
+                            ${module.icon}
+                        </div>
+                        <div class="module-title">${module.name}</div>
+                        <div class="module-count">${module.count} Transactions</div>
+                        <div class="text-xs text-gray-500 mt-1">${module.description}</div>
+                    `;
+
+                    moduleGridEl.appendChild(moduleCard);
+
+                    // Add click event listener
+                    moduleCard.addEventListener('click', () => {
+                        alert(`Viewing details for ${module.name}`);
+                        // Here you would typically navigate to a module details page
+                    });
+                });
+            }
+
+            // Function to filter modules
+            function filterModules() {
+                const searchTerm = moduleSearchEl.value.toLowerCase();
+                const selectedModule = moduleFilterEl.value;
+                const selectedStatus = statusFilterEl.value;
+
+                let filteredModules = [...moduleData];
+
+                // Apply search filter
+                if (searchTerm) {
+                    filteredModules = filteredModules.filter(module =>
+                        module.name.toLowerCase().includes(searchTerm) ||
+                        module.description.toLowerCase().includes(searchTerm)
+                    );
+                }
+
+                // Apply module filter
+                if (selectedModule) {
+                    filteredModules = filteredModules.filter(module =>
+                        module.id === selectedModule
+                    );
+                }
+
+                // In a real app, you would filter by status as well
+                // For now, we'll just simulate this
+
+                displayModules(filteredModules);
+            }
+
+            // Function to create module usage percentage chart
+            function createModuleUsageChart(modules) {
+                // Get the canvas element
+                const ctx = document.getElementById('module-usage-chart').getContext('2d');
+
+                // Calculate total transactions
+                const totalTransactions = modules.reduce((sum, module) => sum + module.count, 0);
+
+                // Prepare data for the chart
+                const moduleNames = modules.map(module => module.name.replace(' Module', ''));
+                const moduleCounts = modules.map(module => module.count);
+                const modulePercentages = modules.map(module => ((module.count / totalTransactions) * 100).toFixed(1));
+                const moduleColors = modules.map(module => {
+                    // Convert Tailwind color classes to actual colors
+                    switch(module.color) {
+                        case 'bg-blue-500': return 'rgba(59, 130, 246, 0.7)';
+                        case 'bg-green-500': return 'rgba(16, 185, 129, 0.7)';
+                        case 'bg-purple-500': return 'rgba(139, 92, 246, 0.7)';
+                        case 'bg-amber-500': return 'rgba(245, 158, 11, 0.7)';
+                        case 'bg-red-500': return 'rgba(239, 68, 68, 0.7)';
+                        default: return 'rgba(107, 114, 128, 0.7)';
+                    }
+                });
+
+                // Create the pie chart
+                new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: moduleNames,
+                        datasets: [{
+                            data: moduleCounts,
+                            backgroundColor: moduleColors,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    font: {
+                                        size: 12
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.raw || 0;
+                                        const percentage = modulePercentages[context.dataIndex];
+                                        return `${label}: ${value} (${percentage}%)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

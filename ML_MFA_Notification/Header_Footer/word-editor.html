@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header & Footer Editor</title>
+
+    <!-- Material Design Components -->
+    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS with Black and White Theme -->
+    <link rel="stylesheet" href="material-styles.css">
+    <link rel="stylesheet" href="word-editor.css">
+</head>
+<body class="mdc-typography">
+    <div class="container word-editor">
+        <!-- Top Toolbar -->
+        <header class="custom-app-bar">
+            <div class="custom-app-bar__row">
+                <section class="custom-app-bar__section custom-app-bar__section--with-actions">
+                    <span class="custom-app-bar__title">Header & Footer Editor</span>
+                    <a href="material-index.html" class="back-button">
+                        <i class="material-icons">arrow_back</i>
+                        <span>Back</span>
+                    </a>
+                </section>
+            </div>
+        </header>
+            <div class="toolbar-container">
+                <div class="toolbar">
+                <div class="toolbar-group">
+                    <button class="tool-button" data-command="bold" title="Bold">
+                        <i class="material-icons">format_bold</i>
+                    </button>
+                    <button class="tool-button" data-command="italic" title="Italic">
+                        <i class="material-icons">format_italic</i>
+                    </button>
+                    <button class="tool-button" data-command="underline" title="Underline">
+                        <i class="material-icons">format_underlined</i>
+                    </button>
+                    <button class="tool-button" data-command="subscript" title="Subscript">
+                        <i class="material-icons">subscript</i>
+                    </button>
+                    <button class="tool-button" data-command="superscript" title="Superscript">
+                        <i class="material-icons">superscript</i>
+                    </button>
+                </div>
+
+                <div class="toolbar-group">
+                    <button class="tool-button" data-command="justifyLeft" title="Align Left">
+                        <i class="material-icons">format_align_left</i>
+                    </button>
+                    <button class="tool-button" data-command="justifyCenter" title="Align Center">
+                        <i class="material-icons">format_align_center</i>
+                    </button>
+                    <button class="tool-button" data-command="justifyRight" title="Align Right">
+                        <i class="material-icons">format_align_right</i>
+                    </button>
+                    <button class="tool-button" data-command="justifyFull" title="Justify">
+                        <i class="material-icons">format_align_justify</i>
+                    </button>
+                </div>
+
+                <div class="toolbar-group">
+                    <button class="tool-button" data-command="insertOrderedList" title="Ordered List">
+                        <i class="material-icons">format_list_numbered</i>
+                    </button>
+                    <button class="tool-button" data-command="insertUnorderedList" title="Unordered List">
+                        <i class="material-icons">format_list_bulleted</i>
+                    </button>
+                    <button class="tool-button" data-command="indent" title="Increase Indent">
+                        <i class="material-icons">format_indent_increase</i>
+                    </button>
+                    <button class="tool-button" data-command="outdent" title="Decrease Indent">
+                        <i class="material-icons">format_indent_decrease</i>
+                    </button>
+                </div>
+
+                <div class="toolbar-group">
+                    <button class="tool-button" data-command="insertImage" title="Insert Image">
+                        <i class="material-icons">insert_photo</i>
+                    </button>
+                    <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                    <button class="tool-button" id="insertImageUrl" title="Insert Image URL">
+                        <i class="material-icons">link</i>
+                    </button>
+                    <button class="tool-button" data-command="insertHorizontalRule" title="Insert Horizontal Line">
+                        <i class="material-icons">remove</i>
+                    </button>
+                    <button class="tool-button" id="insertTextBox" title="Insert Text Box">
+                        <i class="material-icons">text_fields</i>
+                    </button>
+                    <button class="tool-button" id="insertTable" title="Insert Table">
+                        <i class="material-icons">grid_on</i>
+                    </button>
+                </div>
+
+                <div class="toolbar-group">
+                    <button class="tool-button" data-command="foreColor" title="Text Color" id="textColorBtn">
+                        <i class="material-icons">format_color_text</i>
+                    </button>
+                    <div class="color-palette" id="textColorPalette">
+                        <!-- Color options will be added dynamically -->
+                    </div>
+                    <button class="tool-button" data-command="hiliteColor" title="Background Color" id="bgColorBtn">
+                        <i class="material-icons">format_color_fill</i>
+                    </button>
+                    <div class="color-palette" id="bgColorPalette">
+                        <!-- Color options will be added dynamically -->
+                    </div>
+                </div>
+
+                <div class="toolbar-group">
+                    <select class="font-format-select" id="fontFormat">
+                        <option value="" selected>Format</option>
+                        <option value="h1">Heading 1</option>
+                        <option value="h2">Heading 2</option>
+                        <option value="h3">Heading 3</option>
+                        <option value="h4">Heading 4</option>
+                        <option value="h5">Heading 5</option>
+                        <option value="h6">Heading 6</option>
+                        <option value="p">Paragraph</option>
+                        <option value="pre">Preformatted</option>
+                        <option value="blockquote">Blockquote</option>
+                    </select>
+                    <select class="font-size-select" id="fontSize">
+                        <option value="1">8pt</option>
+                        <option value="2">10pt</option>
+                        <option value="3" selected>12pt</option>
+                        <option value="4">14pt</option>
+                        <option value="5">18pt</option>
+                        <option value="6">24pt</option>
+                        <option value="7">36pt</option>
+                    </select>
+                    <select class="font-family-select" id="fontFamily">
+                        <option value="Arial" selected>Arial</option>
+                        <option value="Courier New">Courier New</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="Times New Roman">Times New Roman</option>
+                        <option value="Verdana">Verdana</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Document Area -->
+        <main class="main-content">
+            <div class="document-container">
+            <!-- Layout Selection Removed - Now controlled by landing page parameters -->
+            <div class="layout-selection" style="display: none;">
+                <input type="hidden" id="layoutSelector" value="">
+                <input type="hidden" id="lastPageLayoutSelector" value="">
+            </div>
+
+            <!-- Header/Footer Buttons - Simplified -->
+            <div class="section-buttons">
+                <!-- Navigation and Action Buttons -->
+                <div id="actionButtons">
+                    <!-- Toggle Last Page Button (only shown for report type) -->
+                    <button id="showLastPageBtn" class="mdc-button mdc-button--raised" style="display: none;">
+                        <i class="material-icons mdc-button__icon">arrow_forward</i>
+                        <span class="mdc-button__label">Go to Last Page</span>
+                    </button>
+
+                    <!-- Return to First Page Button (only shown on last page) -->
+                    <button id="toggleLastPageBtn" class="mdc-button mdc-button--raised" style="display: none;">
+                        <i class="material-icons mdc-button__icon">arrow_back</i>
+                        <span class="mdc-button__label">Return to First Page</span>
+                    </button>
+
+                    <button id="previewBtn" class="mdc-button mdc-button--outlined">
+                        <i class="material-icons mdc-button__icon">visibility</i>
+                        <span class="mdc-button__label">Preview</span>
+                    </button>
+                    <button id="saveBtn" class="mdc-button mdc-button--raised">
+                        <i class="material-icons mdc-button__icon">save</i>
+                        <span class="mdc-button__label">Save</span>
+                    </button>
+                    <button id="clearBtn" class="mdc-button mdc-button--outlined">
+                        <i class="material-icons mdc-button__icon">delete</i>
+                        <span class="mdc-button__label">Clear All</span>
+                    </button>
+                    <button id="exitBtn" class="mdc-button mdc-button--outlined">
+                        <i class="material-icons mdc-button__icon">exit_to_app</i>
+                        <span class="mdc-button__label">Exit</span>
+                    </button>
+                </div>
+
+                <!-- Hidden buttons for JavaScript functionality -->
+                <div style="display: none;">
+                    <button id="editHeaderBtn"></button>
+                    <button id="editFooterBtn"></button>
+                    <button id="editReportHeaderBtn"></button>
+                    <button id="editPageHeaderBtn"></button>
+                    <button id="editReportFooterBtn"></button>
+                    <button id="editPageFooterBtn"></button>
+                </div>
+            </div>
+
+            <!-- Document Page -->
+            <div class="document-page">
+                <!-- Header Section (initially hidden) -->
+                <div id="headerSection" class="header-section">
+                    <div class="section-label">Header</div>
+                    <div id="headerEditor" class="editable" contenteditable="true"></div>
+                    <button id="closeHeaderBtn" class="close-section-btn">
+                        <i class="material-icons">close</i>
+                    </button>
+                    <div class="resize-handle-bottom" title="Drag to resize"></div>
+                </div>
+
+                <!-- Report Header Section (initially hidden) -->
+                <div id="reportHeaderSection" class="report-header-section" style="display: none;">
+                    <div class="section-label">Report Header</div>
+                    <div id="reportHeaderEditor" class="editable" contenteditable="true"></div>
+                    <button id="closeReportHeaderBtn" class="close-section-btn">
+                        <i class="material-icons">close</i>
+                    </button>
+                    <div class="resize-handle-bottom" title="Drag to resize"></div>
+                </div>
+
+                <!-- Page Header Section (initially hidden) -->
+                <div id="pageHeaderSection" class="page-header-section" style="display: none;">
+                    <div class="section-label">Page Header</div>
+                    <div id="pageHeaderEditor" class="editable" contenteditable="true"></div>
+                    <button id="closePageHeaderBtn" class="close-section-btn">
+                        <i class="material-icons">close</i>
+                    </button>
+                    <div class="resize-handle-top" title="Drag to resize"></div>
+                </div>
+
+                <!-- Main Content Section -->
+                <div id="mainContent" class="main-content">
+                    <div id="mainEditor" class="editable" contenteditable="true"></div>
+                </div>
+
+                <!-- Footer Section (initially hidden) -->
+                <div id="footerSection" class="footer-section">
+                    <div class="section-label">Footer</div>
+                    <div id="footerEditor" class="editable" contenteditable="true"></div>
+                    <button id="closeFooterBtn" class="close-section-btn">
+                        <i class="material-icons">close</i>
+                    </button>
+                    <div class="resize-handle-top" title="Drag to resize"></div>
+                </div>
+            </div>
+
+            <!-- Last Page (initially hidden) -->
+            <div id="lastPageContainer" class="last-page-container" style="display: none;">
+                <div class="page-divider">Last Page</div>
+
+                <!-- Report Footer Section (initially hidden) -->
+                <div id="reportFooterSection" class="report-footer-section" style="display: none;">
+                    <div class="section-label">Report Footer</div>
+                    <div id="reportFooterEditor" class="editable" contenteditable="true"></div>
+                    <button id="closeReportFooterBtn" class="close-section-btn">
+                        <i class="material-icons">close</i>
+                    </button>
+                    <div class="resize-handle-top" title="Drag to resize"></div>
+                </div>
+
+                <!-- Page Footer Section (initially hidden) -->
+                <div id="pageFooterSection" class="page-footer-section" style="display: none;">
+                    <div class="section-label">Page Footer</div>
+                    <div id="pageFooterEditor" class="editable" contenteditable="true"></div>
+                    <button id="closePageFooterBtn" class="close-section-btn">
+                        <i class="material-icons">close</i>
+                    </button>
+                    <div class="resize-handle-bottom" title="Drag to resize"></div>
+                </div>
+
+                <!-- Last Page Main Content Section -->
+                <div id="lastPageMainContent" class="main-content">
+                    <div id="lastPageMainEditor" class="editable" contenteditable="true"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Include the same modals from the original editor -->
+    <!-- Image URL Modal -->
+    <div id="imageUrlModal" class="modal">
+        <!-- Modal content will be added dynamically -->
+    </div>
+
+    <!-- Preview Modal -->
+    <div id="previewModal" class="modal">
+        <!-- Modal content will be added dynamically -->
+    </div>
+
+    <!-- Table Insert Modal -->
+    <div id="tableModal" class="modal">
+        <!-- Modal content will be added dynamically -->
+    </div>
+
+    <!-- Layout Customization Modal removed in favor of drag-to-resize functionality -->
+
+    <!-- Material Design JavaScript -->
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="word-editor.js"></script>
+</body>
+</html>

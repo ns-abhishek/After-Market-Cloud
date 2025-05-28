@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Template Dashboard - Searchable Company</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        .header-title {
+            color: #000000;
+        }
+
+        .stat-card {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            color: #000000;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .stat-card-title {
+            color: #555555;
+            font-size: 0.85rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-card-value {
+            color: #000000;
+            font-weight: 700;
+            font-size: 1.75rem;
+        }
+
+        .form-section {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 2rem;
+            border-radius: 0.375rem;
+        }
+
+        .form-label {
+            color: #000000;
+            font-weight: 500;
+        }
+
+        .form-control,
+        .form-select {
+            background-color: #ffffff;
+            border: 1px solid #ced4da;
+            color: #000000;
+        }
+
+        div[contenteditable="true"].form-control {
+            min-height: calc(1.5em * 6 + 0.75rem * 2 + 2px);
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            padding: 0.375rem 0.75rem;
+        }
+
+        div[contenteditable="true"].form-control:focus {
+            border-color: #000000;
+            box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.25);
+            outline: 0;
+        }
+
+        div[contenteditable="true"].form-control.text-muted {
+            color: #6c757d !important;
+        }
+
+        .form-control::placeholder {
+            color: #6c757d;
+        }
+
+        .form-control:read-only {
+            background-color: #e9ecef;
+            opacity: 1;
+        }
+
+        .btn-primary {
+            background-color: #000000;
+            border-color: #000000;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover,
+        .btn-primary:focus {
+            background-color: #333333;
+            border-color: #333333;
+            color: #ffffff;
+        }
+
+        .btn-secondary {
+            background-color: #e9ecef;
+            border-color: #ced4da;
+            color: #000000;
+        }
+
+        .btn-secondary:hover,
+        .btn-secondary:focus {
+            background-color: #d3d9df;
+            border-color: #adb5bd;
+            color: #000000;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: #ffffff;
+        }
+
+        .btn-danger:hover,
+        .btn-danger:focus {
+            background-color: #c82333;
+            border-color: #bd2130;
+            color: #ffffff;
+        }
+
+        .template-card {
+            background-color: #ffffff;
+            border: 1px solid #dee2e6;
+        }
+
+        .template-card h3 {
+            color: #000000;
+        }
+
+        .template-card p {
+            color: #333333;
+        }
+
+        .template-card .text-code {
+            color: #000000;
+            font-family: monospace;
+        }
+
+        .filter-section {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 1.5rem;
+            border-radius: 0.375rem;
+        }
+
+        .filter-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #000000;
+        }
+
+        .form-check-label {
+            font-size: 0.9rem;
+            color: #000000;
+        }
+
+        .form-check-input:checked {
+            background-color: #000000;
+            border-color: #000000;
+        }
+
+        .form-check-input:focus {
+            border-color: #000000;
+            box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, .25);
+        }
+
+        .dynamic-field-group,
+        .parameter-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .parameter-row .form-control {
+            flex-grow: 1;
+        }
+
+        .text-danger {
+            color: #dc3545 !important;
+        }
+
+        .filter-checkbox-group-wrapper {}
+
+        .filter-checkbox-group {
+            min-height: 100px;
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 0.5rem;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            background-color: #ffffff;
+        }
+
+        .filter-checkbox-group .form-check {
+            margin-bottom: 0.25rem;
+        }
+
+        .filter-checkbox-group .select-all-container {
+            padding-bottom: 0.25rem;
+            margin-bottom: 0.25rem;
+            border-bottom: 1px dashed #ced4da;
+        }
+
+        .filter-checkbox-group .select-all-container .form-check-label {
+            font-weight: 500;
+        }
+
+        .rich-text-controls .btn,
+        .rich-text-controls .dropdown-toggle {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .rich-text-controls .dropdown-menu {
+            min-width: auto;
+        }
+
+        .color-swatch {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #ccc;
+            display: inline-block;
+            margin-right: 5px;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+
+        .modal-body-html-source {
+            width: 100%;
+            min-height: 300px;
+            border: 1px solid #eee;
+            padding: 10px;
+            overflow: auto;
+            background-color: #f8f9fa;
+            color: #000;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+
+        #customDeleteModal .modal-header {
+            background-color: #000000;
+            color: white;
+        }
+
+        #customCancelModal .modal-header {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .modal-title {
+            font-weight: 600;
+        }
+
+        /* Searchable Dropdown for Company */
+        .company-search-dropdown .list-group-item {
+            cursor: pointer;
+        }
+
+        .company-search-dropdown .list-group-item:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container my-4 my-md-5">
+        <header class="mb-4 d-flex justify-content-between align-items-center">
+            <h1 class="h2 header-title">Email Template Dashboard</h1>
+            <button id="toggleFormBtn" class="btn btn-primary" type="button">
+                <i class="bi bi-plus-lg me-1"></i>
+                <span id="toggleFormBtnText">Add New Template</span>
+            </button>
+        </header>
+
+        <section id="dashboardStats" class="row g-3 mb-4">
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="stat-card p-3 rounded shadow-sm text-center">
+                    <span class="stat-card-title d-block">Total Companies</span>
+                    <span id="totalCompaniesStat" class="stat-card-value h3">0</span>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="stat-card p-3 rounded shadow-sm text-center">
+                    <span class="stat-card-title d-block">Total Branches</span>
+                    <span id="totalBranchesStat" class="stat-card-value h3">0</span>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="stat-card p-3 rounded shadow-sm text-center">
+                    <span class="stat-card-title d-block">Active Companies</span>
+                    <span id="activeCompaniesStat" class="stat-card-value h3">0</span>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="stat-card p-3 rounded shadow-sm text-center">
+                    <span class="stat-card-title d-block">Active Branches</span>
+                    <span id="activeBranchesStat" class="stat-card-value h3">0</span>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="stat-card p-3 rounded shadow-sm text-center">
+                    <span class="stat-card-title d-block">Email Templates</span>
+                    <span id="emailTemplatesStat" class="stat-card-value h3">0</span>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="stat-card p-3 rounded shadow-sm text-center">
+                    <span class="stat-card-title d-block">Active Templates</span>
+                    <span id="activeTemplatesDashboardStat" class="stat-card-value h3">0</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="collapse" id="templateFormCollapse">
+            <section class="form-section mb-4 shadow-sm">
+                <h2 id="formTitle" class="h4 mb-4">Add New Template</h2>
+                <form id="templateForm">
+                    <input type="hidden" id="bodyHtml" name="body">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="templateName" class="form-label">Template Name <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" id="templateName" name="templateName" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="templateCode" class="form-label">Template Code <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" id="templateCode" name="templateCode" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <div class="position-relative company-search-dropdown">
+                                <label for="companyNameInput" class="form-label">Company Name <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" id="companyNameInput" class="form-control" autocomplete="off"
+                                    placeholder="Type to search company...">
+                                <input type="hidden" id="companyNameValue" name="companyName" required>
+                                <div id="companyDropdownList" class="list-group position-absolute w-100 mt-1"
+                                    style="z-index: 1050; max-height: 200px; overflow-y: auto; border: 1px solid #ced4da; background-color: white;display: block;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 align-self-center">
+                            <div class="form-check mt-3">
+                                <input class="form-check-input" type="checkbox" value="active" id="templateIsActive"
+                                    name="templateIsActive" checked>
+                                <label class="form-check-label" for="templateIsActive">Is Active</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <label for="templateCountry" class="form-label">Country</label>
+                            <input type="text" id="templateCountry" name="templateCountry" class="form-control" readonly
+                                placeholder="Auto-filled by company">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="templateState" class="form-label">State</label>
+                            <input type="text" id="templateState" name="templateState" class="form-control" readonly
+                                placeholder="Auto-filled by company">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="templateRegion" class="form-label">Region</label>
+                            <input type="text" id="templateRegion" name="templateRegion" class="form-control" readonly
+                                placeholder="Auto-filled by company">
+                        </div>
+                    </div>
+
+                    <div class="mb-3 p-3 border rounded">
+                        <h3 class="h6 mb-2">Dynamic Parameters (Name Only)</h3>
+                        <div id="dynamicParamsContainer"></div>
+                        <button type="button" id="addParamBtn" class="btn btn-secondary btn-sm mt-2">
+                            <i class="bi bi-plus-circle me-1"></i> Add Parameter
+                        </button>
+                    </div>
+
+                    <div class="mb-1">
+                        <label for="subject" class="form-label">Subject <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input type="text" id="subject" name="subject" class="form-control" required>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                                    id="insertParamSubjectBtn" data-bs-toggle="dropdown" aria-expanded="false"
+                                    title="Insert Parameter">
+                                    <i class="bi bi-braces"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="insertParamSubjectBtn"
+                                    id="subjectParamList"></ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="bodyEditor" class="form-label">Body (Email Content) <span
+                                    class="text-danger">*</span></label>
+                            <button type="button" class="btn btn-sm btn-outline-dark" id="viewSourceBtn"
+                                data-bs-toggle="modal" data-bs-target="#htmlSourceModal"><i
+                                    class="bi bi-code-slash"></i> View Source</button>
+                        </div>
+                        <div class="rich-text-controls mb-1 btn-toolbar" role="toolbar">
+                            <div class="btn-group btn-group-sm me-1" role="group">
+                                <button type="button" class="btn btn-outline-dark" data-command="bold" title="Bold"><i
+                                        class="bi bi-type-bold"></i></button>
+                                <button type="button" class="btn btn-outline-dark" data-command="italic"
+                                    title="Italic"><i class="bi bi-type-italic"></i></button>
+                                <button type="button" class="btn btn-outline-dark" data-command="underline"
+                                    title="Underline"><i class="bi bi-type-underline"></i></button>
+                            </div>
+                            <div class="btn-group btn-group-sm me-1" role="group">
+                                <button type="button" class="btn btn-outline-dark" data-command="insertUnorderedList"
+                                    title="Bullet List"><i class="bi bi-list-ul"></i></button>
+                                <button type="button" class="btn btn-outline-dark" data-command="insertOrderedList"
+                                    title="Numbered List"><i class="bi bi-list-ol"></i></button>
+                            </div>
+                            <div class="dropdown btn-group btn-group-sm me-1" role="group">
+                                <button class="btn btn-outline-dark dropdown-toggle" type="button"
+                                    data-bs-toggle="dropdown" title="Text Color"><i class="bi bi-palette"></i></button>
+                                <div class="dropdown-menu p-2" id="foreColorPalette"></div>
+                            </div>
+                            <div class="dropdown btn-group btn-group-sm me-1" role="group">
+                                <button class="btn btn-outline-dark dropdown-toggle" type="button"
+                                    data-bs-toggle="dropdown" title="Highlight Color"><i
+                                        class="bi bi-palette-fill"></i></button>
+                                <div class="dropdown-menu p-2" id="backColorPalette"></div>
+                            </div>
+                            <div class="btn-group btn-group-sm me-1" role="group">
+                                <button type="button" class="btn btn-outline-dark" data-command="justifyLeft"
+                                    title="Align Left"><i class="bi bi-text-left"></i></button>
+                                <button type="button" class="btn btn-outline-dark" data-command="justifyCenter"
+                                    title="Align Center"><i class="bi bi-text-center"></i></button>
+                                <button type="button" class="btn btn-outline-dark" data-command="justifyRight"
+                                    title="Align Right"><i class="bi bi-text-right"></i></button>
+                            </div>
+                            <div class="dropdown btn-group btn-group-sm" role="group">
+                                <button class="btn btn-outline-dark dropdown-toggle" type="button"
+                                    id="insertParamBodyBtn" data-bs-toggle="dropdown" aria-expanded="false"
+                                    title="Insert Parameter">
+                                    <i class="bi bi-braces"></i> Insert
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="insertParamBodyBtn" id="bodyParamList"></ul>
+                            </div>
+                        </div>
+                        <div id="bodyEditor" class="form-control" contenteditable="true"
+                            aria-placeholder="Enter email body content here..."></div>
+                        <div class="form-text">Tip: Use {{parameter_name}} for dynamic values, or use the insert button.
+                            Select text to apply formatting.</div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Cc (Optional)</label>
+                            <div id="ccContainer"></div>
+                            <button type="button" id="addCcBtn" class="btn btn-secondary btn-sm mt-2"><i
+                                    class="bi bi-plus-circle me-1"></i>Add Cc</button>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Bcc (Optional)</label>
+                            <div id="bccContainer"></div>
+                            <button type="button" id="addBccBtn" class="btn btn-secondary btn-sm mt-2"><i
+                                    class="bi bi-plus-circle me-1"></i>Add Bcc</button>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 d-flex justify-content-end gap-2">
+                        <button type="button" id="clearFormBtn" class="btn btn-secondary">Clear / Cancel Edit</button>
+                        <button type="submit" id="saveTemplateBtn" class="btn btn-primary">Save Template</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+
+        <section id="templatesListSection" class="p-4 rounded shadow-sm"
+            style="background-color: #ffffff; border: 1px solid #dee2e6;">
+            <h2 class="h4 mb-3">Manage Templates</h2>
+            <div class="mb-3"><input type="text" id="searchInput" class="form-control"
+                    placeholder="Search by name or code..."></div>
+            <div class="filter-section mb-4">
+                <div class="row g-3">
+                    <div class="col-md-3 col-sm-6 filter-checkbox-group-wrapper">
+                        <div class="filter-title">Company</div>
+                        <div id="filterCompanyCheckboxesContainer"></div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 filter-checkbox-group-wrapper">
+                        <div class="filter-title">Country</div>
+                        <div id="filterCountryCheckboxesContainer"></div>
+                    </div>
+                    <div class="col-md-2 col-sm-6 filter-checkbox-group-wrapper">
+                        <div class="filter-title">State</div>
+                        <div id="filterStateCheckboxesContainer"></div>
+                    </div>
+                    <div class="col-md-2 col-sm-6 filter-checkbox-group-wrapper">
+                        <div class="filter-title">Region</div>
+                        <div id="filterRegionCheckboxesContainer"></div>
+                    </div>
+                    <div class="col-md-2 col-sm-12">
+                        <div class="filter-title">Status</div>
+                        <div id="filterStatusCheckboxes">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="active" id="statusShowActiveOnly"
+                                    data-filter-group="status" checked>
+                                <label class="form-check-label" for="statusShowActiveOnly">Active</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="applyFiltersBtn" class="btn btn-sm btn-dark mt-3">Apply Filters</button>
+                <button id="resetFiltersBtn" class="btn btn-sm btn-outline-dark mt-3 ms-2">Reset Filters</button>
+            </div>
+            <div id="templatesGrid" class="row g-3"></div>
+            <p id="noTemplatesMessage" class="text-muted mt-3 text-center d-none">No templates found.</p>
+        </section>
+    </div>
+
+    <div class="modal fade" id="htmlSourceModal" tabindex="-1" aria-labelledby="htmlSourceModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="htmlSourceModalLabel">HTML Source Code</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <pre id="htmlSourceContent" class="modal-body-html-source"></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="customDeleteModal" tabindex="-1" aria-labelledby="customDeleteModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="customDeleteModalLabel"><i
+                            class="bi bi-exclamation-triangle-fill me-2"></i>Confirm Deletion</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete the template: <strong id="templateNameToDelete"></strong>?</p>
+                    <p class="text-danger">This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Yes, Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="customCancelModal" tabindex="-1" aria-labelledby="customCancelModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="customCancelModalLabel"><i
+                            class="bi bi-question-circle-fill me-2"></i>Confirm Cancel</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="customCancelModalText">Are you sure you want to cancel? Any unsaved changes will be lost.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">No, Continue Editing</button>
+                    <button type="button" class="btn btn-outline-secondary" id="confirmCancelBtn">Yes, Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // DOM Elements
+        const toggleFormBtn = document.getElementById('toggleFormBtn');
+        const toggleFormBtnText = document.getElementById('toggleFormBtnText');
+        const templateFormCollapseEl = document.getElementById('templateFormCollapse');
+        const templateFormCollapse = new bootstrap.Collapse(templateFormCollapseEl, { toggle: false });
+        const formTitle = document.getElementById('formTitle');
+        const templateForm = document.getElementById('templateForm');
+        const clearFormBtn = document.getElementById('clearFormBtn');
+
+        const dynamicParamsContainer = document.getElementById('dynamicParamsContainer');
+        const addParamBtn = document.getElementById('addParamBtn');
+        const ccContainer = document.getElementById('ccContainer');
+        const addCcBtn = document.getElementById('addCcBtn');
+        const bccContainer = document.getElementById('bccContainer');
+        const addBccBtn = document.getElementById('addBccBtn');
+
+        const templatesGrid = document.getElementById('templatesGrid');
+        const noTemplatesMessage = document.getElementById('noTemplatesMessage');
+        const searchInput = document.getElementById('searchInput');
+
+        const totalCompaniesStat = document.getElementById('totalCompaniesStat');
+        const totalBranchesStat = document.getElementById('totalBranchesStat');
+        const activeCompaniesDashboardStat = document.getElementById('activeCompaniesStat');
+        const activeBranchesStat = document.getElementById('activeBranchesStat');
+        const emailTemplatesStat = document.getElementById('emailTemplatesStat');
+        const activeTemplatesDashboardStat = document.getElementById('activeTemplatesDashboardStat');
+
+        const filterCompanyCheckboxesContainer = document.getElementById('filterCompanyCheckboxesContainer');
+        const filterCountryCheckboxesContainer = document.getElementById('filterCountryCheckboxesContainer');
+        const filterStateCheckboxesContainer = document.getElementById('filterStateCheckboxesContainer');
+        const filterRegionCheckboxesContainer = document.getElementById('filterRegionCheckboxesContainer');
+
+        const statusShowActiveOnlyCheckbox = document.getElementById('statusShowActiveOnly');
+        const applyFiltersBtn = document.getElementById('applyFiltersBtn');
+        const resetFiltersBtn = document.getElementById('resetFiltersBtn');
+
+        const subjectParamList = document.getElementById('subjectParamList');
+        const bodyParamList = document.getElementById('bodyParamList');
+        const templateIsActiveCheckbox = document.getElementById('templateIsActive');
+
+        // Company Searchable Dropdown Elements
+        const companyNameInput = document.getElementById('companyNameInput'); // Text input for display/search
+        const companyNameValueInput = document.getElementById('companyNameValue'); // Hidden input for actual value
+        const companyDropdownList = document.getElementById('companyDropdownList');
+
+
+        const templateCountryInput = document.getElementById('templateCountry');
+        const templateStateInput = document.getElementById('templateState');
+        const templateRegionInput = document.getElementById('templateRegion');
+
+        const viewSourceBtn = document.getElementById('viewSourceBtn');
+        const htmlSourceContent = document.getElementById('htmlSourceContent');
+        const bodyEditor = document.getElementById('bodyEditor');
+        const bodyHtmlInput = document.getElementById('bodyHtml');
+
+        const foreColorPalette = document.getElementById('foreColorPalette');
+        const backColorPalette = document.getElementById('backColorPalette');
+        const predefinedColors = ['#000000', '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', '#FFFFFF', '#808080', '#C0C0C0', '#FFA500', '#800080'];
+
+        const customDeleteModalEl = document.getElementById('customDeleteModal');
+        const customDeleteModal = new bootstrap.Modal(customDeleteModalEl);
+        const templateNameToDeleteSpan = document.getElementById('templateNameToDelete');
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+        let templateIdToDelete = null;
+
+        const customCancelModalEl = document.getElementById('customCancelModal');
+        const customCancelModal = new bootstrap.Modal(customCancelModalEl);
+        const customCancelModalText = document.getElementById('customCancelModalText');
+        const confirmCancelBtn = document.getElementById('confirmCancelBtn');
+        let cancelAction = null;
+
+
+        let templates = [
+            { id: Date.now() + 1, name: 'Welcome Email', code: 'WELCOME_001', company: 'company1', subject: 'Welcome, {{name}}!', body: 'Hi {{name}},<br><br>Welcome aboard! Your customer ID is {{customer_id}}.<br><p style="color: red;">This is a test in red.</p>', params: [{ key: 'name' }, { key: 'customer_id' }], cc: [], bcc: [], status: 'active', country: 'USA', state: 'California', region: 'North America' },
+            { id: Date.now() + 2, name: 'Password Reset', code: 'PWD_RESET_005', company: 'company2', subject: 'Reset Your Password', body: 'Hi {{user}},<br><br>Click here to reset: {{reset_link}}', params: [{ key: 'user' }, { key: 'reset_link' }], cc: ['support@example.com'], bcc: [], status: 'active', country: 'India', state: 'Karnataka', region: 'APAC' },
+            { id: Date.now() + 3, name: 'Order Confirmation', code: 'ORDER_CONF_002', company: 'company1', subject: 'Your Order #{{order_id}} is Confirmed!', body: 'Thanks for your order, {{customer_name}}!', params: [{ key: 'order_id' }, { key: 'customer_name' }], cc: [], bcc: [], status: 'inactive', country: 'USA', state: 'California', region: 'North America' },
+            { id: Date.now() + 4, name: 'Subscription Renewal', code: 'SUB_RENEW_001', company: 'company3', subject: 'Your Subscription for {{product_name}}', body: 'Hi {{name}},<br><br>Your subscription for {{product_name}} will renew on {{renewal_date}}.', params: [{ key: 'name' }, { key: 'product_name' }, { key: 'renewal_date' }], cc: [], bcc: [], status: 'active', country: 'Canada', state: 'Ontario', region: 'North America' }
+        ];
+        let editingTemplateId = null;
+
+        const companyOptions = [
+            { value: "company1", label: "Tech Solutions Inc.", country: "USA", state: "California", region: "North America" },
+            { value: "company2", label: "Global Innovations Ltd.", country: "India", state: "Karnataka", region: "APAC" },
+            { value: "company3", label: "Creative Minds Co.", country: "Canada", state: "Ontario", region: "North America" },
+            { value: "company4", label: "Alpha Corp", country: "UK", state: "London", region: "EMEA" },
+            { value: "company5", label: "Beta LLC", country: "Germany", state: "Berlin", region: "EMEA" },
+            { value: "company6", label: "Gamma Services", country: "France", state: "Paris", region: "EMEA" },
+            { value: "company7", label: "Delta Exports", country: "Australia", state: "Sydney", region: "Oceania" },
+            { value: "company8", label: "Epsilon Industries", country: "New Zealand", state: "Auckland", region: "Oceania" },
+            { value: "company9", label: "Zeta Technologies", country: "USA", state: "California", region: "North America" },
+            { value: "company10", label: "Eta Enterprises", country: "India", state: "Maharashtra", region: "APAC" },
+            { value: "company11", label: "Theta Holdings", country: "Japan", state: "Tokyo", region: "APAC" },
+            { value: "company12", label: "Iota Group", country: "Brazil", state: "São Paulo", region: "LATAM" },
+            { value: "company13", label: "Kappa Partners", country: "Argentina", state: "Buenos Aires", region: "LATAM" },
+            { value: "company10", label: "Eta Enterprises", country: "India", state: "Maharashtra", region: "APAC" },
+            { value: "company11", label: "Theta Holdings", country: "Japan", state: "Tokyo", region: "APAC" },
+            { value: "company12", label: "Iota Group", country: "Brazil", state: "São Paulo", region: "LATAM" },
+        ];
+
+        // --- Company Searchable Dropdown Logic ---
+        function renderCompanyDropdown(filteredCompanies) {
+            companyDropdownList.innerHTML = '';
+            if (filteredCompanies.length === 0) {
+                companyDropdownList.innerHTML = '<a class="list-group-item list-group-item-action disabled">No companies found</a>';
+                companyDropdownList.style.display = 'block'; // Show "no companies found"
+                return;
+            }
+            filteredCompanies.forEach(company => {
+                const item = document.createElement('a');
+                item.classList.add('list-group-item', 'list-group-item-action');
+                item.href = '#';
+                item.textContent = company.label;
+                item.dataset.value = company.value;
+                item.dataset.label = company.label;
+                item.dataset.country = company.country || '';
+                item.dataset.state = company.state || '';
+                item.dataset.region = company.region || '';
+                item.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    companyNameInput.value = this.dataset.label;
+                    companyNameValueInput.value = this.dataset.value; // Set hidden input
+                    templateCountryInput.value = this.dataset.country;
+                    templateStateInput.value = this.dataset.state;
+                    templateRegionInput.value = this.dataset.region;
+                    companyDropdownList.style.display = 'none';
+                });
+                companyDropdownList.appendChild(item);
+            });
+            companyDropdownList.style.display = filteredCompanies.length > 0 ? 'block' : 'none';
+        }
+
+        companyNameInput.addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase();
+            const filtered = companyOptions.filter(company =>
+                company.label.toLowerCase().includes(searchTerm)
+            );
+            renderCompanyDropdown(filtered);
+            // Clear hidden value if input is cleared or doesn't match a selection
+            if (!filtered.some(c => c.label === this.value)) {
+                companyNameValueInput.value = '';
+            }
+        });
+
+        companyNameInput.addEventListener('focus', function () {
+            const searchTerm = this.value.toLowerCase();
+            const filtered = companyOptions.filter(company =>
+                company.label.toLowerCase().includes(searchTerm)
+            );
+            renderCompanyDropdown(filtered.length > 0 ? filtered : companyOptions); // Show all if input is empty
+        });
+
+        // Hide dropdown on blur, with a delay to allow click
+        let blurTimeout;
+        companyNameInput.addEventListener('blur', function () {
+            blurTimeout = setTimeout(() => {
+                companyDropdownList.style.display = 'none';
+            }, 150); // Delay to allow click on list item
+        });
+
+        // Prevent blur hiding when clicking on dropdown item
+        companyDropdownList.addEventListener('mousedown', function (e) {
+            clearTimeout(blurTimeout); // Prevent hiding if click is on dropdown
+        });
+
+
+        function populateFilterCheckboxes() {
+            const createCheckboxesWithSelectAll = (mainContainer, items, groupName, valueKey = 'value', labelKey = 'label') => {
+                mainContainer.innerHTML = '';
+
+                const checkboxGroup = document.createElement('div');
+                checkboxGroup.classList.add('filter-checkbox-group');
+                checkboxGroup.id = `group-${groupName}`;
+                mainContainer.appendChild(checkboxGroup);
+
+                const selectAllContainer = document.createElement('div');
+                selectAllContainer.classList.add('select-all-container', 'form-check');
+                const selectAllId = `selectAll-${groupName}`;
+                selectAllContainer.innerHTML = `
+                    <input class="form-check-input select-all-checkbox" type="checkbox" value="" id="${selectAllId}" data-group="${groupName}">
+                    <label class="form-check-label" for="${selectAllId}" >Select All</label>
+                `;
+                checkboxGroup.appendChild(selectAllContainer);
+
+                if (items.length === 0) {
+                    const noOptionsMsg = document.createElement('small');
+                    noOptionsMsg.classList.add('text-muted', 'px-2', 'py-1', 'd-block');
+                    noOptionsMsg.textContent = 'No options.';
+                    checkboxGroup.appendChild(noOptionsMsg);
+                    document.getElementById(selectAllId).disabled = true;
+                    return;
+                }
+                document.getElementById(selectAllId).disabled = false;
+
+
+                items.forEach(item => {
+                    const val = typeof item === 'string' ? item : item[valueKey];
+                    const lbl = typeof item === 'string' ? item : item[labelKey];
+                    const div = document.createElement('div');
+                    div.classList.add('form-check');
+                    const itemId = `${groupName}-${val.replace(/[^a-zA-Z0-9]/g, '')}`;
+                    div.innerHTML = `
+                        <input class="form-check-input filter-checkbox item-checkbox" type="checkbox" value="${val}" id="${itemId}" data-filter-group="${groupName}" data-group-parent="${groupName}">
+                        <label class="form-check-label" for="${itemId}">${lbl}</label>
+                    `;
+                    checkboxGroup.appendChild(div);
+                });
+
+                const selectAllCheckbox = document.getElementById(selectAllId);
+                selectAllCheckbox.addEventListener('change', function () {
+                    const itemCheckboxes = checkboxGroup.querySelectorAll(`.item-checkbox[data-group-parent="${groupName}"]`);
+                    itemCheckboxes.forEach(chk => chk.checked = this.checked);
+                });
+
+                checkboxGroup.querySelectorAll(`.item-checkbox[data-group-parent="${groupName}"]`).forEach(itemChk => {
+                    itemChk.addEventListener('change', function () {
+                        const allItemCheckboxes = Array.from(checkboxGroup.querySelectorAll(`.item-checkbox[data-group-parent="${groupName}"]`));
+                        const allChecked = allItemCheckboxes.every(chk => chk.checked);
+                        selectAllCheckbox.checked = allChecked;
+                        if (!this.checked && selectAllCheckbox.checked) {
+                            selectAllCheckbox.checked = true;
+                        }
+                    });
+                });
+            };
+
+            createCheckboxesWithSelectAll(filterCompanyCheckboxesContainer, companyOptions, 'company');
+            const uniqueCountries = [...new Set(templates.map(t => t.country).filter(Boolean))].sort();
+            createCheckboxesWithSelectAll(filterCountryCheckboxesContainer, uniqueCountries, 'country');
+            const uniqueRegions = [...new Set(templates.map(t => t.region).filter(Boolean))].sort();
+            createCheckboxesWithSelectAll(filterRegionCheckboxesContainer, uniqueRegions, 'region');
+            const uniqueStates = [...new Set(templates.map(t => t.state).filter(s => s && s.trim() !== ''))].sort();
+            createCheckboxesWithSelectAll(filterStateCheckboxesContainer, uniqueStates, 'state');
+        }
+
+
+        templateFormCollapseEl.addEventListener('show.bs.collapse', () => {
+            toggleFormBtnText.textContent = editingTemplateId ? 'Cancel Editing' : 'Cancel Adding';
+            toggleFormBtn.classList.replace('btn-primary', 'btn-secondary');
+            toggleFormBtn.querySelector('i').classList.replace('bi-plus-lg', 'bi-x-lg');
+        });
+        templateFormCollapseEl.addEventListener('hide.bs.collapse', () => {
+            toggleFormBtnText.textContent = 'Add New Template';
+            toggleFormBtn.classList.replace('btn-secondary', 'btn-primary');
+            toggleFormBtn.querySelector('i').classList.replace('bi-x-lg', 'bi-plus-lg'); // Change back to plus symbol
+
+            editingTemplateId = null;
+            templateForm.reset();
+            companyNameInput.value = ''; // Clear searchable company input
+            companyNameValueInput.value = ''; // Clear hidden company value
+            bodyEditor.innerHTML = '';
+            bodyEditor.classList.add('text-muted');
+            bodyEditor.textContent = bodyEditor.getAttribute('aria-placeholder');
+            bodyHtmlInput.value = '';
+            templateIsActiveCheckbox.checked = true;
+            templateCountryInput.value = ''; templateStateInput.value = ''; templateRegionInput.value = '';
+            dynamicParamsContainer.innerHTML = '';
+            addDynamicParam();
+            updateParameterInsertDropdowns([]);
+        });
+
+        function openFormForAdd() {
+            editingTemplateId = null;
+            templateForm.reset();
+            companyNameInput.value = '';
+            companyNameValueInput.value = '';
+            bodyEditor.innerHTML = '';
+            bodyEditor.classList.add('text-muted');
+            bodyEditor.textContent = bodyEditor.getAttribute('aria-placeholder');
+            bodyHtmlInput.value = '';
+            templateIsActiveCheckbox.checked = true;
+            templateCountryInput.value = ''; templateStateInput.value = ''; templateRegionInput.value = '';
+            dynamicParamsContainer.innerHTML = '';
+            ccContainer.innerHTML = '';
+            bccContainer.innerHTML = '';
+            addDynamicParam();
+            updateParameterInsertDropdowns([]);
+            formTitle.textContent = 'Add New Template';
+            document.getElementById('saveTemplateBtn').textContent = 'Save Template';
+            templateFormCollapse.show();
+            document.getElementById('templateName').focus();
+        }
+
+        toggleFormBtn.addEventListener('click', () => {
+            if (templateFormCollapseEl.classList.contains('show')) {
+                customCancelModalText.textContent = editingTemplateId ? "Are you sure you want to cancel editing? Unsaved changes will be lost." : "Are you sure you want to cancel adding a new template? The form will be cleared.";
+                cancelAction = () => templateFormCollapse.hide();
+                customCancelModal.show();
+            } else {
+                openFormForAdd();
+            }
+        });
+
+        clearFormBtn.addEventListener('click', () => {
+            customCancelModalText.textContent = editingTemplateId ? "Are you sure you want to cancel editing? Unsaved changes will be lost." : "Are you sure you want to clear the form? All entered data will be lost.";
+            cancelAction = () => {
+                if (editingTemplateId) {
+                    templateFormCollapse.hide();
+                } else {
+                    templateForm.reset();
+                    companyNameInput.value = '';
+                    companyNameValueInput.value = '';
+                    bodyEditor.innerHTML = '';
+                    bodyEditor.classList.add('text-muted');
+                    bodyEditor.textContent = bodyEditor.getAttribute('aria-placeholder');
+                    bodyHtmlInput.value = '';
+                    templateIsActiveCheckbox.checked = true;
+                    templateCountryInput.value = ''; templateStateInput.value = ''; templateRegionInput.value = '';
+                    dynamicParamsContainer.innerHTML = '';
+                    ccContainer.innerHTML = '';
+                    bccContainer.innerHTML = '';
+                    addDynamicParam();
+                    updateParameterInsertDropdowns([]);
+                    document.getElementById('templateName').focus();
+                }
+            };
+            customCancelModal.show();
+        });
+
+        confirmCancelBtn.addEventListener('click', () => {
+            if (typeof cancelAction === 'function') {
+                cancelAction();
+            }
+            customCancelModal.hide();
+            cancelAction = null;
+        });
+
+
+        function addDynamicParam(key = '') {
+            const paramId = `param_${Date.now()}`;
+            const paramRow = document.createElement('div');
+            paramRow.classList.add('parameter-row', 'input-group', 'input-group-sm', 'mb-2');
+            paramRow.innerHTML = `
+                <input type="text" name="paramKey_${paramId}" class="form-control param-key-input" placeholder="Parameter Name (e.g., user_name)" value="${key}" required>
+                <button type="button" class="btn btn-outline-danger remove-btn" title="Remove Parameter"><i class="bi bi-trash"></i></button>
+            `;
+            dynamicParamsContainer.appendChild(paramRow);
+            paramRow.querySelector('.remove-btn').addEventListener('click', () => {
+                paramRow.remove();
+                updateParameterInsertDropdownsFromForm();
+            });
+            paramRow.querySelector('.param-key-input').addEventListener('input', updateParameterInsertDropdownsFromForm);
+            updateParameterInsertDropdownsFromForm();
+        }
+
+        function updateParameterInsertDropdownsFromForm() {
+            const currentParams = Array.from(dynamicParamsContainer.querySelectorAll('.param-key-input'))
+                .map(input => input.value.trim()).filter(value => value !== '');
+            updateParameterInsertDropdowns(currentParams);
+        }
+
+        function updateParameterInsertDropdowns(paramNames) {
+            const buildList = (listElement) => {
+                listElement.innerHTML = '';
+                if (paramNames.length === 0) {
+                    listElement.innerHTML = '<li><span class="dropdown-item-text text-muted">No parameters defined</span></li>'; return;
+                }
+                paramNames.forEach(name => {
+                    const li = document.createElement('li');
+                    const a = document.createElement('a');
+                    a.classList.add('dropdown-item'); a.href = '#';
+                    a.textContent = `{{${name}}}`; a.dataset.param = `{{${name}}}`;
+                    li.appendChild(a); listElement.appendChild(li);
+                });
+            };
+            buildList(subjectParamList); buildList(bodyParamList);
+        }
+
+        [subjectParamList, bodyParamList].forEach(list => {
+            list.addEventListener('click', function (e) {
+                e.preventDefault();
+                if (e.target.matches('a[data-param]')) {
+                    const paramToInsert = e.target.dataset.param;
+                    if (this.id === 'subjectParamList') {
+                        insertAtCursor(document.getElementById('subject'), paramToInsert);
+                    } else {
+                        bodyEditor.focus();
+                        document.execCommand('insertText', false, paramToInsert);
+                    }
+                }
+            });
+        });
+
+        function insertAtCursor(myField, myValue) {
+            const startPos = myField.selectionStart;
+            const endPos = myField.selectionEnd;
+            myField.value = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length);
+            myField.selectionStart = myField.selectionEnd = startPos + myValue.length;
+            myField.focus();
+        }
+
+        addParamBtn.addEventListener('click', () => addDynamicParam());
+        function addDynamicField(container, fieldName, value = '') {
+            const fieldId = `${fieldName}_${Date.now()}`;
+            const fieldGroup = document.createElement('div');
+            fieldGroup.classList.add('dynamic-field-group', 'input-group', 'input-group-sm', 'mb-2');
+            fieldGroup.innerHTML = `
+                <input type="email" name="${fieldId}" class="form-control" placeholder="email@example.com" value="${value}">
+                <button type="button" class="btn btn-outline-danger remove-btn" title="Remove Email"><i class="bi bi-trash"></i></button>
+            `;
+            container.appendChild(fieldGroup);
+            fieldGroup.querySelector('.remove-btn').addEventListener('click', () => fieldGroup.remove());
+        }
+        addCcBtn.addEventListener('click', () => addDynamicField(ccContainer, 'cc'));
+        addBccBtn.addEventListener('click', () => addDynamicField(bccContainer, 'bcc'));
+
+        if (bodyEditor) {
+            bodyEditor.addEventListener('input', () => {
+                bodyHtmlInput.value = bodyEditor.innerHTML;
+            });
+            bodyEditor.addEventListener('focus', () => {
+                if (bodyEditor.textContent === bodyEditor.getAttribute('aria-placeholder') && bodyEditor.classList.contains('text-muted')) {
+                    bodyEditor.textContent = '';
+                    bodyEditor.classList.remove('text-muted');
+                }
+            });
+            bodyEditor.addEventListener('blur', () => {
+                if (!bodyEditor.innerHTML.trim() || bodyEditor.innerHTML === '<br>' || bodyEditor.innerHTML === '<div><br></div>') {
+                    bodyEditor.textContent = bodyEditor.getAttribute('aria-placeholder');
+                    bodyEditor.classList.add('text-muted');
+                } else {
+                    bodyEditor.classList.remove('text-muted');
+                }
+            });
+
+            if (!bodyEditor.innerHTML.trim() || bodyEditor.innerHTML === '<br>' || bodyEditor.innerHTML === '<div><br></div>') {
+                bodyEditor.textContent = bodyEditor.getAttribute('aria-placeholder');
+                bodyEditor.classList.add('text-muted');
+            }
+        }
+
+
+        templateForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            if (bodyEditor && bodyEditor.textContent === bodyEditor.getAttribute('aria-placeholder') && bodyEditor.classList.contains('text-muted')) {
+                bodyHtmlInput.value = "";
+            } else if (bodyEditor) {
+                bodyHtmlInput.value = bodyEditor.innerHTML;
+            }
+
+            // Validate company selection
+            if (!companyNameValueInput.value) {
+                alert("Please select a valid company from the list."); // Or use a more integrated validation message
+                companyNameInput.focus();
+                return;
+            }
+
+
+            const formData = new FormData(templateForm); // FormData will now pick up companyName from the hidden input
+            const templateData = {
+                id: editingTemplateId || Date.now(),
+                name: formData.get('templateName'), code: formData.get('templateCode'),
+                company: formData.get('companyName'), // This is now companyNameValueInput.value
+                subject: formData.get('subject'),
+                body: formData.get('body'),
+                status: templateIsActiveCheckbox.checked ? 'active' : 'inactive',
+                country: templateCountryInput.value, state: templateStateInput.value, region: templateRegionInput.value,
+                params: [], cc: [], bcc: []
+            };
+            dynamicParamsContainer.querySelectorAll('.parameter-row .param-key-input').forEach(input => {
+                if (input.value.trim() !== '') templateData.params.push({ key: input.value.trim() });
+            });
+            ccContainer.querySelectorAll('.dynamic-field-group input').forEach(input => {
+                if (input.value.trim() !== '') templateData.cc.push(input.value.trim());
+            });
+            bccContainer.querySelectorAll('.dynamic-field-group input').forEach(input => {
+                if (input.value.trim() !== '') templateData.bcc.push(input.value.trim());
+            });
+
+            if (editingTemplateId) {
+                const index = templates.findIndex(t => t.id === editingTemplateId);
+                templates[index] = templateData;
+            } else {
+                templates.push(templateData);
+            }
+            renderTemplates(); populateFilterCheckboxes(); templateFormCollapse.hide();
+        });
+
+        function renderTemplates() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const showActiveOnly = statusShowActiveOnlyCheckbox.checked;
+            const activeFilters = {};
+            document.querySelectorAll('.filter-section .form-check-input.filter-checkbox:checked').forEach(chk => {
+                const group = chk.dataset.filterGroup;
+                if (!activeFilters[group]) activeFilters[group] = [];
+                activeFilters[group].push(chk.value);
+            });
+
+            const filteredTemplates = templates.filter(template => {
+                if (!(template.name.toLowerCase().includes(searchTerm) || template.code.toLowerCase().includes(searchTerm))) return false;
+                if (showActiveOnly && template.status !== 'active') return false;
+                if (!showActiveOnly && template.status === 'active') return false;
+
+                for (const group in activeFilters) {
+                    if (group === 'status') continue;
+                    if (activeFilters[group].length > 0 && (!template[group] || !activeFilters[group].includes(template[group]))) return false;
+                }
+                return true;
+            });
+
+            templatesGrid.innerHTML = '';
+            noTemplatesMessage.classList.toggle('d-none', filteredTemplates.length > 0);
+            filteredTemplates.forEach(template => {
+                const companyObj = companyOptions.find(c => c.value === template.company);
+                const companyDisplayName = companyObj ? companyObj.label : template.company;
+                const cardCol = document.createElement('div');
+                cardCol.classList.add('col-md-6', 'col-lg-4');
+                cardCol.innerHTML = `
+                    <div class="card template-card h-100">
+                        <div class="card-body d-flex flex-column">
+                            <h3 class="card-title h5">${template.name}</h3>
+                            <p class="card-text text-code small mb-1">${template.code}</p>
+                            <p class="card-text small mb-1"><strong>Company:</strong> ${companyDisplayName}</p>
+                            <p class="card-text small mb-1"><strong>Country:</strong> ${template.country || 'N/A'}</p>
+                            <p class="card-text small mb-1"><strong>State:</strong> ${template.state || 'N/A'}</p>
+                            <p class="card-text small mb-1"><strong>Region:</strong> ${template.region || 'N/A'}</p>
+                            <p class="card-text small mb-2"><strong>Status:</strong> <span class="badge ${template.status === 'active' ? 'bg-success' : 'bg-secondary'}">${template.status}</span></p>
+                            <p class="card-text small text-muted text-truncate" title="${template.subject}"><strong>Subject:</strong> ${template.subject}</p>
+                            <div class="mt-auto pt-2 border-top">
+                                <button class="btn btn-sm btn-secondary edit-btn" data-id="${template.id}"><i class="bi bi-pencil-square"></i> Edit</button>
+                                <button class="btn btn-sm btn-danger delete-btn ms-1" data-id="${template.id}"><i class="bi bi-trash"></i> Delete</button>
+                            </div>
+                        </div>
+                    </div>`;
+                templatesGrid.appendChild(cardCol);
+            });
+            updateDashboardStats(); addCardEventListeners();
+        }
+
+        function addCardEventListeners() {
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    openFormForEdit(templates.find(t => t.id === parseInt(this.dataset.id)));
+                });
+            });
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    templateIdToDelete = parseInt(this.dataset.id);
+                    const templateToDelete = templates.find(t => t.id === templateIdToDelete);
+                    if (templateToDelete) {
+                        templateNameToDeleteSpan.textContent = templateToDelete.name;
+                        customDeleteModal.show();
+                    }
+                });
+            });
+        }
+
+        confirmDeleteBtn.addEventListener('click', function () {
+            if (templateIdToDelete !== null) {
+                templates = templates.filter(t => t.id !== templateIdToDelete);
+                renderTemplates();
+                populateFilterCheckboxes();
+                templateIdToDelete = null;
+            }
+            customDeleteModal.hide();
+        });
+
+        function openFormForEdit(templateData) {
+            if (!templateData) return;
+            templateForm.reset();
+            dynamicParamsContainer.innerHTML = ''; ccContainer.innerHTML = ''; bccContainer.innerHTML = '';
+            editingTemplateId = templateData.id;
+            formTitle.textContent = 'Edit Email Template';
+            document.getElementById('saveTemplateBtn').textContent = 'Update Template';
+
+            document.getElementById('templateName').value = templateData.name;
+            document.getElementById('templateCode').value = templateData.code;
+
+            // Populate searchable company dropdown
+            const companyData = companyOptions.find(c => c.value === templateData.company);
+            if (companyData) {
+                companyNameInput.value = companyData.label;
+                companyNameValueInput.value = companyData.value;
+                templateCountryInput.value = companyData.country || '';
+                templateStateInput.value = companyData.state || '';
+                templateRegionInput.value = companyData.region || '';
+            } else { // Fallback if company not in options (e.g. old data)
+                companyNameInput.value = templateData.company; // Show the value if no label found
+                companyNameValueInput.value = templateData.company;
+                templateCountryInput.value = templateData.country || '';
+                templateStateInput.value = templateData.state || '';
+                templateRegionInput.value = templateData.region || '';
+            }
+
+
+            document.getElementById('subject').value = templateData.subject;
+            if (bodyEditor) {
+                bodyEditor.innerHTML = templateData.body;
+                bodyEditor.classList.remove('text-muted');
+                if (!bodyEditor.innerHTML.trim() || bodyEditor.innerHTML === '<br>' || bodyEditor.innerHTML === '<div><br></div>') {
+                    bodyEditor.textContent = bodyEditor.getAttribute('aria-placeholder');
+                    bodyEditor.classList.add('text-muted');
+                }
+            }
+            if (bodyHtmlInput) bodyHtmlInput.value = templateData.body;
+            templateIsActiveCheckbox.checked = templateData.status === 'active';
+
+            const paramKeys = [];
+            templateData.params.forEach(param => { addDynamicParam(param.key); paramKeys.push(param.key); });
+            updateParameterInsertDropdowns(paramKeys);
+            templateData.cc.forEach(email => addDynamicField(ccContainer, 'cc', email));
+            templateData.bcc.forEach(email => addDynamicField(bccContainer, 'bcc', email));
+
+            templateFormCollapse.show();
+            window.scrollTo({ top: templateFormCollapseEl.offsetTop - 20, behavior: 'smooth' });
+        }
+
+        function updateDashboardStats() {
+            totalCompaniesStat.textContent = companyOptions.length;
+            totalBranchesStat.textContent = "75";
+            activeCompaniesDashboardStat.textContent = "5";
+            activeBranchesStat.textContent = "60";
+
+            const totalTemplates = templates.length;
+            const activeTemplateCount = templates.filter(t => t.status === 'active').length;
+            emailTemplatesStat.textContent = totalTemplates;
+            activeTemplatesDashboardStat.textContent = activeTemplateCount;
+        }
+
+        if (viewSourceBtn) {
+            viewSourceBtn.addEventListener('click', () => {
+                if (htmlSourceContent && bodyEditor) htmlSourceContent.textContent = bodyEditor.innerHTML;
+            });
+        }
+
+        predefinedColors.forEach(color => {
+            const createSwatch = (paletteElement, command, isStyle = false) => {
+                const swatch = document.createElement('span');
+                swatch.classList.add('color-swatch');
+                swatch.style.backgroundColor = color;
+                swatch.title = color;
+                if (color === '#FFFFFF' && command === 'backColor') swatch.style.borderColor = '#000';
+                else if (color === '#000000' && command === 'foreColor') swatch.style.border = '1px solid #fff';
+
+                swatch.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    bodyEditor.focus();
+                    document.execCommand(command, false, color);
+                    if (bodyEditor) bodyHtmlInput.value = bodyEditor.innerHTML;
+                });
+                paletteElement.appendChild(swatch);
+            };
+            createSwatch(foreColorPalette, 'foreColor');
+            createSwatch(backColorPalette, 'backColor');
+        });
+
+        document.querySelectorAll('.rich-text-controls button[data-command]').forEach(button => {
+            button.addEventListener('click', function () {
+                const command = this.dataset.command;
+                bodyEditor.focus();
+                document.execCommand(command, false, null);
+                if (bodyEditor) bodyHtmlInput.value = bodyEditor.innerHTML;
+            });
+        });
+
+        searchInput.addEventListener('input', renderTemplates);
+        applyFiltersBtn.addEventListener('click', renderTemplates);
+        statusShowActiveOnlyCheckbox.addEventListener('change', renderTemplates);
+        resetFiltersBtn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-section .form-check-input.filter-checkbox, .filter-section .select-all-checkbox').forEach(chk => chk.checked = false);
+            statusShowActiveOnlyCheckbox.checked = false;
+            renderTemplates();
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // populateFormCompanyDropdown(); // Not needed for searchable input
+            renderCompanyDropdown(companyOptions); // Initial population for searchable company
+            populateFilterCheckboxes();
+            renderTemplates();
+            addDynamicParam();
+            updateParameterInsertDropdowns([]);
+            // Initial placeholder check for bodyEditor
+            if (bodyEditor && (!bodyEditor.innerHTML.trim() || bodyEditor.innerHTML === '<br>' || bodyEditor.innerHTML === '<div><br></div>')) {
+                bodyEditor.textContent = bodyEditor.getAttribute('aria-placeholder');
+                bodyEditor.classList.add('text-muted');
+            }
+        });
+    </script>
+</body>
+
+</html>
