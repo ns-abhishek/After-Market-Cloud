@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit Logs - Access Control System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <main class="content">
+            <header class="content-header">
+                <div class="header-left">
+                    <h1>Audit Logs</h1>
+                </div>
+                <div class="header-right">
+                    <div class="user-profile">
+                        <div class="avatar-circle">
+                            <span class="avatar-text">M</span>
+                        </div>
+                        <span>Admin User</span>
+                        <i class="fas fa-chevron-down"></i>
+                        <div class="user-dropdown">
+                            <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="role-definition-guide.html"><i class="fas fa-book"></i> User Guide</a>
+                            <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="page-actions">
+                <div class="date-range-picker">
+                    <label>Date Range:</label>
+                    <input type="date" id="startDate" value="2023-06-01">
+                    <span>to</span>
+                    <input type="date" id="endDate" value="2023-06-15">
+                    <button class="btn btn-secondary">Apply</button>
+                </div>
+
+                <div class="filter-container">
+                    <select id="eventTypeFilter">
+                        <option value="">All Event Types</option>
+                        <option value="login">Login</option>
+                        <option value="logout">Logout</option>
+                        <option value="create">Create</option>
+                        <option value="update">Update</option>
+                        <option value="delete">Delete</option>
+                        <option value="permission_change">Permission Change</option>
+                    </select>
+                    <select id="userFilter">
+                        <option value="">All Users</option>
+                        <option value="1001">John Doe</option>
+                        <option value="1002">Jane Smith</option>
+                        <option value="1003">Robert Johnson</option>
+                        <option value="1004">Emily Davis</option>
+                        <option value="1005">Michael Brown</option>
+                    </select>
+                    <select id="statusFilter">
+                        <option value="">All Status</option>
+                        <option value="success">Success</option>
+                        <option value="failure">Failure</option>
+                        <option value="warning">Warning</option>
+                    </select>
+                </div>
+
+                <div class="search-container">
+                    <input type="text" placeholder="Search logs...">
+                    <button class="search-btn"><i class="fas fa-search"></i></button>
+                </div>
+
+                <div class="export-options">
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                </div>
+            </div>
+
+            <div class="audit-logs-container">
+                <div class="audit-logs-list">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>User</th>
+                                <th>Event Type</th>
+                                <th>Resource</th>
+                                <th>Action</th>
+                                <th>Status</th>
+                                <th>IP Address</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2023-06-15 09:45:12</td>
+                                <td>John Doe</td>
+                                <td>Login</td>
+                                <td>User</td>
+                                <td>Authentication</td>
+                                <td><span class="badge status-success">Success</span></td>
+                                <td>192.168.1.100</td>
+                                <td><button class="btn-icon view-details"><i class="fas fa-eye"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>2023-06-15 10:12:34</td>
+                                <td>John Doe</td>
+                                <td>Create</td>
+                                <td>User</td>
+                                <td>Created new user: Michael Brown</td>
+                                <td><span class="badge status-success">Success</span></td>
+                                <td>192.168.1.100</td>
+                                <td><button class="btn-icon view-details"><i class="fas fa-eye"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>2023-06-14 14:22:05</td>
+                                <td>Jane Smith</td>
+                                <td>Login</td>
+                                <td>User</td>
+                                <td>Authentication</td>
+                                <td><span class="badge status-success">Success</span></td>
+                                <td>192.168.1.101</td>
+                                <td><button class="btn-icon view-details"><i class="fas fa-eye"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>2023-06-14 14:45:30</td>
+                                <td>Jane Smith</td>
+                                <td>Update</td>
+                                <td>Role</td>
+                                <td>Updated role: Editor</td>
+                                <td><span class="badge status-success">Success</span></td>
+                                <td>192.168.1.101</td>
+                                <td><button class="btn-icon view-details"><i class="fas fa-eye"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>2023-06-14 15:10:22</td>
+                                <td>Unknown</td>
+                                <td>Login</td>
+                                <td>User</td>
+                                <td>Authentication</td>
+                                <td><span class="badge status-failure">Failure</span></td>
+                                <td>192.168.1.150</td>
+                                <td><button class="btn-icon view-details"><i class="fas fa-eye"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>2023-06-13 11:30:45</td>
+                                <td>Robert Johnson</td>
+                                <td>Permission Change</td>
+                                <td>User</td>
+                                <td>Changed permissions for user: Emily Davis</td>
+                                <td><span class="badge status-warning">Warning</span></td>
+                                <td>192.168.1.102</td>
+                                <td><button class="btn-icon view-details"><i class="fas fa-eye"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>2023-06-13 16:45:10</td>
+                                <td>John Doe</td>
+                                <td>Delete</td>
+                                <td>User</td>
+                                <td>Deleted user: Sarah Wilson</td>
+                                <td><span class="badge status-success">Success</span></td>
+                                <td>192.168.1.100</td>
+                                <td><button class="btn-icon view-details"><i class="fas fa-eye"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>2023-06-12 16:30:15</td>
+                                <td>Emily Davis</td>
+                                <td>Login</td>
+                                <td>User</td>
+                                <td>Authentication</td>
+                                <td><span class="badge status-success">Success</span></td>
+                                <td>192.168.1.103</td>
+                                <td><button class="btn-icon view-details"><i class="fas fa-eye"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>2023-06-12 17:05:22</td>
+                                <td>Emily Davis</td>
+                                <td>Update</td>
+                                <td>Content</td>
+                                <td>Updated content: Product Description</td>
+                                <td><span class="badge status-success">Success</span></td>
+                                <td>192.168.1.103</td>
+                                <td><button class="btn-icon view-details"><i class="fas fa-eye"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>2023-06-11 09:15:30</td>
+                                <td>Jane Smith</td>
+                                <td>Create</td>
+                                <td>Permission</td>
+                                <td>Created new permission: reports_export</td>
+                                <td><span class="badge status-success">Success</span></td>
+                                <td>192.168.1.101</td>
+                                <td><button class="btn-icon view-details"><i class="fas fa-eye"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination">
+                    <button class="pagination-btn"><i class="fas fa-angle-double-left"></i></button>
+                    <button class="pagination-btn"><i class="fas fa-angle-left"></i></button>
+                    <button class="pagination-btn active">1</button>
+                    <button class="pagination-btn">2</button>
+                    <button class="pagination-btn">3</button>
+                    <button class="pagination-btn">...</button>
+                    <button class="pagination-btn">10</button>
+                    <button class="pagination-btn"><i class="fas fa-angle-right"></i></button>
+                    <button class="pagination-btn"><i class="fas fa-angle-double-right"></i></button>
+                </div>
+            </div>
+
+            <!-- Log Details Modal -->
+            <div class="modal" id="logDetailsModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Log Details</h2>
+                        <button class="close-btn">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="log-details">
+                            <div class="detail-row">
+                                <div class="detail-label">Timestamp:</div>
+                                <div class="detail-value">2023-06-15 10:12:34</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">User:</div>
+                                <div class="detail-value">John Doe (ID: 1001)</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Event Type:</div>
+                                <div class="detail-value">Create</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Resource:</div>
+                                <div class="detail-value">User</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Action:</div>
+                                <div class="detail-value">Created new user: Michael Brown</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Status:</div>
+                                <div class="detail-value"><span class="badge status-success">Success</span></div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">IP Address:</div>
+                                <div class="detail-value">192.168.1.100</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">User Agent:</div>
+                                <div class="detail-value">Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Request ID:</div>
+                                <div class="detail-value">req-12345-abcde-67890</div>
+                            </div>
+                            <div class="detail-row full-width">
+                                <div class="detail-label">Additional Data:</div>
+                                <div class="detail-value code-block">
+                                    <pre>{
+  "user_data": {
+    "id": 1005,
+    "first_name": "Michael",
+    "last_name": "Brown",
+    "email": "michael.brown@example.com",
+    "role": "customer",
+    "status": "pending"
+  },
+  "created_by": {
+    "id": 1001,
+    "name": "John Doe",
+    "role": "administrator"
+  }
+}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" id="closeLogDetailsBtn">Close</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permission Management - Access Control System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <main class="content">
+            <header class="content-header">
+                <div class="header-left">
+                    <h1>Permission Management</h1>
+                </div>
+                <div class="header-right">
+                    <div class="user-profile">
+                        <div class="avatar-circle">
+                            <span class="avatar-text">M</span>
+                        </div>
+                        <span>Admin User</span>
+                        <i class="fas fa-chevron-down"></i>
+                        <div class="user-dropdown">
+                            <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="role-definition-guide.html"><i class="fas fa-book"></i> User Guide</a>
+                            <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="page-actions">
+                <button class="btn btn-primary" id="createPermissionBtn">
+                    <i class="fas fa-plus"></i> Create New Permission
+                </button>
+                <div class="search-container">
+                    <input type="text" placeholder="Search permissions...">
+                    <button class="search-btn"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="list">List View</button>
+                <button class="tab-btn" data-tab="matrix">Role-Permission Matrix</button>
+                <button class="tab-btn" data-tab="mapping">Role-Permission Mapping</button>
+                <button class="tab-btn" data-tab="access-models">Access Control Models</button>
+            </div>
+
+            <div class="tab-content">
+                <div class="tab-pane active" id="list">
+                    <div class="permissions-list">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Permission Name</th>
+                                    <th>Description</th>
+                                    <th>Category</th>
+                                    <th>Assigned Roles</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>user_create</td>
+                                    <td>Create new user accounts</td>
+                                    <td>User Management</td>
+                                    <td>Administrator, Manager</td>
+                                    <td class="actions">
+                                        <button class="btn-icon edit"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon delete"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>user_read</td>
+                                    <td>View user information</td>
+                                    <td>User Management</td>
+                                    <td>Administrator, Manager, Editor</td>
+                                    <td class="actions">
+                                        <button class="btn-icon edit"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon delete"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>content_create</td>
+                                    <td>Create new content</td>
+                                    <td>Content Management</td>
+                                    <td>Administrator, Manager, Editor</td>
+                                    <td class="actions">
+                                        <button class="btn-icon edit"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon delete"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>content_publish</td>
+                                    <td>Publish content to live environment</td>
+                                    <td>Content Management</td>
+                                    <td>Administrator, Manager</td>
+                                    <td class="actions">
+                                        <button class="btn-icon edit"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon delete"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>reports_export</td>
+                                    <td>Export reports to various formats</td>
+                                    <td>Reporting</td>
+                                    <td>Administrator, Manager</td>
+                                    <td class="actions">
+                                        <button class="btn-icon edit"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon delete"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="matrix">
+                    <div class="permission-matrix">
+                        <table class="matrix-table">
+                            <thead>
+                                <tr>
+                                    <th>Permission / Role</th>
+                                    <th>Administrator</th>
+                                    <th>Manager</th>
+                                    <th>Editor</th>
+                                    <th>Viewer</th>
+                                    <th>Customer</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="category-header">
+                                    <td colspan="6">User Management</td>
+                                </tr>
+                                <tr>
+                                    <td>Create Users</td>
+                                    <td><i class="fas fa-check"></i></td>
+                                    <td><i class="fas fa-check"></i></td>
+                                    <td><i class="fas fa-times"></i></td>
+                                    <td><i class="fas fa-times"></i></td>
+                                    <td><i class="fas fa-times"></i></td>
+                                </tr>
+                                <tr>
+                                    <td>View Users</td>
+                                    <td><i class="fas fa-check"></i></td>
+                                    <td><i class="fas fa-check"></i></td>
+                                    <td><i class="fas fa-check"></i></td>
+                                    <td><i class="fas fa-times"></i></td>
+                                    <td><i class="fas fa-times"></i></td>
+                                </tr>
+                                <tr>
+                                    <td>Edit Users</td>
+                                    <td><i class="fas fa-check"></i></td>
+                                    <td><i class="fas fa-check"></i></td>
+                                    <td><i class="fas fa-times"></i></td>
+                                    <td><i class="fas fa-times"></i></td>
+                                    <td><i class="fas fa-times"></i></td>
+                                </tr>
+                                <tr>
+                                    <td>Delete Users</td>
+                                    <td><i class="fas fa-check"></i></td>
+                                    <td><i class="fas fa-times"></i></td>
+                                    <td><i class="fas fa-times"></i></td>
+                                    <td><i class="fas fa-times"></i></td>
+                                    <td><i class="fas fa-times"></i></td>
+                                </tr>
+
+                                <tr class="category-header">
+                                    <td colspan="6">Content Management</td>
+                                </tr>
+                                <tr>
+                                    <td>Create Content</td>
+                                    <td><i class="fas fa-check"></i></td>
+                                    <td><i class="fas fa-check"></i></td>
+                                    <td><i class="fas fa-check"></i></td>
+                                    <td><i class="fas fa-times"></i></td>
+                                    <td><i class="fas fa-times"></i></td>
+                                </tr>
+                                <tr>
+                                    <td>View Content</td>
+                                    <td><i class="fas fa-check"></i></td>
+                                    <td><i class="fas fa-check"></i></td>
+                                    <td><i class="fas fa-check"></i></td>
+                                    <td><i class="fas fa-check"></i></td>
+                                    <td><i class="fas fa-check"></i></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="mapping">
+                    <div class="role-permission-mapping">
+                        <!-- Available Permissions Section -->
+                        <div class="available-permissions-container">
+                            <h3>Available Permissions</h3>
+                            <div class="search-container">
+                                <input type="text" id="permissionSearch" placeholder="Search permissions...">
+                                <button class="search-btn"><i class="fas fa-search"></i></button>
+                            </div>
+                            <div class="permission-categories-row" id="availablePermissions">
+                                <!-- User Management Permissions -->
+                                <div class="permission-category-card">
+                                    <div class="permission-category-header">
+                                        <h4>User Management</h4>
+                                    </div>
+                                    <div class="permission-items">
+                                        <div class="permission-item" draggable="true" data-permission="create_user">
+                                            <i class="fas fa-plus-circle"></i> create_user
+                                        </div>
+                                        <div class="permission-item" draggable="true" data-permission="read_user">
+                                            <i class="fas fa-eye"></i> read_user
+                                        </div>
+                                        <div class="permission-item" draggable="true" data-permission="update_user">
+                                            <i class="fas fa-edit"></i> update_user
+                                        </div>
+                                        <div class="permission-item" draggable="true" data-permission="delete_user">
+                                            <i class="fas fa-trash"></i> delete_user
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Content Management Permissions -->
+                                <div class="permission-category-card">
+                                    <div class="permission-category-header">
+                                        <h4>Content Management</h4>
+                                    </div>
+                                    <div class="permission-items">
+                                        <div class="permission-item" draggable="true" data-permission="create_content">
+                                            <i class="fas fa-plus-circle"></i> create_content
+                                        </div>
+                                        <div class="permission-item" draggable="true" data-permission="read_content">
+                                            <i class="fas fa-eye"></i> read_content
+                                        </div>
+                                        <div class="permission-item" draggable="true" data-permission="update_content">
+                                            <i class="fas fa-edit"></i> update_content
+                                        </div>
+                                        <div class="permission-item" draggable="true" data-permission="delete_content">
+                                            <i class="fas fa-trash"></i> delete_content
+                                        </div>
+                                        <div class="permission-item" draggable="true" data-permission="publish_content">
+                                            <i class="fas fa-upload"></i> publish_content
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- System Permissions -->
+                                <div class="permission-category-card">
+                                    <div class="permission-category-header">
+                                        <h4>System</h4>
+                                    </div>
+                                    <div class="permission-items">
+                                        <div class="permission-item" draggable="true" data-permission="manage_roles">
+                                            <i class="fas fa-users-cog"></i> manage_roles
+                                        </div>
+                                        <div class="permission-item" draggable="true" data-permission="manage_permissions">
+                                            <i class="fas fa-key"></i> manage_permissions
+                                        </div>
+                                        <div class="permission-item" draggable="true" data-permission="system_settings">
+                                            <i class="fas fa-cogs"></i> system_settings
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Reporting Permissions -->
+                                <div class="permission-category-card">
+                                    <div class="permission-category-header">
+                                        <h4>Reporting</h4>
+                                    </div>
+                                    <div class="permission-items">
+                                        <div class="permission-item" draggable="true" data-permission="view_reports">
+                                            <i class="fas fa-chart-bar"></i> view_reports
+                                        </div>
+                                        <div class="permission-item" draggable="true" data-permission="export_data">
+                                            <i class="fas fa-file-export"></i> export_data
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Role Cards with Drag & Drop -->
+                        <div class="role-cards-container">
+                            <div class="role-card">
+                                <div class="role-header">
+                                    <h3>Administrator</h3>
+                                </div>
+                                <div class="permissions-section">
+                                    <div class="permission-tags" id="adminPermissions" data-role="administrator">
+                                        <span class="permission-tag" draggable="true" data-permission="create_user">create_user<i class="fas fa-times remove-icon"></i></span>
+                                        <span class="permission-tag" draggable="true" data-permission="read_user">read_user<i class="fas fa-times remove-icon"></i></span>
+                                        <span class="permission-tag" draggable="true" data-permission="update_user">update_user</span>
+                                        <span class="permission-tag" draggable="true" data-permission="delete_user">delete_user</span>
+                                        <span class="permission-tag" draggable="true" data-permission="manage_roles">manage_roles</span>
+                                        <span class="permission-tag" draggable="true" data-permission="manage_permissions">manage_permissions</span>
+                                        <span class="permission-tag" draggable="true" data-permission="view_reports">view_reports</span>
+                                        <span class="permission-tag" draggable="true" data-permission="export_data">export_data</span>
+                                        <span class="permission-tag" draggable="true" data-permission="system_settings">system_settings</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="role-card">
+                                <div class="role-header">
+                                    <h3>Manager</h3>
+                                </div>
+                                <div class="permissions-section">
+                                    <div class="permission-tags" id="managerPermissions" data-role="manager">
+                                        <span class="permission-tag" draggable="true" data-permission="create_user">create_user<i class="fas fa-times remove-icon"></i></span>
+                                        <span class="permission-tag" draggable="true" data-permission="read_user">read_user</span>
+                                        <span class="permission-tag" draggable="true" data-permission="update_user">update_user</span>
+                                        <span class="permission-tag" draggable="true" data-permission="view_reports">view_reports</span>
+                                        <span class="permission-tag" draggable="true" data-permission="export_data">export_data</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="role-card">
+                                <div class="role-header">
+                                    <h3>Editor</h3>
+                                </div>
+                                <div class="permissions-section">
+                                    <div class="permission-tags" id="editorPermissions" data-role="editor">
+                                        <span class="permission-tag" draggable="true" data-permission="create_content">create_content<i class="fas fa-times remove-icon"></i></span>
+                                        <span class="permission-tag" draggable="true" data-permission="read_content">read_content</span>
+                                        <span class="permission-tag" draggable="true" data-permission="update_content">update_content</span>
+                                        <span class="permission-tag" draggable="true" data-permission="publish_content">publish_content</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="role-card">
+                                <div class="role-header">
+                                    <h3>Viewer</h3>
+                                </div>
+                                <div class="permissions-section">
+                                    <div class="permission-tags" id="viewerPermissions" data-role="viewer">
+                                        <span class="permission-tag" draggable="true" data-permission="read_content">read_content<i class="fas fa-times remove-icon"></i></span>
+                                        <span class="permission-tag" draggable="true" data-permission="view_reports">view_reports</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="access-models">
+                    <div class="access-models-container">
+                        <div class="model-selection">
+                            <h3>Active Access Control Models</h3>
+                            <div class="model-toggles">
+                                <label class="toggle-container">
+                                    <input type="checkbox" id="rbacToggle" checked>
+                                    <span class="toggle-slider"></span>
+                                    <span class="toggle-label">Role-Based Access Control (RBAC)</span>
+                                </label>
+                                <label class="toggle-container">
+                                    <input type="checkbox" id="abacToggle">
+                                    <span class="toggle-slider"></span>
+                                    <span class="toggle-label">Attribute-Based Access Control (ABAC)</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- RBAC Configuration Section -->
+                        <div class="model-config" id="rbacConfig">
+                            <div class="model-header">
+                                <h3><i class="fas fa-users-cog"></i> Role-Based Access Control Configuration</h3>
+                            </div>
+                            <div class="model-content">
+                                <p>RBAC is currently the primary access control model. Permissions are assigned to roles, and users are assigned to roles.</p>
+
+                                <div class="config-section">
+                                    <h4>Role Hierarchy</h4>
+                                    <div class="role-hierarchy-diagram">
+                                        <div class="hierarchy-node top">
+                                            <div class="node-content">
+                                                <i class="fas fa-user-shield"></i>
+                                                <span>Administrator</span>
+                                            </div>
+                                            <div class="hierarchy-children">
+                                                <div class="hierarchy-node">
+                                                    <div class="node-content">
+                                                        <i class="fas fa-user-tie"></i>
+                                                        <span>Manager</span>
+                                                    </div>
+                                                    <div class="hierarchy-children">
+                                                        <div class="hierarchy-node">
+                                                            <div class="node-content">
+                                                                <i class="fas fa-user-edit"></i>
+                                                                <span>Editor</span>
+                                                            </div>
+                                                            <div class="hierarchy-children">
+                                                                <div class="hierarchy-node">
+                                                                    <div class="node-content">
+                                                                        <i class="fas fa-user"></i>
+                                                                        <span>Viewer</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="hierarchy-node">
+                                                    <div class="node-content">
+                                                        <i class="fas fa-user-tag"></i>
+                                                        <span>Customer</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="config-section">
+                                    <h4>RBAC Settings</h4>
+                                    <div class="settings-form">
+                                        <div class="form-group">
+                                            <label class="checkbox-container">
+                                                <input type="checkbox" id="rbacInheritance" checked>
+                                                <span class="checkmark"></span>
+                                                Enable Role Inheritance
+                                            </label>
+                                            <small>Allows roles to inherit permissions from parent roles in the hierarchy</small>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="checkbox-container">
+                                                <input type="checkbox" id="rbacMultipleRoles" checked>
+                                                <span class="checkmark"></span>
+                                                Allow Multiple Roles per User
+                                            </label>
+                                            <small>Users can be assigned to multiple roles simultaneously</small>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="checkbox-container">
+                                                <input type="checkbox" id="rbacDefaultDeny" checked>
+                                                <span class="checkmark"></span>
+                                                Default Deny Policy
+                                            </label>
+                                            <small>Access is denied by default unless explicitly granted by a role</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="config-section">
+                                    <h4>Role-Permission Assignment</h4>
+                                    <p>Manage which permissions are assigned to each role:</p>
+                                    <div class="role-selector">
+                                        <label for="rbacRoleSelect">Select Role:</label>
+                                        <select id="rbacRoleSelect">
+                                            <option value="administrator">Administrator</option>
+                                            <option value="manager">Manager</option>
+                                            <option value="editor">Editor</option>
+                                            <option value="viewer">Viewer</option>
+                                            <option value="customer">Customer</option>
+                                        </select>
+                                        <button class="btn btn-primary btn-sm" id="editRolePermissionsBtn">
+                                            <i class="fas fa-edit"></i> Edit Permissions
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ABAC Configuration Section -->
+                        <div class="model-config" id="abacConfig" style="display: none;">
+                            <div class="model-header">
+                                <h3><i class="fas fa-tags"></i> Attribute-Based Access Control Configuration</h3>
+                            </div>
+                            <div class="model-content">
+                                <p>ABAC extends RBAC by allowing access decisions based on attributes of users, resources, and the environment.</p>
+
+                                <div class="config-section">
+                                    <h4>Attribute Categories</h4>
+                                    <div class="attribute-categories">
+                                        <div class="attribute-category">
+                                            <div class="attribute-category-header">
+                                                <h5><i class="fas fa-user"></i> User Attributes</h5>
+                                                <button class="btn btn-sm btn-outline-primary add-attribute-btn" data-category="user">
+                                                    <i class="fas fa-plus"></i> Add User Attribute
+                                                </button>
+                                            </div>
+                                            <div class="attribute-list-container">
+                                                <ul class="attribute-list" id="userAttributeList">
+                                                    <li data-attribute-index="0">
+                                                        <div class="attribute-info">
+                                                            <span class="attribute-name">Department</span>
+                                                            <span class="attribute-type">String</span>
+                                                            <span class="attribute-description">User's department within the organization</span>
+                                                        </div>
+                                                        <div class="attribute-actions">
+                                                            <button class="btn-icon edit-attribute" title="Edit Attribute"><i class="fas fa-edit"></i></button>
+                                                            <button class="btn-icon delete-attribute" title="Delete Attribute"><i class="fas fa-trash"></i></button>
+                                                        </div>
+                                                    </li>
+                                                    <li data-attribute-index="1">
+                                                        <div class="attribute-info">
+                                                            <span class="attribute-name">Clearance Level</span>
+                                                            <span class="attribute-type">Integer (1-5)</span>
+                                                            <span class="attribute-description">Security clearance level of the user</span>
+                                                        </div>
+                                                        <div class="attribute-actions">
+                                                            <button class="btn-icon edit-attribute" title="Edit Attribute"><i class="fas fa-edit"></i></button>
+                                                            <button class="btn-icon delete-attribute" title="Delete Attribute"><i class="fas fa-trash"></i></button>
+                                                        </div>
+                                                    </li>
+                                                    <li data-attribute-index="2">
+                                                        <div class="attribute-info">
+                                                            <span class="attribute-name">Location</span>
+                                                            <span class="attribute-type">String</span>
+                                                            <span class="attribute-description">Physical location of the user</span>
+                                                        </div>
+                                                        <div class="attribute-actions">
+                                                            <button class="btn-icon edit-attribute" title="Edit Attribute"><i class="fas fa-edit"></i></button>
+                                                            <button class="btn-icon delete-attribute" title="Delete Attribute"><i class="fas fa-trash"></i></button>
+                                                        </div>
+                                                    </li>
+                                                    <li data-attribute-index="3">
+                                                        <div class="attribute-info">
+                                                            <span class="attribute-name">Employment Status</span>
+                                                            <span class="attribute-type">String</span>
+                                                            <span class="attribute-description">Current employment status</span>
+                                                        </div>
+                                                        <div class="attribute-actions">
+                                                            <button class="btn-icon edit-attribute" title="Edit Attribute"><i class="fas fa-edit"></i></button>
+                                                            <button class="btn-icon delete-attribute" title="Delete Attribute"><i class="fas fa-trash"></i></button>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div class="attribute-category">
+                                            <div class="attribute-category-header">
+                                                <h5><i class="fas fa-file"></i> Resource Attributes</h5>
+                                                <button class="btn btn-sm btn-outline-primary add-attribute-btn" data-category="resource">
+                                                    <i class="fas fa-plus"></i> Add Resource Attribute
+                                                </button>
+                                            </div>
+                                            <div class="attribute-list-container">
+                                                <ul class="attribute-list" id="resourceAttributeList">
+                                                    <li data-attribute-index="0">
+                                                        <div class="attribute-info">
+                                                            <span class="attribute-name">Classification</span>
+                                                            <span class="attribute-type">String</span>
+                                                            <span class="attribute-description">Security classification of the resource</span>
+                                                        </div>
+                                                        <div class="attribute-actions">
+                                                            <button class="btn-icon edit-attribute" title="Edit Attribute"><i class="fas fa-edit"></i></button>
+                                                            <button class="btn-icon delete-attribute" title="Delete Attribute"><i class="fas fa-trash"></i></button>
+                                                        </div>
+                                                    </li>
+                                                    <li data-attribute-index="1">
+                                                        <div class="attribute-info">
+                                                            <span class="attribute-name">Department</span>
+                                                            <span class="attribute-type">String</span>
+                                                            <span class="attribute-description">Department that owns the resource</span>
+                                                        </div>
+                                                        <div class="attribute-actions">
+                                                            <button class="btn-icon edit-attribute" title="Edit Attribute"><i class="fas fa-edit"></i></button>
+                                                            <button class="btn-icon delete-attribute" title="Delete Attribute"><i class="fas fa-trash"></i></button>
+                                                        </div>
+                                                    </li>
+                                                    <li data-attribute-index="2">
+                                                        <div class="attribute-info">
+                                                            <span class="attribute-name">Creation Date</span>
+                                                            <span class="attribute-type">Date</span>
+                                                            <span class="attribute-description">When the resource was created</span>
+                                                        </div>
+                                                        <div class="attribute-actions">
+                                                            <button class="btn-icon edit-attribute" title="Edit Attribute"><i class="fas fa-edit"></i></button>
+                                                            <button class="btn-icon delete-attribute" title="Delete Attribute"><i class="fas fa-trash"></i></button>
+                                                        </div>
+                                                    </li>
+                                                    <li data-attribute-index="3">
+                                                        <div class="attribute-info">
+                                                            <span class="attribute-name">Owner</span>
+                                                            <span class="attribute-type">String</span>
+                                                            <span class="attribute-description">User or group that owns the resource</span>
+                                                        </div>
+                                                        <div class="attribute-actions">
+                                                            <button class="btn-icon edit-attribute" title="Edit Attribute"><i class="fas fa-edit"></i></button>
+                                                            <button class="btn-icon delete-attribute" title="Delete Attribute"><i class="fas fa-trash"></i></button>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div class="attribute-category">
+                                            <div class="attribute-category-header">
+                                                <h5><i class="fas fa-globe"></i> Environment Attributes</h5>
+                                                <button class="btn btn-sm btn-outline-primary add-attribute-btn" data-category="environment">
+                                                    <i class="fas fa-plus"></i> Add Environment Attribute
+                                                </button>
+                                            </div>
+                                            <div class="attribute-list-container">
+                                                <ul class="attribute-list" id="environmentAttributeList">
+                                                    <li data-attribute-index="0">
+                                                        <div class="attribute-info">
+                                                            <span class="attribute-name">Time</span>
+                                                            <span class="attribute-type">Time</span>
+                                                            <span class="attribute-description">Current time of access request</span>
+                                                        </div>
+                                                        <div class="attribute-actions">
+                                                            <button class="btn-icon edit-attribute" title="Edit Attribute"><i class="fas fa-edit"></i></button>
+                                                            <button class="btn-icon delete-attribute" title="Delete Attribute"><i class="fas fa-trash"></i></button>
+                                                        </div>
+                                                    </li>
+                                                    <li data-attribute-index="1">
+                                                        <div class="attribute-info">
+                                                            <span class="attribute-name">Date</span>
+                                                            <span class="attribute-type">Date</span>
+                                                            <span class="attribute-description">Current date of access request</span>
+                                                        </div>
+                                                        <div class="attribute-actions">
+                                                            <button class="btn-icon edit-attribute" title="Edit Attribute"><i class="fas fa-edit"></i></button>
+                                                            <button class="btn-icon delete-attribute" title="Delete Attribute"><i class="fas fa-trash"></i></button>
+                                                        </div>
+                                                    </li>
+                                                    <li data-attribute-index="2">
+                                                        <div class="attribute-info">
+                                                            <span class="attribute-name">IP Address</span>
+                                                            <span class="attribute-type">String</span>
+                                                            <span class="attribute-description">IP address of the requesting client</span>
+                                                        </div>
+                                                        <div class="attribute-actions">
+                                                            <button class="btn-icon edit-attribute" title="Edit Attribute"><i class="fas fa-edit"></i></button>
+                                                            <button class="btn-icon delete-attribute" title="Delete Attribute"><i class="fas fa-trash"></i></button>
+                                                        </div>
+                                                    </li>
+                                                    <li data-attribute-index="3">
+                                                        <div class="attribute-info">
+                                                            <span class="attribute-name">Security Level</span>
+                                                            <span class="attribute-type">Integer (1-3)</span>
+                                                            <span class="attribute-description">Current security level of the environment</span>
+                                                        </div>
+                                                        <div class="attribute-actions">
+                                                            <button class="btn-icon edit-attribute" title="Edit Attribute"><i class="fas fa-edit"></i></button>
+                                                            <button class="btn-icon delete-attribute" title="Delete Attribute"><i class="fas fa-trash"></i></button>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="config-section">
+                                    <h4>Policy Rules</h4>
+                                    <div class="policy-list">
+                                        <div class="policy-item" data-policy-index="0">
+                                            <div class="policy-header">
+                                                <h5><i class="fas fa-clock"></i> Time-Based Access</h5>
+                                                <div class="policy-actions">
+                                                    <label class="checkbox-container">
+                                                        <input type="checkbox" class="policy-enabled" checked>
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                    <button class="btn-icon edit" title="Edit Policy"><i class="fas fa-edit"></i></button>
+                                                    <button class="btn-icon delete" title="Delete Policy"><i class="fas fa-trash"></i></button>
+                                                </div>
+                                            </div>
+                                            <div class="policy-details">
+                                                <p><strong>Description:</strong> Restrict sensitive operations to business hours</p>
+                                                <div class="policy-rule allow">
+                                                    <span class="policy-type">ALLOW</span>
+                                                    <code>IF user.role IN ['administrator', 'manager'] AND environment.time BETWEEN '08:00' AND '18:00' THEN ALLOW access TO resource.type = 'sensitive'</code>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="policy-item" data-policy-index="1">
+                                            <div class="policy-header">
+                                                <h5><i class="fas fa-building"></i> Department-Based Access</h5>
+                                                <div class="policy-actions">
+                                                    <label class="checkbox-container">
+                                                        <input type="checkbox" class="policy-enabled" checked>
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                    <button class="btn-icon edit" title="Edit Policy"><i class="fas fa-edit"></i></button>
+                                                    <button class="btn-icon delete" title="Delete Policy"><i class="fas fa-trash"></i></button>
+                                                </div>
+                                            </div>
+                                            <div class="policy-details">
+                                                <p><strong>Description:</strong> Allow department members to access their department's resources</p>
+                                                <div class="policy-rule allow">
+                                                    <span class="policy-type">ALLOW</span>
+                                                    <code>IF user.department = resource.department THEN ALLOW access</code>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="policy-item" data-policy-index="2">
+                                            <div class="policy-header">
+                                                <h5><i class="fas fa-shield-alt"></i> Clearance Level Access</h5>
+                                                <div class="policy-actions">
+                                                    <label class="checkbox-container">
+                                                        <input type="checkbox" class="policy-enabled" checked>
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                    <button class="btn-icon edit" title="Edit Policy"><i class="fas fa-edit"></i></button>
+                                                    <button class="btn-icon delete" title="Delete Policy"><i class="fas fa-trash"></i></button>
+                                                </div>
+                                            </div>
+                                            <div class="policy-details">
+                                                <p><strong>Description:</strong> Allow access based on user clearance level</p>
+                                                <div class="policy-rule allow">
+                                                    <span class="policy-type">ALLOW</span>
+                                                    <code>IF user.clearanceLevel >= resource.classification THEN ALLOW access</code>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="policy-item" data-policy-index="3">
+                                            <div class="policy-header">
+                                                <h5><i class="fas fa-file-alt"></i> New Policy</h5>
+                                                <div class="policy-actions">
+                                                    <label class="checkbox-container">
+                                                        <input type="checkbox" class="policy-enabled" checked>
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                    <button class="btn-icon edit" title="Edit Policy"><i class="fas fa-edit"></i></button>
+                                                    <button class="btn-icon delete" title="Delete Policy"><i class="fas fa-trash"></i></button>
+                                                </div>
+                                            </div>
+                                            <div class="policy-details">
+                                                <p><strong>Description:</strong> New policy description</p>
+                                                <div class="policy-rule allow">
+                                                    <span class="policy-type">ALLOW</span>
+                                                    <code>IF user.attribute = value THEN ALLOW access</code>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <button class="btn btn-primary" id="addPolicyBtn">
+                                            <i class="fas fa-plus"></i> Add Policy Rule
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="config-section">
+                                    <h4>ABAC Settings</h4>
+                                    <div class="settings-form">
+                                        <div class="form-group">
+                                            <label class="checkbox-container">
+                                                <input type="checkbox" id="abacCombineWithRbac" checked>
+                                                <span class="checkmark"></span>
+                                                Combine with RBAC
+                                            </label>
+                                            <small>Use ABAC to refine RBAC permissions based on attributes</small>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="checkbox-container">
+                                                <input type="checkbox" id="abacDynamicAttributes" checked>
+                                                <span class="checkmark"></span>
+                                                Enable Dynamic Attributes
+                                            </label>
+                                            <small>Allow attributes to be evaluated at runtime (e.g., current time, location)</small>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="abacConflictResolution">Policy Conflict Resolution:</label>
+                                            <select id="abacConflictResolution">
+                                                <option value="denyOverrides">Deny Overrides</option>
+                                                <option value="allowOverrides">Allow Overrides</option>
+                                                <option value="firstApplicable">First Applicable</option>
+                                            </select>
+                                            <small>How to resolve conflicts when multiple policies apply</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ACL Configuration Section -->
+                        <div class="model-config" id="aclConfig" style="display: none;">
+                            <div class="model-header">
+                                <h3><i class="fas fa-list-ul"></i> Access Control Lists Configuration</h3>
+                            </div>
+                            <div class="model-content">
+                                <p>ACLs provide fine-grained control by assigning permissions directly to users for specific resources.</p>
+
+                                <div class="config-section">
+                                    <h4>ACL Settings</h4>
+                                    <div class="settings-form">
+                                        <div class="form-group">
+                                            <label class="checkbox-container">
+                                                <input type="checkbox" id="aclInheritance" checked>
+                                                <span class="checkmark"></span>
+                                                Enable ACL Inheritance
+                                            </label>
+                                            <small>Child resources inherit ACLs from parent resources</small>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="checkbox-container">
+                                                <input type="checkbox" id="aclOverrideRbac" checked>
+                                                <span class="checkmark"></span>
+                                                ACLs Override RBAC
+                                            </label>
+                                            <small>ACL permissions take precedence over role-based permissions</small>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="aclDefaultPolicy">Default ACL Policy:</label>
+                                            <select id="aclDefaultPolicy">
+                                                <option value="deny">Deny Access</option>
+                                                <option value="allow">Allow Access</option>
+                                            </select>
+                                            <small>Default policy when no ACL entry matches</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="config-section">
+                                    <h4>Permission Types</h4>
+                                    <div class="permission-types-grid">
+                                        <div class="permission-type">
+                                            <div class="permission-type-header">
+                                                <h5>Read</h5>
+                                                <div class="permission-type-actions">
+                                                    <button class="btn-icon edit-small"><i class="fas fa-edit"></i></button>
+                                                </div>
+                                            </div>
+                                            <p>Allows viewing the resource content</p>
+                                        </div>
+                                        <div class="permission-type">
+                                            <div class="permission-type-header">
+                                                <h5>Write</h5>
+                                                <div class="permission-type-actions">
+                                                    <button class="btn-icon edit-small"><i class="fas fa-edit"></i></button>
+                                                </div>
+                                            </div>
+                                            <p>Allows modifying the resource content</p>
+                                        </div>
+                                        <div class="permission-type">
+                                            <div class="permission-type-header">
+                                                <h5>Delete</h5>
+                                                <div class="permission-type-actions">
+                                                    <button class="btn-icon edit-small"><i class="fas fa-edit"></i></button>
+                                                </div>
+                                            </div>
+                                            <p>Allows removing the resource</p>
+                                        </div>
+                                        <div class="permission-type">
+                                            <div class="permission-type-header">
+                                                <h5>Execute</h5>
+                                                <div class="permission-type-actions">
+                                                    <button class="btn-icon edit-small"><i class="fas fa-edit"></i></button>
+                                                </div>
+                                            </div>
+                                            <p>Allows running or executing the resource</p>
+                                        </div>
+                                        <div class="permission-type">
+                                            <div class="permission-type-header">
+                                                <h5>Full Access</h5>
+                                                <div class="permission-type-actions">
+                                                    <button class="btn-icon edit-small"><i class="fas fa-edit"></i></button>
+                                                </div>
+                                            </div>
+                                            <p>Grants all permissions on the resource</p>
+                                        </div>
+                                        <div class="permission-type add-new">
+                                            <button class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-plus"></i> Add Permission Type
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="config-section">
+                                    <h4>Resource Access Control Lists</h4>
+                                    <div class="resource-filter">
+                                        <label for="resourceTypeFilter">Filter by Resource Type:</label>
+                                        <select id="resourceTypeFilter">
+                                            <option value="">All Resources</option>
+                                            <option value="document">Documents</option>
+                                            <option value="report">Reports</option>
+                                            <option value="dashboard">Dashboards</option>
+                                            <option value="api">API Endpoints</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="acl-list">
+                                        <table class="data-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Resource</th>
+                                                    <th>Type</th>
+                                                    <th>Owner</th>
+                                                    <th>Users with Access</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Financial Report Q2</td>
+                                                    <td>Report</td>
+                                                    <td>Finance Dept</td>
+                                                    <td>
+                                                        <div class="user-access-list">
+                                                            <span class="user-access">John Doe (Read)</span>
+                                                            <span class="user-access">Jane Smith (Read, Write)</span>
+                                                            <span class="user-access">Finance Group (Full Access)</span>
+                                                        </div>
+                                                    </td>
+                                                    <td class="actions">
+                                                        <button class="btn-icon edit"><i class="fas fa-edit"></i></button>
+                                                        <button class="btn-icon delete"><i class="fas fa-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Marketing Campaign Assets</td>
+                                                    <td>Document</td>
+                                                    <td>Marketing Dept</td>
+                                                    <td>
+                                                        <div class="user-access-list">
+                                                            <span class="user-access">Marketing Group (Full Access)</span>
+                                                            <span class="user-access">Sales Group (Read)</span>
+                                                        </div>
+                                                    </td>
+                                                    <td class="actions">
+                                                        <button class="btn-icon edit"><i class="fas fa-edit"></i></button>
+                                                        <button class="btn-icon delete"><i class="fas fa-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Customer Database API</td>
+                                                    <td>API Endpoint</td>
+                                                    <td>IT Dept</td>
+                                                    <td>
+                                                        <div class="user-access-list">
+                                                            <span class="user-access">IT Admin (Full Access)</span>
+                                                            <span class="user-access">Sales Team (Read)</span>
+                                                            <span class="user-access">Support Team (Read, Write)</span>
+                                                        </div>
+                                                    </td>
+                                                    <td class="actions">
+                                                        <button class="btn-icon edit"><i class="fas fa-edit"></i></button>
+                                                        <button class="btn-icon delete"><i class="fas fa-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <button class="btn btn-primary" id="addResourceAclBtn">
+                                            <i class="fas fa-plus"></i> Add Resource ACL
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="config-section">
+                                    <h4>Hybrid Access Control</h4>
+                                    <p>Configure how ACLs interact with other access control models:</p>
+
+                                    <div class="hybrid-settings">
+                                        <div class="hybrid-setting">
+                                            <h5>ACL + RBAC Integration</h5>
+                                            <select id="aclRbacIntegration">
+                                                <option value="acl_override">ACLs Override RBAC</option>
+                                                <option value="rbac_override">RBAC Overrides ACLs</option>
+                                                <option value="most_permissive">Most Permissive Wins</option>
+                                                <option value="most_restrictive">Most Restrictive Wins</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="hybrid-setting">
+                                            <h5>ACL + ABAC Integration</h5>
+                                            <select id="aclAbacIntegration">
+                                                <option value="acl_override">ACLs Override ABAC</option>
+                                                <option value="abac_override">ABAC Overrides ACLs</option>
+                                                <option value="most_permissive">Most Permissive Wins</option>
+                                                <option value="most_restrictive">Most Restrictive Wins</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Permission Modal -->
+            <div class="modal" id="permissionModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Create New Permission</h2>
+                        <button class="close-btn">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="permissionForm">
+                            <div class="form-group">
+                                <label for="permissionName">Permission Name</label>
+                                <input type="text" id="permissionName" required>
+                                <small>Use lowercase with underscores (e.g., user_create)</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="permissionDescription">Description</label>
+                                <textarea id="permissionDescription" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="permissionCategory">Category</label>
+                                <select id="permissionCategory">
+                                    <option value="user_management">User Management</option>
+                                    <option value="content_management">Content Management</option>
+                                    <option value="reporting">Reporting</option>
+                                    <option value="system">System</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Assign to Roles</label>
+                                <div class="role-assignments">
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" name="role" value="administrator">
+                                        <span class="checkmark"></span>
+                                        Administrator
+                                    </label>
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" name="role" value="manager">
+                                        <span class="checkmark"></span>
+                                        Manager
+                                    </label>
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" name="role" value="editor">
+                                        <span class="checkmark"></span>
+                                        Editor
+                                    </label>
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" name="role" value="viewer">
+                                        <span class="checkmark"></span>
+                                        Viewer
+                                    </label>
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" name="role" value="customer">
+                                        <span class="checkmark"></span>
+                                        Customer
+                                    </label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" id="cancelPermissionBtn">Cancel</button>
+                        <button class="btn btn-primary" id="savePermissionBtn">Save Permission</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attribute Edit Modal -->
+            <div class="modal" id="attributeModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 id="attributeModalTitle">Edit Attribute</h2>
+                        <button class="close-btn">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="attributeForm">
+                            <div class="form-group">
+                                <label for="attributeName">Attribute Name</label>
+                                <input type="text" id="attributeName" required>
+                                <small>Use descriptive names (e.g., Department, Role, Clearance Level)</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="attributeType">Attribute Type</label>
+                                <select id="attributeType">
+                                    <option value="String">String</option>
+                                    <option value="Integer">Integer</option>
+                                    <option value="Boolean">Boolean</option>
+                                    <option value="Date">Date</option>
+                                    <option value="Time">Time</option>
+                                    <option value="Array">Array</option>
+                                    <option value="Object">Object</option>
+                                </select>
+                                <small>The data type of this attribute</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="attributeDescription">Description</label>
+                                <textarea id="attributeDescription" rows="2"></textarea>
+                                <small>Brief description of what this attribute represents</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="attributeValues">Possible Values</label>
+                                <textarea id="attributeValues" rows="3" placeholder="Enter comma-separated values or leave blank if not applicable"></textarea>
+                                <small>For enumerated types, list possible values (e.g., "admin, user, guest")</small>
+                            </div>
+                            <input type="hidden" id="attributeCategory">
+                            <input type="hidden" id="attributeIndex">
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" id="cancelAttributeBtn">Cancel</button>
+                        <button class="btn btn-primary" id="saveAttributeBtn">Save Attribute</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Policy Rule Edit Modal -->
+            <div class="modal" id="policyModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 id="policyModalTitle">Edit Policy Rule</h2>
+                        <button class="close-btn">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="policyForm">
+                            <div class="form-group">
+                                <label for="policyName">Policy Name</label>
+                                <input type="text" id="policyName" required>
+                                <small>Use descriptive names (e.g., Time-Based Access, Department-Based Access)</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="policyDescription">Description</label>
+                                <textarea id="policyDescription" rows="2" required></textarea>
+                                <small>Brief description of what this policy does</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="policyCondition">Condition</label>
+                                <textarea id="policyCondition" rows="3" required></textarea>
+                                <small>The condition that must be met for this policy to apply (e.g., user.role IN ['administrator', 'manager'])</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="policyEffect">Effect</label>
+                                <select id="policyEffect">
+                                    <option value="ALLOW">Allow Access</option>
+                                    <option value="DENY">Deny Access</option>
+                                </select>
+                                <small>Whether to allow or deny access when the condition is met</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="policyTarget">Target (Optional)</label>
+                                <textarea id="policyTarget" rows="2"></textarea>
+                                <small>Optional target specification (e.g., resource.type = 'sensitive')</small>
+                            </div>
+                            <input type="hidden" id="policyIndex">
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" id="cancelPolicyBtn">Cancel</button>
+                        <button class="btn btn-primary" id="savePolicyBtn">Save Policy</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="access-control.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,1916 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workflow Escalation Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        .stat-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-card.clickable {
+            cursor: pointer;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        .activity-item,
+        .list-item {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .activity-item:last-child,
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .chart-container {
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+
+        .user-avatar {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background-color: #60a5fa;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+        }
+
+        .role-icon {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 0.375rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .scrollable-list-container {
+            max-height: 280px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .scrollable-list-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .scrollable-list-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .scrollable-list-container::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .scrollable-list-container::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto !important;
+        }
+
+        .hidden-section {
+            display: none;
+        }
+
+        .table-header {
+            background-color: #f9fafb;
+        }
+
+        .table-cell {
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .status-tag,
+        .audit-status-filter-tag {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: capitalize;
+            border: 1px solid transparent;
+        }
+
+        .status-escalated,
+        .audit-status-filter-tag.status-escalated {
+            background-color: #fee2e2;
+            color: #b91c1c;
+            border-color: #fecaca;
+        }
+
+        /* Red */
+        .status-pending,
+        .audit-status-filter-tag.status-pending {
+            background-color: #ffedd5;
+            color: #c2410c;
+            border-color: #fed7aa;
+        }
+
+        /* Orange */
+        .status-hold,
+        .audit-status-filter-tag.status-hold {
+            background-color: #fef9c3;
+            color: #a16207;
+            border-color: #fde68a;
+        }
+
+        /* Yellow */
+        .status-in-progress,
+        .audit-status-filter-tag.status-in-progress {
+            background-color: #dbeafe;
+            color: #1d4ed8;
+            border-color: #bfdbfe;
+        }
+
+        /* Blue */
+        .status-resolved,
+        .audit-status-filter-tag.status-resolved {
+            background-color: #d1fae5;
+            color: #047857;
+            border-color: #a7f3d0;
+        }
+
+        /* Green */
+        .status-open {
+            background-color: #ffedd5;
+            color: #c2410c;
+        }
+
+        .status-closed {
+            background-color: #e5e7eb;
+            color: #4b5563;
+        }
+
+
+        .priority-tag {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+
+        .priority-critical {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .priority-high {
+            background-color: #ffedd5;
+            color: #c2410c;
+        }
+
+        .priority-medium {
+            background-color: #fef3c7;
+            color: #a16207;
+        }
+
+        .priority-low {
+            background-color: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .audit-grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 1024px) {
+            .audit-grid-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .audit-grid-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+
+        .audit-card {
+            background-color: #ffffff;
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .audit-card-icon-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .audit-card-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.125rem;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .audit-icon-escalated {
+            background-color: #ef4444;
+        }
+
+        .audit-icon-reassigned {
+            background-color: #f97316;
+        }
+
+        .audit-icon-resolved {
+            background-color: #22c55e;
+        }
+
+        .audit-icon-comment {
+            background-color: #3b82f6;
+        }
+
+        .audit-icon-system {
+            background-color: #6b7280;
+        }
+
+        .audit-card-title-time {
+            flex-grow: 1;
+        }
+
+        .audit-card-title {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1rem;
+            margin-bottom: 0.125rem;
+        }
+
+        .audit-card-time {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .audit-card-body {
+            font-size: 0.875rem;
+            color: #4b5563;
+            flex-grow: 1;
+            line-height: 1.6;
+        }
+
+        .audit-card-body p {
+            margin-bottom: 0.375rem;
+        }
+
+        .audit-card-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .audit-card-body strong {
+            color: #374151;
+        }
+
+        .audit-card-footer {
+            margin-top: 1rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid #f3f4f6;
+            font-size: 0.75rem;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+        }
+
+        .audit-card-footer i {
+            margin-right: 0.375rem;
+        }
+
+        .audit-status-filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .audit-status-filter-tag {
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            background-color: #e5e7eb;
+            color: #4b5563;
+            border-color: #d1d5db;
+        }
+
+        .audit-status-filter-tag:hover {
+            opacity: 0.8;
+        }
+
+        .audit-status-filter-tag.active {
+            box-shadow: 0 0 0 2px white, 0 0 0 4px currentColor;
+        }
+
+        .audit-status-filter-tag.all.active {
+            background-color: #3b82f6;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        /* Escalation Rules Page Styles */
+        #ruleTabsContainer {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .rule-tab-button {
+            padding: 0.625rem 1.25rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: 0.5rem;
+            color: #4b5563;
+            border: 1px solid transparent;
+            background-color: transparent;
+            margin-left: 0.25rem;
+            margin-right: 0.25rem;
+            transition: all 0.2s ease-in-out;
+            display: flex;
+            align-items: center;
+        }
+
+        .rule-tab-button i {
+            margin-right: 0.5rem;
+            color: #9ca3af;
+        }
+
+        .rule-tab-button:hover {
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .rule-tab-button.active {
+            color: #3b82f6;
+            background-color: #ffffff;
+            border-color: #e5e7eb;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .rule-tab-button.active i {
+            color: #3b82f6;
+        }
+
+        .rule-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #e5e7eb;
+        }
+
+        .rule-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .rule-card-title-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .rule-status-indicator {
+            width: 0.625rem;
+            height: 0.625rem;
+            border-radius: 50%;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+            border: 2px solid white;
+            box-shadow: 0 0 0 1px currentColor;
+        }
+
+        .rule-card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .rule-card-actions button {
+            color: #9ca3af;
+            margin-left: 0.5rem;
+            background: none;
+            border: none;
+            padding: 0.25rem;
+            font-size: 0.875rem;
+        }
+
+        .rule-card-actions button:hover {
+            color: #374151;
+        }
+
+        .rule-description {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 1.25rem;
+            line-height: 1.6;
+        }
+
+        .rule-detail-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 0.5rem 1rem;
+            font-size: 0.875rem;
+            color: #4b5563;
+            margin-bottom: 1.25rem;
+        }
+
+        .rule-detail-grid strong {
+            color: #4b5563;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .rule-detail-grid span {
+            color: #3b82f6;
+            font-weight: 500;
+            text-align: right;
+        }
+
+        .rule-detail-grid .actions-list {
+            list-style-type: none;
+            padding-left: 0;
+            grid-column: span 2;
+            margin-top: 0.5rem;
+        }
+
+        .rule-detail-grid .actions-list li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.375rem;
+            color: #374151;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .rule-detail-grid .actions-list i {
+            color: #4f46e5;
+            margin-right: 0.625rem;
+            width: 1.25em;
+            text-align: center;
+            font-size: 0.875em;
+        }
+
+        .rule-card-footer {
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid #f3f4f6;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .rule-card-footer-stat {
+            text-align: center;
+        }
+
+        .rule-card-footer-stat .stat-number {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #4f46e5;
+            display: block;
+            margin-bottom: 0.125rem;
+        }
+
+        .rule-card-footer-stat .stat-label {
+            font-size: 0.625rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.075em;
+        }
+
+
+        .rule-definition-section {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            margin-top: 1.5rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        .rule-definition-section h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #d1d5db;
+        }
+
+        .rule-definition-section .rule-type-block {
+            margin-bottom: 2rem;
+        }
+
+        .rule-definition-section .rule-type-block:last-child {
+            margin-bottom: 0;
+        }
+
+        .rule-definition-section h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .rule-definition-section h4 i {
+            margin-right: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        .rule-definition-section h5 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #374151;
+            margin-top: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .rule-definition-section ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            color: #4b5563;
+        }
+
+        .rule-definition-section p {
+            font-size: 0.875rem;
+            color: #4b5563;
+            line-height: 1.6;
+            margin-bottom: 0.75rem;
+        }
+
+        .rule-tab-content {
+            display: none;
+        }
+
+        .rule-tab-content.active {
+            display: block;
+        }
+
+        .rule-tab-content-wrapper {
+            background-color: #ffffff;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-top: 0;
+        }
+
+        /* Escalation Paths Page Styles - THEME UPDATE */
+        .path-stat-card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            /* More rounded */
+            padding: 1.25rem;
+            /* Adjusted padding */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+            /* Softer shadow */
+            display: flex;
+            align-items: center;
+        }
+
+        .path-stat-icon {
+            width: 2.75rem;
+            /* 44px */
+            height: 2.75rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            /* 20px */
+            margin-right: 1rem;
+            color: #ffffff;
+        }
+
+        .path-stat-info .stat-value {
+            font-size: 1.75rem;
+            /* 28px */
+            font-weight: 600;
+            /* Bolder */
+            color: #1f2937;
+            line-height: 1.2;
+        }
+
+        .path-stat-info .stat-label {
+            font-size: 0.75rem;
+            /* 12px */
+            color: #6b7280;
+            text-transform: uppercase;
+            /* Uppercase label */
+            letter-spacing: 0.025em;
+        }
+
+        .path-stat-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .path-stat-info .stat-sublabel {
+            /* For "Across all departments" */
+            font-size: 0.75rem;
+            color: #9ca3af;
+            /* Lighter gray */
+        }
+
+        .escalation-path-card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .path-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+            /* Reduced margin */
+        }
+
+        .path-card-title-section {
+            flex-grow: 1;
+        }
+
+        .path-card-title {
+            font-size: 1.125rem;
+            /* Slightly smaller */
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+
+        .path-card-tags {
+            /* Container for tags */
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .path-card-tags span {
+            /* Individual tag styling */
+            font-size: 0.625rem;
+            /* 10px */
+            font-weight: 600;
+            /* Bolder */
+            padding: 0.25rem 0.625rem;
+            /* py-1 px-2.5 */
+            border-radius: 0.25rem;
+            /* More rectangular */
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .path-tag-sales {
+            background-color: #e0e7ff;
+            color: #4338ca;
+        }
+
+        /* Indigo */
+        .path-tag-technical {
+            background-color: #d1fae5;
+            color: #059669;
+        }
+
+        /* Emerald */
+        .path-tag-active {
+            background-color: #ccfbf1;
+            color: #0d9488;
+        }
+
+        /* Teal */
+
+
+        .path-card-description {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 1rem;
+            /* Reduced margin */
+            line-height: 1.6;
+        }
+
+        .path-level {
+            display: flex;
+            align-items: center;
+            background-color: #f9fafb;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            /* Reduced margin */
+            border: 1px solid #f3f4f6;
+        }
+
+        .path-level-number {
+            background-color: #4f46e5;
+            color: white;
+            width: 1.5rem;
+            /* 24px */
+            height: 1.5rem;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            /* Smaller number */
+            font-weight: 600;
+            /* Bolder number */
+            margin-right: 0.75rem;
+            /* Reduced margin */
+            flex-shrink: 0;
+        }
+
+        .path-level-details {
+            flex-grow: 1;
+            display: flex;
+            /* For aligning title and meta side-by-side */
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .path-level-title {
+            font-weight: 500;
+            color: #374151;
+            font-size: 0.875rem;
+        }
+
+        .path-level-meta {
+            font-size: 0.75rem;
+            color: #6b7280;
+            text-align: right;
+            /* Align meta to the right */
+        }
+
+        .path-level-meta .users {
+            background-color: #e0e7ff;
+            color: #4338ca;
+            padding: 0.125rem 0.5rem;
+            border-radius: 0.25rem;
+            margin-left: 0.5rem;
+        }
+
+        .path-arrow {
+            text-align: center;
+            color: #d1d5db;
+            /* Lighter arrow */
+            margin: 0.125rem 0;
+            /* Reduced margin */
+            font-size: 0.875rem;
+        }
+
+        .path-card-footer {
+            margin-top: 1rem;
+            /* Reduced margin */
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            /* Reduced gap */
+            text-align: center;
+
+        }
+
+        .path-footer-stat .stat-value {
+            font-size: 1.25rem;
+            /* Slightly smaller */
+            font-weight: 600;
+            color: #3b82f6;
+        }
+
+        .path-footer-stat .stat-label {
+            font-size: 0.625rem;
+            /* 10px */
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .path-footer-stat {
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+
+<body class="p-4 md:p-8">
+
+    <div id="mainDashboardView">
+        <header class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Dashboard</h1>
+            <div class="flex items-center space-x-4"> <button id="escalationRulesBtn"
+                    class="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors duration-150"><i
+                        class="fas fa-cogs mr-1"></i> Escalation Rules & Triggers</button> <button
+                    id="escalationPathsBtn"
+                    class="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors duration-150 ml-4"><i
+                        class="fas fa-sitemap mr-1"></i> Escalation Paths</button>
+                <div class="user-avatar"><i class="fas fa-user"></i></div><span class="text-gray-700 font-medium">Admin
+                    User</span>
+            </div>
+        </header>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6 mb-8">
+            <div id="totalEscalationsCard" class="stat-card clickable">
+                <div class="flex items-center justify-between mb-1">
+                    <h3 class="text-sm font-medium text-gray-500">Total Escalations</h3><i
+                        class="fas fa-stream text-blue-500 text-xl"></i>
+                </div>
+                <p class="text-3xl font-semibold text-gray-800">5,678</p>
+                <p class="text-xs text-green-500 mt-1 flex items-center"><i class="fas fa-arrow-up mr-1"></i> 12% from
+                    last month</p>
+            </div>
+            <div class="stat-card">
+                <div class="flex items-center justify-between mb-1">
+                    <h3 class="text-sm font-medium text-gray-500">Open Escalations</h3><i
+                        class="fas fa-folder-open text-red-500 text-xl"></i>
+                </div>
+                <p class="text-3xl font-semibold text-gray-800">42</p>
+                <p class="text-xs text-gray-500 mt-1">No change</p>
+            </div>
+            <div class="stat-card">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-sm font-medium text-gray-500">Avg. Time</h3><i
+                        class="fas fa-hourglass-half text-indigo-500 text-xl"></i>
+                </div>
+                <div class="flex justify-between">
+                    <div class="text-center pr-2 border-r border-gray-200 w-1/2">
+                        <p class="text-sm font-medium text-gray-500 mb-1">Escalation</p>
+                        <p class="text-2xl font-semibold text-gray-800">2.4h</p>
+                        <p class="text-xs text-green-500 mt-1 flex items-center justify-center"><i
+                                class="fas fa-arrow-down mr-1"></i> 5%</p>
+                    </div>
+                    <div class="text-center pl-2 w-1/2">
+                        <p class="text-sm font-medium text-gray-500 mb-1">Resolution</p>
+                        <p class="text-2xl font-semibold text-gray-800">8.1h</p>
+                        <p class="text-xs text-red-500 mt-1 flex items-center justify-center"><i
+                                class="fas fa-arrow-up mr-1"></i> 2%</p>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="flex items-center justify-between mb-1">
+                    <h3 class="text-sm font-medium text-gray-500">SLA Breach Rate</h3><i
+                        class="fas fa-exclamation-triangle text-orange-500 text-xl"></i>
+                </div>
+                <p class="text-3xl font-semibold text-gray-800">12.5%</p>
+                <p class="text-xs text-red-500 mt-1 flex items-center"><i class="fas fa-arrow-up mr-1"></i> 2% from last
+                    month</p>
+            </div>
+            <div class="stat-card">
+                <div class="flex items-center justify-between mb-1">
+                    <h3 class="text-sm font-medium text-gray-500">Resolution Rate</h3><i
+                        class="fas fa-check-circle text-green-500 text-xl"></i>
+                </div>
+                <p class="text-3xl font-semibold text-gray-800">87.5%</p>
+                <p class="text-xs text-green-500 mt-1 flex items-center"><i class="fas fa-arrow-up mr-1"></i> 1.5% from
+                    last month</p>
+            </div>
+            <div id="auditTrailCard" class="stat-card clickable">
+                <div class="flex items-center justify-between mb-1">
+                    <h3 class="text-sm font-medium text-gray-500">Audit Trail</h3><i
+                        class="fas fa-history text-purple-500 text-xl"></i>
+                </div>
+                <p class="text-3xl font-semibold text-gray-800">View Logs</p>
+                <p class="text-xs text-gray-500 mt-1 flex items-center"><i class="fas fa-search mr-1"></i> Last 24 hours
+                </p>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 mb-8">
+            <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="section-title">Recent Activities</h2><a href="#"
+                        class="text-sm text-blue-600 hover:underline">View All</a>
+                </div>
+                <div class="space-y-3">
+                    <div class="activity-item flex items-start space-x-3">
+                        <div
+                            class="bg-blue-100 text-blue-600 p-2 rounded-full text-sm w-8 h-8 flex items-center justify-center">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-700">New escalation created - John Doe</p>
+                            <p class="text-xs text-gray-500">High priority escalation for system outage. <span
+                                    class="ml-2">2 hours ago</span></p>
+                        </div>
+                    </div>
+                    <div class="activity-item flex items-start space-x-3">
+                        <div
+                            class="bg-green-100 text-green-600 p-2 rounded-full text-sm w-8 h-8 flex items-center justify-center">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-700">Escalation resolved - Editor permissions
+                                updated</p>
+                            <p class="text-xs text-gray-500">Permission issue resolved for user access. <span
+                                    class="ml-2">Yesterday</span></p>
+                        </div>
+                    </div>
+                    <div class="activity-item flex items-start space-x-3">
+                        <div
+                            class="bg-yellow-100 text-yellow-600 p-2 rounded-full text-sm w-8 h-8 flex items-center justify-center">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-700">SLA breach reported - Expert Reports</p>
+                            <p class="text-xs text-gray-500">Response time exceeded target threshold. <span
+                                    class="ml-2">2 days ago</span></p>
+                        </div>
+                    </div>
+                    <div class="activity-item flex items-start space-x-3">
+                        <div
+                            class="bg-red-100 text-red-600 p-2 rounded-full text-sm w-8 h-8 flex items-center justify-center">
+                            <i class="fas fa-user-times"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-700">User deactivated - Jane Smith</p>
+                            <p class="text-xs text-gray-500">Account suspended due to policy violation. <span
+                                    class="ml-2">3 days ago</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="section-title">Escalations by Role</h2><a href="#"
+                        class="text-sm text-blue-600 hover:underline">View Details</a>
+                </div>
+                <div class="scrollable-list-container flex-grow">
+                    <div class="space-y-2">
+                        <div class="list-item flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="role-icon bg-indigo-500"><i class="fas fa-user-tie"></i></div><span
+                                    class="text-sm font-medium text-gray-700">Branch Manager</span>
+                            </div><span class="text-sm font-semibold text-gray-800">12 <span
+                                    class="text-xs text-gray-500 font-normal">open</span></span>
+                        </div>
+                        <div class="list-item flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="role-icon bg-teal-500"><i class="fas fa-headset"></i></div><span
+                                    class="text-sm font-medium text-gray-700">Service Manager</span>
+                            </div><span class="text-sm font-semibold text-gray-800">9 <span
+                                    class="text-xs text-gray-500 font-normal">open</span></span>
+                        </div>
+                        <div class="list-item flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="role-icon bg-sky-500"><i class="fas fa-clipboard-list"></i></div><span
+                                    class="text-sm font-medium text-gray-700">Service Coordinator</span>
+                            </div><span class="text-sm font-semibold text-gray-800">7 <span
+                                    class="text-xs text-gray-500 font-normal">open</span></span>
+                        </div>
+                        <div class="list-item flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="role-icon bg-rose-500"><i class="fas fa-ticket-alt"></i></div><span
+                                    class="text-sm font-medium text-gray-700">Customer App Ticket Grp</span>
+                            </div><span class="text-sm font-semibold text-gray-800">15 <span
+                                    class="text-xs text-gray-500 font-normal">open</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+            <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="section-title">Escalation Activity Metrics</h2><select id="timeRangeSelector"
+                        class="text-sm border border-gray-300 rounded-md p-1.5 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="30">Last 30 Days</option>
+                        <option value="60">Last 60 Days</option>
+                        <option value="90">Last 90 Days</option>
+                    </select>
+                </div>
+                <div class="chart-container" style="height: 320px;"><canvas id="escalationActivityChart"></canvas></div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+                <h2 class="section-title mb-4">Priority Distribution</h2>
+                <div class="chart-container" style="height: 320px;"><canvas id="priorityDistributionChart"></canvas>
+                </div>
+                <div class="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-2 text-xs">
+                    <span class="flex items-center"><span
+                            class="w-3 h-3 bg-red-500 rounded-full mr-1.5"></span>Critical</span>
+                    <span class="flex items-center"><span class="w-3 h-3 bg-orange-500 rounded-full mr-1.5"></span>High
+                        Priority</span>
+                    <span class="flex items-center"><span
+                            class="w-3 h-3 bg-yellow-400 rounded-full mr-1.5"></span>Medium Priority</span>
+                    <span class="flex items-center"><span class="w-3 h-3 bg-sky-500 rounded-full mr-1.5"></span>Low
+                        Priority</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="escalationsListView" class="hidden-section bg-white p-6 md:p-8 rounded-xl shadow-lg">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-semibold text-gray-800">All Created Escalations</h2><button
+                id="backToDashboardBtnEscList"
+                class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition duration-150 ease-in-out"><i
+                    class="fas fa-arrow-left mr-2"></i>Back to Dashboard</button>
+        </div>
+        <div class="mb-6 flex flex-wrap gap-4 items-center">
+            <input type="text" placeholder="Search by ID or Title..."
+                class="p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:w-auto w-full">
+            <select
+                class="p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:w-auto w-full">
+                <option value="">All Priorities</option>
+                <option value="critical">Critical</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+            </select>
+            <select
+                class="p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:w-auto w-full">
+                <option value="">All Statuses</option>
+                <option value="open">Open</option>
+                <option value="in-progress">In Progress</option>
+                <option value="resolved">Resolved</option>
+                <option value="closed">Closed</option>
+            </select>
+            <button
+                class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-lg sm:w-auto w-full">Apply
+                Filters</button>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="table-header">
+                    <tr>
+                        <th scope="col"
+                            class="table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID
+                        </th>
+                        <th scope="col"
+                            class="table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Subject</th>
+                        <th scope="col"
+                            class="table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Priority</th>
+                        <th scope="col"
+                            class="table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Status</th>
+                        <th scope="col"
+                            class="table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Created Date</th>
+                        <th scope="col"
+                            class="table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Assigned To</th>
+                        <th scope="col"
+                            class="table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="escalationsTableBody" class="bg-white divide-y divide-gray-200">
+                    <tr>
+                        <td class="table-cell text-gray-900">ESC-001</td>
+                        <td class="table-cell text-gray-700">Server outage in Building A</td>
+                        <td class="table-cell"><span class="priority-tag priority-critical">Critical</span></td>
+                        <td class="table-cell"><span class="status-tag status-open">Open</span></td>
+                        <td class="table-cell text-gray-500">2024-05-27</td>
+                        <td class="table-cell text-gray-700">Tech Team Alpha</td>
+                        <td class="table-cell"><button class="text-blue-600 hover:text-blue-800 text-sm"><i
+                                    class="fas fa-eye mr-1"></i>View</button></td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell text-gray-900">ESC-002</td>
+                        <td class="table-cell text-gray-700">Login issue for new users</td>
+                        <td class="table-cell"><span class="priority-tag priority-high">High</span></td>
+                        <td class="table-cell"><span class="status-tag status-in-progress">In Progress</span></td>
+                        <td class="table-cell text-gray-500">2024-05-26</td>
+                        <td class="table-cell text-gray-700">Support L2</td>
+                        <td class="table-cell"><button class="text-blue-600 hover:text-blue-800 text-sm"><i
+                                    class="fas fa-eye mr-1"></i>View</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-6 flex justify-center">
+            <nav class="inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination"><a href="#"
+                    class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"><i
+                        class="fas fa-chevron-left h-5 w-5"></i></a><a href="#"
+                    class="relative z-10 inline-flex items-center px-4 py-2 border border-blue-500 bg-blue-50 text-sm font-medium text-blue-600">1</a><a
+                    href="#"
+                    class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">2</a><a
+                    href="#"
+                    class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"><i
+                        class="fas fa-chevron-right h-5 w-5"></i></a></nav>
+        </div>
+    </div>
+
+    <div id="auditTrailView" class="hidden-section bg-gray-100 p-6 md:p-8 rounded-xl">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-semibold text-gray-800">Audit Trail</h2><button id="backToDashboardBtnAudit"
+                class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition duration-150 ease-in-out"><i
+                    class="fas fa-arrow-left mr-2"></i>Back to Dashboard</button>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+                <div><label for="dateRangeStartAudit" class="block text-sm font-medium text-gray-700 mb-1">Date
+                        Range</label>
+                    <div class="flex space-x-2"><input type="date" id="dateRangeStartAudit" name="dateRangeStartAudit"
+                            value="2024-05-01"
+                            class="audit-filter p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm"><span
+                            class="self-center text-gray-500">to</span><input type="date" id="dateRangeEndAudit"
+                            name="dateRangeEndAudit" value="2024-05-28"
+                            class="audit-filter p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm">
+                    </div>
+                </div>
+                <div><label for="actionTypeAudit" class="block text-sm font-medium text-gray-700 mb-1">Action
+                        Type</label><select id="actionTypeAudit" name="actionTypeAudit"
+                        class="audit-filter p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm">
+                        <option value="">All Actions</option>
+                        <option>Ticket Escalated</option>
+                        <option>Ticket Reassigned</option>
+                        <option>Escalation Resolved</option>
+                        <option>Comment Added</option>
+                        <option>SLA Warning</option>
+                    </select></div>
+                <div><label for="roleFilterAudit"
+                        class="block text-sm font-medium text-gray-700 mb-1">Role</label><select id="roleFilterAudit"
+                        name="roleFilterAudit"
+                        class="audit-filter p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm">
+                        <option value="">All Roles</option>
+                        <option>Sales Representative</option>
+                        <option>Sales Director</option>
+                        <option>Sales Manager</option>
+                        <option>Enterprise Sales Manager</option>
+                        <option>Product Specialist</option>
+                        <option>Support Tier 1</option>
+                        <option>System</option>
+                    </select></div>
+                <div><label for="priorityFilterAudit"
+                        class="block text-sm font-medium text-gray-700 mb-1">Priority</label><select
+                        id="priorityFilterAudit" name="priorityFilterAudit"
+                        class="audit-filter p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm">
+                        <option value="">All Priorities</option>
+                        <option value="critical">Critical</option>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select></div>
+                <div><label for="ticketIdFilterAudit" class="block text-sm font-medium text-gray-700 mb-1">Ticket
+                        ID</label><input type="text" id="ticketIdFilterAudit" name="ticketIdFilterAudit"
+                        placeholder="Enter Ticket ID"
+                        class="audit-filter p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm">
+                </div>
+            </div>
+        </div>
+        <div id="auditStatusSummaryContainer" class="audit-status-filter-container"></div>
+        <div class="flex justify-between items-center mb-4 text-sm text-gray-600"><span>Audit Events</span><span
+                id="auditEventCount"></span></div>
+        <div id="auditGridContainer" class="audit-grid-container"></div>
+        <p id="noAuditResults" class="hidden-section text-center text-gray-500 py-8">No audit events match the current
+            filters.</p>
+    </div>
+
+    <div id="escalationRulesView" class="hidden-section bg-gray-100 p-6 md:p-8">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-semibold text-gray-800">Escalation Rules & Triggers</h2>
+            <button id="backToDashboardBtnRules"
+                class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition duration-150 ease-in-out">
+                <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+            </button>
+        </div>
+
+        <div id="ruleTabsContainer" class="bg-gray-200 p-1 rounded-lg flex justify-center mb-6 shadow-inner">
+            <button class="rule-tab-button active" data-tab="timeBasedRulesContent"><i
+                    class="fas fa-clock"></i>Time-Based</button>
+            <button class="rule-tab-button" data-tab="priorityBasedRulesContent"><i
+                    class="fas fa-exclamation-circle"></i>Priority-Based</button>
+            <button class="rule-tab-button" data-tab="keywordBasedRulesContent"><i
+                    class="fas fa-key"></i>Keyword-Based</button>
+            <button class="rule-tab-button" data-tab="statusBasedRulesContent"><i
+                    class="fas fa-check-square"></i>Status-Based</button>
+        </div>
+
+        <div class="rule-tab-content-wrapper">
+            <div id="timeBasedRulesContent" class="rule-tab-content active">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="rule-card-title-section"><span class="rule-status-indicator"
+                                    style="background-color: #22c55e;"></span>
+                                <h3 class="rule-card-title">High Priority Opportunity Timeout</h3>
+                            </div>
+                            <div class="rule-card-actions"><button title="Edit Rule"><i
+                                        class="fas fa-pencil-alt"></i></button><button
+                                    title="Toggle Rule Active/Inactive"><i
+                                        class="fas fa-toggle-on text-green-500 text-xl"></i></button><button
+                                    title="Delete Rule"><i class="fas fa-trash-alt"></i></button></div>
+                        </div>
+                        <p class="rule-description">Escalate high priority opportunities that remain in "Pending
+                            Follow-Up" status for more than 48 hours.</p>
+                        <div class="rule-detail-grid"><strong>Trigger:</strong> <span>Time elapsed > 48
+                                hours</span><strong>Ticket Type:</strong>
+                            <span>Opportunity</span><strong>Priority:</strong> <span>High</span><strong>Status:</strong>
+                            <span>Pending Follow-Up</span>
+                        </div>
+                        <strong class="text-sm text-gray-700 mb-1 mt-2">Actions:</strong>
+                        <ul class="actions-list">
+                            <li><i class="fas fa-level-up-alt"></i>Escalate to: Sales Director</li>
+                            <li><i class="fas fa-bell"></i>Send notification to: Original owner, Sales Director</li>
+                            <li><i class="fas fa-flag"></i>Change priority to: Critical</li>
+                        </ul>
+                        <div class="rule-card-footer">
+                            <div class="rule-card-footer-stat"><span class="stat-number">23</span><span
+                                    class="stat-label">TRIGGERED THIS MONTH</span></div>
+                            <div class="rule-card-footer-stat"><span class="stat-number">4.2h</span><span
+                                    class="stat-label">AVG RESOLUTION TIME</span></div>
+                        </div>
+                    </div>
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="rule-card-title-section"><span class="rule-status-indicator"
+                                    style="background-color: #22c55e;"></span>
+                                <h3 class="rule-card-title">Major Account Inactivity</h3>
+                            </div>
+                            <div class="rule-card-actions"><button title="Edit Rule"><i
+                                        class="fas fa-pencil-alt"></i></button><button
+                                    title="Toggle Rule Active/Inactive"><i
+                                        class="fas fa-toggle-on text-green-500 text-xl"></i></button><button
+                                    title="Delete Rule"><i class="fas fa-trash-alt"></i></button></div>
+                        </div>
+                        <p class="rule-description">Escalate tickets related to major accounts that have no activity for
+                            more than 24 hours.</p>
+                        <div class="rule-detail-grid"><strong>Trigger:</strong> <span>No activity > 24
+                                hours</span><strong>Account Type:</strong> <span>Major Account</span><strong>Business
+                                Hours:</strong> <span>Mon-Fri 9AM-6PM</span></div>
+                        <strong class="text-sm text-gray-700 mb-1 mt-2">Actions:</strong>
+                        <ul class="actions-list">
+                            <li><i class="fas fa-level-up-alt"></i>Escalate to: Enterprise Sales Manager</li>
+                            <li><i class="fas fa-bell"></i>Send notification to: Account owner, Manager</li>
+                            <li><i class="fas fa-tag"></i>Add tag: Major Account Escalation</li>
+                        </ul>
+                        <div class="rule-card-footer">
+                            <div class="rule-card-footer-stat"><span class="stat-number">12</span><span
+                                    class="stat-label">TRIGGERED THIS MONTH</span></div>
+                            <div class="rule-card-footer-stat"><span class="stat-number">2.8h</span><span
+                                    class="stat-label">AVG RESOLUTION TIME</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="priorityBasedRulesContent" class="rule-tab-content">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="rule-card-title-section"><span class="rule-status-indicator"
+                                    style="background-color: #3b82f6;"></span>
+                                <h3 class="rule-card-title">Critical Ticket Unresolved</h3>
+                            </div>
+                            <div class="rule-card-actions"><button title="Edit Rule"><i
+                                        class="fas fa-pencil-alt"></i></button><button
+                                    title="Toggle Rule Active/Inactive"><i
+                                        class="fas fa-toggle-on text-green-500 text-xl"></i></button><button
+                                    title="Delete Rule"><i class="fas fa-trash-alt"></i></button></div>
+                        </div>
+                        <p class="rule-description">Escalate critical priority tickets unresolved for over 2 hours.</p>
+                        <div class="rule-detail-grid"><strong>Trigger:</strong><span>Priority "Critical" AND Resolution
+                                time > 2 hours</span><strong>Applies to:</strong><span>All Ticket Types</span></div>
+                        <strong class="text-sm text-gray-700 mb-1 mt-2">Actions:</strong>
+                        <ul class="actions-list">
+                            <li><i class="fas fa-level-up-alt"></i>Escalate to: Senior Support Engineer</li>
+                            <li><i class="fas fa-bell"></i>Notify: Support Manager</li>
+                        </ul>
+                        <div class="rule-card-footer">
+                            <div class="rule-card-footer-stat"><span class="stat-number">5</span><span
+                                    class="stat-label">TRIGGERED THIS MONTH</span></div>
+                            <div class="rule-card-footer-stat"><span class="stat-number">0.5h</span><span
+                                    class="stat-label">AVG RESOLUTION TIME</span></div>
+                        </div>
+                    </div>
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="rule-card-title-section"><span class="rule-status-indicator"
+                                    style="background-color: #a855f7;"></span>
+                                <h3 class="rule-card-title">Priority Upgrade Notification</h3>
+                            </div>
+                            <div class="rule-card-actions"><button title="Edit Rule"><i
+                                        class="fas fa-pencil-alt"></i></button><button
+                                    title="Toggle Rule Active/Inactive"><i
+                                        class="fas fa-toggle-off text-gray-400 text-xl"></i></button><button
+                                    title="Delete Rule"><i class="fas fa-trash-alt"></i></button></div>
+                        </div>
+                        <p class="rule-description">Notify team lead when a ticket's priority is changed from Low to
+                            High.</p>
+                        <div class="rule-detail-grid"><strong>Trigger:</strong><span>Priority changed from "Low" to
+                                "High"</span><strong>Applies to:</strong><span>Support Tickets</span></div>
+                        <strong class="text-sm text-gray-700 mb-1 mt-2">Actions:</strong>
+                        <ul class="actions-list">
+                            <li><i class="fas fa-bell"></i>Notify: Team Lead</li>
+                            <li><i class="fas fa-tag"></i>Add tag: PriorityReview</li>
+                        </ul>
+                        <div class="rule-card-footer">
+                            <div class="rule-card-footer-stat"><span class="stat-number">18</span><span
+                                    class="stat-label">TRIGGERED THIS MONTH</span></div>
+                            <div class="rule-card-footer-stat"><span class="stat-number">N/A</span><span
+                                    class="stat-label">AVG RESOLUTION TIME</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="rule-definition-section">
+                    <div class="rule-type-block">
+                        <h4><i class="fas fa-exclamation-circle text-blue-500"></i>Priority-Based Rules</h4>
+                        <h5>Definition:</h5>
+                        <p>These rules trigger escalations based on the priority level of a ticket or task (e.g., High,
+                            Medium, Low, or Critical).</p>
+                        <h5>Use Case Example:</h5>
+                        <ul>
+                            <li>If a Critical priority ticket has not been resolved within 2 hours, escalate to a senior
+                                support engineer.</li>
+                            <li>If a Low priority ticket is changed to High, notify the team lead.</li>
+                        </ul>
+                        <h5>Typical Triggers:</h5>
+                        <ul>
+                            <li>Priority is set to "High" or "Critical"</li>
+                            <li>Priority was changed from Medium to High</li>
+                            <li>Priority remains unchanged but resolution time exceeds a threshold</li>
+                        </ul>
+                        <h5>Actions:</h5>
+                        <ul>
+                            <li>Escalate to higher authority</li>
+                            <li>Increase urgency/status</li>
+                            <li>Notify managers or stakeholders</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="keywordBasedRulesContent" class="rule-tab-content">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="rule-card-title-section"><span class="rule-status-indicator"
+                                    style="background-color: #f59e0b;"></span>
+                                <h3 class="rule-card-title">Urgent Keyword Alert</h3>
+                            </div>
+                            <div class="rule-card-actions"><button title="Edit Rule"><i
+                                        class="fas fa-pencil-alt"></i></button><button
+                                    title="Toggle Rule Active/Inactive"><i
+                                        class="fas fa-toggle-on text-green-500 text-xl"></i></button><button
+                                    title="Delete Rule"><i class="fas fa-trash-alt"></i></button></div>
+                        </div>
+                        <p class="rule-description">Flag and escalate tickets containing "urgent", "CEO", or "legal".
+                        </p>
+                        <div class="rule-detail-grid"><strong>Trigger:</strong><span>Subject/Description contains
+                                "urgent" OR "CEO" OR "legal"</span></div>
+                        <strong class="text-sm text-gray-700 mb-1 mt-2">Actions:</strong>
+                        <ul class="actions-list">
+                            <li><i class="fas fa-flag"></i>Flag as: Immediate Attention</li>
+                            <li><i class="fas fa-level-up-alt"></i>Escalate to: Department Head</li>
+                            <li><i class="fas fa-bell"></i>Notify: Security Team (if "legal")</li>
+                        </ul>
+                        <div class="rule-card-footer">
+                            <div class="rule-card-footer-stat"><span class="stat-number">31</span><span
+                                    class="stat-label">TRIGGERED THIS MONTH</span></div>
+                            <div class="rule-card-footer-stat"><span class="stat-number">15min</span><span
+                                    class="stat-label">AVG INITIAL RESPONSE</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="rule-definition-section">
+                    <div class="rule-type-block">
+                        <h4><i class="fas fa-key text-yellow-500"></i>Keyword-Based Rules</h4>
+                        <h5>Definition:</h5>
+                        <p>These rules trigger based on specific words or phrases found in the subject, description, or
+                            communication threads of a ticket.</p>
+                        <h5>Use Case Example:</h5>
+                        <ul>
+                            <li>If a ticket contains the word "urgent", "CEO", or "legal", it is flagged and escalated
+                                immediately.</li>
+                            <li>Tickets with "payment failed" in the description are routed to the billing team with
+                                high priority.</li>
+                        </ul>
+                        <h5>Typical Triggers:</h5>
+                        <ul>
+                            <li>Subject contains “downtime”</li>
+                            <li>Description mentions “refund” or “escalation”</li>
+                            <li>Attachments with filenames indicating issues</li>
+                        </ul>
+                        <h5>Actions:</h5>
+                        <ul>
+                            <li>Auto-tag tickets</li>
+                            <li>Send to specialized queues</li>
+                            <li>Notify legal/finance/security teams</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="statusBasedRulesContent" class="rule-tab-content">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="rule-card-title-section"><span class="rule-status-indicator"
+                                    style="background-color: #10b981;"></span>
+                                <h3 class="rule-card-title">Stale Pending Tickets</h3>
+                            </div>
+                            <div class="rule-card-actions"><button title="Edit Rule"><i
+                                        class="fas fa-pencil-alt"></i></button><button
+                                    title="Toggle Rule Active/Inactive"><i
+                                        class="fas fa-toggle-on text-green-500 text-xl"></i></button><button
+                                    title="Delete Rule"><i class="fas fa-trash-alt"></i></button></div>
+                        </div>
+                        <p class="rule-description">Escalate tickets in "Pending" status for more than 3 days.</p>
+                        <div class="rule-detail-grid"><strong>Trigger:</strong><span>Status is "Pending" AND Time in
+                                status > 3 days</span></div>
+                        <strong class="text-sm text-gray-700 mb-1 mt-2">Actions:</strong>
+                        <ul class="actions-list">
+                            <li><i class="fas fa-level-up-alt"></i>Escalate to: Supervisor</li>
+                            <li><i class="fas fa-bell"></i>Notify: Assigned Agent</li>
+                        </ul>
+                        <div class="rule-card-footer">
+                            <div class="rule-card-footer-stat"><span class="stat-number">9</span><span
+                                    class="stat-label">TRIGGERED THIS MONTH</span></div>
+                            <div class="rule-card-footer-stat"><span class="stat-number">4.5d</span><span
+                                    class="stat-label">AVG TIME IN PENDING</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="rule-definition-section">
+                    <div class="rule-type-block">
+                        <h4><i class="fas fa-check-square text-green-600"></i>Status-Based Rules</h4>
+                        <h5>Definition:</h5>
+                        <p>These rules escalate tasks based on their status (e.g., Open, Pending, On Hold, Resolved) and
+                            how long they stay in that state.</p>
+                        <h5>Use Case Example:</h5>
+                        <ul>
+                            <li>If a ticket is in Pending status for more than 3 days, escalate to a supervisor.</li>
+                            <li>If a ticket is marked Resolved but the customer replies, reopen and notify the agent
+                                immediately.</li>
+                        </ul>
+                        <h5>Typical Triggers:</h5>
+                        <ul>
+                            <li>Status remains “Open” for too long</li>
+                            <li>Status is changed to “On Hold” without notes</li>
+                            <li>Ticket reopens after being “Closed”</li>
+                        </ul>
+                        <h5>Actions:</h5>
+                        <ul>
+                            <li>Escalate to team lead or QA team</li>
+                            <li>Change status to urgent or review</li>
+                            <li>Notify stakeholders about delay</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="escalationPathsView" class="hidden-section bg-gray-100 p-6 md:p-8">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800">Escalation Paths</h2>
+            <button id="backToDashboardBtnPaths"
+                class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition duration-150 ease-in-out">
+                <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="path-stat-card">
+                <div class="path-stat-icon bg-purple-500"><i class="fas fa-project-diagram"></i></div>
+                <div class="path-stat-info">
+                    <span class="stat-label">Total Paths</span>
+                    <span class="stat-value">12</span>
+                    <p class="stat-sublabel">Across all departments</p>
+                </div>
+            </div>
+            <div class="path-stat-card">
+                <div class="path-stat-icon bg-blue-500"><i class="fas fa-users"></i></div>
+                <div class="path-stat-info">
+                    <span class="stat-label">Active Users</span>
+                    <span class="stat-value">45</span>
+                    <p class="stat-sublabel">In escalation paths</p>
+                </div>
+            </div>
+            <div class="path-stat-card">
+                <div class="path-stat-icon bg-yellow-500"><i class="fas fa-layer-group"></i></div>
+                <div class="path-stat-info">
+                    <span class="stat-label">Escalation Levels</span>
+                    <span class="stat-value">4</span>
+                    <p class="stat-sublabel">Maximum levels configured</p>
+                </div>
+            </div>
+            <div class="path-stat-card">
+                <div class="path-stat-icon bg-teal-500"><i class="fas fa-clock"></i></div>
+                <div class="path-stat-info">
+                    <span class="stat-label">Avg response Time</span>
+                    <span class="stat-value">2.3h</span>
+                    <p class="stat-sublabel">Per escalation level</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow mb-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold text-gray-700">Configured Escalation Paths</h3>
+                <div class="flex space-x-3">
+                    <select
+                        class="p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                        <option>All Departments</option>
+                        <option>Sales</option>
+                        <option>Technical Support</option>
+                        <option>Enterprise Accounts</option>
+                    </select>
+                    <select
+                        class="p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                        <option>All Statuses</option>
+                        <option>Active</option>
+                        <option>Inactive</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="escalation-path-card">
+                    <div class="path-card-header">
+                        <div class="path-card-title-section">
+                            <h4 class="path-card-title">Sales Department Escalation</h4>
+                            <div class="path-card-tags"><span class="path-tag-sales">Sales</span><span
+                                    class="path-tag-active">Active</span></div>
+                        </div>
+                        <div class="rule-card-actions"><button title="Edit"><i
+                                    class="fas fa-pencil-alt"></i></button><button title="View"><i
+                                    class="fas fa-eye"></i></button></div>
+                    </div>
+                    <p class="path-card-description">Standard escalation path for sales opportunities and leads,
+                        covering all priority levels and account types.</p>
+                    <div>
+                        <div class="path-level"><span class="path-level-number">1</span>
+                            <div class="path-level-details">
+                                <div class="path-level-title">Sales Representative</div>
+                                <div class="path-level-meta">Initial: 0-24h <span class="users">12 users</span></div>
+                            </div>
+                        </div>
+                        <div class="path-arrow"><i class="fas fa-arrow-down"></i></div>
+                        <div class="path-level"><span class="path-level-number">2</span>
+                            <div class="path-level-details">
+                                <div class="path-level-title">Sales Manager</div>
+                                <div class="path-level-meta">After: 24h <span class="users">4 users</span></div>
+                            </div>
+                        </div>
+                        <div class="path-arrow"><i class="fas fa-arrow-down"></i></div>
+                        <div class="path-level"><span class="path-level-number">3</span>
+                            <div class="path-level-details">
+                                <div class="path-level-title">Sales Director</div>
+                                <div class="path-level-meta">After: 48h <span class="users">2 users</span></div>
+                            </div>
+                        </div>
+                        <div class="path-arrow"><i class="fas fa-arrow-down"></i></div>
+                        <div class="path-level"><span class="path-level-number">4</span>
+                            <div class="path-level-details">
+                                <div class="path-level-title">VP Sales</div>
+                                <div class="path-level-meta">After: 72h <span class="users">1 user</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="path-card-footer">
+                        <div class="path-footer-stat"><span class="stat-value">156</span><span
+                                class="stat-label">Escalations This Month</span></div>
+                        <div class="path-footer-stat"><span class="stat-value">89%</span><span
+                                class="stat-label">Resolution Rate</span></div>
+                        <div class="path-footer-stat"><span class="stat-value">3.2h</span><span class="stat-label">Avg
+                                Response Time</span></div>
+                    </div>
+                </div>
+                <div class="escalation-path-card">
+                    <div class="path-card-header">
+                        <div class="path-card-title-section">
+                            <h4 class="path-card-title">Technical Support Escalation</h4>
+                            <div class="path-card-tags"><span class="path-tag-technical">Technical</span><span
+                                    class="path-tag-active">Active</span></div>
+                        </div>
+                        <div class="rule-card-actions"><button title="Edit"><i
+                                    class="fas fa-pencil-alt"></i></button><button title="View"><i
+                                    class="fas fa-eye"></i></button></div>
+                    </div>
+                    <p class="path-card-description">Specialized escalation path for technical issues requiring expert
+                        knowledge and rapid response.</p>
+                    <div>
+                        <div class="path-level"><span class="path-level-number">1</span>
+                            <div class="path-level-details">
+                                <div class="path-level-title">Product Specialist</div>
+                                <div class="path-level-meta">Initial: 0-4h <span class="users">8 users</span></div>
+                            </div>
+                        </div>
+                        <div class="path-arrow"><i class="fas fa-arrow-down"></i></div>
+                        <div class="path-level"><span class="path-level-number">2</span>
+                            <div class="path-level-details">
+                                <div class="path-level-title">Senior Technical Lead</div>
+                                <div class="path-level-meta">After: 4h <span class="users">3 users</span></div>
+                            </div>
+                        </div>
+                        <div class="path-arrow"><i class="fas fa-arrow-down"></i></div>
+                        <div class="path-level"><span class="path-level-number">3</span>
+                            <div class="path-level-details">
+                                <div class="path-level-title">Engineering Manager</div>
+                                <div class="path-level-meta">After: 12h <span class="users">2 users</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="path-card-footer">
+                        <div class="path-footer-stat"><span class="stat-value">89</span><span
+                                class="stat-label">Escalations This Month</span></div>
+                        <div class="path-footer-stat"><span class="stat-value">94%</span><span
+                                class="stat-label">Resolution Rate</span></div>
+                        <div class="path-footer-stat"><span class="stat-value">1.8h</span><span class="stat-label">Avg
+                                Response Time</span></div>
+                    </div>
+                </div>
+                <div class="escalation-path-card">
+                    <div class="path-card-header">
+                        <div class="path-card-title-section">
+                            <h4 class="path-card-title">Enterprise Accounts</h4>
+                            <div class="path-card-tags"><span class="path-tag-sales">Sales</span><span
+                                    class="path-tag-active">Active</span></div>
+                        </div>
+                        <div class="rule-card-actions"><button title="Edit"><i
+                                    class="fas fa-pencil-alt"></i></button><button title="View"><i
+                                    class="fas fa-eye"></i></button></div>
+                    </div>
+                    <p class="path-card-description">High-priority escalation path for enterprise accounts with
+                        accelerated timelines and executive involvement.</p>
+                    <div>
+                        <div class="path-level"><span class="path-level-number">1</span>
+                            <div class="path-level-details">
+                                <div class="path-level-title">Enterprise Sales Manager</div>
+                                <div class="path-level-meta">Initial: 0-2h <span class="users">3 users</span></div>
+                            </div>
+                        </div>
+                        <div class="path-arrow"><i class="fas fa-arrow-down"></i></div>
+                        <div class="path-level"><span class="path-level-number">2</span>
+                            <div class="path-level-details">
+                                <div class="path-level-title">VP Sales</div>
+                                <div class="path-level-meta">After: 2h <span class="users">1 user</span></div>
+                            </div>
+                        </div>
+                        <div class="path-arrow"><i class="fas fa-arrow-down"></i></div>
+                        <div class="path-level"><span class="path-level-number">3</span>
+                            <div class="path-level-details">
+                                <div class="path-level-title">Chief Revenue Officer</div>
+                                <div class="path-level-meta">After: 6h <span class="users">1 user</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="path-card-footer">
+                        <div class="path-footer-stat"><span class="stat-value">23</span><span
+                                class="stat-label">Escalations This Month</span></div>
+                        <div class="path-footer-stat"><span class="stat-value">96%</span><span
+                                class="stat-label">Resolution Rate</span></div>
+                        <div class="path-footer-stat"><span class="stat-value">1.2h</span><span class="stat-label">Avg
+                                Response Time</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const mainDashboardView = document.getElementById('mainDashboardView');
+            const escalationsListView = document.getElementById('escalationsListView');
+            const auditTrailView = document.getElementById('auditTrailView');
+            const escalationRulesView = document.getElementById('escalationRulesView');
+            const escalationPathsView = document.getElementById('escalationPathsView');
+
+            const totalEscalationsCard = document.getElementById('totalEscalationsCard');
+            const auditTrailCard = document.getElementById('auditTrailCard');
+            const escalationRulesBtn = document.getElementById('escalationRulesBtn');
+            const escalationPathsBtn = document.getElementById('escalationPathsBtn');
+
+            const backToDashboardBtnEscList = document.getElementById('backToDashboardBtnEscList');
+            const backToDashboardBtnAudit = document.getElementById('backToDashboardBtnAudit');
+            const backToDashboardBtnRules = document.getElementById('backToDashboardBtnRules');
+            const backToDashboardBtnPaths = document.getElementById('backToDashboardBtnPaths');
+
+
+            let escalationChart = null;
+            let priorityChart = null;
+            const escalationCanvas = document.getElementById('escalationActivityChart');
+            const priorityCanvas = document.getElementById('priorityDistributionChart');
+            const timeRangeSelector = document.getElementById('timeRangeSelector');
+
+            const auditGridContainer = document.getElementById('auditGridContainer');
+            const noAuditResultsMsg = document.getElementById('noAuditResults');
+            const auditEventCountDisplay = document.getElementById('auditEventCount');
+            const auditStatusSummaryContainer = document.getElementById('auditStatusSummaryContainer');
+            let currentAuditStatusFilter = "";
+
+            const sampleAuditData = [
+                { id: 1, title: 'Ticket Escalated', timeAgo: '2 hours ago', ticketId: 'DP-2024-001', fromUser: 'Sales Rep (John Smith)', toUser: 'Sales Director (Sarah Johnson)', reason: 'SLA Breach Risk - high priority opportunity pending for 48+ hours', triggeredBy: 'Automated Rule "High Priority Opportunity Timeout"', footerUser: 'System', date: '2024-05-28T10:15:00', type: 'Automated', icon: 'fa-arrow-up', iconBg: 'audit-icon-escalated', priority: 'high', role: 'System', statusBefore: 'pending', status: 'escalated', escalationLevel: 'Level 1', responseTimeAfterEscalation: null },
+                { id: 2, title: 'Ticket Reassigned', timeAgo: '4 hours ago', ticketId: 'LEAD-2024-045', fromUser: 'Sales Manager (Mike Wilson)', toUser: 'Ent. Sales Manager (Michael Chen)', reason: 'Manual reassignment - Enterprise account requires specialized handling.', notes: '"This is a Fortune 500 prospect..."', footerUser: 'Mike Wilson', date: '2024-05-28T08:30:00', type: 'Manual', icon: 'fa-random', iconBg: 'audit-icon-reassigned', priority: 'high', role: 'Sales Manager', statusBefore: 'pending', status: 'in-progress', escalationLevel: 'Level 0', responseTimeAfterEscalation: null },
+                { id: 3, title: 'Escalation Resolved', timeAgo: '6 hours ago', ticketId: 'ACC-2024-012', resolvedBy: 'Product Specialist (David Rodriguez)', resolution: 'Technical issue resolved with API integration guidance.', footerUser: 'D. Rodriguez', date: '2024-05-28T06:45:00', type: 'Manual', icon: 'fa-check-circle', iconBg: 'audit-icon-resolved', priority: 'medium', role: 'Product Specialist', statusBefore: 'escalated', status: 'resolved', escalationLevel: 'Level 2', responseTimeAfterEscalation: '3 hours' },
+                { id: 4, title: 'Comment Added', timeAgo: '8 hours ago', ticketId: 'DP-2024-001', user: 'Sarah Johnson', comment: '"Following up with the client. Will update status by EOD."', footerUser: 'S. Johnson', date: '2024-05-28T04:00:00', type: 'Manual', icon: 'fa-comment', iconBg: 'audit-icon-comment', priority: 'high', role: 'Sales Director', statusBefore: 'escalated', status: 'in-progress', escalationLevel: 'Level 1', responseTimeAfterEscalation: '30 mins' },
+                { id: 5, title: 'SLA Warning', timeAgo: '1 day ago', ticketId: 'SERV-0789', details: 'First response SLA approaching breach in 2 hours.', assignedTo: 'Tier 1 Support', footerUser: 'System', date: '2024-05-27T09:00:00', type: 'Automated', icon: 'fa-bell', iconBg: 'audit-icon-system', priority: 'medium', role: 'System', statusBefore: 'open', status: 'pending', escalationLevel: 'N/A', responseTimeAfterEscalation: null },
+                { id: 6, title: 'Ticket Escalated', timeAgo: '2 days ago', ticketId: 'CRIT-001', fromUser: 'Support Tier 1 (Eva Core)', toUser: 'Support Tier 2 (Liam Bell)', reason: 'Customer unresponsive, critical issue reported.', triggeredBy: 'Manual Escalation', footerUser: 'Eva Core', date: '2024-05-26T14:30:00', type: 'Manual', icon: 'fa-arrow-up', iconBg: 'audit-icon-escalated', priority: 'critical', role: 'Support Tier 1', statusBefore: 'in-progress', status: 'escalated', escalationLevel: 'Level 2', responseTimeAfterEscalation: null },
+                { id: 7, title: 'Ticket on Hold', timeAgo: '3 days ago', ticketId: 'HOLD-001', reason: 'Awaiting customer feedback for clarification.', placedBy: 'Support Tier 1 (Tom Lee)', footerUser: 'Tom Lee', date: '2024-05-25T11:00:00', type: 'Manual', icon: 'fa-pause-circle', iconBg: 'audit-icon-system', priority: 'low', role: 'Support Tier 1', statusBefore: 'pending', status: 'hold', escalationLevel: 'N/A', responseTimeAfterEscalation: null },
+            ];
+
+            const auditStatuses = ["escalated", "pending", "hold", "in-progress", "resolved"];
+
+            function getPriorityClass(priority) { if (!priority) return ''; switch (priority.toLowerCase()) { case 'critical': return 'priority-critical'; case 'high': return 'priority-high'; case 'medium': return 'priority-medium'; case 'low': return 'priority-low'; default: return 'bg-gray-200 text-gray-700'; } }
+            function getStatusClass(status) { if (!status) return ''; return `status-${status.toLowerCase().replace(' ', '-')}`; }
+
+            function renderAuditStatusSummary() {
+                if (!auditStatusSummaryContainer) return;
+                auditStatusSummaryContainer.innerHTML = '';
+                const statusCounts = { all: sampleAuditData.length };
+                auditStatuses.forEach(status => { statusCounts[status] = sampleAuditData.filter(item => item.status === status).length; });
+                const allTag = document.createElement('span');
+                allTag.className = `audit-status-filter-tag all ${currentAuditStatusFilter === "" ? 'active' : ''}`;
+                allTag.textContent = `All (${statusCounts.all})`;
+                allTag.dataset.statusFilter = "";
+                allTag.addEventListener('click', handleStatusFilterClick);
+                auditStatusSummaryContainer.appendChild(allTag);
+                auditStatuses.forEach(status => {
+                    const tag = document.createElement('span');
+                    const statusClass = getStatusClass(status);
+                    tag.className = `audit-status-filter-tag ${statusClass} ${currentAuditStatusFilter === status ? 'active' : ''}`;
+                    tag.textContent = `${status.replace('-', ' ')} (${statusCounts[status]})`;
+                    tag.dataset.statusFilter = status;
+                    tag.addEventListener('click', handleStatusFilterClick);
+                    auditStatusSummaryContainer.appendChild(tag);
+                });
+            }
+
+            function handleStatusFilterClick(event) { currentAuditStatusFilter = event.target.dataset.statusFilter; renderAuditStatusSummary(); filterAuditData(); }
+
+            function renderAuditCards(dataToRender) {
+                if (!auditGridContainer) return;
+                auditGridContainer.innerHTML = '';
+                if (dataToRender.length === 0) { noAuditResultsMsg.classList.remove('hidden-section'); } else { noAuditResultsMsg.classList.add('hidden-section'); }
+                auditEventCountDisplay.innerHTML = `<strong>${dataToRender.length}</strong> event${dataToRender.length === 1 ? '' : 's'} found`;
+                dataToRender.forEach(item => {
+                    const card = document.createElement('div'); card.className = 'audit-card';
+                    let bodyHTML = `<p><strong>Ticket:</strong> <a href="#" class="text-blue-600 hover:underline">${item.ticketId}</a></p>`;
+                    if (item.priority) { bodyHTML += `<p><strong>Priority:</strong> <span class="priority-tag ${getPriorityClass(item.priority)}">${item.priority}</span></p>`; }
+                    if (item.statusBefore && item.status) { bodyHTML += `<p><strong>Status:</strong> <span class="status-tag ${getStatusClass(item.statusBefore)}">${item.statusBefore}</span> &rarr; <span class="status-tag ${getStatusClass(item.status)}">${item.status}</span></p>`; } else if (item.status) { bodyHTML += `<p><strong>Status:</strong> <span class="status-tag ${getStatusClass(item.status)}">${item.status}</span></p>`; }
+                    if (item.escalationLevel && item.escalationLevel !== 'N/A') { bodyHTML += `<p><strong>Escalation Level:</strong> ${item.escalationLevel}</p>`; }
+                    if (item.fromUser) bodyHTML += `<p><strong>From:</strong> ${item.fromUser}</p>`;
+                    if (item.toUser) bodyHTML += `<p><strong>To:</strong> ${item.toUser}</p>`;
+                    if (item.reason) bodyHTML += `<p><strong>Reason:</strong> ${item.reason}</p>`;
+                    if (item.triggeredBy) bodyHTML += `<p><strong>Triggered by:</strong> ${item.triggeredBy}</p>`;
+                    if (item.resolvedBy) bodyHTML += `<p><strong>Resolved by:</strong> ${item.resolvedBy}</p>`;
+                    if (item.resolution) bodyHTML += `<p><strong>Resolution:</strong> ${item.resolution}</p>`;
+                    if (item.user) bodyHTML += `<p><strong>User:</strong> ${item.user}</p>`;
+                    if (item.comment) bodyHTML += `<p><strong>Comment:</strong> ${item.comment}</p>`;
+                    if (item.details) bodyHTML += `<p><strong>Details:</strong> ${item.details}</p>`;
+                    if (item.assignedTo) bodyHTML += `<p><strong>Assigned to:</strong> ${item.assignedTo}</p>`;
+                    if (item.responseTimeAfterEscalation) { bodyHTML += `<p><strong>Response Time (post-escalation):</strong> ${item.responseTimeAfterEscalation}</p>`; }
+                    card.innerHTML = `<div class="audit-card-icon-header"><div class="audit-card-icon ${item.iconBg}"><i class="fas ${item.icon}"></i></div><div class="audit-card-title-time"><h3 class="audit-card-title">${item.title}</h3><p class="audit-card-time">${item.timeAgo}</p></div></div><div class="audit-card-body">${bodyHTML}</div><div class="audit-card-footer"><i class="fas ${item.type === 'Automated' ? 'fa-cogs' : 'fa-user'}"></i> ${item.footerUser} &nbsp;&bull;&nbsp; ${new Date(item.date).toLocaleString()} &nbsp;&bull;&nbsp; ${item.type}</div>`;
+                    auditGridContainer.appendChild(card);
+                });
+            }
+
+            function filterAuditData() {
+                const startDate = document.getElementById('dateRangeStartAudit').value;
+                const endDate = document.getElementById('dateRangeEndAudit').value;
+                const actionType = document.getElementById('actionTypeAudit').value;
+                const role = document.getElementById('roleFilterAudit').value;
+                const priority = document.getElementById('priorityFilterAudit').value;
+                const ticketId = document.getElementById('ticketIdFilterAudit').value.toLowerCase();
+                const filteredData = sampleAuditData.filter(item => {
+                    const itemDate = new Date(item.date);
+                    const matchesDate = (!startDate || itemDate >= new Date(startDate)) && (!endDate || itemDate <= new Date(endDate + 'T23:59:59'));
+                    const matchesActionType = !actionType || item.title === actionType;
+                    const matchesRole = !role || item.role === role;
+                    const matchesPriority = !priority || item.priority.toLowerCase() === priority.toLowerCase();
+                    const matchesTicketId = !ticketId || item.ticketId.toLowerCase().includes(ticketId);
+                    const matchesStatus = !currentAuditStatusFilter || item.status === currentAuditStatusFilter;
+                    return matchesDate && matchesActionType && matchesRole && matchesPriority && matchesTicketId && matchesStatus;
+                });
+                renderAuditCards(filteredData);
+            }
+
+            document.querySelectorAll('.audit-filter').forEach(el => el.addEventListener('change', filterAuditData));
+            document.getElementById('ticketIdFilterAudit').addEventListener('input', filterAuditData);
+
+            const original_generateSampleLineData = (days) => { const labels = Array.from({ length: days }, (_, i) => { const d = new Date(); d.setDate(d.getDate() - (days - 1) + i); return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); }); return { labels: labels, datasets: [{ label: 'New Escalations', data: Array.from({ length: days }, () => Math.floor(Math.random() * 80) + 20), borderColor: 'rgb(59, 130, 246)', backgroundColor: 'rgba(59, 130, 246, 0.1)', tension: 0.3, fill: true, }, { label: 'Resolved Escalations', data: Array.from({ length: days }, () => Math.floor(Math.random() * 70) + 10), borderColor: 'rgb(34, 197, 94)', backgroundColor: 'rgba(34, 197, 94, 0.1)', tension: 0.3, fill: true, }, { label: 'SLA Breaches', data: Array.from({ length: days }, () => Math.floor(Math.random() * 30)), borderColor: 'rgb(239, 68, 68)', backgroundColor: 'rgba(239, 68, 68, 0.1)', tension: 0.3, fill: true, }] }; };
+            const original_createOrUpdateEscalationChart = (days) => { if (!escalationCanvas) return; const ctx = escalationCanvas.getContext('2d'); const data = original_generateSampleLineData(days); const existingChart = Chart.getChart(escalationCanvas); if (existingChart) { existingChart.destroy(); } escalationChart = new Chart(ctx, { type: 'line', data: data, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: '#e5e7eb' }, ticks: { color: '#6b7280' } }, x: { grid: { display: false }, ticks: { color: '#6b7280' } } }, plugins: { legend: { position: 'top', labels: { color: '#374151' } }, tooltip: { backgroundColor: '#1f2937', titleColor: '#ffffff', bodyColor: '#ffffff' } } } }); };
+            const original_initializePriorityChart = () => { if (!priorityCanvas) return; const existingChart = Chart.getChart(priorityCanvas); if (existingChart) { existingChart.destroy(); } const ctx = priorityCanvas.getContext('2d'); const priorityData = { labels: ['Critical', 'High Priority', 'Medium Priority', 'Low Priority'], datasets: [{ label: 'Priority Distribution', data: [15, 30, 45, 10], backgroundColor: ['rgb(239, 68, 68)', 'rgb(249, 115, 22)', 'rgb(250, 204, 21)', 'rgb(59, 130, 246)'], hoverOffset: 8, borderWidth: 2, borderColor: '#ffffff' }] }; priorityChart = new Chart(ctx, { type: 'doughnut', data: priorityData, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1f2937', titleColor: '#ffffff', bodyColor: '#ffffff', callbacks: { label: function (context) { let label = context.label || ''; if (label) { label += ': '; } if (context.parsed !== null) { label += context.parsed + '%'; } return label; } } } }, cutout: '70%' } }); };
+
+            const final_createOrUpdateEscalationChart = original_createOrUpdateEscalationChart;
+            const final_initializePriorityChart = original_initializePriorityChart;
+
+            function final_showView(viewToShow) {
+                if (mainDashboardView) mainDashboardView.classList.add('hidden-section');
+                if (escalationsListView) escalationsListView.classList.add('hidden-section');
+                if (auditTrailView) auditTrailView.classList.add('hidden-section');
+                if (escalationRulesView) escalationRulesView.classList.add('hidden-section');
+                if (escalationPathsView) escalationPathsView.classList.add('hidden-section');
+
+
+                if (viewToShow) viewToShow.classList.remove('hidden-section');
+
+                if (viewToShow === mainDashboardView) {
+                    if (escalationCanvas) final_createOrUpdateEscalationChart(timeRangeSelector ? parseInt(timeRangeSelector.value) : 30);
+                    if (priorityCanvas) final_initializePriorityChart();
+                } else if (viewToShow === auditTrailView) {
+                    renderAuditStatusSummary();
+                    filterAuditData();
+                } else if (viewToShow === escalationRulesView) {
+                    const firstTabButton = document.querySelector('#ruleTabsContainer .rule-tab-button');
+                    if (firstTabButton) {
+                        switchRuleTab(firstTabButton.dataset.tab);
+                    }
+                }
+            }
+
+            if (mainDashboardView) { final_showView(mainDashboardView); }
+            if (timeRangeSelector) { timeRangeSelector.addEventListener('change', function (event) { if (mainDashboardView && !mainDashboardView.classList.contains('hidden-section') && escalationCanvas) { final_createOrUpdateEscalationChart(parseInt(event.target.value)); } }); }
+
+            if (totalEscalationsCard) { totalEscalationsCard.addEventListener('click', function () { final_showView(escalationsListView); }); }
+            if (auditTrailCard) { auditTrailCard.addEventListener('click', function () { final_showView(auditTrailView); }); }
+            if (escalationRulesBtn) { escalationRulesBtn.addEventListener('click', function () { final_showView(escalationRulesView); }); }
+            if (escalationPathsBtn) { escalationPathsBtn.addEventListener('click', function () { final_showView(escalationPathsView); }); }
+
+
+            if (backToDashboardBtnEscList) { backToDashboardBtnEscList.addEventListener('click', function () { final_showView(mainDashboardView); }); }
+            if (backToDashboardBtnAudit) { backToDashboardBtnAudit.addEventListener('click', function () { final_showView(mainDashboardView); }); }
+            if (backToDashboardBtnRules) { backToDashboardBtnRules.addEventListener('click', function () { final_showView(mainDashboardView); }); }
+            if (backToDashboardBtnPaths) { backToDashboardBtnPaths.addEventListener('click', function () { final_showView(mainDashboardView); }); }
+
+
+            const ruleTabButtons = document.querySelectorAll('#ruleTabsContainer .rule-tab-button');
+            const ruleTabContents = document.querySelectorAll('.rule-tab-content');
+
+            function switchRuleTab(targetTabId) {
+                ruleTabButtons.forEach(button => {
+                    button.classList.remove('active');
+                    if (button.dataset.tab === targetTabId) {
+                        button.classList.add('active');
+                    }
+                });
+                ruleTabContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === targetTabId) {
+                        content.classList.add('active');
+                    }
+                });
+            }
+
+            ruleTabButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    switchRuleTab(this.dataset.tab);
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

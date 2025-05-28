@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work orders</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-clipboard-list"></i> Work Order Management</h1>
+                <div class="header-controls">
+                    <button class="btn btn-primary" id="newWorkOrderBtn">
+                        <i class="fas fa-plus"></i> New Work Order
+                    </button>
+                    <button class="theme-toggle" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Filters and Search -->
+            <div class="filters-section">
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search work orders...">
+                </div>
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-filter="all">All Queue</button>
+                    <button class="filter-tab" data-filter="my">My Queue</button>
+                    <button class="filter-tab" data-filter="group">Group Queue</button>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-expand-arrows-alt"></i> Expand All
+                    </button>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-compress-arrows-alt"></i> Collapse All
+                    </button>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Work Orders Table -->
+            <div class="table-container">
+                <table class="work-orders-table" id="workOrdersTable">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Work Order #</th>
+                            <th>Customer Account #</th>
+                            <th>Customer Name</th>
+                            <th>Serial #</th>
+                            <th>Quotation #</th>
+                            <th>Ticket #</th>
+                            <th>Planned Start Date</th>
+                            <th>Planned Completion Date</th>
+                            <th>Unit #</th>
+                            <th>Status</th>
+                            <th>Key Tag #</th>
+                            <th>Bay</th>
+                        </tr>
+                    </thead>
+                    <tbody id="workOrdersTableBody">
+                        <!-- Work orders will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <!-- Work Order Detail Modal -->
+        <div class="modal-overlay" id="workOrderModal">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h2 id="modalTitle">Work Order Details</h2>
+                    <button class="modal-close" id="closeModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div class="modal-content">
+                    <!-- Work Order Info Bar -->
+                    <div class="work-order-info-bar">
+                        <div class="info-item">
+                            <label>Work Order #:</label>
+                            <span id="modalWorkOrderNumber"></span>
+                        </div>
+                        <div class="info-item">
+                            <label>Work Order Status:</label>
+                            <span id="modalWorkOrderStatus" class="status-badge"></span>
+                        </div>
+                        <div class="info-item">
+                            <label>Work Order Date:</label>
+                            <span id="modalWorkOrderDate"></span>
+                        </div>
+                        <div class="info-item">
+                            <label>Quotation #:</label>
+                            <span id="modalQuotationNumber"></span>
+                        </div>
+                        <div class="info-item">
+                            <label>Ticket #:</label>
+                            <span id="modalTicketNumber"></span>
+                        </div>
+                        <div class="info-item">
+                            <label>Quotation Date:</label>
+                            <span id="modalQuotationDate"></span>
+                        </div>
+                    </div>
+
+                    <!-- Work Order Action Buttons -->
+                    <div class="work-order-actions">
+                        <button class="action-btn internal-remarks-btn" onclick="openInternalRemarks()">Internal Remarks</button>
+                        <button class="action-btn work-order-value-btn" onclick="openWorkOrderValue()">Work Order Value</button>
+                        <button class="action-btn edit-btn" onclick="editWorkOrder()">Edit</button>
+                        <button class="action-btn exit-btn" onclick="exitWorkOrder()">Exit</button>
+                        <button class="action-btn print-btn" onclick="printWorkOrder()">Print</button>
+                    </div>
+
+                    <!-- Tab Navigation -->
+                    <div class="tab-navigation">
+                        <button class="tab-btn active" data-tab="customer">Customer Details</button>
+                        <button class="tab-btn" data-tab="asset">Asset Details</button>
+                        <button class="tab-btn" data-tab="planning">Planning And Schedule</button>
+                        <button class="tab-btn" data-tab="checklist">Walk Around & Inspections</button>
+                        <button class="tab-btn" data-tab="job">Job Details</button>
+                    </div>
+
+                    <!-- Tab Content -->
+                    <div class="tab-content">
+                        <!-- Customer Details Tab -->
+                        <div class="tab-pane active" id="customerTab">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Mobile</label>
+                                    <input type="text" id="customerMobile" placeholder="Enter mobile number">
+                                </div>
+                                <div class="form-group">
+                                    <label>Name</label>
+                                    <input type="text" id="customerName" placeholder="Enter customer name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" id="customerEmail" placeholder="Enter email address">
+                                </div>
+                                <div class="form-group full-width">
+                                    <label>Party Address</label>
+                                    <input type="text" id="customerAddress" placeholder="Enter complete party address">
+                                </div>
+                                <div class="form-group">
+                                    <label>PO #</label>
+                                    <input type="text" id="poNumber" placeholder="Enter Purchase Order number">
+                                </div>
+                                <div class="form-group">
+                                    <label>Is Drop Down In?</label>
+                                    <select id="isDropDownIn">
+                                        <option value="">Select Option</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Contact Person</label>
+                                    <select id="contactPerson">
+                                        <option value="">Select Contact</option>
+                                        <option value="contact1">Contact Person 1</option>
+                                        <option value="contact2">Contact Person 2</option>
+                                        <option value="contact3">Contact Person 3</option>
+                                    </select>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label>Ship To</label>
+                                    <input type="text" id="shipTo" placeholder="Enter shipping address">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Asset Details Tab -->
+                        <div class="tab-pane" id="assetTab">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Unit #</label>
+                                    <input type="text" id="unitNumber" placeholder="Enter unit number">
+                                </div>
+                                <div class="form-group">
+                                    <label>Serial #</label>
+                                    <input type="text" id="assetSerial" placeholder="Enter serial number">
+                                </div>
+                                <div class="form-group">
+                                    <label>Model *</label>
+                                    <input type="text" id="assetModel" required placeholder="Enter model (required)">
+                                </div>
+                                <div class="form-group">
+                                    <label>Brand</label>
+                                    <input type="text" id="assetBrand" placeholder="Enter brand name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Asset Type</label>
+                                    <select id="assetType">
+                                        <option value="">Select Asset Type</option>
+                                        <option value="coach">Coach</option>
+                                        <option value="truck">Truck</option>
+                                        <option value="van">Van</option>
+                                        <option value="bus">Bus</option>
+                                        <option value="trailer">Trailer</option>
+                                        <option value="school-bus">School Bus</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Key Tag #</label>
+                                    <input type="text" id="keyTag" placeholder="Enter key tag number">
+                                </div>
+                                <div class="form-group">
+                                    <label>Odometer</label>
+                                    <input type="number" id="odometer" placeholder="Enter odometer reading">
+                                </div>
+                                <div class="form-group">
+                                    <label>Asset Status</label>
+                                    <select id="assetStatus">
+                                        <option value="">Select Status</option>
+                                        <option value="active">Active</option>
+                                        <option value="in-service">In Service</option>
+                                        <option value="available">Available</option>
+                                        <option value="maintenance">Under Maintenance</option>
+                                        <option value="out-of-service">Out of Service</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Is Breakdown</label>
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" id="isBreakdown">
+                                        <span class="checkbox-label">Yes, this is a breakdown</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Bay</label>
+                                    <select id="bay">
+                                        <option value="">Select Bay</option>
+                                        <option value="p53">P53</option>
+                                        <option value="drive-middle">Drive - Middle</option>
+                                        <option value="bay-1">Bay 1</option>
+                                        <option value="bay-2">Bay 2</option>
+                                        <option value="bay-3">Bay 3</option>
+                                        <option value="bay-4">Bay 4</option>
+                                        <option value="outdoor">Outdoor</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Planning And Schedule Tab -->
+                        <div class="tab-pane" id="planningTab">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Expected Arrival Date And Time</label>
+                                    <input type="datetime-local" id="expectedArrival">
+                                </div>
+                                <div class="form-group">
+                                    <label>Actual Arrival Date And Time</label>
+                                    <input type="datetime-local" id="actualArrival">
+                                </div>
+                                <div class="form-group">
+                                    <label>Expected Delivery Date And Time</label>
+                                    <input type="datetime-local" id="expectedDelivery">
+                                </div>
+                                <div class="form-group">
+                                    <label>Actual Delivery Date And Time</label>
+                                    <input type="datetime-local" id="actualDelivery">
+                                </div>
+                                <div class="form-group">
+                                    <label>Planned Start Date</label>
+                                    <input type="date" id="plannedStartDate">
+                                </div>
+                                <div class="form-group">
+                                    <label>Planned End Date</label>
+                                    <input type="date" id="plannedEndDate">
+                                </div>
+                                <div class="form-group">
+                                    <label>Actual Start Date</label>
+                                    <input type="date" id="actualStartDate">
+                                </div>
+                                <div class="form-group">
+                                    <label>Actual End Date</label>
+                                    <input type="date" id="actualEndDate">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Walk Around, Quick Check List, Red Carpet, Fuel Gauge Tab -->
+                        <div class="tab-pane" id="checklistTab">
+                            <div class="checklist-container">
+                                <!-- Checklist Menu -->
+                                <div class="checklist-menu">
+                                    <button class="checklist-menu-btn active" data-section="walkaround">Walk Around Model 30</button>
+                                    <button class="checklist-menu-btn" data-section="quickcheck">Quick Check List</button>
+                                    <button class="checklist-menu-btn" data-section="redcarpet">Red Carpet Checklist</button>
+                                    <button class="checklist-menu-btn" data-section="fuelgauge">Fuel Gauge</button>
+                                </div>
+
+                                <!-- Checklist Content -->
+                                <div class="checklist-content">
+                                    <!-- Walk Around Checklist Section -->
+                                    <div class="checklist-section active" id="walkaroundSection">
+                                        <h3>Walk Around Checklist</h3>
+                                        <div class="walkaround-content">
+                                            <!-- Vehicle Info Header -->
+                                            <div class="vehicle-info-header">
+                                                <div class="vehicle-info-row">
+                                                    <div class="vehicle-info-item">
+                                                        <span class="info-label">Model:</span>
+                                                        <span class="info-value">Model 35</span>
+                                                    </div>
+                                                    <div class="vehicle-info-item">
+                                                        <span class="info-label">Customer Name:</span>
+                                                        <span class="info-value">Customer Name</span>
+                                                    </div>
+                                                    <div class="vehicle-info-item">
+                                                        <span class="info-label">Customer #:</span>
+                                                        <span class="info-value">Customer #1067</span>
+                                                    </div>
+                                                    <div class="vehicle-info-item">
+                                                        <span class="info-label">Work Order #:</span>
+                                                        <span class="info-value">WO/177N/2/2025 - 1-Job1 #</span>
+                                                    </div>
+                                                </div>
+                                                <div class="walkaround-actions">
+                                                    <button class="walkaround-btn print-btn" onclick="printWalkAround()">Print</button>
+                                                    <button class="walkaround-btn exit-btn" onclick="exitWalkAround()">Exit</button>
+                                                </div>
+                                            </div>
+
+                                            <!-- Vehicle View Tabs -->
+                                            <div class="vehicle-view-tabs">
+                                                <button class="view-tab-btn active" data-view="front" onclick="switchVehicleView('front')">Front View</button>
+                                                <button class="view-tab-btn" data-view="rear" onclick="switchVehicleView('rear')">Rear View</button>
+                                                <button class="view-tab-btn" data-view="street" onclick="switchVehicleView('street')">Street Side View</button>
+                                                <button class="view-tab-btn" data-view="curb" onclick="switchVehicleView('curb')">Curb Side View</button>
+                                            </div>
+
+                                            <!-- Vehicle Diagram Container -->
+                                            <div class="vehicle-diagram-container">
+                                                <!-- Front View -->
+                                                <div class="vehicle-view active" id="frontView">
+                                                    <img src="./img/Front View.png" alt="Front View" class="vehicle-diagram" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                                    <div class="diagram-placeholder" style="display: none;">
+                                                        <p>Front View Diagram</p>
+                                                        <p>(Image: img/front-view.png)</p>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Rear View -->
+                                                <div class="vehicle-view" id="rearView">
+                                                    <img src="./img/Rear View.png" alt="Rear View" class="vehicle-diagram" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                                    <div class="diagram-placeholder" style="display: none;">
+                                                        <p>Rear View Diagram</p>
+                                                        <p>(Image: img/rear-view.png)</p>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Street Side View -->
+                                                <div class="vehicle-view" id="streetView">
+                                                    <img src="./img/Front Right View.png" alt="Street Side View" class="vehicle-diagram" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                                    <div class="diagram-placeholder" style="display: none;">
+                                                        <p>Street Side View Diagram</p>
+                                                        <p>(Image: img/street-side-view.png)</p>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Curb Side View -->
+                                                <div class="vehicle-view" id="curbView">
+                                                    <img src="./img/Front Left View.png" alt="Curb Side View" class="vehicle-diagram" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                                    <div class="diagram-placeholder" style="display: none;">
+                                                        <p>Curb Side View Diagram</p>
+                                                        <p>(Image: img/curb-side-view.png)</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Tire Pressure Section - Changes based on view -->
+                                            <div class="tire-pressure-section">
+                                                <!-- Front View Data -->
+                                                <div class="view-specific-data active" id="frontViewData">
+                                                    <div class="pressure-row">
+                                                        <div class="pressure-item">
+                                                            <label>Front Left Tire Pressure:</label>
+                                                            <input type="number" id="frontLeftPressure" value="0" min="0" max="200">
+                                                        </div>
+                                                        <div class="pressure-item">
+                                                            <label>Front Right Tire Pressure:</label>
+                                                            <input type="number" id="frontRightPressure" value="0" min="0" max="200">
+                                                        </div>
+                                                    </div>
+                                                    <div class="observation-row">
+                                                        <div class="observation-item">
+                                                            <label>Front View Observation:</label>
+                                                            <textarea id="frontViewObservation" rows="2" placeholder="Enter front view observations...">ok</textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Rear View Data -->
+                                                <div class="view-specific-data" id="rearViewData">
+                                                    <div class="pressure-row">
+                                                        <div class="pressure-item">
+                                                            <label>Rear Left Tire Pressure:</label>
+                                                            <input type="number" id="rearLeftPressure" value="0" min="0" max="200">
+                                                        </div>
+                                                        <div class="pressure-item">
+                                                            <label>Rear Right Tire Pressure:</label>
+                                                            <input type="number" id="rearRightPressure" value="0" min="0" max="200">
+                                                        </div>
+                                                    </div>
+                                                    <div class="observation-row">
+                                                        <div class="observation-item">
+                                                            <label>Rear View Observation:</label>
+                                                            <textarea id="rearViewObservation" rows="2" placeholder="Enter rear view observations...">ok</textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Street Side View Data -->
+                                                <div class="view-specific-data" id="streetViewData">
+                                                    <div class="pressure-row">
+                                                        <div class="pressure-item">
+                                                            <label>Street Side Front Tire Pressure:</label>
+                                                            <input type="number" id="streetFrontPressure" value="0" min="0" max="200">
+                                                        </div>
+                                                        <div class="pressure-item">
+                                                            <label>Street Side Rear Tire Pressure:</label>
+                                                            <input type="number" id="streetRearPressure" value="0" min="0" max="200">
+                                                        </div>
+                                                        <div class="pressure-item">
+                                                            <label>Street Side Rear Tire2 Pressure:</label>
+                                                            <input type="number" id="streetRear2Pressure" value="0" min="0" max="200">
+                                                        </div>
+                                                    </div>
+                                                    <div class="observation-row">
+                                                        <div class="observation-item">
+                                                            <label>Street Side View Observation:</label>
+                                                            <textarea id="streetSideObservation" rows="2" placeholder="Enter street side observations...">ok</textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Curb Side View Data -->
+                                                <div class="view-specific-data" id="curbViewData">
+                                                    <div class="pressure-row">
+                                                        <div class="pressure-item">
+                                                            <label>Curb Side Front Tire Pressure:</label>
+                                                            <input type="number" id="curbFrontPressure" value="0" min="0" max="200">
+                                                        </div>
+                                                        <div class="pressure-item">
+                                                            <label>Curb Side Rear Tire Pressure:</label>
+                                                            <input type="number" id="curbRearPressure" value="0" min="0" max="200">
+                                                        </div>
+                                                        <div class="pressure-item">
+                                                            <label>Curb Side Rear Tire2 Pressure:</label>
+                                                            <input type="number" id="curbRear2Pressure" value="0" min="0" max="200">
+                                                        </div>
+                                                    </div>
+                                                    <div class="observation-row">
+                                                        <div class="observation-item">
+                                                            <label>Curb Side View Observation:</label>
+                                                            <textarea id="curbSideObservation" rows="2" placeholder="Enter curb side observations...">ok</textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Attachment Section -->
+                                            <div class="attachment-section">
+                                                <div class="attachment-header">
+                                                    <h4>Attachment Detail</h4>
+                                                    <button class="attachment-btn" onclick="addAttachment()">📎</button>
+                                                </div>
+                                                <div class="attachment-table-container">
+                                                    <table class="attachment-table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>View</th>
+                                                                <th>File Name</th>
+                                                                <th>File Description</th>
+                                                                <th>Upload By</th>
+                                                                <th>Upload Date</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="attachmentTableBody">
+                                                            <tr class="no-attachments">
+                                                                <td colspan="5" class="no-data-text">No Patterns To View</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Quick Check List Section -->
+                                    <div class="checklist-section" id="quickcheckSection">
+                                        <div class="checklist-header">
+                                            <h3>Quick Checklist</h3>
+                                        </div>
+                                        <div class="checklist-table-container">
+                                            <table class="checklist-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Description</th>
+                                                        <th>OK</th>
+                                                        <th>Not OK</th>
+                                                        <th>Not Applicable</th>
+                                                        <th>Actual Value</th>
+                                                        <th>Notes</th>
+                                                        <th>Attachments</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Tire Condition / Wear Visual and DOT (Dry rot, bulges, age, alignment issues, balance)</td>
+                                                        <td><input type="radio" name="tire_condition" value="ok"></td>
+                                                        <td><input type="radio" name="tire_condition" value="not_ok"></td>
+                                                        <td><input type="radio" name="tire_condition" value="na"></td>
+                                                        <td><input type="text" class="actual-value-input"></td>
+                                                        <td><input type="text" class="notes-input"></td>
+                                                        <td><button class="attachment-icon-btn">📎</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Wheel seal leaks</td>
+                                                        <td><input type="radio" name="wheel_seal" value="ok"></td>
+                                                        <td><input type="radio" name="wheel_seal" value="not_ok"></td>
+                                                        <td><input type="radio" name="wheel_seal" value="na"></td>
+                                                        <td><input type="text" class="actual-value-input"></td>
+                                                        <td><input type="text" class="notes-input"></td>
+                                                        <td><button class="attachment-icon-btn">📎</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Brake check Visual inspection only (Check rotor for cracks and discoloration, etc.)</td>
+                                                        <td><input type="radio" name="brake_check" value="ok"></td>
+                                                        <td><input type="radio" name="brake_check" value="not_ok"></td>
+                                                        <td><input type="radio" name="brake_check" value="na"></td>
+                                                        <td><input type="text" class="actual-value-input"></td>
+                                                        <td><input type="text" class="notes-input"></td>
+                                                        <td><button class="attachment-icon-btn">📎</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Suspension bushings (Sway bar, end link, radius rod)</td>
+                                                        <td><input type="radio" name="suspension" value="ok"></td>
+                                                        <td><input type="radio" name="suspension" value="not_ok"></td>
+                                                        <td><input type="radio" name="suspension" value="na"></td>
+                                                        <td><input type="text" class="actual-value-input"></td>
+                                                        <td><input type="text" class="notes-input"></td>
+                                                        <td><button class="attachment-icon-btn">📎</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Shocks / air bags condition (Dry rot, leakage, cracking, deformation)</td>
+                                                        <td><input type="radio" name="shocks" value="ok"></td>
+                                                        <td><input type="radio" name="shocks" value="not_ok"></td>
+                                                        <td><input type="radio" name="shocks" value="na"></td>
+                                                        <td><input type="text" class="actual-value-input"></td>
+                                                        <td><input type="text" class="notes-input"></td>
+                                                        <td><button class="attachment-icon-btn">📎</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Fuel tank (Straps, mounting, and leaks)</td>
+                                                        <td><input type="radio" name="fuel_tank" value="ok"></td>
+                                                        <td><input type="radio" name="fuel_tank" value="not_ok"></td>
+                                                        <td><input type="radio" name="fuel_tank" value="na"></td>
+                                                        <td><input type="text" class="actual-value-input"></td>
+                                                        <td><input type="text" class="notes-input"></td>
+                                                        <td><button class="attachment-icon-btn">📎</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Engine / Transmission / Differential Check for fluid leaks</td>
+                                                        <td><input type="radio" name="engine_trans" value="ok"></td>
+                                                        <td><input type="radio" name="engine_trans" value="not_ok"></td>
+                                                        <td><input type="radio" name="engine_trans" value="na"></td>
+                                                        <td><input type="text" class="actual-value-input"></td>
+                                                        <td><input type="text" class="notes-input"></td>
+                                                        <td><button class="attachment-icon-btn">📎</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Exhaust system Visual inspection only (Visible soot, broken clamps, piping, etc.)</td>
+                                                        <td><input type="radio" name="exhaust" value="ok"></td>
+                                                        <td><input type="radio" name="exhaust" value="not_ok"></td>
+                                                        <td><input type="radio" name="exhaust" value="na"></td>
+                                                        <td><input type="text" class="actual-value-input"></td>
+                                                        <td><input type="text" class="notes-input"></td>
+                                                        <td><button class="attachment-icon-btn">📎</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Exterior Lights (Operation and condition)</td>
+                                                        <td><input type="radio" name="exterior_lights" value="ok"></td>
+                                                        <td><input type="radio" name="exterior_lights" value="not_ok"></td>
+                                                        <td><input type="radio" name="exterior_lights" value="na"></td>
+                                                        <td><input type="text" class="actual-value-input"></td>
+                                                        <td><input type="text" class="notes-input"></td>
+                                                        <td><button class="attachment-icon-btn">📎</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Engine compartment (belt, pulley, mini-hose, fan clutch)</td>
+                                                        <td><input type="radio" name="engine_compartment" value="ok"></td>
+                                                        <td><input type="radio" name="engine_compartment" value="not_ok"></td>
+                                                        <td><input type="radio" name="engine_compartment" value="na"></td>
+                                                        <td><input type="text" class="actual-value-input"></td>
+                                                        <td><input type="text" class="notes-input"></td>
+                                                        <td><button class="attachment-icon-btn">📎</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Windshield Check for cracks / stone chips</td>
+                                                        <td><input type="radio" name="windshield" value="ok"></td>
+                                                        <td><input type="radio" name="windshield" value="not_ok"></td>
+                                                        <td><input type="radio" name="windshield" value="na"></td>
+                                                        <td><input type="text" class="actual-value-input"></td>
+                                                        <td><input type="text" class="notes-input"></td>
+                                                        <td><button class="attachment-icon-btn">📎</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Chassis Batteries Check for corrosion on terminal, batteries deformation and/or leaks</td>
+                                                        <td><input type="radio" name="chassis_batteries" value="ok"></td>
+                                                        <td><input type="radio" name="chassis_batteries" value="not_ok"></td>
+                                                        <td><input type="radio" name="chassis_batteries" value="na"></td>
+                                                        <td><input type="text" class="actual-value-input"></td>
+                                                        <td><input type="text" class="notes-input"></td>
+                                                        <td><button class="attachment-icon-btn">📎</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Evaporator compartment Check pump / piping for coolant leak</td>
+                                                        <td><input type="radio" name="evaporator" value="ok"></td>
+                                                        <td><input type="radio" name="evaporator" value="not_ok"></td>
+                                                        <td><input type="radio" name="evaporator" value="na"></td>
+                                                        <td><input type="text" class="actual-value-input"></td>
+                                                        <td><input type="text" class="notes-input"></td>
+                                                        <td><button class="attachment-icon-btn">📎</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Others</td>
+                                                        <td><input type="radio" name="others" value="ok"></td>
+                                                        <td><input type="radio" name="others" value="not_ok"></td>
+                                                        <td><input type="radio" name="others" value="na"></td>
+                                                        <td><input type="text" class="actual-value-input"></td>
+                                                        <td><input type="text" class="notes-input"></td>
+                                                        <td><button class="attachment-icon-btn">📎</button></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="checklist-pagination">
+                                            <div class="pagination-controls">
+                                                <button class="pagination-btn">⏮</button>
+                                                <button class="pagination-btn">◀</button>
+                                                <span class="pagination-info">Page 1 Of 1</span>
+                                                <button class="pagination-btn">▶</button>
+                                                <button class="pagination-btn">⏭</button>
+                                                <select class="pagination-select">
+                                                    <option>5</option>
+                                                    <option>10</option>
+                                                    <option>25</option>
+                                                    <option>50</option>
+                                                </select>
+                                            </div>
+                                            <div class="pagination-summary">
+                                                View 1 - 14 Of 14
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Red Carpet Checklist Section -->
+                                    <div class="checklist-section" id="redcarpetSection">
+                                        <div class="checklist-header">
+                                            <h3>Red Carpet Checklist</h3>
+                                        </div>
+                                        <div class="checklist-table-container">
+                                            <table class="checklist-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Description</th>
+                                                        <th>OK</th>
+                                                        <th>Not OK</th>
+                                                        <th>Not Applicable</th>
+                                                        <th>Is Mandatory?</th>
+                                                        <th>Notes</th>
+                                                        <th>Attachments</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>All operations complete from work order and write up sheet</td>
+                                                        <td><input type="radio" name="operations_complete" value="ok"></td>
+                                                        <td><input type="radio" name="operations_complete" value="not_ok"></td>
+                                                        <td><input type="radio" name="operations_complete" value="na"></td>
+                                                        <td><span class="mandatory-text">Yes</span></td>
+                                                        <td><input type="text" class="notes-input"></td>
+                                                        <td><button class="attachment-icon-btn">📎</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Exterior areas of repair cleaned</td>
+                                                        <td><input type="radio" name="exterior_cleaned" value="ok"></td>
+                                                        <td><input type="radio" name="exterior_cleaned" value="not_ok"></td>
+                                                        <td><input type="radio" name="exterior_cleaned" value="na"></td>
+                                                        <td><span class="mandatory-text">Yes</span></td>
+                                                        <td><input type="text" class="notes-input"></td>
+                                                        <td><button class="attachment-icon-btn">📎</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Interior areas of repair cleaned</td>
+                                                        <td><input type="radio" name="interior_cleaned" value="ok"></td>
+                                                        <td><input type="radio" name="interior_cleaned" value="not_ok"></td>
+                                                        <td><input type="radio" name="interior_cleaned" value="na"></td>
+                                                        <td><span class="mandatory-text">Yes</span></td>
+                                                        <td><input type="text" class="notes-input"></td>
+                                                        <td><button class="attachment-icon-btn">📎</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Interior powered up if applicable</td>
+                                                        <td><input type="radio" name="interior_powered" value="ok"></td>
+                                                        <td><input type="radio" name="interior_powered" value="not_ok"></td>
+                                                        <td><input type="radio" name="interior_powered" value="na"></td>
+                                                        <td><span class="mandatory-text">Yes</span></td>
+                                                        <td><input type="text" class="notes-input"></td>
+                                                        <td><button class="attachment-icon-btn">📎</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Entrance area and isle clean and presentable</td>
+                                                        <td><input type="radio" name="entrance_clean" value="ok"></td>
+                                                        <td><input type="radio" name="entrance_clean" value="not_ok"></td>
+                                                        <td><input type="radio" name="entrance_clean" value="na"></td>
+                                                        <td><span class="mandatory-text">Yes</span></td>
+                                                        <td><input type="text" class="notes-input"></td>
+                                                        <td><button class="attachment-icon-btn">📎</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>All floor runners and seat covers removed</td>
+                                                        <td><input type="radio" name="covers_removed" value="ok"></td>
+                                                        <td><input type="radio" name="covers_removed" value="not_ok"></td>
+                                                        <td><input type="radio" name="covers_removed" value="na"></td>
+                                                        <td><span class="mandatory-text">Yes</span></td>
+                                                        <td><input type="text" class="notes-input"></td>
+                                                        <td><button class="attachment-icon-btn">📎</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>All exterior doors locked</td>
+                                                        <td><input type="radio" name="doors_locked" value="ok"></td>
+                                                        <td><input type="radio" name="doors_locked" value="not_ok"></td>
+                                                        <td><input type="radio" name="doors_locked" value="na"></td>
+                                                        <td><span class="mandatory-text">Yes</span></td>
+                                                        <td><input type="text" class="notes-input"></td>
+                                                        <td><button class="attachment-icon-btn">📎</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Keys returned to proper area</td>
+                                                        <td><input type="radio" name="keys_returned" value="ok"></td>
+                                                        <td><input type="radio" name="keys_returned" value="not_ok"></td>
+                                                        <td><input type="radio" name="keys_returned" value="na"></td>
+                                                        <td><span class="mandatory-text">Yes</span></td>
+                                                        <td><input type="text" class="notes-input"></td>
+                                                        <td><button class="attachment-icon-btn">📎</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Validate work performed by external supplier ie. towing, paint, engine, welding, etc.</td>
+                                                        <td><input type="radio" name="external_work" value="ok"></td>
+                                                        <td><input type="radio" name="external_work" value="not_ok"></td>
+                                                        <td><input type="radio" name="external_work" value="na"></td>
+                                                        <td><span class="mandatory-text">Yes</span></td>
+                                                        <td><input type="text" class="notes-input"></td>
+                                                        <td><button class="attachment-icon-btn">📎</button></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="checklist-pagination">
+                                            <div class="pagination-controls">
+                                                <button class="pagination-btn">⏮</button>
+                                                <button class="pagination-btn">◀</button>
+                                                <span class="pagination-info">Page 1 Of 1</span>
+                                                <button class="pagination-btn">▶</button>
+                                                <button class="pagination-btn">⏭</button>
+                                                <select class="pagination-select">
+                                                    <option>5</option>
+                                                    <option>10</option>
+                                                    <option>25</option>
+                                                    <option>50</option>
+                                                </select>
+                                            </div>
+                                            <div class="pagination-summary">
+                                                View 1 - 9 Of 9
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Fuel Gauge Section -->
+                                    <div class="checklist-section" id="fuelgaugeSection">
+                                        <div class="fuel-gauge-header">
+                                            <h3>Operation Code</h3>
+                                        </div>
+                                        <div class="fuel-gauge-container">
+                                            <!-- Fuel Gauge - Work Around -->
+                                            <div class="fuel-gauge-section">
+                                                <h4>Fuel Gauge - Work Around</h4>
+                                                <div class="fuel-gauge-display">
+                                                    <div class="gauge-container">
+                                                        <img src="./img/fuel1.png" alt="Fuel Gauge 1" class="fuel-gauge-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                                        <div class="fuel-gauge-placeholder" style="display: none;">
+                                                            <div class="gauge-circle">
+                                                                <div class="gauge-needle" id="fuelGauge1Needle"></div>
+                                                                <div class="gauge-center"></div>
+                                                                <div class="gauge-labels">
+                                                                    <span class="gauge-label-0">0</span>
+                                                                    <span class="gauge-label-quarter">1/4</span>
+                                                                    <span class="gauge-label-half">1/2</span>
+                                                                    <span class="gauge-label-three-quarter">3/4</span>
+                                                                    <span class="gauge-label-full">F</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="fuel-gauge-controls">
+                                                        <label>Fuel Level:</label>
+                                                        <input type="range" id="fuelGauge1" min="0" max="100" value="25" class="fuel-slider" oninput="updateFuelGauge(1, this.value)">
+                                                        <span id="fuelValue1" class="fuel-value">25%</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Fuel Gauge - Delivery -->
+                                            <div class="fuel-gauge-section">
+                                                <h4>Fuel Gauge - Delivery</h4>
+                                                <div class="fuel-gauge-display">
+                                                    <div class="gauge-container">
+                                                        <img src="./img/fuel2.png" alt="Fuel Gauge 2" class="fuel-gauge-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                                        <div class="fuel-gauge-placeholder" style="display: none;">
+                                                            <div class="gauge-circle">
+                                                                <div class="gauge-needle" id="fuelGauge2Needle"></div>
+                                                                <div class="gauge-center"></div>
+                                                                <div class="gauge-labels">
+                                                                    <span class="gauge-label-0">0</span>
+                                                                    <span class="gauge-label-quarter">1/4</span>
+                                                                    <span class="gauge-label-half">1/2</span>
+                                                                    <span class="gauge-label-three-quarter">3/4</span>
+                                                                    <span class="gauge-label-full">F</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="fuel-gauge-controls">
+                                                        <label>Fuel Level:</label>
+                                                        <input type="range" id="fuelGauge2" min="0" max="100" value="75" class="fuel-slider" oninput="updateFuelGauge(2, this.value)">
+                                                        <span id="fuelValue2" class="fuel-value">75%</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Fuel Gauge Notes Section -->
+                                        <div class="fuel-gauge-notes">
+                                            <div class="notes-row">
+                                                <div class="notes-group">
+                                                    <label>Work Around Notes:</label>
+                                                    <textarea id="workAroundNotes" rows="3" placeholder="Enter work around fuel gauge notes..."></textarea>
+                                                </div>
+                                                <div class="notes-group">
+                                                    <label>Delivery Notes:</label>
+                                                    <textarea id="deliveryNotes" rows="3" placeholder="Enter delivery fuel gauge notes..."></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Job Details Tab -->
+                        <div class="tab-pane" id="jobTab">
+                            <!-- Sub Job Selector -->
+                            <div class="job-selector-container">
+                                <label for="subJobSelector">Select Sub Job:</label>
+                                <select id="subJobSelector" onchange="switchSubJob(this.value)">
+                                    <option value="">-- Select Sub Job --</option>
+                                    <!-- Options will be populated dynamically -->
+                                </select>
+                            </div>
+
+                            <div class="job-details-container">
+                                <!-- Job Details Menu -->
+                                <div class="job-details-menu">
+                                    <button class="job-menu-btn" data-section="legend">Job Card Status Legend</button>
+                                    <button class="job-menu-btn active" data-section="header">J1-Header</button>
+                                    <button class="job-menu-btn" data-section="suggested">J1-Part Suggested List</button>
+                                    <button class="job-menu-btn" data-section="parts">J1-Parts</button>
+                                    <button class="job-menu-btn" data-section="labor">J1-Labor and Misc. Details</button>
+                                    <button class="job-menu-btn" data-section="travel">J1-Travel</button>
+                                    <button class="job-menu-btn" data-section="attachments">J1-Attachments</button>
+                                    <button class="job-menu-btn" data-section="summary">J1-Summary</button>
+                                    <button class="job-menu-btn" data-section="causing">J1-Causing Part</button>
+                                    <button class="job-menu-btn" data-section="activity">Job Card Activity</button>
+                                    <button class="job-menu-btn" data-section="progress">Case Progress</button>
+                                </div>
+
+                                <!-- Job Details Content -->
+                                <div class="job-details-content">
+                                    <!-- J1-Header Section -->
+                                    <div class="job-section active" id="headerSection">
+                                        <h3>J1-Header</h3>
+                                        <div class="job-header-content">
+                                            <!-- Row 1: Quotation and Job Basic Info -->
+                                            <div class="job-form-row">
+                                                <div class="job-form-group">
+                                                    <label>Quotation Ref. #:</label>
+                                                    <input type="text" id="quotationRef" value="QO/177N/2/2025 - 1" readonly>
+                                                </div>
+                                                <div class="job-form-group">
+                                                    <label>Quotation Date:</label>
+                                                    <input type="text" id="quotationDateJob" value="24-Mar-2025" readonly>
+                                                </div>
+                                                <div class="job-form-group">
+                                                    <label>Quotation Status:</label>
+                                                    <input type="text" id="quotationStatusJob" value="Approved" readonly>
+                                                </div>
+                                            </div>
+
+                                            <!-- Row 2: Job Info -->
+                                            <div class="job-form-row">
+                                                <div class="job-form-group">
+                                                    <label>Job #:</label>
+                                                    <input type="text" id="jobNumber" value="WO/177N/2/2025 - 1" readonly>
+                                                </div>
+                                                <div class="job-form-group">
+                                                    <label>Job Date:</label>
+                                                    <input type="text" id="jobDate" value="24-Mar-2025" readonly>
+                                                </div>
+                                                <div class="job-form-group">
+                                                    <label>Job Status:</label>
+                                                    <input type="text" id="jobStatus" value="Moved to Tech" readonly>
+                                                </div>
+                                            </div>
+
+                                            <!-- Row 3: Charged To, Invoice Type, Service Type -->
+                                            <div class="job-form-row">
+                                                <div class="job-form-group">
+                                                    <label>Charged To: *</label>
+                                                    <select id="chargedTo">
+                                                        <option value="">--Select--</option>
+                                                        <option value="customer" selected>Customer</option>
+                                                        <option value="warranty">Warranty</option>
+                                                        <option value="internal">Internal</option>
+                                                    </select>
+                                                </div>
+                                                <div class="job-form-group">
+                                                    <label>Invoice Type: *</label>
+                                                    <select id="invoiceType">
+                                                        <option value="">--Select--</option>
+                                                        <option value="invoice" selected>Invoice</option>
+                                                        <option value="estimate">Estimate</option>
+                                                        <option value="warranty">Warranty</option>
+                                                    </select>
+                                                </div>
+                                                <div class="job-form-group">
+                                                    <label>Service Type: *</label>
+                                                    <select id="serviceTypeJob">
+                                                        <option value="">--Select--</option>
+                                                        <option value="customer-paid" selected>Customer Paid Repair</option>
+                                                        <option value="warranty">Warranty Repair</option>
+                                                        <option value="maintenance">Maintenance</option>
+                                                        <option value="inspection">Inspection</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <!-- Row 4: Planned Dates and Warranty -->
+                                            <div class="job-form-row">
+                                                <div class="job-form-group">
+                                                    <label>Planned Start Date:</label>
+                                                    <input type="date" id="plannedStartJob">
+                                                </div>
+                                                <div class="job-form-group">
+                                                    <label>Planned Completion Date:</label>
+                                                    <input type="date" id="plannedCompletionJob">
+                                                </div>
+                                                <div class="job-form-group">
+                                                    <label>Warranty Type: *</label>
+                                                    <select id="warrantyType">
+                                                        <option value="">--Select--</option>
+                                                        <option value="none">No Warranty</option>
+                                                        <option value="parts">Parts Only</option>
+                                                        <option value="labor">Labor Only</option>
+                                                        <option value="full">Parts & Labor</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <!-- Row 5: Actual Dates and Test Drive -->
+                                            <div class="job-form-row">
+                                                <div class="job-form-group">
+                                                    <label>Actual Start Date:</label>
+                                                    <input type="date" id="actualStartJob">
+                                                </div>
+                                                <div class="job-form-group">
+                                                    <label>Actual End Date:</label>
+                                                    <input type="date" id="actualEndJob">
+                                                </div>
+                                                <div class="job-form-group">
+                                                    <label>Test Drive Distance:</label>
+                                                    <div class="input-with-unit">
+                                                        <input type="number" id="testDriveDistance" placeholder="0">
+                                                        <span class="unit">MI</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Row 6: Delay Reason, Cancelled Reason, Work Priority -->
+                                            <div class="job-form-row">
+                                                <div class="job-form-group">
+                                                    <label>Work Order Delay Reason:</label>
+                                                    <select id="delayReason">
+                                                        <option value="">--Select--</option>
+                                                        <option value="parts">Waiting for Parts</option>
+                                                        <option value="customer">Customer Approval</option>
+                                                        <option value="technician">Technician Unavailable</option>
+                                                        <option value="equipment">Equipment Issue</option>
+                                                    </select>
+                                                </div>
+                                                <div class="job-form-group">
+                                                    <label>Cancelled Reason:</label>
+                                                    <select id="cancelledReason">
+                                                        <option value="">--Select--</option>
+                                                        <option value="customer">Customer Request</option>
+                                                        <option value="cost">Cost Too High</option>
+                                                        <option value="parts">Parts Unavailable</option>
+                                                        <option value="other">Other</option>
+                                                    </select>
+                                                </div>
+                                                <div class="job-form-group">
+                                                    <label>Work Priority: *</label>
+                                                    <select id="workPriorityJob">
+                                                        <option value="">--Select--</option>
+                                                        <option value="1">1 - Critical</option>
+                                                        <option value="2" selected>2 - High</option>
+                                                        <option value="3">3 - Medium</option>
+                                                        <option value="4">4 - Low</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <!-- Row 7: Inside Work and Addition Job -->
+                                            <div class="job-form-row">
+                                                <div class="job-form-group">
+                                                    <label>Is Inside Work?</label>
+                                                    <div class="checkbox-group">
+                                                        <input type="checkbox" id="isInsideWork">
+                                                        <span class="checkbox-label">Yes</span>
+                                                    </div>
+                                                </div>
+                                                <div class="job-form-group">
+                                                    <label>Addition Job/Estimate</label>
+                                                    <input type="text" id="additionJob" placeholder="Enter details">
+                                                </div>
+                                                <div class="job-form-group">
+                                                    <label>Is New Job Added?</label>
+                                                    <div class="checkbox-group">
+                                                        <input type="checkbox" id="isNewJobAdded">
+                                                        <span class="checkbox-label">Yes</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Row 8: Customer Complaint -->
+                                            <div class="job-form-row">
+                                                <div class="job-form-group full-width">
+                                                    <label>Customer Complaint: *</label>
+                                                    <textarea id="customerComplaintJob" rows="2" placeholder="Enter customer complaint">Axle replacement</textarea>
+                                                </div>
+                                            </div>
+
+                                            <!-- Row 9: Failure Analysis -->
+                                            <div class="job-form-row">
+                                                <div class="job-form-group full-width">
+                                                    <label>Cause Of Failure:</label>
+                                                    <textarea id="causeOfFailure" rows="2" placeholder="Enter cause of failure"></textarea>
+                                                </div>
+                                            </div>
+
+                                            <!-- Row 10: Actions -->
+                                            <div class="job-form-row">
+                                                <div class="job-form-group full-width">
+                                                    <label>Corrective Action:</label>
+                                                    <textarea id="correctiveAction" rows="2" placeholder="Enter corrective action taken"></textarea>
+                                                </div>
+                                            </div>
+
+                                            <!-- Row 11: Next Service -->
+                                            <div class="job-form-row">
+                                                <div class="job-form-group full-width">
+                                                    <label>Action For Next Service:</label>
+                                                    <textarea id="actionNextService" rows="2" placeholder="Enter recommendations for next service"></textarea>
+                                                </div>
+                                            </div>
+
+                                            <!-- Row 12: Value Added Sale and Gate Pass -->
+                                            <div class="job-form-row">
+                                                <div class="job-form-group">
+                                                    <label>Value Added Sale</label>
+                                                    <input type="text" id="valueAddedSale" placeholder="Enter value added sale details">
+                                                </div>
+                                                <div class="job-form-group">
+                                                    <label>Gate Pass #:</label>
+                                                    <input type="text" id="gatePassNumber" placeholder="Enter gate pass number">
+                                                </div>
+                                                <div class="job-form-group">
+                                                    <label>Outside Charges:</label>
+                                                    <input type="number" id="outsideCharges" value="0" step="0.01">
+                                                </div>
+                                            </div>
+
+                                            <!-- Row 13: Outside Agency Details -->
+                                            <div class="job-form-row">
+                                                <div class="job-form-group">
+                                                    <label>Out Date:</label>
+                                                    <input type="date" id="outDate">
+                                                </div>
+                                                <div class="job-form-group">
+                                                    <label>In Date:</label>
+                                                    <input type="date" id="inDate">
+                                                </div>
+                                                <div class="job-form-group">
+                                                    <label>Outside Agency Name:</label>
+                                                    <input type="text" id="outsideAgencyName" placeholder="Enter outside agency name">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- J1-Part Suggested List Section -->
+                                    <div class="job-section" id="suggestedSection">
+                                        <h3>J1-Part Suggested List</h3>
+                                        <div class="job-table-container">
+                                            <div class="job-table-header">
+                                                <div class="job-table-actions">
+                                                    <button class="job-btn job-btn-primary">Work Order Value</button>
+                                                    <button class="job-btn job-btn-secondary">Add</button>
+                                                    <button class="job-btn job-btn-secondary">Edit</button>
+                                                    <button class="job-btn job-btn-secondary">Delete</button>
+                                                </div>
+                                            </div>
+                                            <table class="job-data-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="checkbox-col">
+                                                            <input type="checkbox" id="selectAllSuggested">
+                                                        </th>
+                                                        <th>Description</th>
+                                                        <th>Qty</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="suggestedPartsTableBody">
+                                                    <tr class="no-data-row">
+                                                        <td colspan="4" class="no-data-cell">No suggested parts available</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <!-- J1-Parts Section -->
+                                    <div class="job-section" id="partsSection">
+                                        <h3>J1-Parts</h3>
+                                        <div class="job-table-container">
+                                            <div class="job-table-header">
+                                                <div class="job-table-actions">
+                                                    <button class="job-btn job-btn-primary">Work Order Value</button>
+                                                    <button class="job-btn job-btn-secondary">Add</button>
+                                                    <button class="job-btn job-btn-secondary">Edit</button>
+                                                    <button class="job-btn job-btn-secondary">Delete</button>
+                                                </div>
+                                            </div>
+                                            <table class="job-data-table parts-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="checkbox-col">
+                                                            <input type="checkbox" id="selectAllParts">
+                                                        </th>
+                                                        <th>Part Prefix</th>
+                                                        <th>Part #</th>
+                                                        <th>Description</th>
+                                                        <th>Rate</th>
+                                                        <th>Quantity Required</th>
+                                                        <th>Customer Provided</th>
+                                                        <th>Quantity Requested</th>
+                                                        <th>Rejected Quantity</th>
+                                                        <th>Quantity Issued</th>
+                                                        <th>Quantity Used</th>
+                                                        <th>Total Amt</th>
+                                                        <th>Returned Quantity</th>
+                                                        <th>Total Received Amount</th>
+                                                        <th>Parts Disposition</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="partsTableBody">
+                                                    <tr>
+                                                        <td><input type="checkbox"></td>
+                                                        <td>J1-PART</td>
+                                                        <td>CV-JOINT-001</td>
+                                                        <td>CV Joint Assembly - Front Right</td>
+                                                        <td>125.00</td>
+                                                        <td>1</td>
+                                                        <td>No</td>
+                                                        <td>1</td>
+                                                        <td>0</td>
+                                                        <td>1</td>
+                                                        <td>1</td>
+                                                        <td>125.00</td>
+                                                        <td>0</td>
+                                                        <td>125.00</td>
+                                                        <td>Used</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox"></td>
+                                                        <td>J1-PART</td>
+                                                        <td>GREASE-001</td>
+                                                        <td>CV Joint Grease</td>
+                                                        <td>15.00</td>
+                                                        <td>1</td>
+                                                        <td>No</td>
+                                                        <td>1</td>
+                                                        <td>0</td>
+                                                        <td>1</td>
+                                                        <td>1</td>
+                                                        <td>15.00</td>
+                                                        <td>0</td>
+                                                        <td>15.00</td>
+                                                        <td>Used</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <!-- J1-Labor and Misc. Details Section -->
+                                    <div class="job-section" id="laborSection">
+                                        <h3>J1-Labor and Misc. Details</h3>
+                                        <div class="labor-details-container">
+                                            <!-- Labor Details Table -->
+                                            <div class="labor-section">
+                                                <div class="labor-section-header">
+                                                    <h4>Labor Details</h4>
+                                                    <div class="labor-actions">
+                                                        <button class="job-btn job-btn-primary">Work Order Value</button>
+                                                        <button class="job-btn job-btn-secondary">Add</button>
+                                                        <button class="job-btn job-btn-secondary">Edit</button>
+                                                        <button class="job-btn job-btn-secondary">Delete</button>
+                                                    </div>
+                                                </div>
+                                                <table class="labor-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>☑</th>
+                                                            <th>Operation Code</th>
+                                                            <th>Operation Description</th>
+                                                            <th>Qty</th>
+                                                            <th>Unit Rate</th>
+                                                            <th>Total</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><input type="checkbox"></td>
+                                                            <td>J1-DIAG001</td>
+                                                            <td>Diagnostic and troubleshooting</td>
+                                                            <td>2.0</td>
+                                                            <td>75.00</td>
+                                                            <td>150.00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><input type="checkbox"></td>
+                                                            <td>J1-REP002</td>
+                                                            <td>Axle replacement labor</td>
+                                                            <td>4.5</td>
+                                                            <td>85.00</td>
+                                                            <td>382.50</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <!-- Miscellaneous Details Table -->
+                                            <div class="misc-section">
+                                                <div class="misc-section-header">
+                                                    <h4>Miscellaneous Details</h4>
+                                                    <div class="misc-actions">
+                                                        <button class="job-btn job-btn-secondary">Add</button>
+                                                        <button class="job-btn job-btn-secondary">Edit</button>
+                                                        <button class="job-btn job-btn-secondary">Delete</button>
+                                                    </div>
+                                                </div>
+                                                <table class="misc-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>☑</th>
+                                                            <th>Misc Code</th>
+                                                            <th>Description</th>
+                                                            <th>Qty</th>
+                                                            <th>Unit Rate</th>
+                                                            <th>Total</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><input type="checkbox"></td>
+                                                            <td>SHOP001</td>
+                                                            <td>Shop supplies</td>
+                                                            <td>1.0</td>
+                                                            <td>25.00</td>
+                                                            <td>25.00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><input type="checkbox"></td>
+                                                            <td>ENV001</td>
+                                                            <td>Environmental fee</td>
+                                                            <td>1.0</td>
+                                                            <td>5.00</td>
+                                                            <td>5.00</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <!-- Labor Charge Details -->
+                                            <div class="labor-charge-section">
+                                                <div class="labor-charge-header">
+                                                    <h4>Labor Charge Details</h4>
+                                                </div>
+                                                <table class="labor-charge-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Description</th>
+                                                            <th>Standard Hours</th>
+                                                            <th>Actual Hours</th>
+                                                            <th>Rate/Hour</th>
+                                                            <th>Amount</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Diagnostic Time</td>
+                                                            <td>2.0</td>
+                                                            <td>1.8</td>
+                                                            <td>75.00</td>
+                                                            <td>135.00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Repair Time</td>
+                                                            <td>4.5</td>
+                                                            <td>4.2</td>
+                                                            <td>85.00</td>
+                                                            <td>357.00</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <!-- Summary Section -->
+                                            <div class="labor-summary-section">
+                                                <div class="summary-grid">
+                                                    <div class="summary-item">
+                                                        <label>Total Labor Hours:</label>
+                                                        <span>6.0</span>
+                                                    </div>
+                                                    <div class="summary-item">
+                                                        <label>Total Labor Amount:</label>
+                                                        <span>$532.50</span>
+                                                    </div>
+                                                    <div class="summary-item">
+                                                        <label>Total Misc Amount:</label>
+                                                        <span>$30.00</span>
+                                                    </div>
+                                                    <div class="summary-item">
+                                                        <label>Grand Total:</label>
+                                                        <span class="grand-total">$562.50</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Additional Information -->
+                                            <div class="additional-info-section">
+                                                <div class="info-grid">
+                                                    <div class="info-group">
+                                                        <label>Technician:</label>
+                                                        <select>
+                                                            <option>John Smith</option>
+                                                            <option>Mike Johnson</option>
+                                                            <option>Sarah Wilson</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="info-group">
+                                                        <label>Start Time:</label>
+                                                        <input type="datetime-local" value="2025-01-15T08:00">
+                                                    </div>
+                                                    <div class="info-group">
+                                                        <label>End Time:</label>
+                                                        <input type="datetime-local" value="2025-01-15T14:30">
+                                                    </div>
+                                                    <div class="info-group">
+                                                        <label>Status:</label>
+                                                        <select>
+                                                            <option>In Progress</option>
+                                                            <option>Completed</option>
+                                                            <option>On Hold</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="notes-section">
+                                                    <label>Work Notes:</label>
+                                                    <textarea rows="3" placeholder="Enter work notes and observations...">Customer reported grinding noise from front axle. Diagnosed worn CV joint. Replaced complete axle assembly. Test drive completed successfully.</textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- J1-Travel Section -->
+                                    <div class="job-section" id="travelSection">
+                                        <h3>J1-Travel</h3>
+                                        <div class="travel-details-container">
+                                            <div class="travel-section">
+                                                <div class="travel-section-header">
+                                                    <h4>Travel Details</h4>
+                                                    <div class="travel-actions">
+                                                        <button class="job-btn job-btn-primary">Work Order Value</button>
+                                                        <button class="job-btn job-btn-secondary">Add</button>
+                                                        <button class="job-btn job-btn-secondary">Edit</button>
+                                                        <button class="job-btn job-btn-secondary">Delete</button>
+                                                    </div>
+                                                </div>
+                                                <table class="travel-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>☑</th>
+                                                            <th>Employee</th>
+                                                            <th>Start Date</th>
+                                                            <th>End Date</th>
+                                                            <th>Description</th>
+                                                            <th>Expense Type</th>
+                                                            <th>Expense Amount</th>
+                                                            <th>Remarks</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr class="no-data-row">
+                                                            <td colspan="8" class="no-data-cell">No Records To View</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- J1-Attachments Section -->
+                                    <div class="job-section" id="attachmentsSection">
+                                        <h3>J1-Attachments</h3>
+                                        <div class="attachments-details-container">
+                                            <div class="attachments-section">
+                                                <div class="attachments-section-header">
+                                                    <h4>Travel Details</h4>
+                                                    <div class="attachments-actions">
+                                                        <button class="job-btn job-btn-primary">Work Order Value</button>
+                                                        <button class="job-btn job-btn-secondary">Add</button>
+                                                        <button class="job-btn job-btn-secondary">Edit</button>
+                                                        <button class="job-btn job-btn-secondary">Delete</button>
+                                                    </div>
+                                                </div>
+                                                <table class="attachments-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>☑</th>
+                                                            <th>Employee</th>
+                                                            <th>Start Date</th>
+                                                            <th>End Date</th>
+                                                            <th>Description</th>
+                                                            <th>Expense Type</th>
+                                                            <th>Expense Amount</th>
+                                                            <th>Remarks</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr class="no-data-row">
+                                                            <td colspan="8" class="no-data-cell">No Records To View</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- J1-Summary Section -->
+                                    <div class="job-section" id="summarySection">
+                                        <h3>J1-Summary</h3>
+                                        <div class="summary-details-container">
+                                            <div class="summary-section">
+                                                <div class="summary-section-header">
+                                                    <h4>Job Summary</h4>
+                                                    <div class="summary-actions">
+                                                        <button class="job-btn job-btn-primary">Work Order Value</button>
+                                                        <button class="job-btn job-btn-secondary">Add</button>
+                                                        <button class="job-btn job-btn-secondary">Edit</button>
+                                                        <button class="job-btn job-btn-secondary">Delete</button>
+                                                    </div>
+                                                </div>
+                                                <table class="summary-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Description</th>
+                                                            <th>Amount</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Labor Charges - Total Amount</td>
+                                                            <td class="amount-cell">1950.00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Miscellaneous - Total Amount</td>
+                                                            <td class="amount-cell">0.00</td>
+                                                        </tr>
+                                                        <tr class="total-row">
+                                                            <td><strong>Grand Total</strong></td>
+                                                            <td class="amount-cell total-amount"><strong>1950.00</strong></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- J1-Causing Part Section -->
+                                    <div class="job-section" id="causingSection">
+                                        <h3>J1-Causing Part</h3>
+                                        <div class="causing-part-container">
+                                            <div class="causing-part-section">
+                                                <div class="causing-part-header">
+                                                    <h4>Causing Part</h4>
+                                                    <div class="causing-part-actions">
+                                                        <button class="job-btn job-btn-primary">Work Order Value</button>
+                                                        <button class="job-btn job-btn-secondary">Add</button>
+                                                        <button class="job-btn job-btn-secondary">Edit</button>
+                                                        <button class="job-btn job-btn-secondary">Delete</button>
+                                                    </div>
+                                                </div>
+                                                <table class="causing-part-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>☑</th>
+                                                            <th>Part Prefix</th>
+                                                            <th>Part #</th>
+                                                            <th>Description</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr class="no-data-row">
+                                                            <td colspan="4" class="no-data-cell">No Records To View</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Job Card Activity Section -->
+                                    <div class="job-section" id="activitySection">
+                                        <h3>Job Card Activity</h3>
+                                        <div class="job-card-activity-container">
+                                            <div class="job-card-activity-section">
+                                                <div class="job-card-activity-header">
+                                                    <h4>Job Card Activity Detail</h4>
+                                                    <div class="job-card-activity-actions">
+                                                        <button class="job-btn job-btn-primary">Work Order Value</button>
+                                                        <button class="job-btn job-btn-secondary">Add</button>
+                                                        <button class="job-btn job-btn-secondary">Edit</button>
+                                                        <button class="job-btn job-btn-secondary">Delete</button>
+                                                    </div>
+                                                </div>
+                                                <table class="job-card-activity-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>☑</th>
+                                                            <th>Mode</th>
+                                                            <th>Date</th>
+                                                            <th>Reference #</th>
+                                                            <th>Activity</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr class="no-data-row">
+                                                            <td colspan="5" class="no-data-cell">No Records To View</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Case Progress Section -->
+                                    <div class="job-section" id="progressSection">
+                                        <h3>Case Progress</h3>
+                                        <div class="case-progress-container">
+                                            <!-- Transaction Log Header -->
+                                            <div class="transaction-log-header">
+                                                <h4>Transaction Log</h4>
+                                                <button class="close-btn">✕</button>
+                                            </div>
+
+                                            <!-- Case Progress History Section -->
+                                            <div class="case-progress-section">
+                                                <div class="case-progress-header">
+                                                    <h4>Case Progress History</h4>
+                                                    <div class="case-progress-actions">
+                                                        <button class="job-btn job-btn-primary">Work Order Value</button>
+                                                        <button class="job-btn job-btn-secondary">Add</button>
+                                                        <button class="job-btn job-btn-secondary">Edit</button>
+                                                        <button class="job-btn job-btn-secondary">Delete</button>
+                                                    </div>
+                                                </div>
+                                                <table class="case-progress-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>☑</th>
+                                                            <th>Received Time</th>
+                                                            <th>Step Name</th>
+                                                            <th>Assign To</th>
+                                                            <th>Action Name</th>
+                                                            <th>Action By</th>
+                                                            <th>Action Date</th>
+                                                            <th>Remarks</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><input type="checkbox"></td>
+                                                            <td>24-Mar-2025 12:39</td>
+                                                            <td>Work Order Initiated (Bay Area)</td>
+                                                            <td>Admin</td>
+                                                            <td>Save as Draft</td>
+                                                            <td>Admin</td>
+                                                            <td>24-Mar-2025 12:39</td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><input type="checkbox"></td>
+                                                            <td>24-Mar-2025 12:39</td>
+                                                            <td>Save as Draft - (Bay Area)</td>
+                                                            <td>Admin</td>
+                                                            <td>Assign to Technician</td>
+                                                            <td>Admin</td>
+                                                            <td>24-Mar-2025 12:41</td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><input type="checkbox"></td>
+                                                            <td>24-Mar-2025 12:41</td>
+                                                            <td>Technician (Bay Area)</td>
+                                                            <td>Admin</td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                <!-- Pagination -->
+                                                <div class="case-progress-pagination">
+                                                    <div class="pagination-controls">
+                                                        <button class="pagination-btn">⏮</button>
+                                                        <button class="pagination-btn">◀</button>
+                                                        <span class="pagination-info">Page 1 Of 1</span>
+                                                        <button class="pagination-btn">▶</button>
+                                                        <button class="pagination-btn">⏭</button>
+                                                        <select class="pagination-select">
+                                                            <option>5</option>
+                                                            <option>10</option>
+                                                            <option>25</option>
+                                                            <option>50</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="pagination-summary">
+                                                        View 1 - 3 Of 3
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Job Card Status Legend Section -->
+                                    <div class="job-section" id="legendSection">
+                                        <h3>Job Card Status Legend</h3>
+                                        <div class="status-legend-container">
+                                            <div class="status-legend-content">
+                                                <div class="legend-item">
+                                                    <span class="legend-label">Created:</span>
+                                                    <span class="status-badge legend-created">CREATED</span>
+                                                </div>
+                                                <div class="legend-item">
+                                                    <span class="legend-label">Moved to Tech:</span>
+                                                    <span class="status-badge legend-moved-tech">MOVED TO TECH</span>
+                                                </div>
+                                                <div class="legend-item">
+                                                    <span class="legend-label">In Progress:</span>
+                                                    <span class="status-badge legend-in-progress">IN PROGRESS</span>
+                                                </div>
+                                                <div class="legend-item">
+                                                    <span class="legend-label">On Hold/Pending:</span>
+                                                    <span class="status-badge legend-on-hold">ON HOLD/PENDING</span>
+                                                </div>
+                                                <div class="legend-item">
+                                                    <span class="legend-label">Completed/Ready:</span>
+                                                    <span class="status-badge legend-completed">COMPLETED/READY</span>
+                                                </div>
+                                                <div class="legend-item">
+                                                    <span class="legend-label">Invoiced:</span>
+                                                    <span class="status-badge legend-invoiced">INVOICED</span>
+                                                </div>
+                                                <div class="legend-item">
+                                                    <span class="legend-label">Closed:</span>
+                                                    <span class="status-badge legend-closed">CLOSED</span>
+                                                </div>
+                                                <div class="legend-item">
+                                                    <span class="legend-label">Cancelled:</span>
+                                                    <span class="status-badge legend-cancelled">CANCELLED</span>
+                                                </div>
+                                                <div class="legend-item">
+                                                    <span class="legend-label">Estimate/Quote Pending:</span>
+                                                    <span class="status-badge legend-estimate-pending">ESTIMATE/QUOTE PENDING</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                    <button class="btn btn-primary" id="saveBtn">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js?v=28"></script>
+    <script src="script.js?v=28"></script>
+</body>
+</html>

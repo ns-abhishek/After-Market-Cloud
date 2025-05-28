@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Wizard</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo">
+                <i class="fas fa-chart-line"></i>
+                <h1>Report Wizard</h1>
+            </div>
+            <div class="header-actions">
+                <button id="saveReportBtn" class="btn btn-outline">
+                    <i class="fas fa-save"></i> Save
+                </button>
+                <button id="loadReportBtn" class="btn btn-outline">
+                    <i class="fas fa-folder-open"></i> Load
+                </button>
+                <div class="dropdown">
+                    <button class="btn btn-outline dropdown-toggle">
+                        <i class="fas fa-globe"></i> Language
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="#" data-lang="en">English</a>
+                        <a href="#" data-lang="es">Español</a>
+                        <a href="#" data-lang="fr">Français</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="wizard-sidebar">
+                <ul class="wizard-steps">
+                    <li class="step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-info">
+                            <div class="step-title">Data Source</div>
+                            <div class="step-desc">Select your data source</div>
+                        </div>
+                    </li>
+                    <li class="step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-info">
+                            <div class="step-title">Data Selection</div>
+                            <div class="step-desc">Choose fields and filters</div>
+                        </div>
+                    </li>
+                    <li class="step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-info">
+                            <div class="step-title">Grouping & Aggregation</div>
+                            <div class="step-desc">Organize your data</div>
+                        </div>
+                    </li>
+                    <li class="step" data-step="4">
+                        <div class="step-number">4</div>
+                        <div class="step-info">
+                            <div class="step-title">Sorting</div>
+                            <div class="step-desc">Order your results</div>
+                        </div>
+                    </li>
+                    <li class="step" data-step="5">
+                        <div class="step-number">5</div>
+                        <div class="step-info">
+                            <div class="step-title">Visualization</div>
+                            <div class="step-desc">Choose layout and charts</div>
+                        </div>
+                    </li>
+                    <li class="step" data-step="6">
+                        <div class="step-number">6</div>
+                        <div class="step-info">
+                            <div class="step-title">Formatting</div>
+                            <div class="step-desc">Style your report</div>
+                        </div>
+                    </li>
+                    <li class="step" data-step="7">
+                        <div class="step-number">7</div>
+                        <div class="step-info">
+                            <div class="step-title">Preview & Export</div>
+                            <div class="step-desc">Review and download</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="wizard-content">
+                <!-- Step 1: Data Source Selection -->
+                <div class="wizard-step-content" id="step-1">
+                    <h2>Select Data Source</h2>
+                    <div class="data-source-options">
+                        <div class="data-source-card" data-source="file">
+                            <i class="fas fa-file-alt"></i>
+                            <h3>File Upload</h3>
+                            <p>Upload CSV, Excel, or JSON files</p>
+                            <input type="file" id="fileUpload" accept=".csv,.xlsx,.json" class="file-input" />
+                            <label for="fileUpload" class="btn btn-primary">Choose File</label>
+                        </div>
+                        <div class="data-source-card" data-source="sample">
+                            <i class="fas fa-database"></i>
+                            <h3>Sample Data</h3>
+                            <p>Use our sample datasets</p>
+                            <button class="btn btn-primary" id="sampleDataBtn">Browse Samples</button>
+                        </div>
+                        <div class="data-source-card" data-source="paste">
+                            <i class="fas fa-paste"></i>
+                            <h3>Paste Data</h3>
+                            <p>Paste data from clipboard</p>
+                            <button class="btn btn-primary" id="pasteDataBtn">Open Editor</button>
+                        </div>
+                    </div>
+                    <div id="dataSourcePreview" class="data-preview hidden">
+                        <h3>Data Preview</h3>
+                        <div class="data-table-container">
+                            <table id="dataPreviewTable"></table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Other steps will be dynamically loaded -->
+            </div>
+        </div>
+
+        <div class="wizard-footer">
+            <button id="prevStepBtn" class="btn btn-outline" disabled>
+                <i class="fas fa-arrow-left"></i> Previous
+            </button>
+            <div class="step-indicator">
+                Step <span id="currentStep">1</span> of <span id="totalSteps">7</span>
+            </div>
+            <button id="nextStepBtn" class="btn btn-primary">
+                Next <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="sampleDataModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Sample Datasets</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="sample-data-list">
+                    <div class="sample-data-item" data-sample="sales">
+                        <h3>Sales Data</h3>
+                        <p>Monthly sales data with products, regions, and revenue</p>
+                        <button class="btn btn-sm btn-primary">Use This Dataset</button>
+                    </div>
+                    <div class="sample-data-item" data-sample="employees">
+                        <h3>Employee Records</h3>
+                        <p>Employee information with departments and performance metrics</p>
+                        <button class="btn btn-sm btn-primary">Use This Dataset</button>
+                    </div>
+                    <div class="sample-data-item" data-sample="inventory">
+                        <h3>Inventory Management</h3>
+                        <p>Product inventory with stock levels and suppliers</p>
+                        <button class="btn btn-sm btn-primary">Use This Dataset</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="pasteDataModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Paste Your Data</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Paste your data below (CSV, JSON, or tab-separated values):</p>
+                <textarea id="pasteDataArea" rows="10" placeholder="Paste your data here..."></textarea>
+                <div class="modal-actions">
+                    <button id="processPastedDataBtn" class="btn btn-primary">Process Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="saveReportModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Save Report</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="reportName">Report Name</label>
+                    <input type="text" id="reportName" placeholder="Enter report name">
+                </div>
+                <div class="form-group">
+                    <label for="reportDescription">Description (optional)</label>
+                    <textarea id="reportDescription" rows="3" placeholder="Enter report description"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button id="confirmSaveReportBtn" class="btn btn-primary">Save Report</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/dataSource.js"></script>
+    <script src="js/dataSelection.js"></script>
+    <script src="js/grouping.js"></script>
+    <script src="js/aggregation.js"></script>
+    <script src="js/visualization.js"></script>
+    <script src="js/export.js"></script>
+    <script src="js/saveLoad.js"></script>
+    <script src="js/wizard.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

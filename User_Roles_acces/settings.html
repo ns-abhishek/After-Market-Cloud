@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Access Control System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <main class="content">
+            <header class="content-header">
+                <div class="header-left">
+                    <h1>Settings</h1>
+                </div>
+                <div class="header-right">
+                    <div class="user-profile">
+                        <div class="avatar-circle">
+                            <span class="avatar-text">M</span>
+                        </div>
+                        <span>Admin User</span>
+                        <i class="fas fa-chevron-down"></i>
+                        <div class="user-dropdown">
+                            <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="role-definition-guide.html"><i class="fas fa-book"></i> User Guide</a>
+                            <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="settings-container">
+                <div class="settings-sidebar">
+                    <ul class="settings-menu">
+                        <li class="active" data-tab="general"><i class="fas fa-sliders-h"></i> General</li>
+                        <li data-tab="security"><i class="fas fa-shield-alt"></i> Security</li>
+                        <li data-tab="api"><i class="fas fa-code"></i> API Settings</li>
+                        <li data-tab="backup"><i class="fas fa-database"></i> Backup & Restore</li>
+                    </ul>
+                </div>
+
+                <div class="settings-content">
+                    <div class="settings-tab active" id="general">
+                        <h2>General Settings</h2>
+
+                        <div class="settings-section">
+                            <h3>System Information</h3>
+                            <div class="form-group">
+                                <label for="systemName">System Name</label>
+                                <input type="text" id="systemName" value="Access Control System">
+                            </div>
+                            <div class="form-group">
+                                <label for="companyName">Company Name</label>
+                                <input type="text" id="companyName" value="Your Company">
+                            </div>
+                            <div class="form-group">
+                                <label for="adminEmail">Administrator Email</label>
+                                <input type="email" id="adminEmail" value="admin@example.com">
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>Interface Settings</h3>
+                            <div class="form-group">
+                                <label for="language">Default Language</label>
+                                <select id="language">
+                                    <option value="en">English</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                    <option value="zh">Chinese</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="timezone">Default Timezone</label>
+                                <select id="timezone">
+                                    <option value="UTC">UTC</option>
+                                    <option value="America/New_York">Eastern Time (ET)</option>
+                                    <option value="America/Chicago">Central Time (CT)</option>
+                                    <option value="America/Denver">Mountain Time (MT)</option>
+                                    <option value="America/Los_Angeles">Pacific Time (PT)</option>
+                                    <option value="Europe/London">London</option>
+                                    <option value="Europe/Paris">Paris</option>
+                                    <option value="Asia/Tokyo">Tokyo</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="dateFormat">Date Format</label>
+                                <select id="dateFormat">
+                                    <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                                    <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                                    <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="theme">Theme</label>
+                                <select id="theme">
+                                    <option value="light">Light</option>
+                                    <option value="dark">Dark</option>
+                                    <option value="system">System Default</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>Default User Settings</h3>
+                            <div class="form-group">
+                                <label for="defaultRole">Default Role for New Users</label>
+                                <select id="defaultRole">
+                                    <option value="viewer">Viewer</option>
+                                    <option value="editor">Editor</option>
+                                    <option value="manager">Manager</option>
+                                    <option value="administrator">Administrator</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Default User Options</label>
+                                <div class="checkbox-list">
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" id="sendWelcomeEmail" checked>
+                                        <span class="checkmark"></span>
+                                        Send welcome email to new users
+                                    </label>
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" id="requirePasswordChange" checked>
+                                        <span class="checkmark"></span>
+                                        Require password change on first login
+                                    </label>
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" id="autoActivateUsers">
+                                        <span class="checkmark"></span>
+                                        Automatically activate new users
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button class="btn btn-primary">Save Changes</button>
+                            <button class="btn btn-secondary">Reset to Defaults</button>
+                        </div>
+                    </div>
+
+                    <div class="settings-tab" id="security">
+                        <h2>Security Settings</h2>
+
+                        <div class="settings-section">
+                            <h3>Password Policy</h3>
+                            <div class="form-group">
+                                <label for="minPasswordLength">Minimum Password Length</label>
+                                <input type="number" id="minPasswordLength" value="8" min="6" max="32">
+                            </div>
+                            <div class="form-group">
+                                <label>Password Requirements</label>
+                                <div class="checkbox-list">
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" id="requireUppercase" checked>
+                                        <span class="checkmark"></span>
+                                        Require at least one uppercase letter
+                                    </label>
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" id="requireLowercase" checked>
+                                        <span class="checkmark"></span>
+                                        Require at least one lowercase letter
+                                    </label>
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" id="requireNumbers" checked>
+                                        <span class="checkmark"></span>
+                                        Require at least one number
+                                    </label>
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" id="requireSpecialChars" checked>
+                                        <span class="checkmark"></span>
+                                        Require at least one special character
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="passwordExpiration">Password Expiration (days)</label>
+                                <input type="number" id="passwordExpiration" value="90" min="0" max="365">
+                                <small>Set to 0 for no expiration</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="passwordHistory">Password History</label>
+                                <input type="number" id="passwordHistory" value="5" min="0" max="24">
+                                <small>Number of previous passwords that cannot be reused</small>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>Session Settings</h3>
+                            <div class="form-group">
+                                <label for="sessionTimeout">Session Timeout (minutes)</label>
+                                <input type="number" id="sessionTimeout" value="30" min="5" max="1440">
+                            </div>
+                            <div class="form-group">
+                                <label>Session Security</label>
+                                <div class="checkbox-list">
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" id="enforceOneSession" checked>
+                                        <span class="checkmark"></span>
+                                        Enforce one active session per user
+                                    </label>
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" id="rememberDevice" checked>
+                                        <span class="checkmark"></span>
+                                        Allow "Remember this device" option
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button class="btn btn-primary">Save Changes</button>
+                            <button class="btn btn-secondary">Reset to Defaults</button>
+                        </div>
+                    </div>
+
+                    <div class="settings-tab" id="api">
+                        <h2>API Settings</h2>
+
+                        <div class="settings-section">
+                            <h3>API Authentication</h3>
+                            <div class="form-group">
+                                <label for="apiAuthType">Authentication Type</label>
+                                <select id="apiAuthType">
+                                    <option value="jwt">JWT (JSON Web Token)</option>
+                                    <option value="oauth2">OAuth 2.0</option>
+                                    <option value="apikey">API Key</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="settings-section" id="jwtSettings">
+                            <h3>JWT Configuration</h3>
+                            <div class="form-group">
+                                <label for="jwtSecret">JWT Secret Key</label>
+                                <div class="input-with-button">
+                                    <input type="password" id="jwtSecret" value="••••••••••••••••••••••••••••••">
+                                    <button class="btn btn-icon"><i class="fas fa-eye"></i></button>
+                                    <button class="btn btn-icon"><i class="fas fa-sync-alt"></i></button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="jwtExpiration">Token Expiration (minutes)</label>
+                                <input type="number" id="jwtExpiration" value="60" min="5" max="1440">
+                            </div>
+                            <div class="form-group">
+                                <label for="jwtIssuer">Token Issuer</label>
+                                <input type="text" id="jwtIssuer" value="access-control-system">
+                            </div>
+                            <div class="form-group">
+                                <label>JWT Claims</label>
+                                <div class="checkbox-list">
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" id="includeRoles" checked>
+                                        <span class="checkmark"></span>
+                                        Include user roles in token
+                                    </label>
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" id="includePermissions" checked>
+                                        <span class="checkmark"></span>
+                                        Include user permissions in token
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-section" id="oauth2Settings" style="display: none;">
+                            <h3>OAuth 2.0 Configuration</h3>
+                            <div class="form-group">
+                                <label for="oauthProvider">OAuth Provider</label>
+                                <select id="oauthProvider">
+                                    <option value="custom">Custom</option>
+                                    <option value="google">Google</option>
+                                    <option value="microsoft">Microsoft</option>
+                                    <option value="github">GitHub</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="clientId">Client ID</label>
+                                <input type="text" id="clientId" value="">
+                            </div>
+                            <div class="form-group">
+                                <label for="clientSecret">Client Secret</label>
+                                <div class="input-with-button">
+                                    <input type="password" id="clientSecret" value="">
+                                    <button class="btn btn-icon"><i class="fas fa-eye"></i></button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="redirectUri">Redirect URI</label>
+                                <input type="text" id="redirectUri" value="https://yourdomain.com/oauth/callback">
+                            </div>
+                            <div class="form-group">
+                                <label for="authorizationEndpoint">Authorization Endpoint</label>
+                                <input type="text" id="authorizationEndpoint" value="">
+                            </div>
+                            <div class="form-group">
+                                <label for="tokenEndpoint">Token Endpoint</label>
+                                <input type="text" id="tokenEndpoint" value="">
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>API Rate Limiting</h3>
+                            <div class="form-group">
+                                <label for="rateLimit">Rate Limit (requests per minute)</label>
+                                <input type="number" id="rateLimit" value="100" min="10" max="1000">
+                            </div>
+                            <div class="form-group">
+                                <label for="rateLimitBurst">Burst Limit</label>
+                                <input type="number" id="rateLimitBurst" value="150" min="10" max="2000">
+                                <small>Maximum number of requests allowed in a short burst</small>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button class="btn btn-primary">Save Changes</button>
+                            <button class="btn btn-secondary">Reset to Defaults</button>
+                        </div>
+                    </div>
+
+                    <div class="settings-tab" id="backup">
+                        <h2>Backup & Restore</h2>
+
+                        <div class="settings-section">
+                            <h3>Automated Backups</h3>
+                            <div class="form-group">
+                                <label for="backupFrequency">Backup Frequency</label>
+                                <select id="backupFrequency">
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly" selected>Weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="never">Never</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="backupTime">Backup Time</label>
+                                <input type="time" id="backupTime" value="02:00">
+                                <small>Time in 24-hour format (server time)</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="retentionPeriod">Retention Period (days)</label>
+                                <input type="number" id="retentionPeriod" value="30" min="1" max="365">
+                                <small>Number of days to keep backups before automatic deletion</small>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>Backup Storage</h3>
+                            <div class="form-group">
+                                <label for="storageType">Storage Type</label>
+                                <select id="storageType">
+                                    <option value="local">Local Storage</option>
+                                    <option value="s3">Amazon S3</option>
+                                    <option value="azure">Azure Blob Storage</option>
+                                    <option value="gcp">Google Cloud Storage</option>
+                                </select>
+                            </div>
+
+                            <div id="localStorageSettings">
+                                <div class="form-group">
+                                    <label for="localPath">Backup Directory</label>
+                                    <input type="text" id="localPath" value="/var/backups/access-control">
+                                </div>
+                            </div>
+
+                            <div id="cloudStorageSettings" style="display: none;">
+                                <div class="form-group">
+                                    <label for="bucketName">Bucket/Container Name</label>
+                                    <input type="text" id="bucketName" value="">
+                                </div>
+                                <div class="form-group">
+                                    <label for="accessKey">Access Key/Connection String</label>
+                                    <div class="input-with-button">
+                                        <input type="password" id="accessKey" value="">
+                                        <button class="btn btn-icon"><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="region">Region</label>
+                                    <input type="text" id="region" value="">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>Manual Backup & Restore</h3>
+                            <div class="action-buttons">
+                                <button class="btn btn-primary"><i class="fas fa-download"></i> Create Backup Now</button>
+                                <button class="btn btn-secondary"><i class="fas fa-upload"></i> Restore from Backup</button>
+                            </div>
+
+                            <div class="backup-history">
+                                <h4>Recent Backups</h4>
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date & Time</th>
+                                            <th>Size</th>
+                                            <th>Type</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>2023-08-20 02:00:15</td>
+                                            <td>24.5 MB</td>
+                                            <td>Automated</td>
+                                            <td><span class="status-badge success">Completed</span></td>
+                                            <td class="actions">
+                                                <button class="btn-icon download"><i class="fas fa-download"></i></button>
+                                                <button class="btn-icon restore"><i class="fas fa-undo"></i></button>
+                                                <button class="btn-icon delete"><i class="fas fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>2023-08-13 02:00:12</td>
+                                            <td>23.8 MB</td>
+                                            <td>Automated</td>
+                                            <td><span class="status-badge success">Completed</span></td>
+                                            <td class="actions">
+                                                <button class="btn-icon download"><i class="fas fa-download"></i></button>
+                                                <button class="btn-icon restore"><i class="fas fa-undo"></i></button>
+                                                <button class="btn-icon delete"><i class="fas fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>2023-08-10 15:42:33</td>
+                                            <td>23.7 MB</td>
+                                            <td>Manual</td>
+                                            <td><span class="status-badge success">Completed</span></td>
+                                            <td class="actions">
+                                                <button class="btn-icon download"><i class="fas fa-download"></i></button>
+                                                <button class="btn-icon restore"><i class="fas fa-undo"></i></button>
+                                                <button class="btn-icon delete"><i class="fas fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button class="btn btn-primary">Save Changes</button>
+                            <button class="btn btn-secondary">Reset to Defaults</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

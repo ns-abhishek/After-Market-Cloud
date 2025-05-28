@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Role Definition Guide - Access Control System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <main class="content">
+            <header class="content-header">
+                <div class="header-left">
+                    <h1>Role Definition Guide</h1>
+                </div>
+                <div class="header-right">
+                    <div class="user-profile">
+                        <div class="avatar-circle">
+                            <span class="avatar-text">M</span>
+                        </div>
+                        <span>Admin User</span>
+                        <i class="fas fa-chevron-down"></i>
+                        <div class="user-dropdown">
+                            <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="role-definition-guide.html"><i class="fas fa-book"></i> User Guide</a>
+                            <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="guide-container">
+                <div class="guide-sidebar">
+                    <ul class="guide-menu">
+                        <li class="active" data-section="introduction">Introduction</li>
+                        <li data-section="identify-roles">Identifying User Roles</li>
+                        <li data-section="define-permissions">Defining Permissions</li>
+                        <li data-section="map-permissions">Mapping Permissions to Roles</li>
+                        <li data-section="access-control-models">Access Control Models</li>
+                        <li data-section="implementation">Implementation Guidelines</li>
+                        <li data-section="best-practices">Best Practices</li>
+                    </ul>
+                </div>
+
+                <div class="guide-content">
+                    <section id="introduction" class="guide-section active">
+                        <h2>Introduction to Role-Based Access Control</h2>
+                        <p>Role-Based Access Control (RBAC) is a foundational approach to managing user access and permissions within your software. This guide will walk you through the process of defining roles, permissions, and implementing an effective access control system.</p>
+
+                        <div class="info-box">
+                            <h3><i class="fas fa-info-circle"></i> Why is proper role definition important?</h3>
+                            <ul>
+                                <li><strong>Security:</strong> Prevents unauthorized access to sensitive data and functionality</li>
+                                <li><strong>Compliance:</strong> Helps meet regulatory requirements for data protection</li>
+                                <li><strong>Efficiency:</strong> Simplifies user management by grouping permissions</li>
+                                <li><strong>Scalability:</strong> Makes it easier to manage access as your organization grows</li>
+                                <li><strong>Auditability:</strong> Provides clear records of who has access to what</li>
+                            </ul>
+                        </div>
+
+                        <p>This guide follows a systematic approach to establishing who can do what within your software, with a focus on the principle of least privilege - granting only the permissions necessary for users to perform their job functions.</p>
+                    </section>
+
+                    <section id="identify-roles" class="guide-section">
+                        <h2>Identifying User Roles</h2>
+                        <p>The first step in establishing an effective access control system is to identify the different types of users who will interact with your software and categorize them based on their responsibilities and tasks.</p>
+
+                        <h3>Steps to Identify User Roles:</h3>
+                        <ol>
+                            <li>
+                                <strong>Analyze your user base:</strong> Look at who will be using your system and what they need to accomplish.
+                            </li>
+                            <li>
+                                <strong>Group users by responsibilities:</strong> Users with similar responsibilities should be assigned to the same role.
+                            </li>
+                            <li>
+                                <strong>Consider organizational structure:</strong> Roles often align with positions in your organization's hierarchy.
+                            </li>
+                            <li>
+                                <strong>Think about task-based roles:</strong> Some roles may be based on specific tasks rather than positions.
+                            </li>
+                        </ol>
+
+                        <h3>Common Role Examples:</h3>
+                        <div class="role-examples">
+                            <div class="role-card">
+                                <div class="role-icon admin">
+                                    <i class="fas fa-user-shield"></i>
+                                </div>
+                                <div class="role-details">
+                                    <h4>Administrator</h4>
+                                    <p>Highest level of access with system configuration capabilities and user management responsibilities.</p>
+                                    <p><strong>Responsibilities:</strong> System configuration, user management, security monitoring</p>
+                                </div>
+                            </div>
+
+                            <div class="role-card">
+                                <div class="role-icon manager">
+                                    <i class="fas fa-user-tie"></i>
+                                </div>
+                                <div class="role-details">
+                                    <h4>Manager</h4>
+                                    <p>Department-level access with approval capabilities and oversight of team activities.</p>
+                                    <p><strong>Responsibilities:</strong> Approvals, reporting, team management</p>
+                                </div>
+                            </div>
+
+                            <div class="role-card">
+                                <div class="role-icon editor">
+                                    <i class="fas fa-user-edit"></i>
+                                </div>
+                                <div class="role-details">
+                                    <h4>Editor</h4>
+                                    <p>Content creation and modification access without system configuration capabilities.</p>
+                                    <p><strong>Responsibilities:</strong> Content creation, editing, limited publishing</p>
+                                </div>
+                            </div>
+
+                            <div class="role-card">
+                                <div class="role-icon viewer">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="role-details">
+                                    <h4>Viewer</h4>
+                                    <p>Read-only access to content and reports without modification capabilities.</p>
+                                    <p><strong>Responsibilities:</strong> Viewing content, generating reports</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tip-box">
+                            <h3><i class="fas fa-lightbulb"></i> Pro Tip: Role Granularity</h3>
+                            <p>When defining roles, balance between having too many roles (which becomes difficult to manage) and too few roles (which may grant excessive permissions). Consider creating base roles that can be extended with additional permissions for specific use cases.</p>
+                        </div>
+                    </section>
+
+                    <section id="define-permissions" class="guide-section">
+                        <h2>Defining Permissions</h2>
+                        <p>Permissions are specific actions that users can perform within the software. Breaking down complex actions into granular permissions allows for more precise control over what users can do.</p>
+
+                        <h3>Permission Types:</h3>
+                        <div class="permission-types">
+                            <div class="permission-group">
+                                <h4>CRUD Operations</h4>
+                                <ul>
+                                    <li><strong>Create:</strong> Add new records or resources</li>
+                                    <li><strong>Read:</strong> View existing records or resources</li>
+                                    <li><strong>Update:</strong> Modify existing records or resources</li>
+                                    <li><strong>Delete:</strong> Remove existing records or resources</li>
+                                </ul>
+                            </div>
+
+                            <div class="permission-group">
+                                <h4>Workflow Operations</h4>
+                                <ul>
+                                    <li><strong>Approve:</strong> Authorize a request or content</li>
+                                    <li><strong>Publish:</strong> Make content live or visible</li>
+                                    <li><strong>Submit:</strong> Send for review or approval</li>
+                                    <li><strong>Reject:</strong> Deny a request or content</li>
+                                </ul>
+                            </div>
+
+                            <div class="permission-group">
+                                <h4>Data Operations</h4>
+                                <ul>
+                                    <li><strong>Export:</strong> Extract data from the system</li>
+                                    <li><strong>Import:</strong> Load data into the system</li>
+                                    <li><strong>Archive:</strong> Move data to long-term storage</li>
+                                    <li><strong>Restore:</strong> Recover archived data</li>
+                                </ul>
+                            </div>
+
+                            <div class="permission-group">
+                                <h4>Administrative Operations</h4>
+                                <ul>
+                                    <li><strong>Configure:</strong> Change system settings</li>
+                                    <li><strong>Audit:</strong> View system logs and history</li>
+                                    <li><strong>Assign:</strong> Grant roles or permissions</li>
+                                    <li><strong>Revoke:</strong> Remove roles or permissions</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <h3>Permission Naming Conventions:</h3>
+                        <p>Use a consistent naming convention for permissions to make them easier to understand and manage. A common approach is to use the format:</p>
+                        <div class="code-example">
+                            <code>[resource]_[action]</code>
+                        </div>
+
+                        <p>Examples:</p>
+                        <ul>
+                            <li><code>user_create</code> - Permission to create new users</li>
+                            <li><code>content_publish</code> - Permission to publish content</li>
+                            <li><code>report_export</code> - Permission to export reports</li>
+                            <li><code>system_configure</code> - Permission to configure system settings</li>
+                        </ul>
+
+                        <div class="warning-box">
+                            <h3><i class="fas fa-exclamation-triangle"></i> Important: Permission Granularity</h3>
+                            <p>Break down complex actions into granular permissions. Instead of a vague permission like "Manage Users," use specific permissions like "Create User," "Edit User," "Delete User," etc. This allows for more precise control and follows the principle of least privilege.</p>
+                        </div>
+                    </section>
+
+                    <section id="map-permissions" class="guide-section">
+                        <h2>Mapping Permissions to Roles</h2>
+                        <p>Once you have defined your roles and permissions, the next step is to map which permissions each role should have. This creates a clear structure for access control in your system.</p>
+
+                        <h3>Role-Permission Matrix</h3>
+                        <p>A role-permission matrix is a visual representation that shows which permissions are assigned to each role. This makes it easy to understand and manage your access control structure.</p>
+
+                        <div class="table-container">
+                            <table class="role-permission-matrix">
+                                <thead>
+                                    <tr>
+                                        <th>Permission / Role</th>
+                                        <th>Administrator</th>
+                                        <th>Manager</th>
+                                        <th>Editor</th>
+                                        <th>Viewer</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="category-header">
+                                        <td colspan="5">User Management</td>
+                                    </tr>
+                                    <tr>
+                                        <td>user_create</td>
+                                        <td><i class="fas fa-check"></i></td>
+                                        <td><i class="fas fa-check"></i></td>
+                                        <td><i class="fas fa-times"></i></td>
+                                        <td><i class="fas fa-times"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td>user_read</td>
+                                        <td><i class="fas fa-check"></i></td>
+                                        <td><i class="fas fa-check"></i></td>
+                                        <td><i class="fas fa-check"></i></td>
+                                        <td><i class="fas fa-times"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td>user_update</td>
+                                        <td><i class="fas fa-check"></i></td>
+                                        <td><i class="fas fa-check"></i></td>
+                                        <td><i class="fas fa-times"></i></td>
+                                        <td><i class="fas fa-times"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td>user_delete</td>
+                                        <td><i class="fas fa-check"></i></td>
+                                        <td><i class="fas fa-times"></i></td>
+                                        <td><i class="fas fa-times"></i></td>
+                                        <td><i class="fas fa-times"></i></td>
+                                    </tr>
+
+                                    <tr class="category-header">
+                                        <td colspan="5">Content Management</td>
+                                    </tr>
+                                    <tr>
+                                        <td>content_create</td>
+                                        <td><i class="fas fa-check"></i></td>
+                                        <td><i class="fas fa-check"></i></td>
+                                        <td><i class="fas fa-check"></i></td>
+                                        <td><i class="fas fa-times"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td>content_read</td>
+                                        <td><i class="fas fa-check"></i></td>
+                                        <td><i class="fas fa-check"></i></td>
+                                        <td><i class="fas fa-check"></i></td>
+                                        <td><i class="fas fa-check"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td>content_update</td>
+                                        <td><i class="fas fa-check"></i></td>
+                                        <td><i class="fas fa-check"></i></td>
+                                        <td><i class="fas fa-check"></i></td>
+                                        <td><i class="fas fa-times"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td>content_delete</td>
+                                        <td><i class="fas fa-check"></i></td>
+                                        <td><i class="fas fa-check"></i></td>
+                                        <td><i class="fas fa-times"></i></td>
+                                        <td><i class="fas fa-times"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td>content_publish</td>
+                                        <td><i class="fas fa-check"></i></td>
+                                        <td><i class="fas fa-check"></i></td>
+                                        <td><i class="fas fa-times"></i></td>
+                                        <td><i class="fas fa-times"></i></td>
+                                    </tr>
+
+                                    <tr class="category-header">
+                                        <td colspan="5">System Configuration</td>
+                                    </tr>
+                                    <tr>
+                                        <td>system_configure</td>
+                                        <td><i class="fas fa-check"></i></td>
+                                        <td><i class="fas fa-times"></i></td>
+                                        <td><i class="fas fa-times"></i></td>
+                                        <td><i class="fas fa-times"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td>role_manage</td>
+                                        <td><i class="fas fa-check"></i></td>
+                                        <td><i class="fas fa-times"></i></td>
+                                        <td><i class="fas fa-times"></i></td>
+                                        <td><i class="fas fa-times"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td>audit_view</td>
+                                        <td><i class="fas fa-check"></i></td>
+                                        <td><i class="fas fa-check"></i></td>
+                                        <td><i class="fas fa-times"></i></td>
+                                        <td><i class="fas fa-times"></i></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h3>Principle of Least Privilege</h3>
+                        <p>When mapping permissions to roles, follow the principle of least privilege: grant only the permissions necessary for users to perform their job functions, and no more.</p>
+
+                        <div class="info-box">
+                            <h3><i class="fas fa-info-circle"></i> Benefits of Least Privilege</h3>
+                            <ul>
+                                <li><strong>Reduced Risk:</strong> Limits potential damage if a user account is compromised</li>
+                                <li><strong>Minimized Errors:</strong> Users with fewer permissions are less likely to accidentally perform actions they shouldn't</li>
+                                <li><strong>Improved Auditability:</strong> Easier to track who did what when permissions are clearly defined and limited</li>
+                                <li><strong>Simplified Compliance:</strong> Many regulatory frameworks require adherence to the principle of least privilege</li>
+                            </ul>
+                        </div>
+                    </section>
+
+                    <section id="access-control-models" class="guide-section">
+                        <h2>Access Control Models</h2>
+                        <p>Access control models provide the framework for how permissions are structured and enforced in your system. Different models offer varying levels of flexibility, granularity, and complexity.</p>
+
+                        <div class="access-models-container">
+                            <div class="access-model-card">
+                                <div class="model-header">
+                                    <h3><i class="fas fa-users-cog"></i> Role-Based Access Control (RBAC)</h3>
+                                </div>
+                                <div class="model-content">
+                                    <p>RBAC is the most common approach where permissions are assigned to roles, and users are assigned to roles.</p>
+
+                                    <h4>Key Characteristics:</h4>
+                                    <ul>
+                                        <li>Permissions are grouped into roles</li>
+                                        <li>Users are assigned to roles</li>
+                                        <li>Users inherit all permissions of their assigned roles</li>
+                                        <li>Changes to role permissions affect all users with that role</li>
+                                    </ul>
+
+                                    <h4>Advantages:</h4>
+                                    <ul>
+                                        <li>Simple to understand and implement</li>
+                                        <li>Efficient for managing large numbers of users</li>
+                                        <li>Reduces administrative overhead</li>
+                                        <li>Supports principle of least privilege</li>
+                                    </ul>
+
+                                    <h4>Implementation:</h4>
+                                    <p>Our system implements RBAC as the primary access control model. Users are assigned to roles (Administrator, Manager, Editor, etc.), and each role has a defined set of permissions.</p>
+                                </div>
+                            </div>
+
+                            <div class="access-model-card">
+                                <div class="model-header">
+                                    <h3><i class="fas fa-tags"></i> Attribute-Based Access Control (ABAC)</h3>
+                                </div>
+                                <div class="model-content">
+                                    <p>ABAC uses attributes of users, resources, and the environment to determine access permissions.</p>
+
+                                    <h4>Key Characteristics:</h4>
+                                    <ul>
+                                        <li>Access decisions based on attributes (properties) of:
+                                            <ul>
+                                                <li>Users (job title, department, clearance level)</li>
+                                                <li>Resources (classification, owner, creation date)</li>
+                                                <li>Environment (time, location, security level)</li>
+                                            </ul>
+                                        </li>
+                                        <li>Uses policies that combine attributes with logical operations</li>
+                                    </ul>
+
+                                    <h4>Advantages:</h4>
+                                    <ul>
+                                        <li>Highly flexible and granular control</li>
+                                        <li>Can handle complex access scenarios</li>
+                                        <li>Reduces role explosion problem of RBAC</li>
+                                        <li>Supports dynamic, context-aware access decisions</li>
+                                    </ul>
+
+                                    <h4>Implementation:</h4>
+                                    <p>Our system extends RBAC with ABAC capabilities by allowing access decisions based on:</p>
+                                    <ul>
+                                        <li>User attributes (department, location, employment status)</li>
+                                        <li>Resource attributes (sensitivity level, owner, creation date)</li>
+                                        <li>Environmental conditions (time of day, network location)</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="access-model-card">
+                                <div class="model-header">
+                                    <h3><i class="fas fa-list-ul"></i> Access Control Lists (ACLs)</h3>
+                                </div>
+                                <div class="model-content">
+                                    <p>ACLs assign permissions directly to users or groups for specific resources.</p>
+
+                                    <h4>Key Characteristics:</h4>
+                                    <ul>
+                                        <li>Each resource has an associated list of users/groups and their permissions</li>
+                                        <li>Permissions are defined at the resource level</li>
+                                        <li>Direct mapping between users and resources</li>
+                                    </ul>
+
+                                    <h4>Advantages:</h4>
+                                    <ul>
+                                        <li>Simple conceptual model</li>
+                                        <li>Fine-grained control at the resource level</li>
+                                        <li>Useful for specific resource protection</li>
+                                        <li>Familiar model from file systems and networking</li>
+                                    </ul>
+
+                                    <h4>Implementation:</h4>
+                                    <p>Our system incorporates ACLs for specific resources that require more granular control than RBAC provides. This allows:</p>
+                                    <ul>
+                                        <li>Resource owners to control access to their resources</li>
+                                        <li>Special exceptions to the role-based permissions</li>
+                                        <li>Temporary access grants without changing role assignments</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="info-box">
+                            <h3><i class="fas fa-info-circle"></i> Hybrid Approach</h3>
+                            <p>Our system implements a hybrid approach that combines the strengths of multiple access control models:</p>
+                            <ul>
+                                <li><strong>RBAC as the foundation:</strong> Provides a simple, scalable base for most access control needs</li>
+                                <li><strong>ABAC for dynamic decisions:</strong> Adds context-aware access control for complex scenarios</li>
+                                <li><strong>ACLs for exceptions:</strong> Enables fine-grained control for specific resources</li>
+                            </ul>
+                            <p>This hybrid approach provides both simplicity for common cases and flexibility for complex requirements.</p>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Guide navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            const guideMenuItems = document.querySelectorAll('.guide-menu li');
+
+            guideMenuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const sectionId = this.getAttribute('data-section');
+
+                    // Remove active class from all menu items and sections
+                    document.querySelectorAll('.guide-menu li').forEach(el => el.classList.remove('active'));
+                    document.querySelectorAll('.guide-section').forEach(el => el.classList.remove('active'));
+
+                    // Add active class to current menu item and section
+                    this.classList.add('active');
+                    document.getElementById(sectionId).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

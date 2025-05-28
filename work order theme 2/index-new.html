@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order</title>
+    <link rel="stylesheet" href="styles-new.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-brand">
+                <i class="fas fa-wrench"></i>
+                <span>Work Order</span>
+            </div>
+            <div class="header-actions">
+                <div class="search-container">
+                    <input type="search" placeholder="Search work orders..." class="search-input">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                <button class="btn btn-primary">
+                    <i class="fas fa-plus"></i>
+                    New Work Order
+                </button>
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="user-menu">
+                    <img src="https://via.placeholder.com/32" alt="User" class="user-avatar">
+                    <span class="user-name">John Doe</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <aside class="app-sidebar">
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Dashboard</h3>
+                    <ul class="nav-list">
+                        <li><a href="#" class="nav-link active" data-view="overview"><i class="fas fa-tachometer-alt"></i>Overview</a></li>
+                        <li><a href="#" class="nav-link" data-view="analytics"><i class="fas fa-chart-line"></i>Analytics</a></li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Work Orders</h3>
+                    <ul class="nav-list">
+                        <li><a href="#" class="nav-link" data-view="all-orders"><i class="fas fa-clipboard-list"></i>All Orders</a></li>
+                        <li><a href="#" class="nav-link" data-view="pending"><i class="fas fa-clock"></i>Pending</a></li>
+                        <li><a href="#" class="nav-link" data-view="in-progress"><i class="fas fa-tools"></i>In Progress</a></li>
+                        <li><a href="#" class="nav-link" data-view="completed"><i class="fas fa-check-circle"></i>Completed</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="app-main">
+            <!-- Overview View (Default) -->
+            <div class="content-view active" id="overview-view">
+                <!-- Dashboard Stats -->
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon stat-icon-primary">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-number">24</h3>
+                            <p class="stat-label">Active Work Orders</p>
+                            <span class="stat-change positive">+12% from last week</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon stat-icon-success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-number">156</h3>
+                            <p class="stat-label">Completed This Month</p>
+                            <span class="stat-change positive">+8% from last month</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon stat-icon-warning">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-number">8</h3>
+                            <p class="stat-label">Pending Parts</p>
+                            <span class="stat-change negative">+3 from yesterday</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon stat-icon-info">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-number">$12,450</h3>
+                            <p class="stat-label">Revenue This Week</p>
+                            <span class="stat-change positive">+15% from last week</span>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- Work Orders Table -->
+            <div class="card work-orders-card">
+                <div class="card-header">
+                    <h2 class="card-title">Recent Work Orders</h2>
+                    <div class="card-actions">
+                        <button class="btn btn-secondary btn-sm">
+                            <i class="fas fa-filter"></i>
+                            Filter
+                        </button>
+                        <button class="btn btn-secondary btn-sm">
+                            <i class="fas fa-download"></i>
+                            Export
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-container">
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th>Work Order #</th>
+                                    <th>Customer</th>
+                                    <th>Vehicle</th>
+                                    <th>Service Type</th>
+                                    <th>Status</th>
+                                    <th>Priority</th>
+                                    <th>Assigned To</th>
+                                    <th>Due Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="workOrdersTableBody">
+                                <!-- Work orders will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="pagination">
+                        <button class="btn btn-secondary btn-sm">Previous</button>
+                        <span class="pagination-info">Page 1 of 5</span>
+                        <button class="btn btn-secondary btn-sm">Next</button>
+                    </div>
+                </div>
+            </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <h3 class="section-title">Quick Actions</h3>
+                    <div class="action-grid">
+                        <button class="action-card">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Create Work Order</span>
+                        </button>
+                        <button class="action-card">
+                            <i class="fas fa-search"></i>
+                            <span>Find Customer</span>
+                        </button>
+                        <button class="action-card">
+                            <i class="fas fa-barcode"></i>
+                            <span>Scan Part</span>
+                        </button>
+                        <button class="action-card">
+                            <i class="fas fa-calendar-plus"></i>
+                            <span>Schedule Service</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics View -->
+            <div class="content-view" id="analytics-view">
+                <div class="page-header">
+                    <h1 class="page-title">Analytics Dashboard</h1>
+                    <p class="page-description">Comprehensive analytics and reporting for your service operations</p>
+                </div>
+
+                <div class="analytics-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Work Order Trends</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-placeholder">
+                                <i class="fas fa-chart-line"></i>
+                                <p>Work order trends chart would be displayed here</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Revenue Analysis</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-placeholder">
+                                <i class="fas fa-chart-bar"></i>
+                                <p>Revenue analysis chart would be displayed here</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- All Orders View -->
+            <div class="content-view" id="all-orders-view">
+                <!-- Queue Navigation -->
+                <div class="queue-navigation">
+                    <div class="queue-tabs">
+                        <button class="queue-tab active" data-queue="my">My Queue</button>
+                        <button class="queue-tab" data-queue="group">Group Queue</button>
+                        <button class="queue-tab" data-queue="all">All Queue</button>
+                    </div>
+                    <div class="queue-actions">
+                        <button class="btn btn-secondary btn-sm" onclick="expandAll()">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                            Expand All
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="collapseAll()">
+                            <i class="fas fa-compress-arrows-alt"></i>
+                            Collapse All
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="refreshData()">
+                            <i class="fas fa-sync-alt"></i>
+                            Refresh
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="openAdvanceSearch()">
+                            <i class="fas fa-search-plus"></i>
+                            Advance Search
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="exportData()">
+                            <i class="fas fa-file-export"></i>
+                            Export
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="showLegend()">
+                            <i class="fas fa-info-circle"></i>
+                            Legend
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title" id="queueTitle">My Queue - Work Orders</h3>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary btn-sm" onclick="openFilterModal()">
+                                <i class="fas fa-filter"></i>
+                                Filter
+                            </button>
+                            <button class="btn btn-primary btn-sm" onclick="createNewWorkOrder()">
+                                <i class="fas fa-plus"></i>
+                                New Work Order
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="modern-table">
+                                <thead>
+                                    <tr>
+                                        <th>Work Order #</th>
+                                        <th>Customer</th>
+                                        <th>Vehicle</th>
+                                        <th>Service Type</th>
+                                        <th>Status</th>
+                                        <th>Priority</th>
+                                        <th>Assigned To</th>
+                                        <th>Due Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="allOrdersTableBody">
+                                    <!-- All work orders will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Orders View -->
+            <div class="content-view" id="pending-view">
+                <div class="page-header">
+                    <h1 class="page-title">Pending Work Orders</h1>
+                    <p class="page-description">Work orders waiting to be started</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="modern-table">
+                                <thead>
+                                    <tr>
+                                        <th>Work Order #</th>
+                                        <th>Customer</th>
+                                        <th>Vehicle</th>
+                                        <th>Priority</th>
+                                        <th>Created Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pendingOrdersTableBody">
+                                    <!-- Pending work orders will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- In Progress Orders View -->
+            <div class="content-view" id="in-progress-view">
+                <div class="page-header">
+                    <h1 class="page-title">In Progress Work Orders</h1>
+                    <p class="page-description">Work orders currently being worked on</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="modern-table">
+                                <thead>
+                                    <tr>
+                                        <th>Work Order #</th>
+                                        <th>Customer</th>
+                                        <th>Vehicle</th>
+                                        <th>Technician</th>
+                                        <th>Progress</th>
+                                        <th>Due Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inProgressOrdersTableBody">
+                                    <!-- In progress work orders will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completed Orders View -->
+            <div class="content-view" id="completed-view">
+                <div class="page-header">
+                    <h1 class="page-title">Completed Work Orders</h1>
+                    <p class="page-description">Successfully completed work orders</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="modern-table">
+                                <thead>
+                                    <tr>
+                                        <th>Work Order #</th>
+                                        <th>Customer</th>
+                                        <th>Vehicle</th>
+                                        <th>Completed Date</th>
+                                        <th>Total Amount</th>
+                                        <th>Rating</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="completedOrdersTableBody">
+                                    <!-- Completed work orders will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Work Order Modal -->
+    <div id="workOrderModal" class="modal">
+        <div class="modal-content work-order-modal-content">
+            <!-- Work Order Info Bar -->
+            <div class="work-order-info-bar">
+                <div class="info-item">
+                    <label>Work Order #:</label>
+                    <span id="workOrderNumber">WO177N22025</span>
+                </div>
+                <div class="info-item">
+                    <label>Status:</label>
+                    <span id="workOrderStatus" class="status-badge status-progress">In Progress</span>
+                </div>
+                <div class="info-item">
+                    <label>Date:</label>
+                    <span id="workOrderDate">24-Mar-2025</span>
+                </div>
+                <div class="info-item">
+                    <label>Quotation #:</label>
+                    <span id="quotationNumber">QO177N22025</span>
+                </div>
+                <div class="info-item">
+                    <label>Ticket #:</label>
+                    <span id="ticketNumber">-</span>
+                </div>
+                <div class="info-item">
+                    <label>Quotation Date:</label>
+                    <span id="quotationDate">24-Mar-2025</span>
+                </div>
+                <button class="modal-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+<div class="workflow-progress">
+  <div class="workflow-progress-line"></div>
+
+  <div class="workflow-step completed">
+    <div class="step-icon"><i class="fas fa-check"></i></div>
+    <div class="step-label">Created</div>
+  </div>
+  <div class="workflow-step completed">
+    <div class="step-icon"><i class="fas fa-tools"></i></div>
+    <div class="step-label">In Progress</div>
+  </div>
+  <div class="workflow-step completed">
+    <div class="step-icon"><i class="fas fa-clipboard-check"></i></div>
+    <div class="step-label">Quality Check</div>
+  </div>
+  <div class="workflow-step completed">
+    <div class="step-icon"><i class="fas fa-handshake"></i></div>
+    <div class="step-label">Customer Approval</div>
+  </div>
+  <div class="workflow-step completed">
+    <div class="step-icon"><i class="fas fa-flag-checkered"></i></div>
+    <div class="step-label">Completed</div>
+  </div>
+</div>
+
+            <!-- Tab Navigation -->
+            <div class="tab-navigation">
+                <button class="tab-btn active" data-tab="customer">Customer Details</button>
+                <button class="tab-btn" data-tab="asset">Asset Details</button>
+                <button class="tab-btn" data-tab="planning">Planning & Schedule</button>
+                <button class="tab-btn" data-tab="checklist">Walk Around & Inspections</button>
+                <button class="tab-btn" data-tab="job">Job Details</button>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="tab-content">
+                <!-- Customer Details Tab -->
+                <div class="tab-pane active" id="customerTab">
+                    <div class="customer-details-container">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Mobile</label>
+                                    <input type="text" class="form-control" id="customerMobile" value="+1-555-0123">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="customerName" value="John Smith">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="customerEmail" value="john.smith@email.com">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">PO #</label>
+                                    <input type="text" class="form-control" id="customerPO" value="PO-2025-001">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Party Address</label>
+                                    <textarea class="form-control" id="customerAddress" rows="3">123 Main Street
+Suite 100
+New York, NY 10001</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Ship To</label>
+                                    <textarea class="form-control" id="shipToAddress" rows="3">Same as Party Address</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Is Drop Down In?</label>
+                                    <select class="form-control" id="isDropDown">
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Contact Person</label>
+                                    <input type="text" class="form-control" id="contactPerson" value="John Smith">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Asset Details Tab -->
+                <div class="tab-pane" id="assetTab">
+                    <div class="asset-details-container">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">Unit #</label>
+                                    <input type="text" class="form-control" id="unitNumber" value="Unit-001">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Serial #</label>
+                                    <input type="text" class="form-control" id="serialNumber" value="Serial998">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Model</label>
+                                    <input type="text" class="form-control" id="assetModel" value="Model 36">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">Brand</label>
+                                    <input type="text" class="form-control" id="assetBrand" value="Honda">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Asset Type</label>
+                                    <input type="text" class="form-control" id="assetType" value="Vehicle">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Key Tag #</label>
+                                    <input type="text" class="form-control" id="keyTag" value="KEY-MAIN-001">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">Odometer</label>
+                                    <input type="text" class="form-control" id="odometer" value="45,000 miles">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Asset Status</label>
+                                    <select class="form-control" id="assetStatus">
+                                        <option value="active">Active</option>
+                                        <option value="maintenance">In Maintenance</option>
+                                        <option value="inactive">Inactive</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Bay</label>
+                                    <input type="text" class="form-control" id="bay" value="Bay A">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <input type="checkbox" id="isBreakdown"> Is Break Down
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Planning & Schedule Tab -->
+                <div class="tab-pane" id="planningTab">
+                    <div class="planning-details-container">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Expected Arrival</label>
+                                    <input type="datetime-local" class="form-control" id="expectedArrival">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Actual Arrival</label>
+                                    <input type="datetime-local" class="form-control" id="actualArrival">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Expected Delivery</label>
+                                    <input type="datetime-local" class="form-control" id="expectedDelivery">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Actual Delivery</label>
+                                    <input type="datetime-local" class="form-control" id="actualDelivery">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Actual Start Date</label>
+                                    <input type="datetime-local" class="form-control" id="actualStartDate">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Actual End Date</label>
+                                    <input type="datetime-local" class="form-control" id="actualEndDate">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Walk Around & Inspections Tab -->
+                <div class="tab-pane" id="checklistTab">
+                    <div class="checklist-container">
+                        <!-- Checklist Menu -->
+                        <div class="checklist-menu">
+                            <button class="checklist-menu-btn active" data-section="walkaround">Walk Around Model 30</button>
+                            <button class="checklist-menu-btn" data-section="quickcheck">Quick Check List</button>
+                            <button class="checklist-menu-btn" data-section="redcarpet">Red Carpet Checklist</button>
+                            <button class="checklist-menu-btn" data-section="fuelgauge">Fuel Gauge</button>
+                        </div>
+
+                        <!-- Checklist Content -->
+                        <div class="checklist-content">
+                            <!-- Walk Around Section -->
+                            <div class="checklist-section active" id="walkaroundSection">
+                                <div class="walk-around-container">
+                                    <div class="vehicle-views">
+                                        <div class="view-selector">
+                                            <button class="view-btn active" data-view="front">Front View</button>
+                                            <button class="view-btn" data-view="rear">Rear View</button>
+                                            <button class="view-btn" data-view="left">Left View</button>
+                                            <button class="view-btn" data-view="right">Right View</button>
+                                        </div>
+                                        <div class="vehicle-diagram">
+                                            <div class="vehicle-image">
+                                                <img src="" alt="Vehicle View" id="vehicleImage">
+                                            </div>
+                                            <div class="damage-markers" id="damageMarkers">
+                                                <!-- Damage markers will be added dynamically -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="walk-around-checklist">
+                                        <h4>Walk Around Checklist</h4>
+                                        <div class="checklist-items">
+                                            <div class="checklist-item">
+                                                <label>
+                                                    <input type="checkbox" name="exterior_damage"> Exterior Damage
+                                                </label>
+                                                <input type="text" placeholder="Notes" class="notes-input">
+                                            </div>
+                                            <div class="checklist-item">
+                                                <label>
+                                                    <input type="checkbox" name="tire_condition"> Tire Condition
+                                                </label>
+                                                <input type="text" placeholder="Notes" class="notes-input">
+                                            </div>
+                                            <div class="checklist-item">
+                                                <label>
+                                                    <input type="checkbox" name="lights_working"> Lights Working
+                                                </label>
+                                                <input type="text" placeholder="Notes" class="notes-input">
+                                            </div>
+                                            <div class="checklist-item">
+                                                <label>
+                                                    <input type="checkbox" name="fluid_leaks"> Fluid Leaks
+                                                </label>
+                                                <input type="text" placeholder="Notes" class="notes-input">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Quick Check List Section -->
+                            <div class="checklist-section" id="quickcheckSection">
+                                <div class="modern-table-container">
+                                    <table class="modern-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Description</th>
+                                                <th>OK</th>
+                                                <th>Not OK</th>
+                                                <th>Not Applicable</th>
+                                                <th>Actual Value</th>
+                                                <th>Notes</th>
+                                                <th>Attachments</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Tire Condition / Wear Visual and DOT</td>
+                                                <td><input type="radio" name="tire_condition" value="ok"></td>
+                                                <td><input type="radio" name="tire_condition" value="not_ok"></td>
+                                                <td><input type="radio" name="tire_condition" value="na"></td>
+                                                <td><input type="text" class="form-control form-control-sm"></td>
+                                                <td><input type="text" class="form-control form-control-sm"></td>
+                                                <td><button class="btn btn-sm btn-secondary"><i class="fas fa-paperclip"></i></button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Wheel seal leaks</td>
+                                                <td><input type="radio" name="wheel_seal" value="ok"></td>
+                                                <td><input type="radio" name="wheel_seal" value="not_ok"></td>
+                                                <td><input type="radio" name="wheel_seal" value="na"></td>
+                                                <td><input type="text" class="form-control form-control-sm"></td>
+                                                <td><input type="text" class="form-control form-control-sm"></td>
+                                                <td><button class="btn btn-sm btn-secondary"><i class="fas fa-paperclip"></i></button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Brake check Visual inspection only</td>
+                                                <td><input type="radio" name="brake_check" value="ok"></td>
+                                                <td><input type="radio" name="brake_check" value="not_ok"></td>
+                                                <td><input type="radio" name="brake_check" value="na"></td>
+                                                <td><input type="text" class="form-control form-control-sm"></td>
+                                                <td><input type="text" class="form-control form-control-sm"></td>
+                                                <td><button class="btn btn-sm btn-secondary"><i class="fas fa-paperclip"></i></button></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Red Carpet Checklist Section -->
+                            <div class="checklist-section" id="redcarpetSection">
+                                <div class="modern-table-container">
+                                    <table class="modern-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Description</th>
+                                                <th>OK</th>
+                                                <th>Not OK</th>
+                                                <th>Not Applicable</th>
+                                                <th>Is Mandatory?</th>
+                                                <th>Notes</th>
+                                                <th>Attachments</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>All operations complete from work order</td>
+                                                <td><input type="radio" name="operations_complete" value="ok"></td>
+                                                <td><input type="radio" name="operations_complete" value="not_ok"></td>
+                                                <td><input type="radio" name="operations_complete" value="na"></td>
+                                                <td><span class="text-success font-semibold">Yes</span></td>
+                                                <td><input type="text" class="form-control form-control-sm"></td>
+                                                <td><button class="btn btn-sm btn-secondary"><i class="fas fa-paperclip"></i></button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Customer satisfaction survey completed</td>
+                                                <td><input type="radio" name="survey_complete" value="ok"></td>
+                                                <td><input type="radio" name="survey_complete" value="not_ok"></td>
+                                                <td><input type="radio" name="survey_complete" value="na"></td>
+                                                <td><span class="text-warning font-semibold">No</span></td>
+                                                <td><input type="text" class="form-control form-control-sm"></td>
+                                                <td><button class="btn btn-sm btn-secondary"><i class="fas fa-paperclip"></i></button></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Fuel Gauge Section -->
+                            <div class="checklist-section" id="fuelgaugeSection">
+                                <div class="fuel-gauge-container">
+                                    <div class="fuel-gauge-section">
+                                        <h4>Fuel Gauge - Work Around</h4>
+                                        <div class="gauge-container">
+                                            <div class="fuel-gauge-image">
+                                                <img src="https://via.placeholder.com/150x150/e9ecef/6c757d?text=Fuel+Gauge" alt="Fuel Gauge">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="fuel-gauge-section">
+                                        <h4>Fuel Gauge - Delivery</h4>
+                                        <div class="gauge-container">
+                                            <div class="fuel-gauge-image">
+                                                <img src="https://via.placeholder.com/150x150/e9ecef/6c757d?text=Fuel+Gauge" alt="Fuel Gauge">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="fuel-gauge-notes">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label">Work Around Notes</label>
+                                                <textarea class="form-control" rows="3" placeholder="Enter work around notes..."></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label">Delivery Notes</label>
+                                                <textarea class="form-control" rows="3" placeholder="Enter delivery notes..."></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Job Details Tab -->
+                <div class="tab-pane" id="jobTab">
+                    <div class="job-details-container">
+                        <!-- Sub Job Selector -->
+                        <div class="sub-job-selector">
+                            <label class="form-label">Select Sub Job:</label>
+                            <select class="form-control" id="subJobSelector" onchange="switchSubJob(this.value)">
+                                <option value="">Select a job...</option>
+                                <option value="wo1_sub1">Sub Job 1 - WO/177N/1/2025 - 1-01</option>
+                                <option value="wo1_sub2">Sub Job 2 - WO/177N/1/2025 - 1-02</option>
+                                <option value="wo1_sub3">Sub Job 3 - WO/177N/1/2025 - 1-03</option>
+                            </select>
+                        </div>
+
+                        <!-- Job Details Menu -->
+                        <div class="job-details-menu">
+                            <button class="job-menu-btn" data-section="legend">Job Card Status Legend</button>
+                            <button class="job-menu-btn active" data-section="header">J1-Header</button>
+                            <button class="job-menu-btn" data-section="suggested">J1-Part Suggested List</button>
+                            <button class="job-menu-btn" data-section="parts">J1-Parts</button>
+                            <button class="job-menu-btn" data-section="labor">J1-Labor and Misc. Details</button>
+                            <button class="job-menu-btn" data-section="travel">J1-Travel</button>
+                            <button class="job-menu-btn" data-section="attachments">J1-Attachments</button>
+                            <button class="job-menu-btn" data-section="summary">J1-Summary</button>
+                            <button class="job-menu-btn" data-section="causing">J1-Causing Part</button>
+                            <button class="job-menu-btn" data-section="activity">Job Card Activity</button>
+                            <button class="job-menu-btn" data-section="progress">Case Progress</button>
+                        </div>
+
+                        <!-- Job Details Content -->
+                        <div class="job-details-content">
+                            <!-- Job Card Status Legend -->
+                            <div class="job-section" id="legendSection">
+                                <h3>Job Card Status Legend</h3>
+                                <div class="legend-container">
+                                    <div class="legend-item">
+                                        <span class="legend-color" style="background: #28a745;"></span>
+                                        <span class="legend-text">Completed</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <span class="legend-color" style="background: #0066cc;"></span>
+                                        <span class="legend-text">In Progress</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <span class="legend-color" style="background: #ffc107;"></span>
+                                        <span class="legend-text">Pending</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <span class="legend-color" style="background: #dc3545;"></span>
+                                        <span class="legend-text">On Hold</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- J1-Header Section -->
+                            <div class="job-section active" id="headerSection">
+                                <h3>J1-Header</h3>
+                                <div class="job-header-content">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="form-label">Quotation Ref. #:</label>
+                                                <input type="text" class="form-control" id="quotationRef" value="QO/177N/1/2025 - 1" readonly>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Job #:</label>
+                                                <input type="text" class="form-control" id="jobNumber" value="WO/177N/1/2025 - 1-01" readonly>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Job Status:</label>
+                                                <select class="form-control" id="jobStatus">
+                                                    <option value="created">Created</option>
+                                                    <option value="progress" selected>In Progress</option>
+                                                    <option value="completed">Completed</option>
+                                                    <option value="hold">On Hold</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="form-label">Service Type:</label>
+                                                <select class="form-control" id="serviceType">
+                                                    <option value="repair" selected>Repair</option>
+                                                    <option value="maintenance">Maintenance</option>
+                                                    <option value="inspection">Inspection</option>
+                                                    <option value="warranty">Warranty Repair</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Work Priority:</label>
+                                                <select class="form-control" id="workPriority">
+                                                    <option value="low">Low</option>
+                                                    <option value="medium">Medium</option>
+                                                    <option value="high" selected>High</option>
+                                                    <option value="urgent">Urgent</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Financial Year:</label>
+                                                <input type="text" class="form-control" id="financialYear" value="2024-25" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="form-label">Customer Complaint:</label>
+                                                <textarea class="form-control" id="customerComplaintJob" rows="3">Engine making unusual noise during startup</textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">
+                                                    <input type="checkbox" id="isMobileRate"> Mobile Rate
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- J1-Part Suggested List Section -->
+                            <div class="job-section" id="suggestedSection">
+                                <h3>J1-Part Suggested List</h3>
+                                <div class="suggested-parts-container">
+                                    <div class="table-actions">
+                                        <button class="btn btn-primary btn-sm">Add Suggested Part</button>
+                                        <button class="btn btn-secondary btn-sm">Import from Template</button>
+                                    </div>
+                                    <div class="modern-table-container">
+                                        <table class="modern-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>☑</th>
+                                                    <th>Part #</th>
+                                                    <th>Description</th>
+                                                    <th>Qty Required</th>
+                                                    <th>Unit Price</th>
+                                                    <th>Total</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><input type="checkbox"></td>
+                                                    <td>ENG-FILTER-001</td>
+                                                    <td>Engine Oil Filter</td>
+                                                    <td>1</td>
+                                                    <td>$25.00</td>
+                                                    <td>$25.00</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-secondary"><i class="fas fa-edit"></i></button>
+                                                        <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><input type="checkbox"></td>
+                                                    <td>ENG-OIL-001</td>
+                                                    <td>Engine Oil 5W-30</td>
+                                                    <td>5</td>
+                                                    <td>$8.00</td>
+                                                    <td>$40.00</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-secondary"><i class="fas fa-edit"></i></button>
+                                                        <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- J1-Parts Section -->
+                            <div class="job-section" id="partsSection">
+                                <h3>J1-Parts</h3>
+                                <div class="parts-container">
+                                    <div class="table-actions">
+                                        <button class="btn btn-primary btn-sm">Add Part</button>
+                                        <button class="btn btn-secondary btn-sm">Bulk Import</button>
+                                        <button class="btn btn-secondary btn-sm">Check Availability</button>
+                                    </div>
+                                    <div class="modern-table-container">
+                                        <table class="modern-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Part Prefix</th>
+                                                    <th>Part #</th>
+                                                    <th>Description</th>
+                                                    <th>Qty Required</th>
+                                                    <th>Qty Available</th>
+                                                    <th>Unit Price</th>
+                                                    <th>Total</th>
+                                                    <th>Status</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>J1-PART</td>
+                                                    <td>CV-JOINT-001</td>
+                                                    <td>CV Joint Assembly - Front Right</td>
+                                                    <td>1</td>
+                                                    <td>3</td>
+                                                    <td>$150.00</td>
+                                                    <td>$150.00</td>
+                                                    <td><span class="status-badge status-completed">Available</span></td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-secondary"><i class="fas fa-edit"></i></button>
+                                                        <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>J1-PART</td>
+                                                    <td>GREASE-001</td>
+                                                    <td>CV Joint Grease</td>
+                                                    <td>1</td>
+                                                    <td>0</td>
+                                                    <td>$12.00</td>
+                                                    <td>$12.00</td>
+                                                    <td><span class="status-badge status-pending">Back Order</span></td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-secondary"><i class="fas fa-edit"></i></button>
+                                                        <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- J1-Labor and Misc. Details Section -->
+                            <div class="job-section" id="laborSection">
+                                <h3>J1-Labor and Misc. Details</h3>
+                                <div class="labor-container">
+                                    <div class="table-actions">
+                                        <button class="btn btn-primary btn-sm">Add Labor</button>
+                                        <button class="btn btn-secondary btn-sm">Add Miscellaneous</button>
+                                    </div>
+                                    <div class="modern-table-container">
+                                        <table class="modern-table labor-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Type</th>
+                                                    <th>Operation Code</th>
+                                                    <th>Description</th>
+                                                    <th>Hours</th>
+                                                    <th>Rate</th>
+                                                    <th>Total</th>
+                                                    <th>Status</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Labor</td>
+                                                    <td>J1-DIAG001</td>
+                                                    <td>Diagnostic and troubleshooting</td>
+                                                    <td>2.5</td>
+                                                    <td>$85.00</td>
+                                                    <td>$212.50</td>
+                                                    <td><span class="status-badge status-progress">In Progress</span></td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-secondary"><i class="fas fa-edit"></i></button>
+                                                        <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Labor</td>
+                                                    <td>J1-REP002</td>
+                                                    <td>Axle replacement labor</td>
+                                                    <td>4.0</td>
+                                                    <td>$85.00</td>
+                                                    <td>$340.00</td>
+                                                    <td><span class="status-badge status-pending">Pending</span></td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-secondary"><i class="fas fa-edit"></i></button>
+                                                        <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- J1-Travel Section -->
+                            <div class="job-section" id="travelSection">
+                                <h3>J1-Travel</h3>
+                                <div class="travel-container">
+                                    <div class="table-actions">
+                                        <button class="btn btn-primary btn-sm">Add Travel</button>
+                                        <button class="btn btn-secondary btn-sm">Calculate Distance</button>
+                                    </div>
+                                    <div class="modern-table-container">
+                                        <table class="modern-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>From</th>
+                                                    <th>To</th>
+                                                    <th>Distance (miles)</th>
+                                                    <th>Rate per mile</th>
+                                                    <th>Total</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="no-data-row">
+                                                    <td colspan="7" class="text-center text-muted">No travel records found</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- J1-Attachments Section -->
+                            <div class="job-section" id="attachmentsSection">
+                                <h3>J1-Attachments</h3>
+                                <div class="attachments-container">
+                                    <div class="upload-area">
+                                        <div class="upload-zone">
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                            <p>Drag and drop files here or click to browse</p>
+                                            <input type="file" multiple class="file-input" style="display: none;">
+                                            <button class="btn btn-primary">Choose Files</button>
+                                        </div>
+                                    </div>
+                                    <div class="attachments-list">
+                                        <div class="attachment-item">
+                                            <div class="attachment-icon">
+                                                <i class="fas fa-file-image"></i>
+                                            </div>
+                                            <div class="attachment-info">
+                                                <div class="attachment-name">diagnostic_photo_1.jpg</div>
+                                                <div class="attachment-size">2.3 MB</div>
+                                            </div>
+                                            <div class="attachment-actions">
+                                                <button class="btn btn-sm btn-secondary"><i class="fas fa-download"></i></button>
+                                                <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- J1-Summary Section -->
+                            <div class="job-section" id="summarySection">
+                                <h3>J1-Summary</h3>
+                                <div class="summary-container">
+                                    <div class="summary-actions">
+                                        <button class="btn btn-primary">Work Order Value</button>
+                                        <button class="btn btn-secondary">Export Summary</button>
+                                    </div>
+                                    <div class="summary-table-container">
+                                        <table class="modern-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Description</th>
+                                                    <th>Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Labor Charges - Total Amount</td>
+                                                    <td class="amount-cell">$552.50</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Parts - Total Amount</td>
+                                                    <td class="amount-cell">$162.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Travel - Total Amount</td>
+                                                    <td class="amount-cell">$0.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Miscellaneous - Total Amount</td>
+                                                    <td class="amount-cell">$0.00</td>
+                                                </tr>
+                                                <tr class="total-row">
+                                                    <td><strong>Grand Total</strong></td>
+                                                    <td class="amount-cell"><strong>$714.50</strong></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- J1-Causing Part Section -->
+                            <div class="job-section" id="causingSection">
+                                <h3>J1-Causing Part</h3>
+                                <div class="causing-part-container">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label">Cause of Failure:</label>
+                                                <textarea class="form-control" rows="4" placeholder="Describe the root cause of the failure...">Worn CV joint due to normal wear and tear. Boot was damaged allowing contamination.</textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Corrective Action:</label>
+                                                <textarea class="form-control" rows="4" placeholder="Describe the corrective action taken...">Replaced CV joint assembly and boot. Applied new grease and performed road test.</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label">Action for Next Service:</label>
+                                                <textarea class="form-control" rows="4" placeholder="Recommendations for next service...">Monitor CV joint condition during next service. Check boot integrity.</textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Technician Notes:</label>
+                                                <textarea class="form-control" rows="4" placeholder="Additional technician notes...">Customer advised to avoid aggressive driving to extend component life.</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Job Card Activity Section -->
+                            <div class="job-section" id="activitySection">
+                                <h3>Job Card Activity</h3>
+                                <div class="activity-container">
+                                    <div class="activity-actions">
+                                        <button class="btn btn-primary btn-sm">Add Activity</button>
+                                        <button class="btn btn-secondary btn-sm">Export Log</button>
+                                    </div>
+                                    <div class="modern-table-container">
+                                        <table class="modern-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>☑</th>
+                                                    <th>Mode</th>
+                                                    <th>Date</th>
+                                                    <th>Reference #</th>
+                                                    <th>Activity</th>
+                                                    <th>Technician</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><input type="checkbox" checked></td>
+                                                    <td>Diagnostic</td>
+                                                    <td>2025-01-15 09:00</td>
+                                                    <td>DIAG-001</td>
+                                                    <td>Initial diagnostic completed</td>
+                                                    <td>Mike Johnson</td>
+                                                    <td><span class="status-badge status-completed">Completed</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><input type="checkbox"></td>
+                                                    <td>Repair</td>
+                                                    <td>2025-01-15 14:30</td>
+                                                    <td>REP-001</td>
+                                                    <td>CV joint replacement in progress</td>
+                                                    <td>Mike Johnson</td>
+                                                    <td><span class="status-badge status-progress">In Progress</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Case Progress Section -->
+                            <div class="job-section" id="progressSection">
+                                <h3>Case Progress</h3>
+                                <div class="progress-container">
+                                    <div class="progress-timeline">
+                                        <div class="timeline-item completed">
+                                            <div class="timeline-marker"></div>
+                                            <div class="timeline-content">
+                                                <h4>Work Order Created</h4>
+                                                <p>Initial work order created and assigned</p>
+                                                <span class="timeline-date">2025-01-14 08:00</span>
+                                            </div>
+                                        </div>
+                                        <div class="timeline-item completed">
+                                            <div class="timeline-marker"></div>
+                                            <div class="timeline-content">
+                                                <h4>Diagnostic Started</h4>
+                                                <p>Initial diagnostic and inspection begun</p>
+                                                <span class="timeline-date">2025-01-15 09:00</span>
+                                            </div>
+                                        </div>
+                                        <div class="timeline-item active">
+                                            <div class="timeline-marker"></div>
+                                            <div class="timeline-content">
+                                                <h4>Repair in Progress</h4>
+                                                <p>CV joint replacement currently underway</p>
+                                                <span class="timeline-date">2025-01-15 14:30</span>
+                                            </div>
+                                        </div>
+                                        <div class="timeline-item">
+                                            <div class="timeline-marker"></div>
+                                            <div class="timeline-content">
+                                                <h4>Quality Check</h4>
+                                                <p>Final inspection and quality verification</p>
+                                                <span class="timeline-date">Pending</span>
+                                            </div>
+                                        </div>
+                                        <div class="timeline-item">
+                                            <div class="timeline-marker"></div>
+                                            <div class="timeline-content">
+                                                <h4>Customer Delivery</h4>
+                                                <p>Vehicle ready for customer pickup</p>
+                                                <span class="timeline-date">Pending</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Modal -->
+    <div id="filterModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Filter Work Orders</h2>
+                <button class="modal-close" onclick="closeFilterModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="filter-form">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Status</label>
+                                <select class="form-control" id="filterStatus" multiple>
+                                    <option value="pending">Pending</option>
+                                    <option value="progress">In Progress</option>
+                                    <option value="completed">Completed</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Priority</label>
+                                <select class="form-control" id="filterPriority" multiple>
+                                    <option value="low">Low</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="high">High</option>
+                                    <option value="urgent">Urgent</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Service Type</label>
+                                <select class="form-control" id="filterServiceType" multiple>
+                                    <option value="repair">Repair</option>
+                                    <option value="maintenance">Maintenance</option>
+                                    <option value="inspection">Inspection</option>
+                                    <option value="warranty">Warranty</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Assigned To</label>
+                                <select class="form-control" id="filterAssignedTo" multiple>
+                                    <option value="Mike Johnson">Mike Johnson</option>
+                                    <option value="Tom Wilson">Tom Wilson</option>
+                                    <option value="Alex Chen">Alex Chen</option>
+                                    <option value="Emma Davis">Emma Davis</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Date Range</label>
+                                <div class="date-range">
+                                    <input type="date" class="form-control" id="filterDateFrom" placeholder="From">
+                                    <input type="date" class="form-control" id="filterDateTo" placeholder="To">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Customer</label>
+                                <input type="text" class="form-control" id="filterCustomer" placeholder="Search customer...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="clearFilters()">Clear All</button>
+                <button class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Advance Search Modal -->
+    <div id="advanceSearchModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Advanced Search</h2>
+                <button class="modal-close" onclick="closeAdvanceSearchModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="search-form">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-label">Work Order #</label>
+                                <input type="text" class="form-control" id="searchWorkOrder" placeholder="WO-2025-001">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Customer Name</label>
+                                <input type="text" class="form-control" id="searchCustomer" placeholder="John Smith">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Vehicle</label>
+                                <input type="text" class="form-control" id="searchVehicle" placeholder="2020 Honda Civic">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-label">Phone Number</label>
+                                <input type="text" class="form-control" id="searchPhone" placeholder="+1-555-0123">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" id="searchEmail" placeholder="customer@email.com">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">VIN Number</label>
+                                <input type="text" class="form-control" id="searchVIN" placeholder="1HGBH41JXMN109186">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-label">License Plate</label>
+                                <input type="text" class="form-control" id="searchLicense" placeholder="ABC-1234">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Part Number</label>
+                                <input type="text" class="form-control" id="searchPartNumber" placeholder="CV-JOINT-001">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Invoice Number</label>
+                                <input type="text" class="form-control" id="searchInvoice" placeholder="INV-2025-001">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="form-label">Description/Notes</label>
+                                <textarea class="form-control" id="searchDescription" rows="3" placeholder="Search in work order descriptions and notes..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="clearAdvanceSearch()">Clear All</button>
+                <button class="btn btn-primary" onclick="performAdvanceSearch()">Search</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Legend Modal -->
+    <div id="legendModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Work Order Legend</h2>
+                <button class="modal-close" onclick="closeLegendModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="legend-content">
+                    <div class="legend-section">
+                        <h4>Status Indicators</h4>
+                        <div class="legend-items">
+                            <div class="legend-item">
+                                <span class="status-badge status-pending">Pending</span>
+                                <span class="legend-description">Work order created, waiting to be started</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="status-badge status-progress">In Progress</span>
+                                <span class="legend-description">Work order currently being worked on</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="status-badge status-completed">Completed</span>
+                                <span class="legend-description">Work order finished and ready for delivery</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="status-badge status-cancelled">Cancelled</span>
+                                <span class="legend-description">Work order cancelled by customer or management</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="legend-section">
+                        <h4>Priority Levels</h4>
+                        <div class="legend-items">
+                            <div class="legend-item">
+                                <span class="priority-badge priority-low">Low</span>
+                                <span class="legend-description">Standard priority, no rush</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="priority-badge priority-medium">Medium</span>
+                                <span class="legend-description">Normal business priority</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="priority-badge priority-high">High</span>
+                                <span class="legend-description">Important, expedite when possible</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="priority-badge priority-urgent">Urgent</span>
+                                <span class="legend-description">Critical, immediate attention required</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="legend-section">
+                        <h4>Action Icons</h4>
+                        <div class="legend-items">
+                            <div class="legend-item">
+                                <i class="fas fa-eye text-primary"></i>
+                                <span class="legend-description">View work order details</span>
+                            </div>
+                            <div class="legend-item">
+                                <i class="fas fa-edit text-secondary"></i>
+                                <span class="legend-description">Edit work order</span>
+                            </div>
+                            <div class="legend-item">
+                                <i class="fas fa-play text-success"></i>
+                                <span class="legend-description">Start work order</span>
+                            </div>
+                            <div class="legend-item">
+                                <i class="fas fa-check text-success"></i>
+                                <span class="legend-description">Complete work order</span>
+                            </div>
+                            <div class="legend-item">
+                                <i class="fas fa-print text-secondary"></i>
+                                <span class="legend-description">Print work order</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script-new.js"></script>
+</body>
+</html>

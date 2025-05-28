@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Management System</title>
+
+    <!-- Material Design Components -->
+    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="Campaign.css">
+</head>
+<body>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+
+
+    <!-- Main Content -->
+    <main class="main-content" id="main-content">
+        <div class="container">
+            <!-- Page Header with Tabs -->
+            <div class="page-header">
+                <div class="header-left">
+                    <h2 class="page-title">Campaign Management</h2>
+                </div>
+                <div class="header-right">
+                    <button class="btn btn-primary" id="addCampaignBtn">
+                        <i class="material-icons">add</i>
+                        <span>Add New Campaign</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Navigation Tabs -->
+            <div class="main-tabs">
+                <div class="main-tab-item active" onclick="switchMainTab('campaigns')">
+                    <i class="material-icons">campaign</i>
+                    <span>Campaigns</span>
+                </div>
+                <div class="main-tab-item" onclick="switchMainTab('analytics')">
+                    <i class="material-icons">analytics</i>
+                    <span>Analytics Dashboard</span>
+                </div>
+            </div>
+
+            <!-- Main Tab Content -->
+            <div class="main-tab-content">
+                <!-- Campaigns Tab Panel -->
+                <div class="main-tab-panel active" id="campaigns-panel">
+                    <!-- Page Header -->
+                    <div class="page-header">
+                        <div class="header-left">
+                            <h2 class="page-title">Campaign Management</h2>
+                        </div>
+                        <div class="header-right">
+                            <button class="btn btn-primary" id="addCampaignBtn">
+                                <i class="material-icons">add</i>
+                                <span>Add New Campaign</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Campaign Statistics -->
+                    <div class="campaigns-stats-section">
+                        <div class="campaigns-stats-grid">
+                            <div class="campaigns-stat-card total">
+                                <div class="stat-icon">
+                                    <i class="material-icons">campaign</i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-number" id="totalCampaignsCount">0</div>
+                                    <div class="stat-label">Total Campaigns</div>
+                                </div>
+                            </div>
+                            <div class="campaigns-stat-card active">
+                                <div class="stat-icon">
+                                    <i class="material-icons">play_circle</i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-number" id="activeCampaignsCount">0</div>
+                                    <div class="stat-label">Active Campaigns</div>
+                                </div>
+                            </div>
+                            <div class="campaigns-stat-card inactive">
+                                <div class="stat-icon">
+                                    <i class="material-icons">pause_circle</i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-number" id="inactiveCampaignsCount">0</div>
+                                    <div class="stat-label">Inactive Campaigns</div>
+                                </div>
+                            </div>
+                            <div class="campaigns-stat-card recent">
+                                <div class="stat-icon">
+                                    <i class="material-icons">schedule</i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-number" id="recentCampaignsCount">0</div>
+                                    <div class="stat-label">Recent Campaigns</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Campaigns Grid -->
+                    <div class="campaigns-grid-container">
+                        <div class="campaigns-grid" id="campaignsGrid">
+                            <!-- Campaign cards will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="campaigns-pagination" id="campaignsPagination" style="display: none;">
+                        <div class="pagination-info">
+                            <span id="paginationInfo">Showing 1-6 of 0 campaigns</span>
+                        </div>
+                        <div class="pagination-controls">
+                            <button class="pagination-btn prev" id="prevPageBtn" onclick="window.campaignManager.goToPreviousPage()">
+                                <i class="material-icons">chevron_left</i>
+                                Previous
+                            </button>
+                            <div id="pageNumbers">
+                                <!-- Page numbers will be generated here -->
+                            </div>
+                            <button class="pagination-btn next" id="nextPageBtn" onclick="window.campaignManager.goToNextPage()">
+                                Next
+                                <i class="material-icons">chevron_right</i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div class="empty-state" id="emptyState" style="display: none;">
+                        <div class="empty-content">
+                            <i class="material-icons empty-icon">campaign</i>
+                            <h3>No campaigns found</h3>
+                            <p>Get started by creating your first campaign</p>
+                            <button class="btn btn-outline" id="addFirstCampaignBtn">
+                                <i class="material-icons">add</i>
+                                <span>Create Campaign</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Tab Panel -->
+                <div class="main-tab-panel" id="analytics-panel">
+                    <!-- Analytics Dashboard Content -->
+                    <div class="analytics-dashboard">
+                        <!-- Summary Cards -->
+                        <section class="analytics-summary-section">
+                            <div class="analytics-summary-cards">
+                                <div class="analytics-summary-card">
+                                    <div class="analytics-card-icon total">
+                                        <i class="material-icons">campaign</i>
+                                    </div>
+                                    <div class="analytics-card-content">
+                                        <h3 id="analyticsTotalCampaigns">0</h3>
+                                        <p>Total Campaigns</p>
+                                    </div>
+                                </div>
+                                <div class="analytics-summary-card">
+                                    <div class="analytics-card-icon active">
+                                        <i class="material-icons">trending_up</i>
+                                    </div>
+                                    <div class="analytics-card-content">
+                                        <h3 id="analyticsActiveCampaigns">0</h3>
+                                        <p>Active Campaigns</p>
+                                    </div>
+                                </div>
+                                <div class="analytics-summary-card">
+                                    <div class="analytics-card-icon popular">
+                                        <i class="material-icons">star</i>
+                                    </div>
+                                    <div class="analytics-card-content">
+                                        <h3 id="analyticsPopularCampaigns">0</h3>
+                                        <p>Popular Campaigns</p>
+                                    </div>
+                                </div>
+                                <div class="analytics-summary-card">
+                                    <div class="analytics-card-icon engagement">
+                                        <i class="material-icons">people</i>
+                                    </div>
+                                    <div class="analytics-card-content">
+                                        <h3 id="analyticsAvgEngagement">0%</h3>
+                                        <p>Avg Engagement</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Parts & Service Campaign Analysis Section -->
+                        <section class="analytics-parts-service-section">
+                            <div class="analytics-section-header">
+                                <h2>Parts & Service Campaign Analysis</h2>
+                                <div class="analytics-section-controls">
+                                    <select id="analyticsPartsServiceFilter" class="form-select">
+                                        <option value="all">All Campaigns</option>
+                                        <option value="parts">Parts Only</option>
+                                        <option value="service">Service Only</option>
+                                        <option value="bundled">Bundled Offers</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Parts & Service Summary Cards -->
+                            <div class="analytics-parts-service-cards">
+                                <div class="analytics-summary-card">
+                                    <div class="analytics-card-icon parts">
+                                        <i class="material-icons">build</i>
+                                    </div>
+                                    <div class="analytics-card-content">
+                                        <h3 id="analyticsPartsPromotions">0</h3>
+                                        <p>Parts Promotions</p>
+                                    </div>
+                                </div>
+                                <div class="analytics-summary-card">
+                                    <div class="analytics-card-icon service">
+                                        <i class="material-icons">build_circle</i>
+                                    </div>
+                                    <div class="analytics-card-content">
+                                        <h3 id="analyticsServiceCampaigns">0</h3>
+                                        <p>Service Campaigns</p>
+                                    </div>
+                                </div>
+                                <div class="analytics-summary-card">
+                                    <div class="analytics-card-icon redemption">
+                                        <i class="material-icons">redeem</i>
+                                    </div>
+                                    <div class="analytics-card-content">
+                                        <h3 id="analyticsRedemptionRate">0%</h3>
+                                        <p>Avg Redemption Rate</p>
+                                    </div>
+                                </div>
+                                <div class="analytics-summary-card">
+                                    <div class="analytics-card-icon attachment">
+                                        <i class="material-icons">link</i>
+                                    </div>
+                                    <div class="analytics-card-content">
+                                        <h3 id="analyticsAttachmentRate">0%</h3>
+                                        <p>Attachment Rate</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Parts & Service Charts Grid -->
+                            <div class="analytics-parts-service-charts">
+                                <!-- Campaign Types Distribution -->
+                                <div class="analytics-chart-container">
+                                    <div class="analytics-chart-header">
+                                        <h3>Campaign Types Distribution</h3>
+                                        <div class="analytics-chart-controls">
+                                            <button class="btn btn-sm btn-outline" id="exportPartsCampaignTypesChart">
+                                                <i class="material-icons">download</i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="analytics-chart-wrapper">
+                                        <canvas id="analyticsPartsCampaignTypesChart"></canvas>
+                                    </div>
+                                </div>
+
+                                <!-- Parts Sales Performance -->
+                                <div class="analytics-chart-container">
+                                    <div class="analytics-chart-header">
+                                        <h3>Parts Sales vs Unused Offers</h3>
+                                        <div class="analytics-chart-controls">
+                                            <button class="btn btn-sm btn-outline" id="exportPartsPerformanceChart">
+                                                <i class="material-icons">download</i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="analytics-chart-wrapper">
+                                        <canvas id="analyticsPartsPerformanceChart"></canvas>
+                                    </div>
+                                </div>
+
+                                <!-- Service Bookings Performance -->
+                                <div class="analytics-chart-container">
+                                    <div class="analytics-chart-header">
+                                        <h3>Service Bookings vs Expired Slots</h3>
+                                        <div class="analytics-chart-controls">
+                                            <button class="btn btn-sm btn-outline" id="exportServicePerformanceChart">
+                                                <i class="material-icons">download</i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="analytics-chart-wrapper">
+                                        <canvas id="analyticsServicePerformanceChart"></canvas>
+                                    </div>
+                                </div>
+
+                                <!-- Redemption Trends -->
+                                <div class="analytics-chart-container full-width">
+                                    <div class="analytics-chart-header">
+                                        <h3>Redemption Rate Trends</h3>
+                                        <div class="analytics-chart-controls">
+                                            <select id="analyticsRedemptionPeriod" class="form-select">
+                                                <option value="7">Last 7 Days</option>
+                                                <option value="30">Last 30 Days</option>
+                                                <option value="90">Last 90 Days</option>
+                                            </select>
+                                            <button class="btn btn-sm btn-outline" id="exportRedemptionTrendsChart">
+                                                <i class="material-icons">download</i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="analytics-chart-wrapper">
+                                        <canvas id="analyticsRedemptionTrendsChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Popular Parts & Service Promotions -->
+                        <section class="analytics-popular-parts-service-section">
+                            <div class="analytics-section-header">
+                                <h2>Popular Parts & Service Promotions</h2>
+                                <div class="analytics-section-controls">
+                                    <select id="analyticsPopularPartsMetric" class="form-select">
+                                        <option value="sales">By Sales Volume</option>
+                                        <option value="redemption">By Redemption Rate</option>
+                                        <option value="rating">By Customer Rating</option>
+                                        <option value="attachment">By Attachment Rate</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="analytics-popular-parts-grid" id="analyticsPopularPartsGrid">
+                                <!-- Popular parts & service promotions will be populated here -->
+                            </div>
+                        </section>
+
+                        <!-- Parts & Service Performance Table -->
+                        <section class="analytics-parts-performance-section">
+                            <div class="analytics-section-header">
+                                <h2>Parts & Service Campaign Performance</h2>
+                                <div class="analytics-section-controls">
+                                    <div class="analytics-search-box">
+                                        <i class="material-icons">search</i>
+                                        <input type="text" id="analyticsPartsPerformanceSearch" placeholder="Search parts/services...">
+                                    </div>
+                                    <button class="btn btn-outline" id="exportPartsServiceDataBtn">
+                                        <i class="material-icons">download</i>
+                                        Export Data
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="analytics-performance-table-container">
+                                <table class="analytics-performance-table" id="analyticsPartsServiceTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Campaign</th>
+                                            <th>Type</th>
+                                            <th>Category</th>
+                                            <th>Offered</th>
+                                            <th>Sold/Booked</th>
+                                            <th>Redemption Rate</th>
+                                            <th>Customer Rating</th>
+                                            <th>Attachment Rate</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="analyticsPartsServiceTableBody">
+                                        <!-- Parts & service performance data will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+
+                        <!-- Customer Feedback Section -->
+                        <section class="analytics-feedback-section">
+                            <div class="analytics-section-header">
+                                <h2>Parts & Service Customer Feedback</h2>
+                                <div class="analytics-section-controls">
+                                    <select id="analyticsFeedbackFilter" class="form-select">
+                                        <option value="all">All Feedback</option>
+                                        <option value="parts">Parts Feedback</option>
+                                        <option value="service">Service Feedback</option>
+                                        <option value="positive">Positive Only</option>
+                                        <option value="negative">Negative Only</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="analytics-feedback-grid">
+                                <!-- Feedback Summary Chart -->
+                                <div class="analytics-feedback-chart-container">
+                                    <div class="analytics-chart-header">
+                                        <h3>Parts & Service Feedback Distribution</h3>
+                                    </div>
+                                    <div class="analytics-chart-wrapper">
+                                        <canvas id="analyticsFeedbackPieChart"></canvas>
+                                    </div>
+                                </div>
+
+                                <!-- Recent Feedback List -->
+                                <div class="analytics-feedback-list-container">
+                                    <div class="analytics-feedback-header">
+                                        <h3>Recent Parts & Service Reviews</h3>
+                                    </div>
+                                    <div class="analytics-feedback-list" id="analyticsFeedbackList">
+                                        <!-- Feedback items will be populated here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add/Edit Campaign Modal -->
+    <div class="modal-overlay" id="campaignModal">
+        <div class="modal modal-extra-large">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add New Campaign</h3>
+                <button class="modal-close" id="closeModal">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-container">
+                    <!-- Horizontal Tabs -->
+                    <div class="horizontal-tabs">
+                        <div class="tab-item active" data-tab="basic">
+                            <i class="material-icons">info</i>
+                            <span>Basic Info</span>
+                        </div>
+                        <div class="tab-item" data-tab="fail-code">
+                            <i class="material-icons">error</i>
+                            <span>Fail Code</span>
+                        </div>
+                        <div class="tab-item" data-tab="asset">
+                            <i class="material-icons">inventory</i>
+                            <span>Assets</span>
+                        </div>
+                        <div class="tab-item" data-tab="operation">
+                            <i class="material-icons">settings</i>
+                            <span>Operations</span>
+                        </div>
+                        <div class="tab-item" data-tab="parts">
+                            <i class="material-icons">build</i>
+                            <span>Parts</span>
+                        </div>
+                        <div class="tab-item" data-tab="labor">
+                            <i class="material-icons">work</i>
+                            <span>Labor</span>
+                        </div>
+                        <div class="tab-item" data-tab="customer">
+                            <i class="material-icons">person</i>
+                            <span>Customers</span>
+                        </div>
+                        <div class="tab-item" data-tab="causing-parts">
+                            <i class="material-icons">warning</i>
+                            <span>Causing Parts</span>
+                        </div>
+                        <div class="tab-item" data-tab="attachments">
+                            <i class="material-icons">attach_file</i>
+                            <span>Attachments</span>
+                        </div>
+                    </div>
+
+                    <!-- Content Area -->
+                    <div class="tab-content">
+                        <form id="campaignForm">
+                            <!-- Basic Info Tab -->
+                            <div class="tab-panel active" id="basic-panel">
+                                <h4>Basic Campaign Information</h4>
+
+                                <div class="basic-info-grid">
+                                    <div class="form-group">
+                                        <label for="campaignCode">Campaign Code *</label>
+                                        <input type="text" id="campaignCode" class="form-input" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="campaignName">Campaign Name *</label>
+                                        <input type="text" id="campaignName" class="form-input" required>
+                                    </div>
+                                </div>
+
+                                <div class="checkbox-row">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="isActive" checked>
+                                        <span class="checkbox-custom"></span>
+                                        <span class="checkbox-text">Is Active</span>
+                                    </label>
+
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="isManufacturer">
+                                        <span class="checkbox-custom"></span>
+                                        <span class="checkbox-text">Is Manufacturer</span>
+                                    </label>
+
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="isVehicleRecall">
+                                        <span class="checkbox-custom"></span>
+                                        <span class="checkbox-text">Is Vehicle Recall?</span>
+                                    </label>
+
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="isEquipmentRecall">
+                                        <span class="checkbox-custom"></span>
+                                        <span class="checkbox-text">Is Equipment Recall?</span>
+                                    </label>
+                                </div>
+
+                                <div class="date-row">
+                                    <div class="form-group">
+                                        <label for="startDate">Start Date</label>
+                                        <input type="date" id="startDate" class="form-input">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="endDate">End Date</label>
+                                        <input type="date" id="endDate" class="form-input">
+                                    </div>
+                                </div>
+
+                                <div class="remarks-section">
+                                    <div class="form-group">
+                                        <label for="remarks">Remarks</label>
+                                        <textarea id="remarks" class="form-textarea" rows="4" placeholder="Enter campaign remarks..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Fail Code Details Tab -->
+                            <div class="tab-panel" id="fail-code-panel">
+                                <h4>Fail Code Details</h4>
+
+                                <!-- Add New Fail Code Section -->
+                                <div class="fail-code-add-section">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="failCodeSearch">Search Fail Code *</label>
+                                            <div class="search-input-container">
+                                                <input type="text" id="failCodeSearch" class="form-input" placeholder="Type to search fail codes..." autocomplete="off">
+                                                <div class="keyboard-hint">Use ↑↓ to navigate, Enter to select, Esc to close</div>
+                                                <datalist id="failCodeOptions">
+                                                    <!-- Options will be populated by JavaScript -->
+                                                </datalist>
+                                                <div class="search-dropdown" id="failCodeDropdown" style="display: none;">
+                                                    <!-- Search results will be populated here -->
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="failCodeCategory">Fail Category</label>
+                                            <select id="failCodeCategory" class="form-input">
+                                                <option value="">Select Category</option>
+                                                <option value="mechanical">Mechanical</option>
+                                                <option value="electrical">Electrical</option>
+                                                <option value="software">Software</option>
+                                                <option value="hydraulic">Hydraulic</option>
+                                                <option value="pneumatic">Pneumatic</option>
+                                                <option value="structural">Structural</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="failCodeDescription">Fail Code Description</label>
+                                        <textarea id="failCodeDescription" class="form-textarea" rows="3" placeholder="Description will be auto-filled when you select a fail code..." readonly></textarea>
+                                    </div>
+
+                                    <div class="form-actions">
+                                        <button type="button" class="btn btn-primary" id="addFailCodeBtn">
+                                            <i class="material-icons">add</i>
+                                            <span>Add Fail Code</span>
+                                        </button>
+                                        <button type="button" class="btn btn-outline" id="clearFailCodeBtn">
+                                            <i class="material-icons">clear</i>
+                                            <span>Clear</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Added Fail Codes List -->
+                                <div class="fail-codes-list-section">
+                                    <h5 class="section-title">
+                                        <span>Added Fail Codes</span>
+                                        <span class="fail-codes-count" id="failCodesCount">(0)</span>
+                                        <div class="multiple-delete-actions" id="failCodeMultipleActions" style="display: none;">
+                                            <button type="button" class="btn btn-danger btn-sm" id="deleteSelectedFailCodes">
+                                                <i class="material-icons">delete</i>
+                                                <span>Delete Selected</span>
+                                            </button>
+                                            <button type="button" class="btn btn-outline btn-sm" id="selectAllFailCodes">
+                                                <i class="material-icons">select_all</i>
+                                                <span>Select All</span>
+                                            </button>
+                                        </div>
+                                    </h5>
+                                    <div class="fail-codes-list" id="failCodesList">
+                                        <!-- Fail codes will be rendered here by JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Asset Details Tab -->
+                            <div class="tab-panel" id="asset-panel">
+                                <h4>Asset Details</h4>
+
+                                <!-- Asset Filters Section -->
+                                <div class="asset-filters-section">
+                                    <div class="filters-row">
+                                        <div class="filter-group">
+                                            <label for="brandFilter">Brand</label>
+                                            <div class="search-filter-container">
+                                                <input type="text" id="brandFilter" class="form-input filter-search" placeholder="Search brands...">
+                                                <div class="filter-dropdown" id="brandDropdown" style="display: none;">
+                                                    <!-- Brand options will be populated here -->
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="filter-group">
+                                            <label for="assetTypeFilter">Asset Type</label>
+                                            <div class="search-filter-container">
+                                                <input type="text" id="assetTypeFilter" class="form-input filter-search" placeholder="Search asset types...">
+                                                <div class="filter-dropdown" id="assetTypeDropdown" style="display: none;">
+                                                    <!-- Asset type options will be populated here -->
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="filter-group">
+                                            <label for="modelFilter">Model</label>
+                                            <div class="search-filter-container">
+                                                <input type="text" id="modelFilter" class="form-input filter-search" placeholder="Search models...">
+                                                <div class="filter-dropdown" id="modelDropdown" style="display: none;">
+                                                    <!-- Model options will be populated here -->
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="filter-actions">
+                                            <button type="button" class="btn btn-primary" id="searchAssetsBtn">
+                                                <i class="material-icons">search</i>
+                                                <span>Search</span>
+                                            </button>
+                                            <button type="button" class="btn btn-outline" id="clearFiltersBtn">
+                                                <i class="material-icons">clear</i>
+                                                <span>Clear</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Initial Search State -->
+                                <div class="initial-search-state" id="initialSearchState">
+                                    <div class="search-prompt">
+                                        <i class="material-icons">search</i>
+                                        <h5>Search for Assets</h5>
+                                        <p>Use the filters on the left to search for assets, then click the "Search" button to display results.</p>
+                                        <div class="search-tips">
+                                            <h6>Search Tips:</h6>
+                                            <ul>
+                                                <li>Enter at least one filter criteria (Brand, Asset Type, or Model)</li>
+                                                <li>Use partial text to find matching assets</li>
+                                                <li>Leave filters empty to see all assets</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Assets Table Section (Initially Hidden) -->
+                                <div class="assets-table-section" id="assetsTableSection" style="display: none;">
+                                    <div class="table-header">
+                                        <div class="table-title">
+                                            <h5>Available Assets</h5>
+                                            <span class="asset-count" id="assetCount">0 assets found</span>
+                                        </div>
+                                        <div class="table-actions">
+                                            <button type="button" class="btn btn-outline" id="selectAllAssetsBtn">
+                                                <i class="material-icons">select_all</i>
+                                                <span>Select All</span>
+                                            </button>
+                                            <button type="button" class="btn btn-primary" id="addSelectedAssetsBtn">
+                                                <i class="material-icons">add</i>
+                                                <span>Add Selected</span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="assets-table-wrapper">
+                                        <table class="assets-table">
+                                            <thead>
+                                                <tr>
+                                                    <th width="40">
+                                                        <label class="checkbox-label">
+                                                            <input type="checkbox" id="selectAllCheckbox">
+                                                            <span class="checkbox-custom"></span>
+                                                        </label>
+                                                    </th>
+                                                    <th>Brand</th>
+                                                    <th>Asset Type</th>
+                                                    <th>Model</th>
+                                                    <th>Serial #</th>
+                                                    <th>Work Order #</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="assetsTableBody">
+                                                <!-- Asset rows will be populated here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- Pagination -->
+                                    <div class="table-pagination">
+                                        <div class="pagination-info">
+                                            <span>Page <span id="currentPage">1</span> of <span id="totalPages">1</span> of <span id="totalAssets">0</span></span>
+                                        </div>
+                                        <div class="pagination-controls">
+                                            <button class="pagination-btn" id="prevPageBtn" disabled>
+                                                <i class="material-icons">chevron_left</i>
+                                            </button>
+                                            <button class="pagination-btn" id="nextPageBtn" disabled>
+                                                <i class="material-icons">chevron_right</i>
+                                            </button>
+                                        </div>
+                                        <div class="pagination-size">
+                                            <select id="pageSizeSelect" class="form-input">
+                                                <option value="10">10</option>
+                                                <option value="25">25</option>
+                                                <option value="50">50</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Empty State -->
+                                    <div class="empty-assets" id="emptyAssets" style="display: none;">
+                                        <i class="material-icons">inventory_2</i>
+                                        <p>No assets found. Try adjusting your search criteria.</p>
+                                    </div>
+                                </div>
+
+                                <!-- Selected Assets Section -->
+                                <div class="selected-assets-section">
+                                    <h5>Selected Assets for Campaign</h5>
+                                    <div class="selected-assets-list" id="selectedAssetsList">
+                                        <div class="empty-selected-assets" id="emptySelectedAssets">
+                                            <i class="material-icons">inventory</i>
+                                            <p>No assets selected for this campaign yet.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Operation Details Tab -->
+                            <div class="tab-panel" id="operation-panel">
+                                <h4>Operation Details</h4>
+
+                                <!-- Add New Operation Section -->
+                                <div class="operation-add-section">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="operationCodeSearch">Search Operation Code *</label>
+                                            <div class="search-input-container">
+                                                <input type="text" id="operationCodeSearch" class="form-input" placeholder="Type to search operation codes..." autocomplete="off">
+                                                <div class="keyboard-hint">Use ↑↓ to navigate, Enter to select, Esc to close</div>
+                                                <div class="search-dropdown" id="operationCodeDropdown" style="display: none;">
+                                                    <!-- Search results will be populated here -->
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="operationQty">Qty *</label>
+                                            <input type="number" id="operationQty" class="form-input" min="1" step="1" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="operationDescriptionSearch">Search Operation Description</label>
+                                            <div class="search-input-container">
+                                                <textarea id="operationDescriptionSearch" class="form-textarea" rows="3" placeholder="Type to search operation descriptions..." autocomplete="off"></textarea>
+                                                <div class="search-dropdown" id="operationDescriptionDropdown" style="display: none;">
+                                                    <!-- Search results will be populated here -->
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="operationTime">Operation Time (Hours)</label>
+                                            <input type="number" id="operationTime" class="form-input" step="0.5" placeholder="Auto-filled" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" id="isMandatory">
+                                                <span class="checkbox-custom"></span>
+                                                <span class="checkbox-text">Is Mandatory</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-actions">
+                                        <button type="button" class="btn btn-primary" id="addOperationBtn">
+                                            <i class="material-icons">add</i>
+                                            <span>Add Operation</span>
+                                        </button>
+                                        <button type="button" class="btn btn-outline" id="clearOperationBtn">
+                                            <i class="material-icons">clear</i>
+                                            <span>Clear</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Added Operations List -->
+                                <div class="operations-list-section">
+                                    <h5 class="section-title">
+                                        <span>Added Operations</span>
+                                        <span class="operations-count" id="operationsCount">(0)</span>
+                                        <div class="multiple-delete-actions" id="operationMultipleActions" style="display: none;">
+                                            <button type="button" class="btn btn-danger btn-sm" id="deleteSelectedOperations">
+                                                <i class="material-icons">delete</i>
+                                                <span>Delete Selected</span>
+                                            </button>
+                                            <button type="button" class="btn btn-outline btn-sm" id="selectAllOperations">
+                                                <i class="material-icons">select_all</i>
+                                                <span>Select All</span>
+                                            </button>
+                                        </div>
+                                    </h5>
+                                    <div class="operations-list" id="operationsList">
+                                        <!-- Operations will be rendered here by JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Parts Details Tab -->
+                            <div class="tab-panel" id="parts-panel">
+                                <h4>Parts Details</h4>
+
+                                <!-- Add New Part Section -->
+                                <div class="parts-add-section">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="partPrefixSearch">Search Prefix</label>
+                                            <div class="search-input-container">
+                                                <input type="text" id="partPrefixSearch" class="form-input" placeholder="Type to search part prefix..." autocomplete="off">
+                                                <div class="search-dropdown" id="partPrefixDropdown" style="display: none;">
+                                                    <!-- Search results will be populated here -->
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="partNumberSearch">Search Part #</label>
+                                            <div class="search-input-container">
+                                                <input type="text" id="partNumberSearch" class="form-input" placeholder="Type to search part number..." autocomplete="off">
+                                                <div class="search-dropdown" id="partNumberDropdown" style="display: none;">
+                                                    <!-- Search results will be populated here -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="partDescriptionSearch">Search Description</label>
+                                            <div class="search-input-container">
+                                                <textarea id="partDescriptionSearch" class="form-textarea" rows="2" placeholder="Type to search part description..." autocomplete="off"></textarea>
+                                                <div class="search-dropdown" id="partDescriptionDropdown" style="display: none;">
+                                                    <!-- Search results will be populated here -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="partQty">Qty *</label>
+                                            <input type="number" id="partQty" class="form-input" min="1" step="1" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="partTotal">Total *</label>
+                                            <input type="number" id="partTotal" class="form-input" min="0" step="0.01" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="partDiscountPercent">Discount % *</label>
+                                            <input type="number" id="partDiscountPercent" class="form-input" min="0" max="100" step="0.01" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="partManufacturingContribution">Manufacturing Contribution % *</label>
+                                            <input type="number" id="partManufacturingContribution" class="form-input" min="0" max="100" step="0.01" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <div class="checkbox-container">
+                                                <label class="checkbox-label">
+                                                    <input type="checkbox" id="partIsMandatory">
+                                                    <span class="checkbox-custom"></span>
+                                                    <span class="checkbox-text">Is Mandatory</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-actions">
+                                        <button type="button" class="btn btn-primary" id="addPartBtn">
+                                            <i class="material-icons">add</i>
+                                            <span>Add Part</span>
+                                        </button>
+                                        <button type="button" class="btn btn-outline" id="clearPartBtn">
+                                            <i class="material-icons">clear</i>
+                                            <span>Clear</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Added Parts List -->
+                                <div class="parts-list-section">
+                                    <h5 class="section-title">
+                                        <span>Added Parts</span>
+                                        <span class="parts-count" id="partsCount">(0)</span>
+                                        <div class="multiple-delete-actions" id="partsMultipleActions" style="display: none;">
+                                            <button type="button" class="btn btn-danger btn-sm" id="deleteSelectedParts">
+                                                <i class="material-icons">delete</i>
+                                                <span>Delete Selected</span>
+                                            </button>
+                                            <button type="button" class="btn btn-outline btn-sm" id="selectAllParts">
+                                                <i class="material-icons">select_all</i>
+                                                <span>Select All</span>
+                                            </button>
+                                        </div>
+                                    </h5>
+                                    <div class="parts-list" id="partsList">
+                                        <!-- Parts will be rendered here by JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Labor Charges Tab -->
+                            <div class="tab-panel" id="labor-panel">
+                                <h4>Labor Charges Details</h4>
+
+                                <!-- Add New Labor Section -->
+                                <div class="labor-add-section">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="laborCodeSearch">Search Labor Code *</label>
+                                            <div class="search-input-container">
+                                                <input type="text" id="laborCodeSearch" class="form-input" placeholder="Type to search labor codes..." autocomplete="off">
+                                                <div class="search-dropdown" id="laborCodeDropdown" style="display: none;">
+                                                    <!-- Search results will be populated here -->
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="laborDescriptionSearch">Search Labor Description *</label>
+                                            <div class="search-input-container">
+                                                <textarea id="laborDescriptionSearch" class="form-textarea" rows="2" placeholder="Type to search labor descriptions..." autocomplete="off"></textarea>
+                                                <div class="search-dropdown" id="laborDescriptionDropdown" style="display: none;">
+                                                    <!-- Search results will be populated here -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="laborRate">Rate (Auto-filled)</label>
+                                            <input type="number" id="laborRate" class="form-input" step="0.01" placeholder="Auto-filled" readonly>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="laborQty">Qty *</label>
+                                            <input type="number" id="laborQty" class="form-input" min="1" step="1" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="laborDiscountPercent">Discount % *</label>
+                                            <input type="number" id="laborDiscountPercent" class="form-input" min="0" max="100" step="0.01" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="laborManufacturingContribution">Manufacturing Contribution % *</label>
+                                            <input type="number" id="laborManufacturingContribution" class="form-input" min="0" max="100" step="0.01" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <div class="checkbox-container">
+                                                <label class="checkbox-label">
+                                                    <input type="checkbox" id="laborIsMandatory">
+                                                    <span class="checkbox-custom"></span>
+                                                    <span class="checkbox-text">Is Mandatory</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-actions">
+                                        <button type="button" class="btn btn-primary" id="addLaborBtn">
+                                            <i class="material-icons">add</i>
+                                            <span>Add Labor</span>
+                                        </button>
+                                        <button type="button" class="btn btn-outline" id="clearLaborBtn">
+                                            <i class="material-icons">clear</i>
+                                            <span>Clear</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Added Labor List -->
+                                <div class="labor-list-section">
+                                    <h5 class="section-title">
+                                        <span>Added Labor Charges</span>
+                                        <span class="labor-count" id="laborCount">(0)</span>
+                                        <div class="multiple-delete-actions" id="laborMultipleActions" style="display: none;">
+                                            <button type="button" class="btn btn-danger btn-sm" id="deleteSelectedLabor">
+                                                <i class="material-icons">delete</i>
+                                                <span>Delete Selected</span>
+                                            </button>
+                                            <button type="button" class="btn btn-outline btn-sm" id="selectAllLabor">
+                                                <i class="material-icons">select_all</i>
+                                                <span>Select All</span>
+                                            </button>
+                                        </div>
+                                    </h5>
+                                    <div class="labor-list" id="laborList">
+                                        <!-- Labor charges will be rendered here by JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Customer Details Tab -->
+                            <div class="tab-panel" id="customer-panel">
+                                <h4>Customer Details</h4>
+
+                                <!-- Customer Filter Section -->
+                                <div class="customer-filter-section">
+                                    <div class="customer-filter-container">
+                                        <div class="region-panel">
+                                            <h6>Region</h6>
+                                            <div class="search-container">
+                                                <input type="text" id="regionSearch" class="search-input" placeholder="Search regions...">
+                                            </div>
+                                            <div class="region-list" id="regionList">
+                                                <div class="region-item" data-region="all">
+                                                    <label class="checkbox-label">
+                                                        <input type="checkbox" id="selectAllRegions">
+                                                        <span class="checkbox-custom"></span>
+                                                        <span class="checkbox-text">Select All</span>
+                                                    </label>
+                                                </div>
+                                                <div class="region-item" data-region="canada">
+                                                    <label class="checkbox-label">
+                                                        <input type="checkbox" value="canada">
+                                                        <span class="checkbox-custom"></span>
+                                                        <span class="checkbox-text">Canada</span>
+                                                    </label>
+                                                </div>
+                                                <div class="region-item" data-region="east">
+                                                    <label class="checkbox-label">
+                                                        <input type="checkbox" value="east">
+                                                        <span class="checkbox-custom"></span>
+                                                        <span class="checkbox-text">East</span>
+                                                    </label>
+                                                </div>
+                                                <div class="region-item" data-region="mexico">
+                                                    <label class="checkbox-label">
+                                                        <input type="checkbox" value="mexico">
+                                                        <span class="checkbox-custom"></span>
+                                                        <span class="checkbox-text">Mexico</span>
+                                                    </label>
+                                                </div>
+                                                <div class="region-item" data-region="north">
+                                                    <label class="checkbox-label">
+                                                        <input type="checkbox" value="north">
+                                                        <span class="checkbox-custom"></span>
+                                                        <span class="checkbox-text">North</span>
+                                                    </label>
+                                                </div>
+                                                <div class="region-item" data-region="others">
+                                                    <label class="checkbox-label">
+                                                        <input type="checkbox" value="others">
+                                                        <span class="checkbox-custom"></span>
+                                                        <span class="checkbox-text">Others</span>
+                                                    </label>
+                                                </div>
+                                                <div class="region-item" data-region="south">
+                                                    <label class="checkbox-label">
+                                                        <input type="checkbox" value="south">
+                                                        <span class="checkbox-custom"></span>
+                                                        <span class="checkbox-text">South</span>
+                                                    </label>
+                                                </div>
+                                                <div class="region-item" data-region="us">
+                                                    <label class="checkbox-label">
+                                                        <input type="checkbox" value="us">
+                                                        <span class="checkbox-custom"></span>
+                                                        <span class="checkbox-text">US</span>
+                                                    </label>
+                                                </div>
+                                                <div class="region-item" data-region="west">
+                                                    <label class="checkbox-label">
+                                                        <input type="checkbox" value="west">
+                                                        <span class="checkbox-custom"></span>
+                                                        <span class="checkbox-text">West</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="states-panel">
+                                            <h6>States</h6>
+                                            <div class="search-container">
+                                                <input type="text" id="statesSearch" class="search-input" placeholder="Search states...">
+                                            </div>
+                                            <div class="states-list" id="statesList">
+                                                <div class="empty-states">
+                                                    <i class="material-icons">location_on</i>
+                                                    <p>Select a region to view available states</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="customer-actions">
+                                            <button type="button" class="btn btn-primary" id="okCustomerBtn">
+                                                <span>OK</span>
+                                            </button>
+                                            <button type="button" class="btn btn-outline" id="clearCustomerBtn">
+                                                <span>Clear</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Added Customers Section -->
+                                <div class="added-customers-section">
+                                    <h5 class="section-title">
+                                        <i class="material-icons">people</i>
+                                        Added Customers
+                                        <span class="customer-count" id="customerCount">(0)</span>
+                                    </h5>
+                                    <div class="added-customers-container" id="addedCustomersContainer">
+                                        <div class="empty-customers">
+                                            <i class="material-icons">person_add</i>
+                                            <p>No customers added yet. Select regions and states above, then click OK to add customers.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Causing Parts Tab -->
+                            <div class="tab-panel" id="causing-parts-panel">
+                                <h4>Causing Parts Details</h4>
+
+                                <!-- Causing Parts Search Form -->
+                                <div class="causing-parts-form">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="causingPartPrefixSearch">Part Prefix</label>
+                                            <div class="search-input-container">
+                                                <input type="text" id="causingPartPrefixSearch" class="form-input" placeholder="Search prefix..." autocomplete="off">
+                                                <div class="search-dropdown" id="causingPartPrefixDropdown" style="display: none;">
+                                                    <!-- Prefix options will be populated here -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="causingPartNumberSearch">Part #</label>
+                                            <div class="search-input-container">
+                                                <input type="text" id="causingPartNumberSearch" class="form-input" placeholder="Search part number..." autocomplete="off">
+                                                <div class="search-dropdown" id="causingPartNumberDropdown" style="display: none;">
+                                                    <!-- Part number options will be populated here -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="causingPartDescriptionSearch">Description</label>
+                                            <div class="search-input-container">
+                                                <input type="text" id="causingPartDescriptionSearch" class="form-input" placeholder="Search description..." autocomplete="off">
+                                                <div class="search-dropdown" id="causingPartDescriptionDropdown" style="display: none;">
+                                                    <!-- Description options will be populated here -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="form-actions">
+                                        <button type="button" class="btn btn-primary" id="addCausingPartBtn">
+                                            <i class="material-icons">add</i>
+                                            <span>Add Causing Part</span>
+                                        </button>
+                                        <button type="button" class="btn btn-outline" id="clearCausingPartBtn">
+                                            <i class="material-icons">clear</i>
+                                            <span>Clear</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Added Causing Parts List -->
+                                <div class="causing-parts-list-section">
+                                    <h5 class="section-title">
+                                        <i class="material-icons">warning</i>
+                                        Added Causing Parts
+                                        <span class="causing-parts-count" id="causingPartsCount">(0)</span>
+                                        <div class="multiple-delete-actions" id="causingPartsMultipleActions" style="display: none;">
+                                            <button type="button" class="btn btn-danger btn-sm" id="deleteSelectedCausingParts">
+                                                <i class="material-icons">delete</i>
+                                                <span>Delete Selected</span>
+                                            </button>
+                                            <button type="button" class="btn btn-outline btn-sm" id="selectAllCausingParts">
+                                                <i class="material-icons">select_all</i>
+                                                <span>Select All</span>
+                                            </button>
+                                        </div>
+                                    </h5>
+                                    <div class="causing-parts-list" id="causingPartsList">
+                                        <div class="empty-causing-parts" id="emptyCausingParts">
+                                            <i class="material-icons">warning</i>
+                                            <p>No causing parts added yet. Use the form above to add causing parts.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Attachments Tab -->
+                            <div class="tab-panel" id="attachments-panel">
+                                <h4>Attachment Details</h4>
+
+                                <!-- Add New Attachment Section -->
+                                <div class="attachment-add-section">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="attachmentFiles">Upload Files *</label>
+                                            <input type="file" id="attachmentFiles" class="form-input" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.xlsx,.xls">
+                                            <small class="form-help">Supported formats: PDF, DOC, DOCX, JPG, PNG, XLSX, XLS</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="attachmentDescription">Attachment Description *</label>
+                                        <textarea id="attachmentDescription" class="form-textarea" rows="3" placeholder="Describe the attached files..."></textarea>
+                                    </div>
+
+                                    <div class="form-actions">
+                                        <button type="button" class="btn btn-primary" id="addAttachmentBtn">
+                                            <i class="material-icons">add</i>
+                                            <span>Add Attachment</span>
+                                        </button>
+                                        <button type="button" class="btn btn-outline" id="clearAttachmentBtn">
+                                            <i class="material-icons">clear</i>
+                                            <span>Clear</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Added Attachments List -->
+                                <div class="attachments-list-section">
+                                    <h5 class="section-title">
+                                        <span>Added Attachments</span>
+                                        <span class="attachments-count" id="attachmentsCount">(0)</span>
+                                        <div class="multiple-delete-actions" id="attachmentMultipleActions" style="display: none;">
+                                            <button type="button" class="btn btn-danger btn-sm" id="deleteSelectedAttachments">
+                                                <i class="material-icons">delete</i>
+                                                <span>Delete Selected</span>
+                                            </button>
+                                            <button type="button" class="btn btn-outline btn-sm" id="selectAllAttachments">
+                                                <i class="material-icons">select_all</i>
+                                                <span>Select All</span>
+                                            </button>
+                                        </div>
+                                    </h5>
+                                    <div class="attachments-list" id="attachmentsList">
+                                        <!-- Attachments will be rendered here by JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" id="cancelBtn">
+                    <i class="material-icons">close</i>
+                    <span>Cancel</span>
+                </button>
+                <button type="button" class="btn btn-primary" id="saveBtn">
+                    <i class="material-icons">save</i>
+                    <span>Save Campaign</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Campaign Modal -->
+    <div class="modal-overlay" id="viewModal">
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <h3>Campaign Details</h3>
+                <button class="modal-close" id="closeViewModal">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="view-container">
+                    <!-- Left Side - Tabs -->
+                    <div class="tabs-sidebar">
+                        <div class="tab-item active" data-tab="view-basic">
+                            <i class="material-icons">info</i>
+                            <span>Basic Info</span>
+                        </div>
+                        <div class="tab-item" data-tab="view-fail-code">
+                            <i class="material-icons">error</i>
+                            <span>Fail Code Details</span>
+                        </div>
+                        <div class="tab-item" data-tab="view-asset">
+                            <i class="material-icons">inventory</i>
+                            <span>Asset Details</span>
+                        </div>
+                        <div class="tab-item" data-tab="view-operation">
+                            <i class="material-icons">settings</i>
+                            <span>Operation Details</span>
+                        </div>
+                        <div class="tab-item" data-tab="view-parts">
+                            <i class="material-icons">build</i>
+                            <span>Parts Details</span>
+                        </div>
+                        <div class="tab-item" data-tab="view-labor">
+                            <i class="material-icons">work</i>
+                            <span>Labor Charges</span>
+                        </div>
+                        <div class="tab-item" data-tab="view-customer">
+                            <i class="material-icons">person</i>
+                            <span>Customer Details</span>
+                        </div>
+                        <div class="tab-item" data-tab="view-causing-parts">
+                            <i class="material-icons">warning</i>
+                            <span>Causing Parts</span>
+                        </div>
+                        <div class="tab-item" data-tab="view-attachments">
+                            <i class="material-icons">attach_file</i>
+                            <span>Attachments</span>
+                        </div>
+                    </div>
+
+                    <!-- Right Side - Content -->
+                    <div class="tab-content">
+                        <!-- Basic Info View -->
+                        <div class="tab-panel active" id="view-basic-panel">
+                            <h4>Basic Campaign Information</h4>
+                            <div class="view-content" id="viewBasicContent">
+                                <!-- Content will be populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Other view panels will be populated by JavaScript -->
+                        <div class="tab-panel" id="view-fail-code-panel">
+                            <h4>Fail Code Details</h4>
+                            <div class="view-content" id="viewFailCodeContent"></div>
+                        </div>
+
+                        <div class="tab-panel" id="view-asset-panel">
+                            <h4>Asset Details</h4>
+                            <div class="view-content" id="viewAssetContent"></div>
+                        </div>
+
+                        <div class="tab-panel" id="view-operation-panel">
+                            <h4>Operation Details</h4>
+                            <div class="view-content" id="viewOperationContent"></div>
+                        </div>
+
+                        <div class="tab-panel" id="view-parts-panel">
+                            <h4>Parts Details</h4>
+                            <div class="view-content" id="viewPartsContent"></div>
+                        </div>
+
+                        <div class="tab-panel" id="view-labor-panel">
+                            <h4>Labor Charges Details</h4>
+                            <div class="view-content" id="viewLaborContent"></div>
+                        </div>
+
+                        <div class="tab-panel" id="view-customer-panel">
+                            <h4>Customer Details</h4>
+                            <div class="view-content" id="viewCustomerContent"></div>
+                        </div>
+
+                        <div class="tab-panel" id="view-causing-parts-panel">
+                            <h4>Causing Parts Details</h4>
+                            <div class="view-content" id="viewCausingPartsContent"></div>
+                        </div>
+
+                        <div class="tab-panel" id="view-attachments-panel">
+                            <h4>Attachment Details</h4>
+                            <div class="view-content" id="viewAttachmentsContent"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" id="closeViewBtn">Close</button>
+                <button type="button" class="btn btn-primary" id="copyFromViewBtn">Copy Campaign</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal modal-small">
+            <div class="modal-header">
+                <h3>Delete Campaign</h3>
+                <button class="modal-close" id="closeDeleteModal">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this campaign? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" id="cancelDeleteBtn">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Material Design Components JS -->
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="Campaign.js"></script>
+</body>
+</html>
