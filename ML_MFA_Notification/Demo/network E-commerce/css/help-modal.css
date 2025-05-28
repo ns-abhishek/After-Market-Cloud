@@ -1,0 +1,172 @@
+/* Help Modal Styles */
+.help-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.help-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.help-modal.closing {
+    opacity: 0;
+}
+
+.help-modal-content {
+    background-color: var(--payment-card-bg);
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--payment-shadow);
+    border: 1px solid var(--payment-border);
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+}
+
+.help-modal.active .help-modal-content {
+    transform: translateY(0);
+}
+
+.help-modal-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--payment-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.help-modal-header h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--payment-text);
+    margin: 0;
+}
+
+.close-help-modal {
+    background: none;
+    border: none;
+    color: var(--payment-text-secondary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.close-help-modal:hover {
+    color: var(--payment-text);
+    transform: scale(1.1);
+}
+
+.help-modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.help-section {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--payment-border);
+}
+
+.help-section:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.help-section h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--payment-text);
+    margin-bottom: 10px;
+}
+
+.help-section p {
+    color: var(--payment-text-secondary);
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.help-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.help-section ul li {
+    color: var(--payment-text-secondary);
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(var(--payment-border-rgb), 0.3);
+    position: relative;
+    padding-left: 20px;
+}
+
+.help-section ul li:before {
+    content: '•';
+    color: var(--payment-accent);
+    position: absolute;
+    left: 0;
+}
+
+.help-section ul li:last-child {
+    border-bottom: none;
+}
+
+.help-modal-footer {
+    padding: 15px 20px;
+    border-top: 1px solid var(--payment-border);
+    text-align: right;
+}
+
+.contact-support-btn {
+    background-color: var(--payment-accent);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.contact-support-btn:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+}
+
+/* Responsive Styles */
+@media (max-width: 576px) {
+    .help-modal-content {
+        width: 95%;
+        max-height: 90vh;
+    }
+    
+    .help-modal-header {
+        padding: 15px;
+    }
+    
+    .help-modal-body {
+        padding: 15px;
+    }
+    
+    .help-modal-footer {
+        padding: 15px;
+    }
+}

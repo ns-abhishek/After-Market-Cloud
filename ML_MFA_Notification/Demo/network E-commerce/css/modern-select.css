@@ -1,0 +1,151 @@
+/* Modern Select Dropdown Styles */
+.modern-select-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.modern-select-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--payment-text);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.modern-select {
+    position: relative;
+    width: 100%;
+    cursor: pointer;
+}
+
+.modern-select-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--payment-border);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.modern-select-header:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: var(--payment-accent);
+}
+
+.modern-select.open .modern-select-header {
+    border-color: var(--payment-accent);
+    border-radius: 8px 8px 0 0;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+.modern-select-current {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--payment-text);
+}
+
+.modern-select-arrow {
+    color: var(--payment-text-secondary);
+    transition: transform 0.3s ease;
+}
+
+.modern-select.open .modern-select-arrow {
+    transform: rotate(180deg);
+}
+
+.modern-select-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--payment-card-bg);
+    border: 1px solid var(--payment-accent);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.modern-select.open .modern-select-dropdown {
+    max-height: 300px;
+    opacity: 1;
+}
+
+.modern-select-option {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.modern-select-option:last-child {
+    border-bottom: none;
+}
+
+.modern-select-option:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.modern-select-option.selected {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.modern-select-option-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin-right: 12px;
+    color: var(--payment-accent);
+}
+
+.modern-select-option-text {
+    font-size: 14px;
+    color: var(--payment-text);
+}
+
+/* Animation for dropdown */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modern-select.open .modern-select-dropdown {
+    animation: fadeInDown 0.3s ease forwards;
+}
+
+/* Focus styles for accessibility */
+.modern-select-header:focus {
+    outline: none;
+    border-color: var(--payment-accent);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+}
+
+/* Disabled state */
+.modern-select.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.modern-select.disabled .modern-select-header:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: var(--payment-border);
+}
