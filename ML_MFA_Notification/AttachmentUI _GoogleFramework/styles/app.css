@@ -1,0 +1,664 @@
+/* Google Framework App Layout */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--google-grey-50);
+    color: var(--google-grey-900);
+    min-height: 100vh;
+    font-family: var(--google-font-family-secondary);
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Touch-specific styles */
+.touch-device button,
+.touch-device mwc-button,
+.touch-device mwc-icon-button,
+.touch-device .file-action-button {
+    /* Increase touch targets for better mobile usability */
+    min-height: 44px;
+    min-width: 44px;
+}
+
+.touch-device .file-actions {
+    gap: 12px;
+}
+
+.touch-device .google-table td,
+.touch-device .google-table th {
+    padding: 16px 12px;
+}
+
+.app-content-wrapper {
+    padding-top: 64px; /* Height of the top app bar */
+}
+
+.app-content {
+    display: flex;
+    min-height: calc(100vh - 64px);
+}
+
+.main-content {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+    margin-left: 0;
+    transition: margin-left 0.3s;
+}
+
+mwc-drawer[open] + .main-content {
+    margin-left: 256px; /* Width of the drawer */
+}
+
+/* Google Card Styles */
+.google-card {
+    background-color: white;
+    border-radius: var(--google-border-radius-medium);
+    box-shadow: var(--google-shadow-1);
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+.google-card__content {
+    padding: 24px;
+}
+
+.ticket-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.ticket-header h2 {
+    font-family: var(--google-font-family);
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0;
+    color: var(--google-grey-900);
+}
+
+.status-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0 12px;
+    height: 32px;
+    border-radius: var(--google-border-radius-pill);
+    background-color: var(--google-blue-50);
+    color: var(--google-blue-700);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.ticket-details {
+    padding: 0;
+}
+
+.ticket-details-grid {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -12px;
+}
+
+.ticket-details-column {
+    flex: 1;
+    min-width: 200px;
+    padding: 0 12px;
+}
+
+.ticket-details p {
+    margin: 8px 0;
+    color: var(--google-grey-700);
+    font-size: 14px;
+}
+
+.ticket-details strong {
+    color: var(--google-grey-900);
+}
+
+/* Attachments Section */
+.attachments-section {
+    background-color: white;
+    border-radius: var(--google-border-radius-medium);
+    padding: 24px;
+    box-shadow: var(--google-shadow-1);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.section-header h2 {
+    font-family: var(--google-font-family);
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0;
+    color: var(--google-grey-900);
+}
+
+.section-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+/* Google File Upload Area */
+.file-upload-area {
+    border: 2px dashed var(--google-grey-300);
+    border-radius: var(--google-border-radius-medium);
+    padding: 32px;
+    text-align: center;
+    margin-bottom: 24px;
+    background-color: var(--google-grey-50);
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.file-upload-area:hover {
+    background-color: var(--google-grey-100);
+    border-color: var(--google-blue-500);
+}
+
+.file-upload-area mwc-icon {
+    font-size: 48px;
+    color: var(--google-grey-700);
+    margin-bottom: 16px;
+    display: block;
+}
+
+.file-upload-area p {
+    margin: 8px 0;
+    color: var(--google-grey-900);
+    font-size: 16px;
+}
+
+.file-upload-area .upload-caption {
+    color: var(--google-grey-700);
+    font-size: 14px;
+}
+
+.file-input {
+    display: none;
+}
+
+/* View Containers */
+.view-container {
+    display: none;
+}
+
+.view-container.active {
+    display: block;
+}
+
+/* Google Table */
+.google-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font-size: 14px;
+    color: var(--google-grey-900);
+    background-color: white;
+    border-radius: var(--google-border-radius-medium);
+    overflow: hidden;
+    box-shadow: var(--google-shadow-1);
+}
+
+.google-table thead {
+    background-color: var(--google-grey-50);
+}
+
+.google-table th {
+    text-align: left;
+    padding: 16px;
+    font-weight: 500;
+    color: var(--google-grey-700);
+    border-bottom: 1px solid var(--google-grey-200);
+    white-space: nowrap;
+}
+
+.google-table td {
+    padding: 16px;
+    border-bottom: 1px solid var(--google-grey-200);
+}
+
+.google-table tr:last-child td {
+    border-bottom: none;
+}
+
+.google-table .checkbox-cell {
+    width: 56px;
+    padding: 0 0 0 16px;
+}
+
+/* Google Grid */
+.google-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.attachment-card__actions {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 16px;
+}
+
+/* File Preview in Upload Dialog */
+.file-preview-area {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding: 16px;
+    background-color: #f8f9fa;
+    border-radius: var(--mdc-shape-small);
+}
+
+.file-icon {
+    font-size: 36px;
+    color: #5f6368;
+}
+
+.file-details {
+    flex: 1;
+}
+
+.selected-filename {
+    display: block;
+    margin-bottom: 8px;
+    word-break: break-all;
+}
+
+/* File Viewer */
+.file-viewer-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f1f3f4;
+}
+
+.file-viewer-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #5f6368;
+}
+
+.file-viewer-placeholder i {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.file-viewer-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.file-viewer-pdf {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.file-viewer-text {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    white-space: pre-wrap;
+    font-family: monospace;
+    overflow: auto;
+    background-color: white;
+}
+
+.file-viewer-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* File Type Icons */
+.file-type-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    margin-right: 8px;
+}
+
+.file-type-icon i {
+    font-size: 20px;
+    color: white;
+}
+
+.file-type-icon.image {
+    background-color: #4285f4; /* Google Blue */
+}
+
+.file-type-icon.pdf {
+    background-color: #ea4335; /* Google Red */
+}
+
+.file-type-icon.document {
+    background-color: #4285f4; /* Google Blue */
+}
+
+.file-type-icon.spreadsheet {
+    background-color: #34a853; /* Google Green */
+}
+
+.file-type-icon.presentation {
+    background-color: #fbbc04; /* Google Yellow */
+}
+
+.file-type-icon.text {
+    background-color: #5f6368; /* Google Gray */
+}
+
+.file-type-icon.other {
+    background-color: #9aa0a6; /* Light Gray */
+}
+
+/* File Actions */
+.file-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.file-action-button {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: transparent;
+    color: var(--mdc-theme-text-secondary-on-background);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.file-action-button:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+    color: var(--mdc-theme-primary);
+}
+
+.file-action-button i {
+    font-size: 20px;
+}
+
+/* Signature Status */
+.signature-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.signature-status.signed {
+    background-color: rgba(52, 168, 83, 0.1);
+    color: #34a853;
+}
+
+.signature-status.unsigned {
+    background-color: rgba(251, 188, 4, 0.1);
+    color: #fbbc04;
+}
+
+.signature-status i {
+    font-size: 14px;
+    margin-right: 4px;
+}
+
+/* Comprehensive Responsive Design System */
+
+/* Orientation-specific styles */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+    /* Optimize for landscape phones */
+    .app-content-wrapper {
+        padding-top: 48px; /* Smaller top bar in landscape */
+    }
+
+    mwc-top-app-bar {
+        --mdc-top-app-bar-width: 100%;
+        --mdc-top-app-bar-height: 48px;
+    }
+
+    .file-upload-area {
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        text-align: left;
+    }
+
+    .file-upload-area mwc-icon {
+        margin-right: 16px;
+        margin-bottom: 0;
+    }
+
+    /* Adjust dialog for landscape */
+    mwc-dialog {
+        --mdc-dialog-min-height: 90vh;
+        --mdc-dialog-max-height: 90vh;
+    }
+}
+
+/* High-resolution screens (Retina displays, etc.) */
+@media screen and (min-resolution: 2dppx) {
+    /* Optimize for high-resolution displays */
+    .file-upload-area {
+        border-width: 1px;
+    }
+
+    .google-card,
+    .attachments-section {
+        box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.2), 0 1px 3px 1px rgba(60, 64, 67, 0.1);
+    }
+}
+
+/* Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+    .app-content {
+        flex-direction: column;
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+    }
+
+    mwc-drawer[open] + .main-content {
+        margin-left: 0 !important;
+    }
+
+    .google-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+
+    .section-actions {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    /* Adjust dialog width for tablets */
+    #file-viewer-dialog {
+        --mdc-dialog-min-width: 90vw;
+        --mdc-dialog-max-width: 90vw;
+    }
+}
+
+/* Mobile Large (425px - 768px) */
+@media (max-width: 768px) {
+    .app-content {
+        flex-direction: column;
+    }
+
+    .main-content {
+        padding: 16px;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .section-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .file-upload-area {
+        padding: 24px 16px;
+    }
+
+    .google-table {
+        overflow-x: auto;
+        display: block;
+    }
+
+    .ticket-details-grid {
+        flex-direction: column;
+    }
+
+    .ticket-details-column {
+        padding: 8px 0;
+    }
+
+    .google-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 12px;
+    }
+
+    /* Hide less important columns on mobile */
+    .google-table th:nth-child(3),
+    .google-table td:nth-child(3),
+    .google-table th:nth-child(4),
+    .google-table td:nth-child(4) {
+        display: none;
+    }
+}
+
+/* Mobile Medium (375px - 425px) */
+@media (max-width: 425px) {
+    .main-content {
+        padding: 12px;
+    }
+
+    .attachments-section {
+        padding: 16px;
+    }
+
+    .google-card__content {
+        padding: 16px;
+    }
+
+    .section-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    mwc-tab-bar {
+        width: 100%;
+    }
+
+    .google-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .file-upload-area {
+        padding: 16px;
+    }
+
+    .file-upload-area mwc-icon {
+        font-size: 36px;
+    }
+
+    /* Further reduce table columns */
+    .google-table th:nth-child(5),
+    .google-table td:nth-child(5) {
+        display: none;
+    }
+
+    /* Adjust dialog for small screens */
+    mwc-dialog {
+        --mdc-dialog-min-width: 100vw;
+        --mdc-dialog-max-width: 100vw;
+        --mdc-dialog-min-height: 100vh;
+    }
+}
+
+/* Mobile Small (320px - 375px) */
+@media (max-width: 375px) {
+    .main-content {
+        padding: 8px;
+    }
+
+    .attachments-section {
+        padding: 12px;
+    }
+
+    .section-header h2 {
+        font-size: 18px;
+    }
+
+    .file-upload-area {
+        padding: 12px;
+    }
+
+    .file-upload-area p {
+        font-size: 14px;
+    }
+
+    .file-upload-area .upload-caption {
+        font-size: 12px;
+    }
+
+    /* Simplify UI elements */
+    .file-actions {
+        gap: 4px;
+    }
+}
+
+/* Print styles for better printing */
+@media print {
+    body {
+        background-color: white;
+    }
+
+    mwc-top-app-bar,
+    mwc-drawer,
+    .section-actions,
+    .file-upload-area,
+    mwc-button[icon="upload_file"],
+    .file-action-button {
+        display: none !important;
+    }
+
+    .main-content {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .google-card,
+    .attachments-section {
+        box-shadow: none;
+        border: 1px solid #dadce0;
+    }
+}
