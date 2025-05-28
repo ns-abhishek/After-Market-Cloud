@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-cube"></i>
+                    <span class="logo-text">Manager</span>
+                </div>
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active" data-module="movement-type">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span class="nav-text">Movement Type</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-module="movement-type-definition">
+                            <i class="fas fa-cogs"></i>
+                            <span class="nav-text">Movement Type Definition</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-module="parts-category">
+                            <i class="fas fa-tags"></i>
+                            <span class="nav-text">Parts Category</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-module="parts-category-definition">
+                            <i class="fas fa-list-alt"></i>
+                            <span class="nav-text">Parts Category Definition</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                    <span class="theme-text">Dark Mode</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-content">
+                    <div class="header-left">
+                        <button class="mobile-sidebar-toggle" id="mobileSidebarToggle">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <h1 class="page-title" id="pageTitle">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>Movement Type</span>
+                        </h1>
+                    </div>
+                    <div class="header-actions">
+                        <div class="user-menu">
+                            <button class="user-avatar">
+                                <i class="fas fa-user"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Container -->
+            <div class="content-container" id="contentContainer">
+                <!-- Dynamic content will be loaded here -->
+            </div>
+        </main>
+
+        <!-- Module Templates -->
+        <!-- Movement Type Module -->
+        <template id="movement-type-template">
+            <div class="module-content">
+                <!-- Toolbar -->
+                <div class="toolbar">
+                    <div class="toolbar-left">
+                        <button class="btn btn-primary" data-action="add">
+                            <i class="fas fa-plus"></i>
+                            Add
+                        </button>
+                        <button class="btn btn-danger" data-action="delete" disabled>
+                            <i class="fas fa-trash"></i>
+                            Delete
+                        </button>
+
+                    </div>
+                    <div class="toolbar-right">
+                        <button class="btn btn-outline" data-action="advanced-search">
+                            <i class="fas fa-search-plus"></i>
+                            Advanced Search
+                        </button>
+                        <div class="dropdown">
+                            <button class="btn btn-outline dropdown-toggle" data-action="export">
+                                <i class="fas fa-download"></i>
+                                Export
+                            </button>
+                            <div class="dropdown-menu">
+                                <a href="#" class="dropdown-item" data-format="csv">
+                                    <i class="fas fa-file-csv"></i>
+                                    Export as CSV
+                                </a>
+                                <a href="#" class="dropdown-item" data-format="json">
+                                    <i class="fas fa-file-code"></i>
+                                    Export as JSON
+                                </a>
+                                <a href="#" class="dropdown-item" data-format="excel">
+                                    <i class="fas fa-file-excel"></i>
+                                    Export as Excel
+                                </a>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline" data-action="refresh">
+                            <i class="fas fa-sync-alt"></i>
+                            Refresh
+                        </button>
+                        <button class="btn btn-info" data-action="customize">
+                            <i class="fas fa-cog"></i>
+                            Customize
+                        </button>
+                    </div>
+                </div>
+
+            <!-- Search Bar -->
+            <div class="search-container">
+                <div class="search-input-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search movement types...">
+                    <button class="search-clear" id="searchClear">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Advanced Search Panel -->
+            <div class="advanced-search-panel" id="advancedSearchPanel">
+                <div class="advanced-search-content">
+                    <h3>Advanced Search</h3>
+                    <div class="search-filters">
+                        <div class="filter-group">
+                            <label for="companyFilter">Company</label>
+                            <select id="companyFilter" class="filter-select">
+                                <option value="">All Companies</option>
+                                <option value="HCL_AMP">HCL_AMP</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="descriptionFilter">Description</label>
+                            <select id="descriptionFilter" class="filter-select">
+                                <option value="">All Descriptions</option>
+                                <option value="Slow">Slow</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Fast">Fast</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="statusFilter">Status</label>
+                            <select id="statusFilter" class="filter-select">
+                                <option value="">All Status</option>
+                                <option value="Yes">Active</option>
+                                <option value="No">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="search-actions">
+                        <button class="btn btn-primary" id="applyFilters">Apply Filters</button>
+                        <button class="btn btn-secondary" id="clearFilters">Clear Filters</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Table -->
+            <div class="table-container">
+                <div class="table-wrapper">
+                    <table class="data-table" id="dataTable">
+                        <thead>
+                            <tr>
+                                <th class="checkbox-column">
+                                    <div class="checkbox-wrapper">
+                                        <input type="checkbox" id="selectAll" class="checkbox">
+                                        <label for="selectAll" class="checkbox-label"></label>
+                                    </div>
+                                </th>
+                                <th class="action-column">Actions</th>
+                                <th class="sortable" data-column="company">
+                                    <div class="header-content">
+                                        <span>Company</span>
+                                        <i class="fas fa-sort sort-icon"></i>
+                                    </div>
+                                </th>
+                                <th class="sortable" data-column="description">
+                                    <div class="header-content">
+                                        <span>Description</span>
+                                        <i class="fas fa-sort sort-icon"></i>
+                                    </div>
+                                </th>
+                                <th class="sortable" data-column="isActive">
+                                    <div class="header-content">
+                                        <span>Status</span>
+                                        <i class="fas fa-sort sort-icon"></i>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+                <!-- Pagination -->
+                <div class="pagination-container">
+                    <div class="pagination-info">
+                        <span class="pagination-info-text">View 1 - 3 of 3</span>
+                    </div>
+                    <div class="pagination-controls">
+                        <button class="pagination-btn" data-action="first-page" title="First page">
+                            <i class="fas fa-angle-double-left"></i>
+                        </button>
+                        <button class="pagination-btn" data-action="prev-page" title="Previous page">
+                            <i class="fas fa-angle-left"></i>
+                        </button>
+                        <span class="pagination-text">Page</span>
+                        <input type="number" class="pagination-input" value="1" min="1">
+                        <span class="pagination-text">of <span class="total-pages">1</span></span>
+                        <button class="pagination-btn" data-action="next-page" title="Next page">
+                            <i class="fas fa-angle-right"></i>
+                        </button>
+                        <button class="pagination-btn" data-action="last-page" title="Last page">
+                            <i class="fas fa-angle-double-right"></i>
+                        </button>
+                        <select class="page-size-select">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- Movement Type Definition Module -->
+        <template id="movement-type-definition-template">
+            <div class="module-content">
+                <!-- Toolbar -->
+                <div class="toolbar">
+                    <div class="toolbar-left">
+                        <button class="btn btn-primary" data-action="add">
+                            <i class="fas fa-plus"></i>
+                            Add
+                        </button>
+                        <button class="btn btn-danger" data-action="delete" disabled>
+                            <i class="fas fa-trash"></i>
+                            Delete
+                        </button>
+
+                    </div>
+                    <div class="toolbar-right">
+                        <button class="btn btn-outline" data-action="advanced-search">
+                            <i class="fas fa-search-plus"></i>
+                            Advanced Search
+                        </button>
+                        <div class="dropdown">
+                            <button class="btn btn-outline dropdown-toggle" data-action="export">
+                                <i class="fas fa-download"></i>
+                                Export
+                            </button>
+                            <div class="dropdown-menu">
+                                <a href="#" class="dropdown-item" data-format="csv">
+                                    <i class="fas fa-file-csv"></i>
+                                    Export as CSV
+                                </a>
+                                <a href="#" class="dropdown-item" data-format="json">
+                                    <i class="fas fa-file-code"></i>
+                                    Export as JSON
+                                </a>
+                                <a href="#" class="dropdown-item" data-format="excel">
+                                    <i class="fas fa-file-excel"></i>
+                                    Export as Excel
+                                </a>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline" data-action="refresh">
+                            <i class="fas fa-sync-alt"></i>
+                            Refresh
+                        </button>
+                        <button class="btn btn-info" data-action="customize">
+                            <i class="fas fa-cog"></i>
+                            Customize
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <div class="search-input-wrapper">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" placeholder="Search movement type definitions...">
+                        <button class="search-clear">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Advanced Search Panel -->
+                <div class="advanced-search-panel" id="advancedSearchPanel">
+                    <div class="advanced-search-content">
+                        <h3>Advanced Search</h3>
+                        <div class="search-filters">
+                            <div class="filter-group">
+                                <label for="companyFilter">Company</label>
+                                <select id="companyFilter" class="filter-select">
+                                    <option value="">All Companies</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="descriptionFilter">Description</label>
+                                <select id="descriptionFilter" class="filter-select">
+                                    <option value="">All Descriptions</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="statusFilter">Status</label>
+                                <select id="statusFilter" class="filter-select">
+                                    <option value="">All Status</option>
+                                    <option value="Yes">Active</option>
+                                    <option value="No">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="search-actions">
+                            <button class="btn btn-primary" id="applyFilters">Apply Filters</button>
+                            <button class="btn btn-secondary" id="clearFilters">Clear Filters</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Table -->
+                <div class="table-container">
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th class="checkbox-column">
+                                        <div class="checkbox-wrapper">
+                                            <input type="checkbox" class="checkbox select-all">
+                                        </div>
+                                    </th>
+                                    <th class="action-column">Actions</th>
+                                    <th class="sortable" data-column="description">
+                                        <div class="header-content">
+                                            <span>Description</span>
+                                            <i class="fas fa-sort sort-icon"></i>
+                                        </div>
+                                    </th>
+                                    <th class="sortable" data-column="unmoved">
+                                        <div class="header-content">
+                                            <span>Unmoved</span>
+                                            <i class="fas fa-sort sort-icon"></i>
+                                        </div>
+                                    </th>
+                                    <th class="sortable" data-column="slow">
+                                        <div class="header-content">
+                                            <span>Slow</span>
+                                            <i class="fas fa-sort sort-icon"></i>
+                                        </div>
+                                    </th>
+                                    <th class="sortable" data-column="medium">
+                                        <div class="header-content">
+                                            <span>Medium</span>
+                                            <i class="fas fa-sort sort-icon"></i>
+                                        </div>
+                                    </th>
+                                    <th class="sortable" data-column="fast">
+                                        <div class="header-content">
+                                            <span>Fast</span>
+                                            <i class="fas fa-sort sort-icon"></i>
+                                        </div>
+                                    </th>
+                                    <th class="sortable" data-column="isActive">
+                                        <div class="header-content">
+                                            <span>Is Active?</span>
+                                            <i class="fas fa-sort sort-icon"></i>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-body">
+                                <!-- Data will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination-container">
+                    <div class="pagination-info">
+                        <span class="pagination-info-text">View 1 - 1 of 1</span>
+                    </div>
+                    <div class="pagination-controls">
+                        <button class="pagination-btn" data-action="first-page" title="First page">
+                            <i class="fas fa-angle-double-left"></i>
+                        </button>
+                        <button class="pagination-btn" data-action="prev-page" title="Previous page">
+                            <i class="fas fa-angle-left"></i>
+                        </button>
+                        <span class="pagination-text">Page</span>
+                        <input type="number" class="pagination-input" value="1" min="1">
+                        <span class="pagination-text">of <span class="total-pages">1</span></span>
+                        <button class="pagination-btn" data-action="next-page" title="Next page">
+                            <i class="fas fa-angle-right"></i>
+                        </button>
+                        <button class="pagination-btn" data-action="last-page" title="Last page">
+                            <i class="fas fa-angle-double-right"></i>
+                        </button>
+                        <select class="page-size-select">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- Parts Category Module -->
+        <template id="parts-category-template">
+            <div class="module-content">
+                <!-- Toolbar -->
+                <div class="toolbar">
+                    <div class="toolbar-left">
+                        <button class="btn btn-primary" data-action="add">
+                            <i class="fas fa-plus"></i>
+                            Add
+                        </button>
+                        <button class="btn btn-danger" data-action="delete" disabled>
+                            <i class="fas fa-trash"></i>
+                            Delete
+                        </button>
+
+                    </div>
+                    <div class="toolbar-right">
+                        <button class="btn btn-outline" data-action="advanced-search">
+                            <i class="fas fa-search-plus"></i>
+                            Advanced Search
+                        </button>
+                        <div class="dropdown">
+                            <button class="btn btn-outline dropdown-toggle" data-action="export">
+                                <i class="fas fa-download"></i>
+                                Export
+                            </button>
+                            <div class="dropdown-menu">
+                                <a href="#" class="dropdown-item" data-format="csv">
+                                    <i class="fas fa-file-csv"></i>
+                                    Export as CSV
+                                </a>
+                                <a href="#" class="dropdown-item" data-format="json">
+                                    <i class="fas fa-file-code"></i>
+                                    Export as JSON
+                                </a>
+                                <a href="#" class="dropdown-item" data-format="excel">
+                                    <i class="fas fa-file-excel"></i>
+                                    Export as Excel
+                                </a>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline" data-action="refresh">
+                            <i class="fas fa-sync-alt"></i>
+                            Refresh
+                        </button>
+                        <button class="btn btn-info" data-action="customize">
+                            <i class="fas fa-cog"></i>
+                            Customize
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <div class="search-input-wrapper">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" placeholder="Search parts categories...">
+                        <button class="search-clear">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Advanced Search Panel -->
+                <div class="advanced-search-panel" id="advancedSearchPanel">
+                    <div class="advanced-search-content">
+                        <h3>Advanced Search</h3>
+                        <div class="search-filters">
+                            <div class="filter-group">
+                                <label for="companyFilter">Company</label>
+                                <select id="companyFilter" class="filter-select">
+                                    <option value="">All Companies</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="descriptionFilter">Description</label>
+                                <select id="descriptionFilter" class="filter-select">
+                                    <option value="">All Descriptions</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="statusFilter">Status</label>
+                                <select id="statusFilter" class="filter-select">
+                                    <option value="">All Status</option>
+                                    <option value="Yes">Active</option>
+                                    <option value="No">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="search-actions">
+                            <button class="btn btn-primary" id="applyFilters">Apply Filters</button>
+                            <button class="btn btn-secondary" id="clearFilters">Clear Filters</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Table -->
+                <div class="table-container">
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th class="checkbox-column">
+                                        <div class="checkbox-wrapper">
+                                            <input type="checkbox" class="checkbox select-all">
+                                        </div>
+                                    </th>
+                                    <th class="action-column">Actions</th>
+                                    <th class="sortable" data-column="company">
+                                        <div class="header-content">
+                                            <span>Company</span>
+                                            <i class="fas fa-sort sort-icon"></i>
+                                        </div>
+                                    </th>
+                                    <th class="sortable" data-column="description">
+                                        <div class="header-content">
+                                            <span>Description</span>
+                                            <i class="fas fa-sort sort-icon"></i>
+                                        </div>
+                                    </th>
+                                    <th class="sortable" data-column="isActive">
+                                        <div class="header-content">
+                                            <span>Is Active?</span>
+                                            <i class="fas fa-sort sort-icon"></i>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-body">
+                                <!-- Data will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination-container">
+                    <div class="pagination-info">
+                        <span class="pagination-info-text">View 1 - 10 of 83</span>
+                    </div>
+                    <div class="pagination-controls">
+                        <button class="pagination-btn" data-action="first-page" title="First page">
+                            <i class="fas fa-angle-double-left"></i>
+                        </button>
+                        <button class="pagination-btn" data-action="prev-page" title="Previous page">
+                            <i class="fas fa-angle-left"></i>
+                        </button>
+                        <span class="pagination-text">Page</span>
+                        <input type="number" class="pagination-input" value="1" min="1">
+                        <span class="pagination-text">of <span class="total-pages">9</span></span>
+                        <button class="pagination-btn" data-action="next-page" title="Next page">
+                            <i class="fas fa-angle-right"></i>
+                        </button>
+                        <button class="pagination-btn" data-action="last-page" title="Last page">
+                            <i class="fas fa-angle-double-right"></i>
+                        </button>
+                        <select class="page-size-select">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- Parts Category Definition Module -->
+        <template id="parts-category-definition-template">
+            <div class="module-content">
+                <!-- Toolbar -->
+                <div class="toolbar">
+                    <div class="toolbar-left">
+                        <button class="btn btn-primary" data-action="add">
+                            <i class="fas fa-plus"></i>
+                            Add
+                        </button>
+                        <button class="btn btn-danger" data-action="delete" disabled>
+                            <i class="fas fa-trash"></i>
+                            Delete
+                        </button>
+
+                    </div>
+                    <div class="toolbar-right">
+                        <button class="btn btn-outline" data-action="advanced-search">
+                            <i class="fas fa-search-plus"></i>
+                            Advanced Search
+                        </button>
+                        <div class="dropdown">
+                            <button class="btn btn-outline dropdown-toggle" data-action="export">
+                                <i class="fas fa-download"></i>
+                                Export
+                            </button>
+                            <div class="dropdown-menu">
+                                <a href="#" class="dropdown-item" data-format="csv">
+                                    <i class="fas fa-file-csv"></i>
+                                    Export as CSV
+                                </a>
+                                <a href="#" class="dropdown-item" data-format="json">
+                                    <i class="fas fa-file-code"></i>
+                                    Export as JSON
+                                </a>
+                                <a href="#" class="dropdown-item" data-format="excel">
+                                    <i class="fas fa-file-excel"></i>
+                                    Export as Excel
+                                </a>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline" data-action="refresh">
+                            <i class="fas fa-sync-alt"></i>
+                            Refresh
+                        </button>
+                        <button class="btn btn-info" data-action="customize">
+                            <i class="fas fa-cog"></i>
+                            Customize
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <div class="search-input-wrapper">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" placeholder="Search parts category definitions...">
+                        <button class="search-clear">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Advanced Search Panel -->
+                <div class="advanced-search-panel" id="advancedSearchPanel">
+                    <div class="advanced-search-content">
+                        <h3>Advanced Search</h3>
+                        <div class="search-filters">
+                            <div class="filter-group">
+                                <label for="companyFilter">Parts Category</label>
+                                <select id="companyFilter" class="filter-select">
+                                    <option value="">All Categories</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="descriptionFilter">Conversion Factor</label>
+                                <select id="descriptionFilter" class="filter-select">
+                                    <option value="">All Factors</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="statusFilter">Status</label>
+                                <select id="statusFilter" class="filter-select">
+                                    <option value="">All Status</option>
+                                    <option value="Yes">Active</option>
+                                    <option value="No">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="search-actions">
+                            <button class="btn btn-primary" id="applyFilters">Apply Filters</button>
+                            <button class="btn btn-secondary" id="clearFilters">Clear Filters</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Table -->
+                <div class="table-container">
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th class="checkbox-column">
+                                        <div class="checkbox-wrapper">
+                                            <input type="checkbox" class="checkbox select-all">
+                                        </div>
+                                    </th>
+                                    <th class="action-column">Actions</th>
+                                    <th class="sortable" data-column="partsCategory">
+                                        <div class="header-content">
+                                            <span>Parts Category</span>
+                                            <i class="fas fa-sort sort-icon"></i>
+                                        </div>
+                                    </th>
+                                    <th class="sortable" data-column="conversionFactor">
+                                        <div class="header-content">
+                                            <span>Conversion Factor</span>
+                                            <i class="fas fa-sort sort-icon"></i>
+                                        </div>
+                                    </th>
+                                    <th class="sortable" data-column="profitValue">
+                                        <div class="header-content">
+                                            <span>Profit Value</span>
+                                            <i class="fas fa-sort sort-icon"></i>
+                                        </div>
+                                    </th>
+                                    <th class="sortable" data-column="netRateFactor">
+                                        <div class="header-content">
+                                            <span>Net Rate Factor</span>
+                                            <i class="fas fa-sort sort-icon"></i>
+                                        </div>
+                                    </th>
+                                    <th class="sortable" data-column="isActive">
+                                        <div class="header-content">
+                                            <span>Is Active?</span>
+                                            <i class="fas fa-sort sort-icon"></i>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-body">
+                                <!-- Data will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination-container">
+                    <div class="pagination-info">
+                        <span class="pagination-info-text">View 1 - 2 of 2</span>
+                    </div>
+                    <div class="pagination-controls">
+                        <button class="pagination-btn" data-action="first-page" title="First page">
+                            <i class="fas fa-angle-double-left"></i>
+                        </button>
+                        <button class="pagination-btn" data-action="prev-page" title="Previous page">
+                            <i class="fas fa-angle-left"></i>
+                        </button>
+                        <span class="pagination-text">Page</span>
+                        <input type="number" class="pagination-input" value="1" min="1">
+                        <span class="pagination-text">of <span class="total-pages">1</span></span>
+                        <button class="pagination-btn" data-action="next-page" title="Next page">
+                            <i class="fas fa-angle-right"></i>
+                        </button>
+                        <button class="pagination-btn" data-action="last-page" title="Last page">
+                            <i class="fas fa-angle-double-right"></i>
+                        </button>
+                        <select class="page-size-select">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+    <!-- Customize Modal -->
+    <div class="modal-overlay" id="customizeModalOverlay">
+        <div class="modal customize-modal">
+            <div class="modal-header">
+                <h2>Customize Table</h2>
+                <button class="modal-close" id="customizeModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="customize-section">
+                    <h3>Table Alignment</h3>
+                    <div class="customize-group">
+                        <label>Header Alignment:</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="headerAlign" value="left" checked>
+                                <span>Left</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="headerAlign" value="center">
+                                <span>Center</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="headerAlign" value="right">
+                                <span>Right</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="customize-group">
+                        <label>Data Alignment:</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="dataAlign" value="left" checked>
+                                <span>Left</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="dataAlign" value="center">
+                                <span>Center</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="dataAlign" value="right">
+                                <span>Right</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="customize-section">
+                    <h3>Header Colors</h3>
+                    <div class="customize-group">
+                        <label>Header Background:</label>
+                        <div class="color-options">
+                            <div class="color-option" data-color="default" style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);" title="Default"></div>
+                            <div class="color-option" data-color="blue" style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);" title="Blue"></div>
+                            <div class="color-option" data-color="green" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);" title="Green"></div>
+                            <div class="color-option" data-color="purple" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);" title="Purple"></div>
+                            <div class="color-option" data-color="red" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);" title="Red"></div>
+                            <div class="color-option" data-color="orange" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);" title="Orange"></div>
+                            <div class="color-option" data-color="dark" style="background: linear-gradient(135deg, #374151 0%, #1f2937 100%);" title="Dark"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="customize-section">
+                    <h3>Table Density</h3>
+                    <div class="customize-group">
+                        <label>Row Height:</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="density" value="compact">
+                                <span>Compact</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="density" value="normal" checked>
+                                <span>Normal</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="density" value="comfortable">
+                                <span>Comfortable</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="customizeReset">Reset to Default</button>
+                <button class="btn btn-secondary" id="customizeCancel">Cancel</button>
+                <button class="btn btn-primary" id="customizeApply">Apply Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Add/Edit -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add Movement Type</h2>
+                <button class="modal-close" id="modalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="itemForm">
+                    <!-- Movement Type and Parts Category fields -->
+                    <div class="form-group" id="companyGroup">
+                        <label for="companyInput">Company</label>
+                        <input type="text" id="companyInput" class="form-input">
+                    </div>
+                    <div class="form-group" id="descriptionGroup">
+                        <label for="descriptionInput">Description</label>
+                        <input type="text" id="descriptionInput" class="form-input">
+                    </div>
+
+                    <!-- Movement Type Definition fields -->
+                    <div class="form-group" id="unmovedGroup" style="display: none;">
+                        <label for="unmoved">Unmoved</label>
+                        <input type="number" id="unmoved" class="form-input" min="0" value="0">
+                    </div>
+                    <div class="form-group" id="slowGroup" style="display: none;">
+                        <label for="slow">Slow</label>
+                        <input type="number" id="slow" class="form-input" min="0" value="0">
+                    </div>
+                    <div class="form-group" id="mediumGroup" style="display: none;">
+                        <label for="medium">Medium</label>
+                        <input type="number" id="medium" class="form-input" min="0" value="0">
+                    </div>
+                    <div class="form-group" id="fastGroup" style="display: none;">
+                        <label for="fast">Fast</label>
+                        <input type="number" id="fast" class="form-input" min="0" value="0">
+                    </div>
+
+                    <!-- Parts Category Definition fields -->
+                    <div class="form-group" id="partsCategoryGroup" style="display: none;">
+                        <label for="partsCategory">Parts Category</label>
+                        <input type="text" id="partsCategory" class="form-input">
+                    </div>
+                    <div class="form-group" id="conversionFactorGroup" style="display: none;">
+                        <label for="conversionFactor">Conversion Factor</label>
+                        <input type="number" id="conversionFactor" class="form-input" step="0.001" min="0" value="0">
+                    </div>
+                    <div class="form-group" id="profitValueGroup" style="display: none;">
+                        <label for="profitValue">Profit Value</label>
+                        <input type="number" id="profitValue" class="form-input" step="0.01" min="0" value="0">
+                    </div>
+                    <div class="form-group" id="netRateFactorGroup" style="display: none;">
+                        <label for="netRateFactor">Net Rate Factor</label>
+                        <input type="number" id="netRateFactor" class="form-input" step="0.001" min="0" value="0">
+                    </div>
+
+                    <!-- Common field -->
+                    <div class="form-group" id="isActiveGroup">
+                        <label for="isActiveInput">Is Active?</label>
+                        <select id="isActiveInput" class="form-input">
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="modalCancel">Cancel</button>
+                <button class="btn btn-primary" id="modalSave">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

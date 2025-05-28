@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Tickets - User Portal</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/dark-theme.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Tickets specific styles */
+        .tickets-container {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 20px;
+        }
+
+        .tickets-sidebar {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .tickets-sidebar-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .ticket-filters {
+            padding: 15px 20px;
+        }
+
+        .filter-group {
+            margin-bottom: 15px;
+        }
+
+        .filter-group h4 {
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: var(--accent-color);
+        }
+
+        .filter-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-option input[type="checkbox"] {
+            margin: 0;
+        }
+
+        .tickets-list {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .tickets-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tickets-search {
+            display: flex;
+            align-items: center;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            padding: 5px 10px;
+            width: 300px;
+        }
+
+        .tickets-search input {
+            border: none;
+            background: transparent;
+            padding: 5px;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .tickets-search button {
+            background: transparent;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+        }
+
+        .ticket-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .ticket-item:hover {
+            background-color: #f9f9f9;
+        }
+
+        .ticket-status {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .status-open {
+            background-color: var(--info-color);
+        }
+
+        .status-in-progress {
+            background-color: var(--warning-color);
+        }
+
+        .status-resolved {
+            background-color: var(--success-color);
+        }
+
+        .status-closed {
+            background-color: var(--accent-color);
+        }
+
+        .ticket-info {
+            flex: 1;
+        }
+
+        .ticket-info h4 {
+            margin-bottom: 5px;
+        }
+
+        .ticket-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--accent-color);
+        }
+
+        .ticket-id {
+            font-weight: 500;
+        }
+
+        .ticket-priority {
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            color: white;
+            text-align: center;
+            width: 60px;
+        }
+
+        .priority-low {
+            background-color: var(--success-color);
+        }
+
+        .priority-medium {
+            background-color: var(--warning-color);
+        }
+
+        .priority-high {
+            background-color: var(--danger-color);
+        }
+
+        .ticket-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .ticket-actions button {
+            background: transparent;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .ticket-actions button:hover {
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="portal-container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <h1>User<span>Portal</span></h1>
+            </div>
+            <div class="search-container">
+                <input type="text" id="global-search" placeholder="Search across the portal...">
+                <button id="search-button"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="user-menu">
+                <div class="notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </div>
+                <div class="user-profile">
+                    <img src="https://via.placeholder.com/40" alt="User Profile">
+                    <div class="user-info">
+                        <span class="user-name">John Doe</span>
+                        <span class="user-role">Admin</span>
+                    </div>
+                    <div class="dropdown-menu">
+                        <ul>
+                            <li><a href="account.html"><i class="fas fa-user"></i> My Account</a></li>
+                            <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                            <li><a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-container">
+            <!-- Sidebar -->
+            <nav class="sidebar">
+                <ul>
+                    <li><a href="../index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="knowledge-base.html"><i class="fas fa-book"></i> Knowledge Base</a></li>
+                    <li class="active"><a href="tickets.html"><i class="fas fa-ticket-alt"></i> Support Tickets</a></li>
+                    <li><a href="documents.html"><i class="fas fa-file-alt"></i> Documents</a></li>
+                    <li><a href="account.html"><i class="fas fa-user-cog"></i> Account</a></li>
+                    <li><a href="analytics.html"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+                    <li class="admin-only"><a href="#"><i class="fas fa-users-cog"></i> User Management</a></li>
+                </ul>
+            </nav>
+
+            <!-- Content Area -->
+            <main class="content">
+                <div class="page-header">
+                    <h2>Support Tickets</h2>
+                    <div class="actions">
+                        <button class="btn-primary" id="new-ticket-btn"><i class="fas fa-plus"></i> New Ticket</button>
+                    </div>
+                </div>
+
+                <!-- Tickets Container -->
+                <div class="tickets-container">
+                    <!-- Tickets Sidebar -->
+                    <div class="tickets-sidebar">
+                        <div class="tickets-sidebar-header">
+                            <h3>Filters</h3>
+                        </div>
+                        <div class="ticket-filters">
+                            <div class="filter-group">
+                                <h4>Status</h4>
+                                <div class="filter-options">
+                                    <label class="filter-option">
+                                        <input type="checkbox" checked> Open
+                                    </label>
+                                    <label class="filter-option">
+                                        <input type="checkbox" checked> In Progress
+                                    </label>
+                                    <label class="filter-option">
+                                        <input type="checkbox"> Resolved
+                                    </label>
+                                    <label class="filter-option">
+                                        <input type="checkbox"> Closed
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="filter-group">
+                                <h4>Priority</h4>
+                                <div class="filter-options">
+                                    <label class="filter-option">
+                                        <input type="checkbox" checked> High
+                                    </label>
+                                    <label class="filter-option">
+                                        <input type="checkbox" checked> Medium
+                                    </label>
+                                    <label class="filter-option">
+                                        <input type="checkbox" checked> Low
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="filter-group">
+                                <h4>Date Range</h4>
+                                <div class="filter-options">
+                                    <label class="filter-option">
+                                        <input type="checkbox" checked> Last 7 days
+                                    </label>
+                                    <label class="filter-option">
+                                        <input type="checkbox"> Last 30 days
+                                    </label>
+                                    <label class="filter-option">
+                                        <input type="checkbox"> Last 90 days
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tickets List -->
+                    <div class="tickets-list">
+                        <div class="tickets-header">
+                            <h3>All Tickets</h3>
+                            <div class="tickets-search">
+                                <input type="text" placeholder="Search tickets...">
+                                <button><i class="fas fa-search"></i></button>
+                            </div>
+                        </div>
+                        <div class="ticket-items">
+                            <div class="ticket-item">
+                                <div class="ticket-status status-open"></div>
+                                <div class="ticket-info">
+                                    <h4>Unable to access account settings</h4>
+                                    <p>I'm trying to change my password but the settings page is not loading correctly.</p>
+                                    <div class="ticket-meta">
+                                        <span class="ticket-id">#1234</span>
+                                        <span>Created: 2 hours ago</span>
+                                    </div>
+                                </div>
+                                <div class="ticket-priority priority-high">High</div>
+                                <div class="ticket-actions">
+                                    <button><i class="fas fa-reply"></i></button>
+                                    <button><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                            <div class="ticket-item">
+                                <div class="ticket-status status-in-progress"></div>
+                                <div class="ticket-info">
+                                    <h4>Feature request: Dark mode</h4>
+                                    <p>Would it be possible to add a dark mode option to the portal?</p>
+                                    <div class="ticket-meta">
+                                        <span class="ticket-id">#1233</span>
+                                        <span>Created: 1 day ago</span>
+                                    </div>
+                                </div>
+                                <div class="ticket-priority priority-medium">Medium</div>
+                                <div class="ticket-actions">
+                                    <button><i class="fas fa-reply"></i></button>
+                                    <button><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                            <div class="ticket-item">
+                                <div class="ticket-status status-resolved"></div>
+                                <div class="ticket-info">
+                                    <h4>Question about billing cycle</h4>
+                                    <p>I have a question about when my subscription renews and how billing works.</p>
+                                    <div class="ticket-meta">
+                                        <span class="ticket-id">#1230</span>
+                                        <span>Created: 3 days ago</span>
+                                    </div>
+                                </div>
+                                <div class="ticket-priority priority-low">Low</div>
+                                <div class="ticket-actions">
+                                    <button><i class="fas fa-reply"></i></button>
+                                    <button><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                            <div class="ticket-item">
+                                <div class="ticket-status status-closed"></div>
+                                <div class="ticket-info">
+                                    <h4>API integration issue</h4>
+                                    <p>I'm having trouble integrating with your API. Getting error code 403.</p>
+                                    <div class="ticket-meta">
+                                        <span class="ticket-id">#1225</span>
+                                        <span>Created: 1 week ago</span>
+                                    </div>
+                                </div>
+                                <div class="ticket-priority priority-high">High</div>
+                                <div class="ticket-actions">
+                                    <button><i class="fas fa-reply"></i></button>
+                                    <button><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="../js/theme-utils.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/tickets.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/search-part2.js"></script>
+    <script src="../js/search-part3.js"></script>
+    <script src="../js/search-part4.js"></script>
+    <script src="../js/profile-manager.js"></script>
+    <script src="../js/search-fix.js"></script>
+</body>
+</html>

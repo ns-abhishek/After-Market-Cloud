@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - Customer Portal</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* User Management specific styles */
+        .user-management-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .user-management-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .user-search-filter {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .user-search {
+            display: flex;
+            align-items: center;
+            background-color: var(--hover-bg);
+            border-radius: 4px;
+            padding: 5px 10px;
+            width: 300px;
+        }
+
+        .user-search input {
+            border: none;
+            background: transparent;
+            padding: 5px;
+            width: 100%;
+            font-size: 14px;
+            color: var(--text-color);
+        }
+
+        .user-search button {
+            background: transparent;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+        }
+
+        .user-filter select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background-color: var(--widget-bg);
+            color: var(--text-color);
+        }
+
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--widget-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .users-table th,
+        .users-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .users-table th {
+            background-color: var(--header-bg);
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .users-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .users-table tr:hover {
+            background-color: var(--hover-bg);
+        }
+
+        .user-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .user-status.active {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+        }
+
+        .user-status.inactive {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .user-actions button {
+            background: transparent;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-actions button:hover {
+            color: var(--primary-color);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            background-color: var(--widget-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .pagination button.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .pagination button:hover:not(.active) {
+            background-color: var(--hover-bg);
+        }
+
+        /* User Modal Styles */
+        .user-modal {
+            max-width: 600px;
+        }
+
+        .user-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .role-permissions {
+            margin-top: 20px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+        }
+
+        .permission-group {
+            margin-bottom: 15px;
+        }
+
+        .permission-group h4 {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .permission-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .permission-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .permission-option input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="portal-container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <h1>Customer<span>Portal</span></h1>
+            </div>
+            <div class="search-container">
+                <input type="text" id="global-search" placeholder="Search across the portal...">
+                <button id="search-button"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="user-menu">
+                <div class="notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </div>
+                <div class="user-profile">
+                    <img src="https://via.placeholder.com/40" alt="User Profile">
+                    <div class="user-info">
+                        <span class="user-name">John Doe</span>
+                        <span class="user-role">Admin</span>
+                    </div>
+                    <div class="dropdown-menu">
+                        <ul>
+                            <li><a href="account.html"><i class="fas fa-user"></i> My Account</a></li>
+                            <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                            <li><a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-container">
+            <!-- Sidebar -->
+            <nav class="sidebar">
+                <ul>
+                    <li><a href="../index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="knowledge-base.html"><i class="fas fa-book"></i> Knowledge Base</a></li>
+                    <li><a href="tickets.html"><i class="fas fa-ticket-alt"></i> Support Tickets</a></li>
+                    <li><a href="documents.html"><i class="fas fa-file-alt"></i> Documents</a></li>
+                    <li><a href="account.html"><i class="fas fa-user-cog"></i> Account</a></li>
+                    <li><a href="analytics.html"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+                    <li class="active"><a href="user-management.html"><i class="fas fa-users-cog"></i> User Management</a></li>
+                </ul>
+            </nav>
+
+            <!-- Content Area -->
+            <main class="content">
+                <div class="page-header">
+                    <h2>User Management</h2>
+                    <div class="actions">
+                        <button class="btn-primary" id="add-user-btn"><i class="fas fa-plus"></i> Add User</button>
+                    </div>
+                </div>
+
+                <!-- User Management Container -->
+                <div class="user-management-container">
+                    <div class="user-management-header">
+                        <div class="user-search-filter">
+                            <div class="user-search">
+                                <input type="text" id="user-search-input" placeholder="Search users...">
+                                <button id="user-search-btn"><i class="fas fa-search"></i></button>
+                            </div>
+                            <div class="user-filter">
+                                <select id="role-filter">
+                                    <option value="">All Roles</option>
+                                    <option value="admin">Admin</option>
+                                    <option value="manager">Manager</option>
+                                    <option value="user">User</option>
+                                </select>
+                            </div>
+                            <div class="user-filter">
+                                <select id="status-filter">
+                                    <option value="">All Status</option>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="user-count">
+                            <span>Showing <strong id="user-count">0</strong> users</span>
+                        </div>
+                    </div>
+
+                    <!-- Users Table -->
+                    <table class="users-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Last Login</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body">
+                            <!-- User rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+
+                    <!-- Pagination -->
+                    <div class="pagination" id="users-pagination">
+                        <!-- Pagination buttons will be populated by JavaScript -->
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- User Modal Template -->
+    <div id="user-modal-template" style="display: none;">
+        <div class="modal-overlay">
+            <div class="modal-container user-modal">
+                <div class="modal-header">
+                    <h3 id="user-modal-title">Add New User</h3>
+                    <button class="modal-close"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="modal-body">
+                    <form id="user-form">
+                        <div class="user-form">
+                            <div class="form-group">
+                                <label for="user-first-name">First Name</label>
+                                <input type="text" id="user-first-name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="user-last-name">Last Name</label>
+                                <input type="text" id="user-last-name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="user-email">Email</label>
+                                <input type="email" id="user-email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="user-role">Role</label>
+                                <select id="user-role" required>
+                                    <option value="admin">Admin</option>
+                                    <option value="manager">Manager</option>
+                                    <option value="user">User</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="user-status">Status</label>
+                                <select id="user-status" required>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="password-group">
+                                <label for="user-password">Password</label>
+                                <input type="password" id="user-password">
+                            </div>
+                        </div>
+
+                        <div class="role-permissions">
+                            <h4>Permissions</h4>
+                            <div class="permission-group">
+                                <h4>Content Management</h4>
+                                <div class="permission-options">
+                                    <div class="permission-option">
+                                        <input type="checkbox" id="perm-view-content">
+                                        <label for="perm-view-content">View Content</label>
+                                    </div>
+                                    <div class="permission-option">
+                                        <input type="checkbox" id="perm-create-content">
+                                        <label for="perm-create-content">Create Content</label>
+                                    </div>
+                                    <div class="permission-option">
+                                        <input type="checkbox" id="perm-edit-content">
+                                        <label for="perm-edit-content">Edit Content</label>
+                                    </div>
+                                    <div class="permission-option">
+                                        <input type="checkbox" id="perm-delete-content">
+                                        <label for="perm-delete-content">Delete Content</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="permission-group">
+                                <h4>User Management</h4>
+                                <div class="permission-options">
+                                    <div class="permission-option">
+                                        <input type="checkbox" id="perm-view-users">
+                                        <label for="perm-view-users">View Users</label>
+                                    </div>
+                                    <div class="permission-option">
+                                        <input type="checkbox" id="perm-create-users">
+                                        <label for="perm-create-users">Create Users</label>
+                                    </div>
+                                    <div class="permission-option">
+                                        <input type="checkbox" id="perm-edit-users">
+                                        <label for="perm-edit-users">Edit Users</label>
+                                    </div>
+                                    <div class="permission-option">
+                                        <input type="checkbox" id="perm-delete-users">
+                                        <label for="perm-delete-users">Delete Users</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary" id="cancel-user-btn">Cancel</button>
+                            <button type="submit" class="btn-primary" id="save-user-btn">Save User</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/theme-utils.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/search-part2.js"></script>
+    <script src="../js/search-part3.js"></script>
+    <script src="../js/search-part4.js"></script>
+    <script src="../js/profile-manager.js"></script>
+    <script src="../js/search-fix.js"></script>
+    <script src="../js/user-management.js"></script>
+</body>
+</html>

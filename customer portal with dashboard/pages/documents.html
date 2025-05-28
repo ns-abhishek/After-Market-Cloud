@@ -1,0 +1,697 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documents - User Portal</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Documents specific styles */
+        .documents-container {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 20px;
+        }
+
+        .documents-sidebar {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .documents-sidebar-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .folder-list {
+            padding: 15px 0;
+        }
+
+        .folder-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .folder-item:hover, .folder-item.active {
+            background-color: #f5f5f5;
+        }
+
+        .folder-item i {
+            color: var(--accent-color);
+        }
+
+        .folder-item.active i {
+            color: var(--primary-color);
+        }
+
+        .documents-content {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .documents-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .documents-search {
+            display: flex;
+            align-items: center;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            padding: 5px 10px;
+            width: 300px;
+        }
+
+        .documents-search input {
+            border: none;
+            background: transparent;
+            padding: 5px;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .documents-search button {
+            background: transparent;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+        }
+
+        .documents-view-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .view-option {
+            background: transparent;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            padding: 5px;
+            transition: var(--transition);
+        }
+
+        .view-option.active, .view-option:hover {
+            color: var(--primary-color);
+        }
+
+        .documents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .document-card {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .document-card:hover {
+            box-shadow: var(--shadow);
+            transform: translateY(-5px);
+        }
+
+        .document-icon {
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f9f9f9;
+            font-size: 40px;
+            color: var(--accent-color);
+        }
+
+        .document-info {
+            padding: 15px;
+        }
+
+        .document-info h4 {
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .document-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--accent-color);
+        }
+
+        .document-actions {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 15px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .document-action {
+            background: transparent;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .document-action:hover {
+            color: var(--primary-color);
+        }
+
+        .documents-list {
+            display: none;
+            padding: 0;
+        }
+
+        .document-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .document-item:hover {
+            background-color: #f9f9f9;
+        }
+
+        .document-item-icon {
+            font-size: 24px;
+            color: var(--accent-color);
+            margin-right: 15px;
+        }
+
+        .document-item-info {
+            flex: 1;
+        }
+
+        .document-item-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            color: var(--accent-color);
+        }
+
+        .document-item-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            margin: 20px;
+            transition: var(--transition);
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+        }
+
+        .upload-icon {
+            font-size: 40px;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+
+        .upload-text h3 {
+            margin-bottom: 10px;
+        }
+
+        .upload-text p {
+            color: var(--accent-color);
+            margin-bottom: 20px;
+        }
+
+        /* Drag and Drop Styles */
+        .document-card.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .folder-item.folder-dragover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .folder-item.folder-dragover i {
+            color: white;
+        }
+
+        /* Notification Styles */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        .notification {
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 300px;
+            max-width: 400px;
+            animation: slideIn 0.3s ease-out forwards;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .notification.success {
+            border-left: 4px solid #52c41a;
+        }
+
+        .notification.error {
+            border-left: 4px solid #f5222d;
+        }
+
+        .notification.info {
+            border-left: 4px solid #1890ff;
+        }
+
+        .notification-icon {
+            font-size: 20px;
+        }
+
+        .notification.success .notification-icon {
+            color: #52c41a;
+        }
+
+        .notification.error .notification-icon {
+            color: #f5222d;
+        }
+
+        .notification.info .notification-icon {
+            color: #1890ff;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-close {
+            background: transparent;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .notification-close:hover {
+            color: var(--primary-color);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-container {
+            background-color: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.3s ease;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--primary-color);
+        }
+
+        .modal-content {
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 60vh;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 15px 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .document-details {
+            display: flex;
+            gap: 20px;
+        }
+
+        .document-preview {
+            flex-shrink: 0;
+        }
+
+        .document-icon.large {
+            width: 100px;
+            height: 100px;
+            font-size: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn-danger {
+            background-color: #f5222d;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #cf1322;
+        }
+
+        .document-actions-menu {
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            z-index: 100;
+        }
+
+        .document-actions-menu ul {
+            padding: 0;
+            margin: 0;
+        }
+
+        .document-actions-menu ul li {
+            padding: 0;
+        }
+
+        .document-actions-menu ul li a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            color: var(--text-color);
+            transition: var(--transition);
+        }
+
+        .document-actions-menu ul li a:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <div class="portal-container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <h1>User<span>Portal</span></h1>
+            </div>
+            <div class="search-container">
+                <input type="text" id="global-search" placeholder="Search across the portal...">
+                <button id="search-button"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="user-menu">
+                <div class="notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </div>
+                <div class="user-profile">
+                    <img src="https://via.placeholder.com/40" alt="User Profile">
+                    <div class="user-info">
+                        <span class="user-name">John Doe</span>
+                        <span class="user-role">Admin</span>
+                    </div>
+                    <div class="dropdown-menu">
+                        <ul>
+                            <li><a href="account.html"><i class="fas fa-user"></i> My Account</a></li>
+                            <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                            <li><a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-container">
+            <!-- Sidebar -->
+            <nav class="sidebar">
+                <ul>
+                    <li><a href="../index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="knowledge-base.html"><i class="fas fa-book"></i> Knowledge Base</a></li>
+                    <li><a href="tickets.html"><i class="fas fa-ticket-alt"></i> Support Tickets</a></li>
+                    <li class="active"><a href="documents.html"><i class="fas fa-file-alt"></i> Documents</a></li>
+                    <li><a href="account.html"><i class="fas fa-user-cog"></i> Account</a></li>
+                    <li><a href="analytics.html"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+                    <li class="admin-only"><a href="#"><i class="fas fa-users-cog"></i> User Management</a></li>
+                </ul>
+            </nav>
+
+            <!-- Content Area -->
+            <main class="content">
+                <div class="page-header">
+                    <h2>Documents</h2>
+                    <div class="actions">
+                        <button class="btn-secondary"><i class="fas fa-sync"></i> Refresh</button>
+                        <button class="btn-primary"><i class="fas fa-upload"></i> Upload</button>
+                    </div>
+                </div>
+
+                <!-- Documents Container -->
+                <div class="documents-container">
+                    <!-- Documents Sidebar -->
+                    <div class="documents-sidebar">
+                        <div class="documents-sidebar-header">
+                            <h3>Folders</h3>
+                            <button class="btn-secondary"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <div class="folder-list">
+                            <div class="folder-item active">
+                                <i class="fas fa-folder"></i>
+                                <span>All Documents</span>
+                            </div>
+                            <div class="folder-item">
+                                <i class="fas fa-folder"></i>
+                                <span>Product Specifications</span>
+                            </div>
+                            <div class="folder-item">
+                                <i class="fas fa-folder"></i>
+                                <span>User Guides</span>
+                            </div>
+                            <div class="folder-item">
+                                <i class="fas fa-folder"></i>
+                                <span>Contracts</span>
+                            </div>
+                            <div class="folder-item">
+                                <i class="fas fa-folder"></i>
+                                <span>Invoices</span>
+                            </div>
+                            <div class="folder-item">
+                                <i class="fas fa-folder"></i>
+                                <span>Reports</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Documents Content -->
+                    <div class="documents-content">
+                        <div class="documents-header">
+                            <div class="documents-search">
+                                <input type="text" placeholder="Search documents...">
+                                <button><i class="fas fa-search"></i></button>
+                            </div>
+                            <div class="documents-view-options">
+                                <button class="view-option active" id="grid-view"><i class="fas fa-th"></i></button>
+                                <button class="view-option" id="list-view"><i class="fas fa-list"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Upload Area -->
+                        <div class="upload-area">
+                            <div class="upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <div class="upload-text">
+                                <h3>Drag & Drop Files Here</h3>
+                                <p>or click to browse files</p>
+                                <button class="btn-primary">Browse Files</button>
+                            </div>
+                        </div>
+
+                        <!-- Documents Grid View -->
+                        <div class="documents-grid">
+                            <div class="document-card">
+                                <div class="document-icon">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                                <div class="document-info">
+                                    <h4>Product Specifications.pdf</h4>
+                                    <div class="document-meta">
+                                        <span>PDF</span>
+                                        <span>2.4 MB</span>
+                                    </div>
+                                </div>
+                                <div class="document-actions">
+                                    <button class="document-action"><i class="fas fa-download"></i></button>
+                                    <button class="document-action"><i class="fas fa-share-alt"></i></button>
+                                    <button class="document-action"><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                            <div class="document-card">
+                                <div class="document-icon">
+                                    <i class="fas fa-file-word"></i>
+                                </div>
+                                <div class="document-info">
+                                    <h4>User Guide.docx</h4>
+                                    <div class="document-meta">
+                                        <span>DOCX</span>
+                                        <span>1.8 MB</span>
+                                    </div>
+                                </div>
+                                <div class="document-actions">
+                                    <button class="document-action"><i class="fas fa-download"></i></button>
+                                    <button class="document-action"><i class="fas fa-share-alt"></i></button>
+                                    <button class="document-action"><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                            <div class="document-card">
+                                <div class="document-icon">
+                                    <i class="fas fa-file-excel"></i>
+                                </div>
+                                <div class="document-info">
+                                    <h4>Financial Report.xlsx</h4>
+                                    <div class="document-meta">
+                                        <span>XLSX</span>
+                                        <span>3.2 MB</span>
+                                    </div>
+                                </div>
+                                <div class="document-actions">
+                                    <button class="document-action"><i class="fas fa-download"></i></button>
+                                    <button class="document-action"><i class="fas fa-share-alt"></i></button>
+                                    <button class="document-action"><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                            <div class="document-card">
+                                <div class="document-icon">
+                                    <i class="fas fa-file-image"></i>
+                                </div>
+                                <div class="document-info">
+                                    <h4>Product Image.jpg</h4>
+                                    <div class="document-meta">
+                                        <span>JPG</span>
+                                        <span>4.5 MB</span>
+                                    </div>
+                                </div>
+                                <div class="document-actions">
+                                    <button class="document-action"><i class="fas fa-download"></i></button>
+                                    <button class="document-action"><i class="fas fa-share-alt"></i></button>
+                                    <button class="document-action"><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="../js/theme-utils.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/documents.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/search-part2.js"></script>
+    <script src="../js/search-part3.js"></script>
+    <script src="../js/search-part4.js"></script>
+    <script src="../js/profile-manager.js"></script>
+    <script src="../js/search-fix.js"></script>
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <h1 class="page-title">Model</h1>
+            <button class="btn btn-primary new-btn" id="newBtn">
+                <i class="fas fa-plus"></i> New
+            </button>
+        </header>
+
+        <!-- Filters Section -->
+        <div class="filters-section">
+            <div class="filter-group">
+                <label for="brandSelect">Brand</label>
+                <select id="brandSelect" class="filter-select">
+                    <option value="">-Select-</option>
+                    <option value="brand1">Brand 1</option>
+                    <option value="brand2">Brand 2</option>
+                    <option value="brand3">Brand 3</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="assetTypeSelect">Asset Type</label>
+                <select id="assetTypeSelect" class="filter-select">
+                    <option value="">-Select-</option>
+                    <option value="type1">Type 1</option>
+                    <option value="type2">Type 2</option>
+                    <option value="type3">Type 3</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Action Buttons Section -->
+        <div class="actions-section">
+            <div class="action-buttons">
+                <button class="btn btn-danger" id="deleteBtn">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+                <button class="btn btn-secondary" id="advanceSearchBtn">
+                    <i class="fas fa-search"></i> Advance Search
+                </button>
+                <button class="btn btn-success" id="exportBtn">
+                    <i class="fas fa-download"></i> Export
+                </button>
+                <button class="btn btn-info" id="refreshBtn">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+        </div>
+
+        <!-- Data Table Section -->
+        <div class="table-container">
+            <table class="data-table" id="dataTable">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="selectAll" class="checkbox">
+                        </th>
+                        <th>View</th>
+                        <th>Delete</th>
+                        <th>Model</th>
+                        <th>Service Type</th>
+                        <th>Service Frequency</th>
+                        <th>Is Active?</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Data will be populated by JavaScript -->
+                </tbody>
+            </table>
+
+            <div class="no-data" id="noDataMessage">
+                <i class="fas fa-inbox"></i>
+                <p>No records to view</p>
+            </div>
+        </div>
+
+        <!-- Pagination Section -->
+        <div class="pagination-section">
+            <div class="pagination-info">
+                <span>Page</span>
+                <input type="number" id="pageInput" value="1" min="1" class="page-input">
+                <span>of</span>
+                <span id="totalPages">0</span>
+                <select id="recordsPerPage" class="records-select">
+                    <option value="10">10</option>
+                    <option value="20" selected>20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+
+            <div class="pagination-controls">
+                <button class="btn btn-pagination" id="firstPageBtn">
+                    <i class="fas fa-angle-double-left"></i>
+                </button>
+                <button class="btn btn-pagination" id="prevPageBtn">
+                    <i class="fas fa-angle-left"></i>
+                </button>
+                <button class="btn btn-pagination" id="nextPageBtn">
+                    <i class="fas fa-angle-right"></i>
+                </button>
+                <button class="btn btn-pagination" id="lastPageBtn">
+                    <i class="fas fa-angle-double-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for New/Edit Model -->
+    <div class="modal" id="modelModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add Model</h2>
+                <button class="close-btn" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="modelForm">
+                    <div class="form-row">
+                        <div class="form-column">
+                            <div class="form-group">
+                                <label for="modelName">Model Name <span class="required">*</span></label>
+                                <input type="text" id="modelName" name="modelName" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="serviceType">Service Type</label>
+                                <select id="serviceType" name="serviceType">
+                                    <option value="">--Select--</option>
+                                    <option value="maintenance">Maintenance</option>
+                                    <option value="repair">Repair</option>
+                                    <option value="inspection">Inspection</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea id="description" name="description" rows="3"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="averageLandingCost">Average Landing Cost</label>
+                                <input type="number" id="averageLandingCost" name="averageLandingCost" step="0.01">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="physicalStock">Physical Stock</label>
+                                <input type="number" id="physicalStock" name="physicalStock">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="outOfWarehouse">Out Of Warehouse</label>
+                                <input type="number" id="outOfWarehouse" name="outOfWarehouse">
+                            </div>
+                        </div>
+
+                        <div class="form-column">
+                            <div class="form-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="isActive" name="isActive" checked>
+                                    <span class="checkmark"></span>
+                                    Is Active?
+                                </label>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="serviceFrequency">Service Frequency</label>
+                                <select id="serviceFrequency" name="serviceFrequency">
+                                    <option value="">--Select--</option>
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="quarterly">Quarterly</option>
+                                    <option value="annually">Annually</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="averageSellingPrice">Average Selling Price</label>
+                                <input type="number" id="averageSellingPrice" name="averageSellingPrice" step="0.01">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="availableStock">Available Stock</label>
+                                <input type="number" id="availableStock" name="availableStock">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="gitStock">GIT Stock</label>
+                                <input type="number" id="gitStock" name="gitStock">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="underClearance">Under Clearance</label>
+                                <input type="number" id="underClearance" name="underClearance">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelBtn">Exit</button>
+                <button type="submit" class="btn btn-primary" id="saveBtn">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

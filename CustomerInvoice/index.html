@@ -1,0 +1,3393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HCLSoftware - Customer Invoice</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <style>
+        /* Define CSS Variables for Theme Colors */
+        :root {
+            /* Dark Theme Defaults */
+            --bg-primary: #000; /* Body background */
+            --bg-secondary: #1a1a1a; /* Modal, main content bg */
+            --bg-tertiary: #1f2937; /* Sidebar, table header, buttons bg (gray-800) */
+            --bg-quaternary: #fff; /* Main content deeper bg (gray-950) */
+            --text-primary: #fff; /* Main text */
+            --text-secondary: #d1d5db; /* Gray-300 for secondary text */
+            --text-tertiary: #9ca3af; /* Gray-400 for icons/less prominent text */
+            --border-color: #374151; /* Gray-700 for borders */
+            --hover-bg: #374151; /* Gray-700 for hover backgrounds */
+            --hover-text: #fff; /* White for hover text */
+            --active-border: #fff; /* White for active tab border */
+            --input-bg: #1f2937; /* Gray-800 for input background */
+            --input-border: #4b5563; /* Gray-600 for input border */
+            --table-border-bottom: #333; /* Specific table border */
+            --table-row-hover-bg: #1f2937; /* Gray-800 for table row hover */
+            --modal-bg: #1a1a1a;
+            --modal-border: #333;
+            --close-button-color: #aaa;
+            --pagination-active-bg: #4b5563; /* Gray-600 for active pagination button */
+
+            /* Sidebar specific variables */
+            --sidebar-expanded-width: 256px; /* w-64 */
+            --header-height: 72px; /* Approx height of header p-4 + content */
+            --quick-access-icon-size: 48px; /* Size for square quick access buttons */
+
+            /* Drag and Drop styles */
+            --drag-over-bg: #4a90e2; /* A subtle blue for drag-over feedback */
+            --dragging-opacity: 0.5;
+        }
+
+        /* Light Theme Overrides */
+        body.light-theme {
+            --bg-primary: #fff;
+            --bg-secondary: #f9fafb; /* Gray-50 */
+            --bg-tertiary: #e5e7eb; /* Gray-200 */
+            --bg-quaternary: #f3f4f6; /* Gray-100 */
+            --text-primary: #111827; /* Gray-900 */
+            --text-secondary: #4b5563; /* Gray-600 */
+            --text-tertiary: #6b7280; /* Gray-500 */
+            --border-color: #d1d5db; /* Gray-300 */
+            --hover-bg: #d1d5db; /* Gray-300 for hover backgrounds */
+            --hover-text: #111827; /* Gray-900 for hover text */
+            --active-border: #111827; /* Gray-900 for active tab border */
+            --input-bg: #f3f4f6; /* Gray-100 for input background */
+            --input-border: #9ca3af; /* Gray-400 for input border */
+            --table-border-bottom: #ccc;
+            --table-row-hover-bg: #e5e7eb; /* Gray-200 for table row hover */
+            --modal-bg: #fff;
+            --modal-border: #d1d5db;
+            --close-button-color: #6b7280;
+            --pagination-active-bg: #9ca3af; /* Gray-400 for active pagination button */
+
+            /* Drag and Drop styles */
+            --drag-over-bg: #a8d8ff; /* Lighter blue for light theme */
+            --dragging-opacity: 0.7;
+        }
+
+        /* Apply CSS Variables to Tailwind-like classes */
+        .bg-theme-primary { background-color: var(--bg-primary); }
+        .bg-theme-secondary { background-color: var(--bg-secondary); }
+        .bg-theme-tertiary { background-color: var(--bg-tertiary); }
+        .bg-theme-quaternary { background-color: var(--bg-quaternary); }
+        /* Changed text-theme-primary to use var(--text-primary) directly for consistency */
+        .text-theme-primary { color: var(black); }
+        .text-theme-secondary { color: var(--text-secondary); }
+        .text-theme-tertiary { color: var(--text-tertiary); }
+        .border-theme { border-color: var(--border-color); }
+
+        /* Custom hover classes for theme */
+        .hover-bg-theme-hover:hover { background-color: var(--hover-bg); }
+        .hover-text-theme-hover:hover { color: var(--hover-text); }
+        .border-b-theme-active { border-bottom-color: var(--active-border); }
+
+        /* Input specific theme styles */
+        .input-theme {
+            background-color: var(--input-bg);
+            color: var(--text-primary);
+            border-color: var(--input-border);
+        }
+        .input-theme:focus {
+            outline: none;
+            box-shadow: 0 0 0 1px var(--input-border); /* Use box-shadow for ring effect */
+        }
+
+        /* Table specific theme styles */
+        .invoice-table th, .invoice-table td {
+            border-bottom: 1px solid var(--table-border-bottom);
+            padding: 0.5rem; /* Reduced padding for compactness */
+            text-align: left;
+            color: var(--text-primary); /* Ensure cell text also follows theme */
+            font-size: 0.875rem; /* text-sm */
+        }
+        .invoice-table th {
+            background-color: var(--bg-tertiary); /* Table header background */
+            color: var(--text-primary);
+            font-size: 0.875rem; /* text-sm */
+            position: relative; /* Needed for absolute positioning of search icon/input */
+            vertical-align: top; /* Align content to top */
+        }
+        .invoice-table td {
+            vertical-align: middle; /* Align content to middle for data cells and icons */
+        }
+        .invoice-table tbody tr:hover {
+            background-color: var(--table-row-hover-bg);
+        }
+        /* Style for icons inside TD cells */
+        .invoice-table td .fa-edit,
+        .invoice-table td .fa-envelope,
+        .invoice-table td .fa-tags,
+        .invoice-table td .fa-clipboard-check,
+        .invoice-table td .fa-exclamation-triangle,
+        .invoice-table td .fa-gavel,
+        .invoice-table td .fa-smile, /* Added sentiment icons */
+        .invoice-table td .fa-frown,
+        .invoice-table td .fa-meh,
+        .invoice-table td .fa-folder-open, /* Added category icon */
+        .invoice-table td .fa-align-left, /* Added description icon */
+        .invoice-table td .fa-file-alt { /* Added summary icon */
+            color: var(--text-tertiary);
+            font-size: 1rem; /* Consistent icon size */
+            cursor: pointer;
+        }
+        .invoice-table td .fa-edit:hover,
+        .invoice-table td .fa-envelope:hover,
+        .invoice-table td .fa-tags:hover,
+        .invoice-table td .fa-clipboard-check:hover,
+        .invoice-table td .fa-exclamation-triangle:hover,
+        .invoice-table td .fa-gavel:hover,
+        .invoice-table td .fa-smile:hover, /* Added sentiment icons */
+        .invoice-table td .fa-frown:hover,
+        .invoice-table td .fa-meh:hover,
+        .invoice-table td .fa-folder-open:hover, /* Added category icon */
+        .invoice-table td .fa-align-left:hover, /* Added description icon */
+        .invoice-table td .fa-file-alt:hover { /* Added summary icon */
+            color: var(--hover-text);
+        }
+
+        /* Custom scrollbar for a sleek look */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary); /* Dark track for black theme, light for light */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--text-secondary); /* Slightly lighter thumb */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-tertiary); /* Even lighter on hover */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden; /* Prevent horizontal scroll due to sidebar transition */
+        }
+
+        /* Sidebar specific styles */
+        #sidebar {
+            width: var(--sidebar-expanded-width); /* Fixed width when open */
+            transition: transform 0.3s ease-in-out;
+            overflow-x: hidden; /* Hide overflowing text when collapsed */
+            position: fixed; /* Always fixed position */
+            height: calc(100% - var(--header-height)); /* Take remaining height below header */
+            top: var(--header-height); /* Position below the header */
+            left: 0;
+            z-index: 40;
+            transform: translateX(-100%); /* Hidden by default */
+        }
+        #sidebar.active { /* 'active' class for visible state */
+            transform: translateX(0%);
+        }
+
+        #sidebar .sidebar-text {
+            white-space: nowrap; /* Prevent text wrapping */
+            opacity: 1; /* Always visible when sidebar is open */
+        }
+        
+        /* Main content does not shift, sidebar is an overlay */
+        #mainContent {
+            margin-left: 0; /* Always 0 margin */
+            transition: margin-left 0.3s ease-in-out; /* Keep transition for consistency */
+        }
+
+        /* Quick Access Icons Container */
+        #quickAccessIcons {
+            position: fixed;
+            top: var(--header-height); /* Starts below the main header */
+            left: 0;
+            z-index: 30; /* Below sidebar, above main content */
+            background-color: var(--bg-tertiary);
+            border-right: 1px solid var(--border-color);
+            padding: 1rem 0; /* Vertical padding */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem; /* Space between icons */
+            width: var(--quick-access-icon-size); /* Fixed width for the icon bar */
+            height: calc(100% - var(--header-height)); /* Take remaining height */
+            box-sizing: border-box;
+        }
+
+        #quickAccessIcons .quick-access-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: var(--quick-access-icon-size);
+            height: var(--quick-access-icon-size);
+            font-size: 1.25rem; /* Icon size */
+            color: var(--text-tertiary);
+            border-radius: 0.375rem; /* rounded-md */
+            transition: background-color 0.2s ease, color 0.2s ease;
+            cursor: pointer;
+        }
+
+        #quickAccessIcons .quick-access-btn:hover {
+            background-color: var(--hover-bg);
+            color: var(--hover-text);
+        }
+
+        /* Adjust main content to start after the quick access bar */
+        main#mainContent {
+            margin-left: var(--quick-access-icon-size); /* Shift main content by icon bar width */
+        }
+
+        /* Specific drag-over style for main tabs */
+        .drag-over-tab {
+            border: 2px dashed var(--drag-over-bg) !important;
+            box-shadow: 0 0 10px var(--drag-over-bg);
+        }
+
+        /* Mobile specific adjustments for quick access bar (if needed) */
+        @media (max-width: 1023px) {
+            /* Quick access icons are always visible on mobile in this setup */
+            /* No specific changes needed here as they are already fixed */
+        }
+
+
+        /* Modal specific styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--modal-bg);
+            margin: auto;
+            padding: 1.5rem; /* Reduced padding for compactness */
+            border: 1px solid var(--modal-border);
+            border-radius: 0.5rem;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            position: relative;
+            max-height: 80vh;
+            overflow-y: auto;
+            color: var(--text-primary); /* Modal text color */
+        }
+
+        .close-button {
+            color: var(--close-button-color);
+            position: absolute;
+            top: 0.75rem; /* Adjusted position */
+            right: 0.75rem; /* Adjusted position */
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: var(--text-primary);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Loading spinner */
+        .loader {
+            border: 4px solid var(--border-color); /* Light grey */
+            border-top: 4px solid #3498db; /* Blue (fixed for loader) */
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Pagination button styles */
+        .pagination-button {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            padding: 0.25rem 0.75rem; /* py-1 px-3 */
+            border-radius: 0.25rem; /* rounded-md */
+            transition: background-color 200ms ease-in-out;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            border: 1px solid transparent; /* subtle border */
+        }
+        .pagination-button:hover {
+            background-color: var(--hover-bg);
+        }
+        .pagination-button.active {
+            background-color: var(--pagination-active-bg);
+            font-weight: 600; /* font-semibold */
+            border-color: var(--active-border);
+        }
+
+        /* Drag and Drop styles */
+        .dragging {
+            opacity: var(--dragging-opacity);
+            border: 2px dashed var(--drag-over-bg);
+        }
+        .drag-over {
+            background-color: var(--drag-over-bg) !important;
+        }
+        .table-header-draggable {
+            cursor: grab;
+            user-select: none; /* Prevent text selection during drag */
+        }
+        .table-row-draggable {
+            cursor: grab;
+        }
+        /* Sidebar items are no longer draggable in this pattern, but keeping class for consistency if needed */
+        .sidebar-item-draggable {
+            /* cursor: grab; */
+        }
+
+        /* Specific styles for search icon/input in table header */
+        .column-header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* Align text and search to start */
+            width: 100%; /* Ensure it takes full width of TH */
+            padding-bottom: 0.25rem; /* Add some padding to bottom of header content */
+        }
+
+        .column-header-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Space between title and icon */
+            width: 100%;
+            padding-bottom: 0.25rem; /* Add padding below title for icon */
+        }
+
+        .search-toggle-icon {
+            cursor: pointer;
+            color: var(--text-tertiary);
+            margin-left: 0.5rem; /* Space from title */
+            flex-shrink: 0; /* Prevent icon from shrinking */
+        }
+        .search-toggle-icon:hover {
+            color: var(--hover-text);
+        }
+
+        .search-input-wrapper {
+            width: 100%;
+            margin-top: 0.25rem; /* mt-1 */
+            max-height: 0; /* Hidden by default */
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out; /* Smooth transition */
+        }
+        .search-input-wrapper.active {
+            max-height: 50px; /* Adjust based on input height + padding */
+        }
+        .search-input-field {
+            width: 100%;
+            padding: 0.25rem 0.5rem; /* px-1 py-0.5 */
+            font-size: 0.75rem; /* text-xs */
+            border-radius: 0.25rem; /* rounded */
+            box-sizing: border-box; /* Crucial for consistent width */
+        }
+
+        /* Ensure min-width for important columns to prevent squishing */
+        th[data-column-id="edit"] { width: 50px; min-width: 50px; } /* Fixed width for edit icon */
+        th[data-column-id="invoice-num"] { min-width: 160px; } /* Slightly increased */
+        th[data-column-id="account-num"] { min-width: 160px; }
+        th[data-column-id="name"] { min-width: 150px; }
+        th[data-column-id="payment-mode"] { min-width: 130px; }
+        th[data-column-id="date"] { min-width: 110px; }
+        th[data-column-id="work-order"] { min-width: 150px; }
+        th[data-column-id="work-order-date"] { min-width: 150px; }
+        th[data-column-id="serial"] { min-width: 120px; }
+        th[data-column-id="model"] { min-width: 100px; }
+        th[data-column-id="draft-amount"] { min-width: 140px; }
+        th[data-column-id="tax-amount"] { min-width: 120px; } /* New Tax Amount column */
+        th[data-column-id="invoice-amount"] { min-width: 130px; }
+        th[data-column-id="sap-status"] { min-width: 160px; }
+        th[data-column-id="send-mail"] { min-width: 100px; }
+        th[data-column-id="tags"] { min-width: 100px; }
+        th[data-column-id="next-steps"] { min-width: 110px; }
+        th[data-column-id="anomaly"] { min-width: 100px; }
+        th[data-column-id="compliance"] { min-width: 100px; }
+        th[data-column-id="sentiment"] { min-width: 100px; } /* New sentiment column */
+        th[data-column-id="category"] { min-width: 120px; } /* New category column */
+        th[data-column-id="description"] { min-width: 120px; } /* New description column */
+        th[data-column-id="summary"] { min-width: 100px; } /* New summary column */
+    </style>
+</head>
+<body class="bg-theme-primary text-theme-primary min-h-screen flex flex-col">
+
+    <header class="bg-theme-tertiary shadow-lg p-4 flex items-center justify-between border-b border-theme">
+        <div class="flex items-center space-x-4">
+            <div class="text-xl font-bold text-theme-primary" style="color:white">HCLSoftware</div>
+            <div class="relative hidden lg:block">
+                <input type="text" placeholder="Search for menu" class="rounded-md py-2 px-4 pl-10 focus:ring-1 input-theme">
+                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-theme-tertiary"></i>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <span class="text-theme-secondary hidden md:block">Welcome : Admin</span>
+            <div class="flex items-center space-x-2">
+                <span class="text-theme-secondary">Branch 11 ( 1 )</span>
+                <i class="fas fa-caret-down text-theme-tertiary cursor-pointer"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden">
+        <div id="quickAccessIcons">
+            <button id="sidebarToggle" class="quick-access-btn" title="Toggle Sidebar">
+                <i class="fas fa-bars"></i>
+            </button>
+            <button class="quick-access-btn" id="home-icon" title="Home">
+                <i class="fas fa-home"></i>
+            </button>
+            <button class="quick-access-btn" id="dashboard-icon" title="Dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+            </button>
+            <button class="quick-access-btn" id="refresh-icon" title="Refresh">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+            <button class="quick-access-btn" id="add-new-icon" title="Add New">
+                <i class="fas fa-plus"></i>
+            </button>
+            <button class="quick-access-btn" id="export-excel-icon" title="Export to Excel">
+                <i class="fas fa-file-excel"></i>
+            </button>
+            <button class="quick-access-btn" id="export-pdf-icon" title="Export to PDF">
+                <i class="fas fa-file-pdf"></i>
+            </button>
+            <button class="quick-access-btn" id="advance-filter-icon" title="Advance Filter">
+                <i class="fas fa-filter"></i>
+            </button>
+            <button class="quick-access-btn" id="logout-icon" title="Logout">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+            <button id="themeToggle" class="quick-access-btn" title="Toggle Theme">
+                <i class="fas fa-sun" id="themeIcon"></i>
+            </button>
+        </div>
+
+        <aside id="sidebar" class="bg-theme-tertiary p-4 border-r border-theme flex-shrink-0">
+            <nav class="space-y-2">
+                <ul class="space-y-1">
+                    <li class="group sidebar-item-draggable" draggable="true">
+                        <a href="#" class="flex items-center justify-start p-3 rounded-md text-theme-secondary hover-bg-theme-hover hover-text-theme-hover transition duration-200">
+                            <i class="fas fa-tools mr-3"></i>
+                            <span class="sidebar-text">Service</span>
+                            <i class="fas fa-chevron-down text-xs group-hover:text-theme-primary ml-auto"></i>
+                        </a>
+                        <ul class="ml-6 mt-1 space-y-1 hidden">
+                            <li class="group sidebar-item-draggable" draggable="true">
+                                <a href="#" class="flex items-center justify-start p-2 rounded-md text-theme-tertiary hover-bg-theme-hover hover-text-theme-hover transition duration-200">
+                                    <i class="fas fa-clipboard-list mr-3"></i>
+                                    <span class="sidebar-text">Work Order</span>
+                                    <i class="fas fa-chevron-down text-xs group-hover:text-theme-primary ml-auto"></i>
+                                </a>
+                                <ul class="ml-6 mt-1 space-y-1 hidden">
+                                    <li><a href="#" class="block p-2 rounded-md text-theme-tertiary hover-bg-theme-hover hover-text-theme-hover transition duration-200 sidebar-invoice-link" draggable="true" data-target-tab="customer-invoice" data-drag-type="sidebar-invoice-link">Service Invoice</a></li>
+                                    <li><a href="#" class="block p-2 rounded-md text-theme-tertiary hover-bg-theme-hover hover-text-theme-hover transition duration-200 sidebar-invoice-link" draggable="true" data-target-tab="customer-invoice">Service Invoice Return</a></li>
+                                    <li><a href="#" class="block p-2 rounded-md text-theme-tertiary hover-bg-theme-hover hover-text-theme-hover transition duration-200 sidebar-invoice-link" draggable="true" data-target-tab="internal-invoice">Internal Invoice</a></li>
+                                    <li><a href="#" class="block p-2 rounded-md text-theme-tertiary hover-bg-theme-hover hover-text-theme-hover transition duration-200 sidebar-invoice-link" draggable="true" data-target-tab="internal-invoice">Internal Invoice Return</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main id="mainContent" class="flex-1 p-4 bg-theme-quaternary transition-all duration-300 ease-in-out overflow-y-auto">
+            <div id="customer-invoice" class="tab-content active">
+                <div class="flex items-center gap-3 mb-4">
+                    <h2 class="text-xl font-semibold text-theme-primary" id="main-content-h2">Customer Invoice</h2>
+                </div>
+
+                <div class="bg-theme-secondary rounded-lg shadow-xl overflow-x-auto border border-theme">
+                    <table class="min-w-full invoice-table">
+                        <thead class="bg-theme-tertiary">
+                            <tr id="table-header-row">
+                                <th class="whitespace-nowrap table-header-draggable" draggable="true" data-column-id="edit">
+                                    <div class="column-header-content">
+                                        <div class="column-header-title">
+                                            <span>Edit</span>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="whitespace-nowrap table-header-draggable" draggable="true" data-column-id="invoice-num">
+                                    <div class="column-header-content">
+                                        <div class="column-header-title">
+                                            <span>Customer Invoice</span>
+                                            <i class="fas fa-search search-toggle-icon" data-target-input="search-invoice-num"></i>
+                                        </div>
+                                        <div class="search-input-wrapper" id="search-invoice-num">
+                                            <input type="text" placeholder="Search..." class="search-input-field input-theme">
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="whitespace-nowrap hide-on-sm table-header-draggable" draggable="true" data-column-id="account-num">
+                                    <div class="column-header-content">
+                                        <div class="column-header-title">
+                                            <span>Customer Account</span>
+                                            <i class="fas fa-search search-toggle-icon" data-target-input="search-account-num"></i>
+                                        </div>
+                                        <div class="search-input-wrapper" id="search-account-num">
+                                            <input type="text" placeholder="Search..." class="search-input-field input-theme">
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="whitespace-nowrap table-header-draggable" draggable="true" data-column-id="name">
+                                    <div class="column-header-content">
+                                        <div class="column-header-title">
+                                            <span>Name</span>
+                                            <i class="fas fa-search search-toggle-icon" data-target-input="search-name"></i>
+                                        </div>
+                                        <div class="search-input-wrapper" id="search-name">
+                                            <input type="text" placeholder="Search..." class="search-input-field input-theme">
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="whitespace-nowrap hide-on-sm table-header-draggable" draggable="true" data-column-id="payment-mode">
+                                    <div class="column-header-content">
+                                        <div class="column-header-title">
+                                            <span>Payment Mode</span>
+                                            <i class="fas fa-search search-toggle-icon" data-target-input="search-payment-mode"></i>
+                                        </div>
+                                        <div class="search-input-wrapper" id="search-payment-mode">
+                                            <input type="text" placeholder="Search..." class="search-input-field input-theme">
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="whitespace-nowrap table-header-draggable" draggable="true" data-column-id="date">
+                                    <div class="column-header-content">
+                                        <div class="column-header-title">
+                                            <span>Date</span>
+                                            <i class="fas fa-search search-toggle-icon" data-target-input="search-date"></i>
+                                        </div>
+                                        <div class="search-input-wrapper" id="search-date">
+                                            <input type="text" placeholder="Search..." class="search-input-field input-theme">
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="whitespace-nowrap table-header-draggable" draggable="true" data-column-id="work-order">
+                                    <div class="column-header-content">
+                                        <div class="column-header-title">
+                                            <span>Work Order</span>
+                                            <i class="fas fa-search search-toggle-icon" data-target-input="search-work-order"></i>
+                                        </div>
+                                        <div class="search-input-wrapper" id="search-work-order">
+                                            <input type="text" placeholder="Search..." class="search-input-field input-theme">
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="whitespace-nowrap table-header-draggable" draggable="true" data-column-id="work-order-date">
+                                    <div class="column-header-content">
+                                        <div class="column-header-title">
+                                            <span>Work Order Date</span>
+                                            <i class="fas fa-search search-toggle-icon" data-target-input="search-work-order-date"></i>
+                                        </div>
+                                        <div class="search-input-wrapper" id="search-work-order-date">
+                                            <input type="text" placeholder="Search..." class="search-input-field input-theme">
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="whitespace-nowrap hide-on-md table-header-draggable" draggable="true" data-column-id="serial">
+                                    <div class="column-header-content">
+                                        <div class="column-header-title">
+                                            <span>Serial</span>
+                                            <i class="fas fa-search search-toggle-icon" data-target-input="search-serial"></i>
+                                        </div>
+                                        <div class="search-input-wrapper" id="search-serial">
+                                            <input type="text" placeholder="Search..." class="search-input-field input-theme">
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="whitespace-nowrap hide-on-sm table-header-draggable" draggable="true" data-column-id="model">
+                                    <div class="column-header-content">
+                                        <div class="column-header-title">
+                                            <span>Model</span>
+                                            <i class="fas fa-search search-toggle-icon" data-target-input="search-model"></i>
+                                        </div>
+                                        <div class="search-input-wrapper" id="search-model">
+                                            <input type="text" placeholder="Search..." class="search-input-field input-theme">
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="whitespace-nowrap table-header-draggable" draggable="true" data-column-id="draft-amount">
+                                    <div class="column-header-content">
+                                        <div class="column-header-title">
+                                            <span>Draft Invoice Amount</span>
+                                            <i class="fas fa-search search-toggle-icon" data-target-input="search-draft-amount"></i>
+                                        </div>
+                                        <div class="search-input-wrapper" id="search-draft-amount">
+                                            <input type="text" placeholder="Search..." class="search-input-field input-theme">
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="whitespace-nowrap table-header-draggable" draggable="true" data-column-id="tax-amount">
+                                    <div class="column-header-content">
+                                        <div class="column-header-title">
+                                            <span>Tax Amount</span>
+                                            <i class="fas fa-search search-toggle-icon" data-target-input="search-tax-amount"></i>
+                                        </div>
+                                        <div class="search-input-wrapper" id="search-tax-amount">
+                                            <input type="text" placeholder="Search..." class="search-input-field input-theme">
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="whitespace-nowrap table-header-draggable" draggable="true" data-column-id="invoice-amount">
+                                    <div class="column-header-content">
+                                        <div class="column-header-title">
+                                            <span>Invoice Amount</span>
+                                            <i class="fas fa-search search-toggle-icon" data-target-input="search-invoice-amount"></i>
+                                        </div>
+                                        <div class="search-input-wrapper" id="search-invoice-amount">
+                                            <input type="text" placeholder="Search..." class="search-input-field input-theme">
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="whitespace-nowrap hide-on-sm table-header-draggable" draggable="true" data-column-id="sap-status">
+                                    <div class="column-header-content">
+                                        <div class="column-header-title">
+                                            <span>SAP Status</span>
+                                            <i class="fas fa-search search-toggle-icon" data-target-input="search-sap-status"></i>
+                                        </div>
+                                        <div class="search-input-wrapper" id="search-sap-status">
+                                            <input type="text" placeholder="Search..." class="search-input-field input-theme">
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="whitespace-nowrap hide-on-sm table-header-draggable" draggable="true" data-column-id="send-mail">
+                                    <div class="column-header-content">
+                                        <div class="column-header-title">
+                                            <span>Send Mail</span>
+                                            <i class="fas fa-search search-toggle-icon" data-target-input="search-send-mail"></i>
+                                        </div>
+                                        <div class="search-input-wrapper" id="search-send-mail">
+                                            <input type="text" placeholder="Search..." class="search-input-field input-theme">
+                                        </div>
+                                    </div>
+                                </th>
+                               
+                            </tr>
+                        </thead>
+                        <tbody id="invoice-table-body">
+                            <tr class="hover-bg-theme-hover transition duration-200 table-row-draggable" draggable="true"
+                                data-invoice-id="SV177N/1/2925-1"
+                                data-customer-name="Customer 13337"
+                                data-account-num="0000228129"
+                                data-payment-mode="Customer Acc"
+                                data-date="31-Jan-2025"
+                                data-work-order="WO/177N/171/2023"
+                                data-work-order-date="17-Dec-2023"
+                                data-serial="Serial28889"
+                                data-model="Model 13"
+                                data-draft-amount="537.26"
+                                data-tax-amount="0.00"
+                                data-invoice-amount="0.00"
+                                data-sap-status="Process Not Completed">
+                                <td><i class="fas fa-edit text-theme-tertiary hover:text-theme-primary cursor-pointer edit-invoice-btn"></i></td>
+                                <td data-column-id="invoice-num" class="text-theme-secondary">SV177N/1/2925-1</td>
+                                <td data-column-id="account-num" class="text-theme-tertiary hide-on-sm">0000228129</td>
+                                <td data-column-id="name" class="text-theme-secondary">Customer 13337</td>
+                                <td data-column-id="payment-mode" class="text-theme-tertiary hide-on-sm">Customer Acc</td>
+                                <td data-column-id="date" class="text-theme-secondary">31-Jan-2025</td>
+                                <td data-column-id="work-order" class="text-theme-tertiary hide-on-md">WO/177N/171/2023</td>
+                                <td data-column-id="work-order-date" class="text-theme-tertiary hide-on-md">17-Dec-2023</td>
+                                <td data-column-id="serial" class="text-theme-tertiary hide-on-md">Serial28889</td>
+                                <td data-column-id="model" class="text-theme-tertiary hide-on-sm">Model 13</td>
+                                <td data-column-id="draft-amount" class="text-theme-primary">537.26</td>
+                                <td data-column-id="tax-amount" class="text-theme-primary">0.00</td>
+                                <td data-column-id="invoice-amount" class="text-theme-primary">0.00</td>
+                                <td data-column-id="sap-status" class="text-theme-tertiary hide-on-sm">Process Not Completed</td>
+                                <td data-column-id="send-mail" class="text-theme-tertiary hide-on-sm"><i class="fas fa-envelope hover:text-theme-primary cursor-pointer send-mail-btn"></i></td>
+                               
+                            </tr>
+                            <tr class="hover-bg-theme-hover transition duration-200 table-row-draggable" draggable="true"
+                                data-invoice-id="SI/177N/15/2024-1"
+                                data-customer-name="Customer 12486"
+                                data-account-num="0000227177"
+                                data-payment-mode="COD"
+                                data-date="19-Dec-2024"
+                                data-work-order="WO/177N/20/2024-5"
+                                data-work-order-date="19-Dec-2024"
+                                data-serial="Serial8940"
+                                data-model="Model 25"
+                                data-draft-amount="226.20"
+                                data-tax-amount="0.00"
+                                data-invoice-amount="0.00"
+                                data-sap-status="Process Not Completed">
+                                <td><i class="fas fa-edit text-theme-tertiary hover:text-theme-primary cursor-pointer edit-invoice-btn"></i></td>
+                                <td data-column-id="invoice-num" class="text-theme-secondary">SI/177N/15/2024-1</td>
+                                <td data-column-id="account-num" class="text-theme-tertiary hide-on-sm">0000227177</td>
+                                <td data-column-id="name" class="text-theme-secondary">Customer 12486</td>
+                                <td data-column-id="payment-mode" class="text-theme-tertiary hide-on-sm">COD</td>
+                                <td data-column-id="date" class="text-theme-secondary">19-Dec-2024</td>
+                                <td data-column-id="work-order" class="text-theme-tertiary hide-on-md">WO/177N/20/2024-5</td>
+                                <td data-column-id="work-order-date" class="text-theme-tertiary hide-on-md">19-Dec-2024</td>
+                                <td data-column-id="serial" class="text-theme-tertiary hide-on-md">Serial8940</td>
+                                <td data-column-id="model" class="text-theme-tertiary hide-on-sm">Model 25</td>
+                                <td data-column-id="draft-amount" class="text-theme-primary">226.20</td>
+                                <td data-column-id="tax-amount" class="text-theme-primary">0.00</td>
+                                <td data-column-id="invoice-amount" class="text-theme-primary">0.00</td>
+                                <td data-column-id="sap-status" class="text-theme-tertiary hide-on-sm">Process Not Completed</td>
+                                <td data-column-id="send-mail" class="text-theme-tertiary hide-on-sm"><i class="fas fa-envelope hover:text-theme-primary cursor-pointer send-mail-btn"></i></td>
+                                
+                            </tr>
+                            <tr class="hover-bg-theme-hover transition duration-200"
+                                data-invoice-id="SU177N/14/2024-1"
+                                data-customer-name="Customer 100-(K)"
+                                data-account-num="0000204932"
+                                data-payment-mode="Customer Acc"
+                                data-date="19-Dec-2024"
+                                data-work-order="WO/177N/24/2024-1"
+                                data-work-order-date="19-Dec-2024"
+                                data-serial="Serial16750"
+                                data-model="Model 16"
+                                data-draft-amount="191.00"
+                                data-tax-amount="0.00"
+                                data-invoice-amount="0.00"
+                                data-sap-status="Process Not Completed">
+                                <td><i class="fas fa-edit text-theme-tertiary hover:text-theme-primary cursor-pointer edit-invoice-btn"></i></td>
+                                <td data-column-id="invoice-num" class="text-theme-secondary">SU177N/14/2024-1</td>
+                                <td data-column-id="account-num" class="text-theme-tertiary hide-on-sm">0000204932</td>
+                                <td data-column-id="name" class="text-theme-secondary">Customer 100-(K)</td>
+                                <td data-column-id="payment-mode" class="text-theme-tertiary hide-on-sm">Customer Acc</td>
+                                <td data-column-id="date" class="text-theme-secondary">19-Dec-2024</td>
+                                <td data-column-id="work-order" class="text-theme-tertiary hide-on-md">WO/177N/24/2024-1</td>
+                                <td data-column-id="work-order-date" class="text-theme-tertiary hide-on-md">19-Dec-2024</td>
+                                <td data-column-id="serial" class="text-theme-tertiary hide-on-md">Serial16750</td>
+                                <td data-column-id="model" class="text-theme-tertiary hide-on-sm">Model 16</td>
+                                <td data-column-id="draft-amount" class="text-theme-primary">191.00</td>
+                                <td data-column-id="tax-amount" class="text-theme-primary">0.00</td>
+                                <td data-column-id="invoice-amount" class="text-theme-primary">0.00</td>
+                                <td data-column-id="sap-status" class="text-theme-tertiary hide-on-sm">Process Not Completed</td>
+                                <td data-column-id="send-mail" class="text-theme-tertiary hide-on-sm"><i class="fas fa-envelope hover:text-theme-primary cursor-pointer send-mail-btn"></i></td>
+                               
+                            <tr class="hover-bg-theme-hover transition duration-200"
+                                data-invoice-id="SU177N/13/2024-1"
+                                data-customer-name="Customer 1937"
+                                data-account-num="0000207350"
+                                data-payment-mode="Customer Acc"
+                                data-date="18-Dec-2024"
+                                data-work-order="WO/177/23/2024-1"
+                                data-work-order-date="18-Dec-2024"
+                                data-serial="Serial21364"
+                                data-model="Model 23"
+                                data-draft-amount="640.74"
+                                data-tax-amount="0.00"
+                                data-invoice-amount="0.00"
+                                data-sap-status="Process Not Completed">
+                                <td><i class="fas fa-edit text-theme-tertiary hover:text-theme-primary cursor-pointer edit-invoice-btn"></i></td>
+                                <td data-column-id="invoice-num" class="text-theme-secondary">SU177N/13/2024-1</td>
+                                <td data-column-id="account-num" class="text-theme-tertiary hide-on-sm">0000207350</td>
+                                <td data-column-id="name" class="text-theme-secondary">Customer 1937</td>
+                                <td data-column-id="payment-mode" class="text-theme-tertiary hide-on-sm">Customer Acc</td>
+                                <td data-column-id="date" class="text-theme-secondary">18-Dec-2024</td>
+                                <td data-column-id="work-order" class="text-theme-tertiary hide-on-md">WO/177/23/2024-1</td>
+                                <td data-column-id="work-order-date" class="text-theme-tertiary hide-on-md">18-Dec-2024</td>
+                                <td data-column-id="serial" class="text-theme-tertiary hide-on-md">Serial21364</td>
+                                <td data-column-id="model" class="text-theme-tertiary hide-on-sm">Model 23</td>
+                                <td data-column-id="draft-amount" class="text-theme-primary">640.74</td>
+                                <td data-column-id="tax-amount" class="text-theme-primary">0.00</td>
+                                <td data-column-id="invoice-amount" class="text-theme-primary">0.00</td>
+                                <td data-column-id="sap-status" class="text-theme-tertiary hide-on-sm">Process Not Completed</td>
+                                <td data-column-id="send-mail" class="text-theme-tertiary hide-on-sm"><i class="fas fa-envelope hover:text-theme-primary cursor-pointer send-mail-btn"></i></td>
+                              </tr>
+                            <tr class="hover-bg-theme-hover transition duration-200"
+                                data-invoice-id="SI/177N/12/2024-1"
+                                data-customer-name="Customer 10007"
+                                data-account-num="0000223554"
+                                data-payment-mode="Customer Acc"
+                                data-date="28-Aug-2024"
+                                data-work-order="WO/177N/18/2024-1"
+                                data-work-order-date="28-Aug-2024"
+                                data-serial="Serial37581"
+                                data-model="Model 15"
+                                data-draft-amount="744.75"
+                                data-tax-amount="0.00"
+                                data-invoice-amount="10.00"
+                                data-sap-status="Process Not Completed">
+                                <td><i class="fas fa-edit text-theme-tertiary hover:text-theme-primary cursor-pointer edit-invoice-btn"></i></td>
+                                <td data-column-id="invoice-num" class="text-theme-secondary">SI/177N/12/2024-1</td>
+                                <td data-column-id="account-num" class="text-theme-tertiary hide-on-sm">0000223554</td>
+                                <td data-column-id="name" class="text-theme-secondary">Customer 10007</td>
+                                <td data-column-id="payment-mode" class="text-theme-tertiary hide-on-sm">Customer Acc</td>
+                                <td data-column-id="date" class="text-theme-secondary">28-Aug-2024</td>
+                                <td data-column-id="work-order" class="text-theme-tertiary hide-on-md">WO/177N/18/2024-1</td>
+                                <td data-column-id="work-order-date" class="text-theme-tertiary hide-on-md">28-Aug-2024</td>
+                                <td data-column-id="serial" class="text-theme-tertiary hide-on-md">Serial37581</td>
+                                <td data-column-id="model" class="text-theme-tertiary hide-on-sm">Model 15</td>
+                                <td data-column-id="draft-amount" class="text-theme-primary">744.75</td>
+                                <td data-column-id="tax-amount" class="text-theme-primary">0.00</td>
+                                <td data-column-id="invoice-amount" class="text-theme-primary">10.00</td>
+                                <td data-column-id="sap-status" class="text-theme-tertiary hide-on-sm">Process Not Completed</td>
+                                <td data-column-id="send-mail" class="text-theme-tertiary hide-on-sm"><i class="fas fa-envelope hover:text-theme-primary cursor-pointer send-mail-btn"></i></td>
+                              
+                            </tr>
+                            <tr class="hover-bg-theme-hover transition duration-200"
+                                data-invoice-id="SI/177N/11/2024-1"
+                                data-customer-name="Customer 1937"
+                                data-account-num="0000207350"
+                                data-payment-mode="Customer Acc"
+                                data-date="21-May-2024"
+                                data-work-order="WO/177N/14/2024-4"
+                                data-work-order-date="20-May-2024"
+                                data-serial="Serial21364"
+                                data-model="Model 23"
+                                data-draft-amount="2531.30"
+                                data-tax-amount="0.00"
+                                data-invoice-amount="0.00"
+                                data-sap-status="Process Not Completed">
+                                <td><i class="fas fa-edit text-theme-tertiary hover:text-theme-primary cursor-pointer edit-invoice-btn"></i></td>
+                                <td data-column-id="invoice-num" class="text-theme-secondary">SI/177N/11/2024-1</td>
+                                <td data-column-id="account-num" class="text-theme-tertiary hide-on-sm">0000207350</td>
+                                <td data-column-id="name" class="text-theme-secondary">Customer 1937</td>
+                                <td data-column-id="payment-mode" class="text-theme-tertiary hide-on-sm">Customer Acc</td>
+                                <td data-column-id="date" class="text-theme-secondary">21-May-2024</td>
+                                <td data-column-id="work-order" class="text-theme-tertiary hide-on-md">WO/177N/14/2024-4</td>
+                                <td data-column-id="work-order-date" class="text-theme-tertiary hide-on-md">20-May-2024</td>
+                                <td data-column-id="serial" class="text-theme-tertiary hide-on-md">Serial21364</td>
+                                <td data-column-id="model" class="text-theme-tertiary hide-on-sm">Model 23</td>
+                                <td data-column-id="draft-amount" class="text-theme-primary">2531.30</td>
+                                <td data-column-id="tax-amount" class="text-theme-primary">0.00</td>
+                                <td data-column-id="invoice-amount" class="text-theme-primary">0.00</td>
+                                <td data-column-id="sap-status" class="text-theme-tertiary hide-on-sm">Process Not Completed</td>
+                                <td data-column-id="send-mail" class="text-theme-tertiary hide-on-sm"><i class="fas fa-envelope hover:text-theme-primary cursor-pointer send-mail-btn"></i></td>
+                               
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="flex flex-col md:flex-row items-center justify-between mt-4 text-theme-tertiary text-sm">
+                    <div class="mb-2 md:mb-0" id="pagination-info">
+                        View 1 - 1 of 1
+                    </div>
+                    <div class="flex items-center space-x-2" id="pagination-controls">
+                        <button id="prevPage" class="pagination-button"><i class="fas fa-angle-left"></i> Previous</button>
+                        <span class="flex items-center space-x-1">
+                            <span>Page</span>
+                            <input type="number" id="currentPageInput" value="1" min="1" class="w-12 text-center rounded-md py-1 border input-theme text-sm focus:ring-1">
+                            <span>of <span id="totalPagesSpan">1</span></span>
+                        </span>
+                        <button id="nextPage" class="pagination-button">Next <i class="fas fa-angle-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="internal-invoice" class="tab-content hidden">
+                <div class="flex items-center gap-3 mb-4">
+                    <h2 class="text-xl font-semibold text-theme-primary">Internal Invoice</h2>
+                </div>
+                <div class="bg-theme-secondary rounded-lg shadow-xl p-4 border border-theme">
+                    <p class="text-theme-secondary">This section would display details for internal invoices. Content to be added here.</p>
+                    <p class="text-theme-tertiary mt-2">Internal invoices are used for transactions between different departments or entities within the same company.</p>
+                </div>
+            </div>
+
+            <div id="dashboard-content" class="tab-content hidden p-4">
+                <h2 class="text-xl font-semibold text-theme-primary mb-4">Dashboard</h2>
+                <div class="flex items-center space-x-4 mb-6">
+                    <label for="chartType" class="text-theme-secondary">Select Chart Type:</label>
+                    <select id="chartType" class="input-theme p-2 rounded-md">
+                        <option value="bar">Bar Chart (Invoice Amounts by Customer)</option>
+                        <option value="pie">Pie Chart (Payment Modes Distribution)</option>
+                        <option value="line">Line Chart (Invoices Over Time)</option>
+                    </select>
+                    <button id="generateChartBtn" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200">Generate Chart</button>
+                </div>
+                <div class="bg-theme-secondary rounded-lg shadow-xl p-4 border border-theme flex justify-center items-center h-96">
+                    <canvas id="myChart" class="max-w-full max-h-full"></canvas>
+                    <p id="chartMessage" class="text-theme-tertiary text-center hidden">Select a chart type and click "Generate Chart" to see the data visualization.</p>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <div id="llmModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3 id="modalTitle" class="text-lg font-bold mb-3 text-theme-primary"></h3>
+            <div id="modalContent" class="text-theme-secondary whitespace-pre-wrap text-sm">
+                </div>
+            <div id="modalLoader" class="loader hidden"></div> <button id="copyToClipboard" class="bg-theme-tertiary text-theme-primary px-3 py-1.5 rounded-md mt-4 hover-bg-theme-hover transition duration-200 text-sm hidden">
+                <i class="fas fa-copy mr-2"></i> Copy to Clipboard
+            </button>
+        </div>
+    </div>
+
+    <div id="addRowModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button" id="closeAddRowModal">&times;</span>
+            <h3 class="text-lg font-bold mb-3 text-theme-primary">Add New Invoice Record</h3>
+            <form id="newInvoiceForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div>
+                    <label for="new-invoice-id" class="block text-theme-primary font-medium mb-1">Invoice ID <span class="text-red-500">*</span></label>
+                    <input type="text" id="new-invoice-id" class="w-full p-2 rounded input-theme" required>
+                </div>
+                <div>
+                    <label for="new-customer-account" class="block text-theme-primary font-medium mb-1">Customer Account</label>
+                    <input type="text" id="new-customer-account" class="w-full p-2 rounded input-theme">
+                </div>
+                <div>
+                    <label for="new-customer-name" class="block text-theme-primary font-medium mb-1">Customer Name <span class="text-red-500">*</span></label>
+                    <input type="text" id="new-customer-name" class="w-full p-2 rounded input-theme" required>
+                </div>
+                <div>
+                    <label for="new-payment-mode" class="block text-theme-primary font-medium mb-1">Payment Mode</label>
+                    <input type="text" id="new-payment-mode" class="w-full p-2 rounded input-theme">
+                </div>
+                <div>
+                    <label for="new-date" class="block text-theme-primary font-medium mb-1">Date <span class="text-red-500">*</span></label>
+                    <input type="date" id="new-date" class="w-full p-2 rounded input-theme" required>
+                </div>
+                <div>
+                    <label for="new-work-order" class="block text-theme-primary font-medium mb-1">Work Order</label>
+                    <input type="text" id="new-work-order" class="w-full p-2 rounded input-theme">
+                </div>
+                <div>
+                    <label for="new-work-order-date" class="block text-theme-primary font-medium mb-1">Work Order Date</label>
+                    <input type="date" id="new-work-order-date" class="w-full p-2 rounded input-theme">
+                </div>
+                <div>
+                    <label for="new-serial" class="block text-theme-primary font-medium mb-1">Serial</label>
+                    <input type="text" id="new-serial" class="w-full p-2 rounded input-theme">
+                </div>
+                <div>
+                    <label for="new-model" class="block text-theme-primary font-medium mb-1">Model</label>
+                    <input type="text" id="new-model" class="w-full p-2 rounded input-theme">
+                </div>
+                <div>
+                    <label for="new-draft-amount" class="block text-theme-primary font-medium mb-1">Draft Invoice Amount</label>
+                    <input type="number" id="new-draft-amount" class="w-full p-2 rounded input-theme" step="0.01" value="0.00">
+                </div>
+                <div>
+                    <label for="new-tax-amount" class="block text-theme-primary font-medium mb-1">Tax Amount</label>
+                    <input type="number" id="new-tax-amount" class="w-full p-2 rounded input-theme" step="0.01" value="0.00">
+                </div>
+                <div>
+                    <label for="new-invoice-amount" class="block text-theme-primary font-medium mb-1">Invoice Amount</label>
+                    <input type="number" id="new-invoice-amount" class="w-full p-2 rounded input-theme" step="0.01" value="0.00">
+                </div>
+                <div class="md:col-span-2"> <label for="new-sap-status" class="block text-theme-primary font-medium mb-1">SAP Status</label>
+                    <input type="text" id="new-sap-status" class="w-full p-2 rounded input-theme">
+                </div>
+                <div class="md:col-span-2 flex justify-end space-x-3 mt-6">
+                    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition duration-200">Add Row</button>
+                    <button type="button" id="cancelAddRow" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition duration-200">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        // --- Theme Toggle Logic ---
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
+
+        // Function to set theme based on localStorage or default to dark
+        function setTheme(theme) {
+            if (theme === 'light') {
+                body.classList.add('light-theme');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            } else {
+                body.classList.remove('light-theme');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            }
+            localStorage.setItem('theme', theme);
+        }
+
+        // Initialize theme on load
+        const savedTheme = localStorage.getItem('theme') || 'dark'; // Default to 'dark'
+        setTheme(savedTheme);
+
+        // Toggle theme on button click
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.classList.contains('light-theme') ? 'light' : 'dark';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+
+
+        // --- Sidebar Toggle Logic ---
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+        const sidebarToggle = document.getElementById('sidebarToggle'); // Now in quickAccessIcons
+
+        // Function to set sidebar state (active/inactive)
+        function setSidebarState(isActive) {
+            if (isActive) {
+                sidebar.classList.add('active');
+                // For desktop, shift main content
+                if (window.innerWidth >= 1024) {
+                    mainContent.classList.add('sidebar-active-desktop');
+                }
+            } else {
+                sidebar.classList.remove('active');
+                // For desktop, remove main content shift
+                if (window.innerWidth >= 1024) {
+                    mainContent.classList.remove('sidebar-active-desktop');
+                }
+            }
+        }
+
+        // Initial sidebar state on load
+        window.addEventListener('load', () => {
+            setSidebarState(false); // Start hidden on all screen sizes
+        });
+
+        // Adjust sidebar on resize
+        window.addEventListener('resize', () => {
+            // When resizing, always ensure sidebar is hidden and main content margin is correct
+            setSidebarState(false);
+        });
+
+        // Hamburger toggle button click (now on the quick access bar)
+        document.getElementById('sidebarToggle').addEventListener('click', () => {
+            setSidebarState(!sidebar.classList.contains('active'));
+        });
+
+        // Close sidebar when clicking outside (for mobile overlay)
+        document.addEventListener('click', (event) => {
+            // Check if sidebar is active and click is outside sidebar and toggle button
+            if (sidebar.classList.contains('active') && !sidebar.contains(event.target) && !sidebarToggle.contains(event.target)) {
+                setSidebarState(false);
+            }
+        });
+
+
+        // --- Sidebar Menu Dropdown Logic ---
+        document.querySelectorAll('nav .group > a').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent default link behavior
+                const submenu = item.nextElementSibling;
+                // Only toggle submenu if sidebar is active (open)
+                if (submenu && submenu.tagName === 'UL' && sidebar.classList.contains('active')) {
+                    submenu.classList.toggle('hidden');
+                    const icon = item.querySelector('.fa-chevron-down');
+                    if (icon) {
+                        icon.classList.toggle('rotate-180');
+                    }
+                }
+            });
+        });
+
+
+        // --- Main Content Header & Tab Display Logic ---
+        function activateMainContentHeader(newHeaderText = 'Customer Invoice') {
+            const h2Element = document.getElementById('main-content-h2');
+            if (h2Element) {
+                h2Element.textContent = newHeaderText;
+            }
+        }
+
+        // Function to show/hide content areas (tabs)
+        function showContentArea(id) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        // NEW: Event listeners for sidebar invoice links
+        document.querySelectorAll('.sidebar-invoice-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent default link behavior
+                const linkText = link.textContent.trim(); // Get the text of the clicked link
+                const targetTabId = link.dataset.targetTab;
+
+                activateMainContentHeader(linkText); // Update the main content H2 header
+                showContentArea(targetTabId); // Show the corresponding content area
+                setSidebarState(false); // Close sidebar after clicking a link
+            });
+        });
+
+
+        // --- Responsive Column Hiding Logic (on resize) ---
+        function adjustTableColumns() {
+            const table = document.querySelector('.invoice-table');
+            if (!table) return;
+
+            const headers = table.querySelectorAll('th');
+            const rows = table.querySelectorAll('tbody tr');
+
+            headers.forEach((header, colIndex) => {
+                const isHiddenOnSm = header.classList.contains('hide-on-sm');
+                const isHiddenOnMd = header.classList.contains('hide-on-md');
+
+                // Check if current screen width is less than sm (768px)
+                if (window.innerWidth < 768) {
+                    if (isHiddenOnSm || isHiddenOnMd) {
+                        header.style.display = 'none';
+                        rows.forEach(row => {
+                            if (row.children[colIndex]) { // Added check
+                                row.children[colIndex].style.display = 'none';
+                            }
+                        });
+                    } else {
+                        header.style.display = 'table-cell'; /* Ensure table-cell for visible headers */
+                        rows.forEach(row => {
+                            if (row.children[colIndex]) { // Added check
+                                row.children[colIndex].style.display = '';
+                            }
+                        });
+                    }
+                }
+                // Check if current screen width is less than md (1024px) but greater than or equal to sm
+                else if (window.innerWidth < 1024) {
+                    if (isHiddenOnMd) {
+                        header.style.display = 'none';
+                        rows.forEach(row => {
+                            if (row.children[colIndex]) { // Added check
+                                row.children[colIndex].style.display = 'none';
+                            }
+                        });
+                    } else {
+                        header.style.display = 'table-cell'; /* Ensure table-cell for visible headers */
+                        rows.forEach(row => {
+                            if (row.children[colIndex]) { // Added check
+                                row.children[colIndex].style.display = '';
+                            }
+                        });
+                    }
+                }
+                // For large screens (lg and up)
+                else {
+                    header.style.display = 'table-cell'; /* Ensure table-cell for all headers */
+                    rows.forEach(row => {
+                        if (row.children[colIndex]) { // Added check
+                            row.children[colIndex].style.display = '';
+                        }
+                    });
+                }
+            });
+        }
+
+        // Initial adjustment and on window resize
+        window.addEventListener('load', adjustTableColumns);
+        window.addEventListener('resize', adjustTableColumns);
+
+        // --- LLM Integration Logic ---
+        const llmModal = document.getElementById('llmModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalContent = document.getElementById('modalContent');
+        const modalLoader = document.getElementById('modalLoader');
+        const closeButton = llmModal.querySelector('.close-button'); // Select close button specific to llmModal
+        const copyToClipboardButton = document.getElementById('copyToClipboard');
+
+        // Function to open the modal
+        function openModal(title) {
+            modalTitle.textContent = title;
+            modalContent.innerHTML = ''; // Clear previous content
+            modalLoader.classList.remove('hidden'); // Show loader
+            copyToClipboardButton.classList.add('hidden'); // Hide copy button initially
+            llmModal.classList.remove('hidden');
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            llmModal.classList.add('hidden');
+        }
+
+        // Event listener for closing the modal
+        closeButton.addEventListener('click', closeModal);
+        window.addEventListener('click', (event) => {
+            if (event.target == llmModal) {
+                closeModal();
+            }
+        });
+
+        // Function to call Gemini API for structured response (Summary & Insight)
+        async function callGeminiAPIStructured(prompt) {
+            try {
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = {
+                    contents: chatHistory,
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "OBJECT",
+                            properties: {
+                                "summary": { "type": "STRING" },
+                                "insight": { "type": "STRING" }
+                            },
+                            "propertyOrdering": ["summary", "insight"]
+                        }
+                    }
+                };
+                const apiKey = ""; // Canvas will provide this at runtime
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                modalLoader.classList.add('hidden'); // Hide loader
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const jsonText = result.candidates[0].content.parts[0].text;
+                    const parsedJson = JSON.parse(jsonText);
+
+                    if (parsedJson.summary || parsedJson.insight) {
+                        let contentHtml = `
+                            <p class="font-semibold text-theme-primary mb-2">Summary:</p>
+                            <p class="text-theme-secondary mb-4">${parsedJson.summary || 'No summary available.'}</p>
+                            <p class="font-semibold text-theme-primary mb-2">Insight:</p>
+                            <p class="text-theme-secondary">${parsedJson.insight || 'No specific insight available.'}</p>
+                        `;
+                        modalContent.innerHTML = contentHtml;
+                        copyToClipboardButton.classList.remove('hidden'); // Show copy button
+                    } else {
+                        modalContent.textContent = "Error: Generated content is empty or malformed.";
+                    }
+                } else {
+                    modalContent.textContent = "Error: Could not generate content. Please try again.";
+                }
+            } catch (error) {
+                console.error('Error calling Gemini API:', error);
+                modalLoader.classList.add('hidden');
+                modalContent.textContent = "Error: Failed to connect to AI service. Please check your network or try again later.";
+            }
+        }
+
+        // Function to call Gemini API for plain text response (Email Draft)
+        async function callGeminiAPIText(prompt) {
+            try {
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = { contents: chatHistory };
+                const apiKey = ""; // Canvas will provide this at runtime
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                modalLoader.classList.add('hidden'); // Hide loader
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    modalContent.textContent = text;
+                    copyToClipboardButton.classList.remove('hidden'); // Show copy button
+                } else {
+                    modalContent.textContent = "Error: Could not generate content. Please try again.";
+                }
+            } catch (error) {
+                console.error('Error calling Gemini API:', error);
+                modalLoader.classList.add('hidden');
+                modalContent.textContent = "Error: Failed to connect to AI service. Please check your network or try again later.";
+            }
+        }
+
+        // Function to call Gemini API for Tagging (structured response: array of strings)
+        async function callGeminiAPITagging(prompt) {
+            try {
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = {
+                    contents: chatHistory,
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "ARRAY",
+                            items: { "type": "STRING" }
+                        }
+                    }
+                };
+                const apiKey = ""; // Canvas will provide this at runtime
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                modalLoader.classList.add('hidden'); // Hide loader
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const jsonText = result.candidates[0].content.parts[0].text;
+                    const parsedJson = JSON.parse(jsonText);
+
+                    if (Array.isArray(parsedJson) && parsedJson.length > 0) {
+                        let tagsHtml = '<p class="font-semibold text-theme-primary mb-2">Suggested Tags:</p>';
+                        tagsHtml += '<div class="flex flex-wrap gap-2">';
+                        parsedJson.forEach(tag => {
+                            tagsHtml += `<span class="bg-theme-tertiary text-theme-secondary text-xs px-2 py-1 rounded-full">${tag}</span>`;
+                        });
+                        tagsHtml += '</div>';
+                        modalContent.innerHTML = tagsHtml;
+                        copyToClipboardButton.classList.remove('hidden'); // Show copy button
+                    } else {
+                        modalContent.textContent = "No tags suggested for this invoice.";
+                    }
+                } else {
+                    modalContent.textContent = "Error: Could not generate tags. Please try again.";
+                }
+            } catch (error) {
+                console.error('Error calling Gemini API for tags:', error);
+                modalLoader.classList.add('hidden');
+                modalContent.textContent = "Error: Failed to connect to AI service for tags. Please check your network or try again later.";
+            }
+        }
+
+        // Function to call Gemini API for Next Steps (structured response: array of strings)
+        async function callGeminiAPINextSteps(prompt) {
+            try {
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = {
+                    contents: chatHistory,
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "ARRAY",
+                            items: { "type": "STRING" }
+                        }
+                    }
+                };
+                const apiKey = ""; // Canvas will provide this at runtime
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                modalLoader.classList.add('hidden'); // Hide loader
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const jsonText = result.candidates[0].content.parts[0].text;
+                    const parsedJson = JSON.parse(jsonText);
+
+                    if (Array.isArray(parsedJson) && parsedJson.length > 0) {
+                        let stepsHtml = '<p class="font-semibold text-theme-primary mb-2">Suggested Next Steps:</p>';
+                        stepsHtml += '<ul class="list-disc list-inside text-theme-secondary">';
+                        parsedJson.forEach(step => {
+                            stepsHtml += `<li>${step}</li>`;
+                        });
+                        stepsHtml += '</ul>';
+                        modalContent.innerHTML = stepsHtml;
+                        copyToClipboardButton.classList.remove('hidden'); // Show copy button
+                    } else {
+                        modalContent.textContent = "No next steps suggested for this invoice.";
+                    }
+                } else {
+                    modalContent.textContent = "Error: Could not generate next steps. Please try again.";
+                }
+            } catch (error) {
+                console.error('Error calling Gemini API for next steps:', error);
+                modalLoader.classList.add('hidden');
+                modalContent.textContent = "Error: Failed to connect to AI service for next steps. Please check your network or try again later.";
+            }
+        }
+
+        // Function to call Gemini API for Anomaly Detection (structured response: object with is_anomalous and reason)
+        async function callGeminiAPIAnomalyDetection(prompt) {
+            try {
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = {
+                    contents: chatHistory,
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "OBJECT",
+                            properties: {
+                                "is_anomalous": { "type": "BOOLEAN" },
+                                "reason": { "type": "STRING" }
+                            },
+                            "propertyOrdering": ["is_anomalous", "reason"]
+                        }
+                    }
+                };
+                const apiKey = ""; // Canvas will provide this at runtime
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                modalLoader.classList.add('hidden'); // Hide loader
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const jsonText = result.candidates[0].content.parts[0].text;
+                    const parsedJson = JSON.parse(jsonText);
+
+                    if (typeof parsedJson.is_anomalous === 'boolean' && parsedJson.reason) {
+                        let anomalyHtml = `
+                            <p class="font-semibold text-theme-primary mb-2">Anomaly Status:</p>
+                            <p class="text-theme-secondary mb-4">${parsedJson.is_anomalous ? '<span class="text-red-500 font-bold">ANOMALOUS</span>' : '<span class="text-green-500 font-bold">NORMAL</span>'}</p>
+                            <p class="font-semibold text-theme-primary mb-2">Reason:</p>
+                            <p class="text-theme-secondary">${parsedJson.reason}</p>
+                        `;
+                        modalContent.innerHTML = anomalyHtml;
+                        copyToClipboardButton.classList.remove('hidden'); // Show copy button
+                    } else {
+                        modalContent.textContent = "Error: Anomaly detection result is empty or malformed.";
+                    }
+                } else {
+                    modalContent.textContent = "Error: Could not perform anomaly detection. Please try again.";
+                }
+            } catch (error) {
+                console.error('Error calling Gemini API for anomaly detection:', error);
+                modalLoader.classList.add('hidden');
+                modalContent.textContent = "Error: Failed to connect to AI service for anomaly detection. Please check your network or try again later.";
+            }
+        }
+
+        // Function to call Gemini API for Compliance Check (structured response: object with is_compliant, issues, recommendations)
+        async function callGeminiAPIComplianceCheck(prompt) {
+            try {
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = {
+                    contents: chatHistory,
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "OBJECT",
+                            properties: {
+                                "is_compliant": { "type": "BOOLEAN" },
+                                "issues": {
+                                    type: "ARRAY",
+                                    items: { "type": "STRING" }
+                                },
+                                "recommendations": {
+                                    type: "ARRAY",
+                                    items: { "type": "STRING" }
+                                }
+                            },
+                            "propertyOrdering": ["is_compliant", "issues", "recommendations"]
+                        }
+                    }
+                };
+                const apiKey = ""; // Canvas will provide this at runtime
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                modalLoader.classList.add('hidden'); // Hide loader
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const jsonText = result.candidates[0].content.parts[0].text;
+                    const parsedJson = JSON.parse(jsonText);
+
+                    let complianceHtml = `
+                        <p class="font-semibold text-theme-primary mb-2">Compliance Status:</p>
+                        <p class="text-theme-secondary mb-4">${parsedJson.is_compliant ? '<span class="text-green-500 font-bold">COMPLIANT</span>' : '<span class="text-red-500 font-bold">NON-COMPLIANT</span>'}</p>
+                    `;
+                    if (parsedJson.issues && parsedJson.issues.length > 0) {
+                        complianceHtml += '<p class="font-semibold text-theme-primary mb-2">Issues Found:</p>';
+                        complianceHtml += '<ul class="list-disc list-inside text-theme-secondary mb-4">';
+                        parsedJson.issues.forEach(issue => {
+                            complianceHtml += `<li>${issue}</li>`;
+                        });
+                        complianceHtml += '</ul>';
+                    } else {
+                        complianceHtml += '<p class="text-theme-secondary mb-4">No specific issues detected.</p>';
+                    }
+                    if (parsedJson.recommendations && parsedJson.recommendations.length > 0) {
+                        complianceHtml += '<p class="font-semibold text-theme-primary mb-2">Recommendations:</p>';
+                        complianceHtml += '<ul class="list-disc list-inside text-theme-secondary">';
+                        parsedJson.recommendations.forEach(rec => {
+                            complianceHtml += `<li>${rec}</li>`;
+                        });
+                        complianceHtml += '</ul>';
+                    } else {
+                        complianceHtml += '<p class="text-theme-secondary">No specific recommendations.</p>';
+                    }
+                    modalContent.innerHTML = complianceHtml;
+                    copyToClipboardButton.classList.remove('hidden'); // Show copy button
+                } else {
+                    modalContent.textContent = "Error: Could not perform compliance check. Please try again.";
+                }
+            } catch (error) {
+                console.error('Error calling Gemini API for compliance check:', error);
+                modalLoader.classList.add('hidden');
+                modalContent.textContent = "Error: Failed to connect to AI service for compliance check. Please check your network or try again later.";
+            }
+        }
+
+        // Function to call Gemini API for Sentiment Analysis (structured response: object with sentiment and reason)
+        async function callGeminiAPISentimentAnalysis(prompt) {
+            try {
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = {
+                    contents: chatHistory,
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "OBJECT",
+                            properties: {
+                                "sentiment": { "type": "STRING" },
+                                "reason": { "type": "STRING" }
+                            },
+                            "propertyOrdering": ["sentiment", "reason"]
+                        }
+                    }
+                };
+                const apiKey = ""; // Canvas will provide this at runtime
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                modalLoader.classList.add('hidden'); // Hide loader
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const jsonText = result.candidates[0].content.parts[0].text;
+                    const parsedJson = JSON.parse(jsonText);
+
+                    if (parsedJson.sentiment || parsedJson.reason) {
+                        let sentimentHtml = `
+                            <p class="font-semibold text-theme-primary mb-2">Sentiment:</p>
+                            <p class="text-theme-secondary mb-4">${parsedJson.sentiment || 'N/A'}</p>
+                            <p class="font-semibold text-theme-primary mb-2">Reason:</p>
+                            <p class="text-theme-secondary">${parsedJson.reason || 'No specific reason provided.'}</p>
+                        `;
+                        modalContent.innerHTML = sentimentHtml;
+                        copyToClipboardButton.classList.remove('hidden'); // Show copy button
+                    } else {
+                        modalContent.textContent = "Error: Sentiment analysis result is empty or malformed.";
+                    }
+                } else {
+                    modalContent.textContent = "Error: Could not perform sentiment analysis. Please try again.";
+                }
+            } catch (error) {
+                console.error('Error calling Gemini API for sentiment analysis:', error);
+                modalLoader.classList.add('hidden');
+                modalContent.textContent = "Error: Failed to connect to AI service for sentiment analysis. Please check your network or try again later.";
+            }
+        }
+
+        // Function to call Gemini API for Invoice Categorization (structured response: object with category and explanation)
+        async function callGeminiAPICategorization(prompt) {
+            try {
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = {
+                    contents: chatHistory,
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "OBJECT",
+                            properties: {
+                                "category": { "type": "STRING" },
+                                "explanation": { "type": "STRING" }
+                            },
+                            "propertyOrdering": ["category", "explanation"]
+                        }
+                    }
+                };
+                const apiKey = ""; // Canvas will provide this at runtime
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                modalLoader.classList.add('hidden'); // Hide loader
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const jsonText = result.candidates[0].content.parts[0].text;
+                    const parsedJson = JSON.parse(jsonText);
+
+                    if (parsedJson.category || parsedJson.explanation) {
+                        let categoryHtml = `
+                            <p class="font-semibold text-theme-primary mb-2">Suggested Category:</p>
+                            <p class="text-theme-secondary mb-4">${parsedJson.category || 'N/A'}</p>
+                            <p class="font-semibold text-theme-primary mb-2">Explanation:</p>
+                            <p class="text-theme-secondary">${parsedJson.explanation || 'No explanation provided.'}</p>
+                        `;
+                        modalContent.innerHTML = categoryHtml;
+                        copyToClipboardButton.classList.remove('hidden'); // Show copy button
+                    } else {
+                        modalContent.textContent = "Error: Category analysis result is empty or malformed.";
+                    }
+                } else {
+                    modalContent.textContent = "Error: Could not perform category analysis. Please try again.";
+                }
+            } catch (error) {
+                console.error('Error calling Gemini API for category analysis:', error);
+                modalLoader.classList.add('hidden');
+                modalContent.textContent = "Error: Failed to connect to AI service for category analysis. Please check your network or try again later.";
+            }
+        }
+
+        // Function to call Gemini API for Invoice Description Expansion (plain text response)
+        async function callGeminiAPIExpandDescription(prompt) {
+            try {
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = { contents: chatHistory };
+                const apiKey = ""; // Canvas will provide this at runtime
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                modalLoader.classList.add('hidden'); // Hide loader
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    modalContent.textContent = text;
+                    copyToClipboardButton.classList.remove('hidden'); // Show copy button
+                } else {
+                    modalContent.textContent = "Error: Could not expand description. Please try again.";
+                }
+            } catch (error) {
+                console.error('Error calling Gemini API for description expansion:', error);
+                modalLoader.classList.add('hidden');
+                modalContent.textContent = "Error: Failed to connect to AI service for description expansion. Please check your network or try again later.";
+            }
+        }
+
+        // Function to call Gemini API for Invoice Summary (plain text response)
+        async function callGeminiAPISummary(prompt) {
+            try {
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = { contents: chatHistory };
+                const apiKey = ""; // Canvas will provide this at runtime
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                modalLoader.classList.add('hidden'); // Hide loader
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    modalContent.textContent = text;
+                    copyToClipboardButton.classList.remove('hidden'); // Show copy button
+                } else {
+                    modalContent.textContent = "Error: Could not generate summary. Please try again.";
+                }
+            } catch (error) {
+                console.error('Error calling Gemini API for summary:', error);
+                modalLoader.classList.add('hidden');
+                modalContent.textContent = "Error: Failed to connect to AI service for summary. Please check your network or try again later.";
+            }
+        }
+
+
+        // Event listener for "Send Mail" buttons
+        document.querySelectorAll('.send-mail-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const row = event.target.closest('tr');
+                const invoiceId = row.dataset.invoiceId;
+                const customerName = row.dataset.customerName;
+                const amount = row.dataset.amount;
+                const date = row.dataset.date;
+                const status = row.dataset.sapStatus; // Use sapStatus for the prompt
+
+                openModal(`✨ Draft Email for Invoice: ${invoiceId}`);
+                const prompt = `Draft a polite email to ${customerName} regarding invoice ${invoiceId} for the amount of $${amount} issued on ${date}. The current SAP status is "${status}".
+                If the status is "Process Not Completed", the email should gently remind them about the outstanding process. If it's a completed process, it should confirm the service completion and payment (if applicable).
+                Keep the tone professional and concise.`;
+                callGeminiAPIText(prompt); // Use the plain text API call
+            });
+        });
+
+        // Event listener for "Suggest Tags" buttons
+        document.querySelectorAll('.suggest-tags-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const row = event.target.closest('tr');
+                const invoiceId = row.dataset.invoiceId;
+                const customerName = row.dataset.customerName;
+                const amount = row.dataset.amount;
+                const model = row.dataset.model;
+                const workOrder = row.dataset.workOrder;
+
+                openModal(`✨ Suggested Tags for: ${invoiceId}`);
+                const prompt = `Suggest 3-5 relevant tags or categories for an invoice with the following details, in JSON array format:
+                Invoice ID: ${invoiceId}
+                Customer: ${customerName}
+                Amount: $${amount}
+                Model: ${model}
+                Work Order: ${workOrder}
+
+                Example JSON output:
+                ["Tag1", "Tag2", "Tag3"]
+                `;
+                callGeminiAPITagging(prompt);
+            });
+        });
+
+        // Event listener for "Next Steps" buttons
+        document.querySelectorAll('.next-steps-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const row = event.target.closest('tr');
+                const invoiceId = row.dataset.invoiceId;
+                const customerName = row.dataset.customerName;
+                const amount = row.dataset.amount;
+                const date = row.dataset.date;
+                const status = row.dataset.sapStatus;
+                const model = row.dataset.model;
+                const workOrder = row.dataset.workOrder;
+
+                openModal(`✨ Next Steps for: ${invoiceId}`);
+                const prompt = `Based on the following invoice details, suggest 2-3 actionable next steps or recommendations in a JSON array format. Consider the status and typical invoice workflows.
+                Invoice ID: ${invoiceId}
+                Customer: ${customerName}
+                Amount: $${amount}
+                Date: ${date}
+                Status: ${status}
+                Model: ${model}
+                Work Order: ${workOrder}
+
+                Example JSON output:
+                ["Follow up on payment if status is 'Process Not Completed'", "Schedule next service for Model X", "Send customer a satisfaction survey"]
+                `;
+                callGeminiAPINextSteps(prompt);
+            });
+        });
+
+        // Event listener for "Anomaly" buttons
+        document.querySelectorAll('.anomaly-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const row = event.target.closest('tr');
+                const invoiceId = row.dataset.invoiceId;
+                const customerName = row.dataset.customerName;
+                const amount = row.dataset.amount;
+                const date = row.dataset.date;
+                const status = row.dataset.sapStatus;
+                const model = row.dataset.model;
+                const workOrder = row.dataset.workOrder;
+
+                openModal(`✨ Anomaly Detection for: ${invoiceId}`);
+                const prompt = `Analyze the following invoice details for any potential anomalies or unusual patterns. Provide a boolean 'is_anomalous' (true/false) and a 'reason' string in JSON format.
+                Invoice ID: ${invoiceId}
+                Customer: ${customerName}
+                Amount: $${amount}
+                Date: ${date}
+                Status: ${status}
+                Model: ${model}
+                Work Order: ${workOrder}
+
+                Example JSON output:
+                {
+                  "is_anomalous": true,
+                  "reason": "The amount is significantly higher than typical invoices for this customer."
+                }
+                `;
+                callGeminiAPIAnomalyDetection(prompt);
+            });
+        });
+
+        // Event listener for "Compliance" buttons
+        document.querySelectorAll('.compliance-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const row = event.target.closest('tr');
+                const invoiceId = row.dataset.invoiceId;
+                const customerName = row.dataset.customerName;
+                const amount = row.dataset.amount;
+                const date = row.dataset.date;
+                const status = row.dataset.sapStatus;
+                const model = row.dataset.model;
+                const workOrder = row.dataset.workOrder;
+
+                openModal(`✨ Compliance Check for: ${invoiceId}`);
+                const prompt = `Perform a compliance check on the following invoice details. Assume standard business invoice compliance rules (e.g., presence of key data, reasonable amounts).
+                Provide a boolean 'is_compliant' (true/false), an array of 'issues' (strings), and an array of 'recommendations' (strings) in JSON format.
+
+                Invoice ID: ${invoiceId}
+                Customer: ${customerName}
+                Amount: $${amount}
+                Date: ${date}
+                Status: ${status}
+                Model: ${model}
+                Work Order: ${workOrder}
+
+                Example JSON output:
+                {
+                  "is_compliant": true,
+                  "issues": [],
+                  "recommendations": ["Ensure all line items are fully detailed."]
+                }
+                `;
+                callGeminiAPIComplianceCheck(prompt);
+            });
+        });
+
+        // Event listener for "Sentiment" buttons
+        document.querySelectorAll('.sentiment-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const row = event.target.closest('tr');
+                const customerName = row.dataset.customerName;
+                const invoiceId = row.dataset.invoiceId; // Include invoice ID for better context
+
+                openModal(`✨ Sentiment Analysis for: ${customerName}`);
+                const prompt = `Analyze the sentiment towards the customer related to invoice ${invoiceId} and the customer name itself "${customerName}". Provide a 'sentiment' (Positive, Negative, or Neutral) and a 'reason' for your assessment in JSON format.
+                Example JSON output:
+                {
+                  "sentiment": "Neutral",
+                  "reason": "The name is generic and does not convey specific sentiment, and no other contextual data indicates sentiment."
+                }
+                `;
+                callGeminiAPISentimentAnalysis(prompt);
+            });
+        });
+
+        // Event listener for "Category" buttons
+        document.querySelectorAll('.category-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const row = event.target.closest('tr');
+                const invoiceId = row.dataset.invoiceId;
+                const customerName = row.dataset.customerName;
+                const amount = row.dataset.amount;
+                const model = row.dataset.model;
+                const workOrder = row.dataset.workOrder;
+
+                openModal(`✨ Category for: ${invoiceId}`);
+                const prompt = `Categorize the following invoice into one of these types: "Software License", "Hardware Purchase", "Consulting Service", "Maintenance", "Travel Expenses", "Other". Provide the 'category' and a brief 'explanation' in JSON format.
+                Invoice ID: ${invoiceId}
+                Customer: ${customerName}
+                Amount: $${amount}
+                Model: ${model}
+                Work Order: ${workOrder}
+
+                Example JSON output:
+                {
+                  "category": "Software License",
+                  "explanation": "This invoice is likely for software based on the model and work order type."
+                }
+                `;
+                callGeminiAPICategorization(prompt);
+            });
+        });
+
+        // Event listener for "Description" buttons
+        document.querySelectorAll('.expand-description-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const row = event.target.closest('tr');
+                const invoiceId = row.dataset.invoiceId;
+                const customerName = row.dataset.customerName;
+                const amount = row.dataset.amount;
+                const date = row.dataset.date;
+                const status = row.dataset.sapStatus;
+                const model = row.dataset.model;
+                const workOrder = row.dataset.workOrder;
+
+                openModal(`✨ Expanded Description for: ${invoiceId}`);
+                const prompt = `Generate a detailed description for the following invoice. Elaborate on the service/product, customer, amount, and status.
+                Invoice ID: ${invoiceId}
+                Customer: ${customerName}
+                Amount: $${amount}
+                Date: ${date}
+                Status: ${status}
+                Model: ${model}
+                Work Order: ${workOrder}
+                `;
+                callGeminiAPIExpandDescription(prompt); // Using plain text API call for description
+            });
+        });
+
+        // Event listener for "Summary" buttons
+        document.querySelectorAll('.summary-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const row = event.target.closest('tr');
+                const invoiceId = row.dataset.invoiceId;
+                const customerName = row.dataset.customerName;
+                const amount = row.dataset.amount;
+                const date = row.dataset.date;
+                const status = row.dataset.sapStatus;
+                const model = row.dataset.model;
+                const workOrder = row.dataset.workOrder;
+
+                openModal(`✨ Summary for: ${invoiceId}`);
+                const prompt = `Provide a concise summary and key takeaways for the following invoice. Focus on the most important information like the invoice ID, customer, amount, and status.
+                Invoice ID: ${invoiceId}
+                Customer: ${customerName}
+                Amount: $${amount}
+                Date: ${date}
+                Status: ${status}
+                Model: ${model}
+                Work Order: ${workOrder}
+                `;
+                callGeminiAPISummary(prompt); // Using plain text API call for summary
+            });
+        });
+
+
+        // Event listener for "Edit Invoice" buttons
+        document.querySelectorAll('.edit-invoice-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const row = event.target.closest('tr');
+                const invoiceData = {
+                    invoiceId: row.dataset.invoiceId,
+                    customerName: row.dataset.customerName,
+                    accountNum: row.dataset.accountNum,
+                    paymentMode: row.dataset.paymentMode,
+                    date: row.dataset.date,
+                    workOrder: row.dataset.workOrder,
+                    workOrderDate: row.dataset.workOrderDate,
+                    serial: row.dataset.serial,
+                    model: row.dataset.model,
+                    draftAmount: row.dataset.draftAmount,
+                    taxAmount: row.dataset.taxAmount,
+                    invoiceAmount: row.dataset.invoiceAmount,
+                    sapStatus: row.dataset.sapStatus,
+                };
+
+                openModal(`Edit Invoice: ${invoiceData.invoiceId}`);
+                modalLoader.classList.add('hidden'); // Hide loader as we're showing form
+
+                let formHtml = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <label for="edit-invoice-id" class="block text-theme-primary font-medium mb-1">Invoice ID</label>
+                            <input type="text" id="edit-invoice-id" value="${invoiceData.invoiceId}" class="w-full p-2 rounded input-theme" readonly>
+                        </div>
+                        <div>
+                            <label for="edit-customer-name" class="block text-theme-primary font-medium mb-1">Customer Name</label>
+                            <input type="text" id="edit-customer-name" value="${invoiceData.customerName}" class="w-full p-2 rounded input-theme">
+                        </div>
+                        <div>
+                            <label for="edit-account-num" class="block text-theme-primary font-medium mb-1">Customer Account</label>
+                            <input type="text" id="edit-account-num" value="${invoiceData.accountNum}" class="w-full p-2 rounded input-theme">
+                        </div>
+                        <div>
+                            <label for="edit-payment-mode" class="block text-theme-primary font-medium mb-1">Payment Mode</label>
+                            <input type="text" id="edit-payment-mode" value="${invoiceData.paymentMode}" class="w-full p-2 rounded input-theme">
+                        </div>
+                        <div>
+                            <label for="edit-date" class="block text-theme-primary font-medium mb-1">Date</label>
+                            <input type="date" id="edit-date" value="${invoiceData.date}" class="w-full p-2 rounded input-theme">
+                        </div>
+                        <div>
+                            <label for="edit-work-order" class="block text-theme-primary font-medium mb-1">Work Order</label>
+                            <input type="text" id="edit-work-order" value="${invoiceData.workOrder}" class="w-full p-2 rounded input-theme">
+                        </div>
+                        <div>
+                            <label for="edit-work-order-date" class="block text-theme-primary font-medium mb-1">Work Order Date</label>
+                            <input type="date" id="edit-work-order-date" value="${invoiceData.workOrderDate}" class="w-full p-2 rounded input-theme">
+                        </div>
+                        <div>
+                            <label for="edit-serial" class="block text-theme-primary font-medium mb-1">Serial</label>
+                            <input type="text" id="edit-serial" value="${invoiceData.serial}" class="w-full p-2 rounded input-theme">
+                        </div>
+                        <div>
+                            <label for="edit-model" class="block text-theme-primary font-medium mb-1">Model</label>
+                            <input type="text" id="edit-model" value="${invoiceData.model}" class="w-full p-2 rounded input-theme">
+                        </div>
+                        <div>
+                            <label for="edit-draft-amount" class="block text-theme-primary font-medium mb-1">Draft Invoice Amount</label>
+                            <input type="number" id="edit-draft-amount" value="${invoiceData.draftAmount}" class="w-full p-2 rounded input-theme" step="0.01">
+                        </div>
+                        <div>
+                            <label for="edit-tax-amount" class="block text-theme-primary font-medium mb-1">Tax Amount</label>
+                            <input type="number" id="edit-tax-amount" value="${invoiceData.taxAmount}" class="w-full p-2 rounded input-theme" step="0.01">
+                        </div>
+                        <div>
+                            <label for="edit-invoice-amount" class="block text-theme-primary font-medium mb-1">Invoice Amount</label>
+                            <input type="number" id="edit-invoice-amount" value="${invoiceData.invoiceAmount}" class="w-full p-2 rounded input-theme" step="0.01">
+                        </div>
+                        <div class="md:col-span-2"> <label for="edit-sap-status" class="block text-theme-primary font-medium mb-1">SAP Status</label>
+                            <input type="text" id="edit-sap-status" value="${invoiceData.sapStatus}" class="w-full p-2 rounded input-theme">
+                        </div>
+                    </div>
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button id="save-invoice-changes" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200">Save Changes</button>
+                        <button id="cancel-edit" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition duration-200">Cancel</button>
+                    </div>
+                `;
+                modalContent.innerHTML = formHtml;
+                copyToClipboardButton.classList.add('hidden'); // Hide copy button for edit form
+
+                document.getElementById('save-invoice-changes').addEventListener('click', () => {
+                    const updatedData = {
+                        invoiceId: document.getElementById('edit-invoice-id').value,
+                        customerName: document.getElementById('edit-customer-name').value,
+                        accountNum: document.getElementById('edit-account-num').value,
+                        paymentMode: document.getElementById('edit-payment-mode').value,
+                        date: document.getElementById('edit-date').value,
+                        workOrder: document.getElementById('edit-work-order').value,
+                        workOrderDate: document.getElementById('edit-work-order-date').value,
+                        serial: document.getElementById('edit-serial').value,
+                        model: document.getElementById('edit-model').value,
+                        draftAmount: document.getElementById('edit-draft-amount').value,
+                        taxAmount: document.getElementById('edit-tax-amount').value,
+                        invoiceAmount: document.getElementById('edit-invoice-amount').value,
+                        sapStatus: document.getElementById('edit-sap-status').value,
+                    };
+
+                    // Update the row's dataset attributes
+                    row.dataset.invoiceId = updatedData.invoiceId;
+                    row.dataset.customerName = updatedData.customerName;
+                    row.dataset.accountNum = updatedData.accountNum;
+                    row.dataset.paymentMode = updatedData.paymentMode;
+                    row.dataset.date = updatedData.date;
+                    row.dataset.workOrder = updatedData.workOrder;
+                    row.dataset.workOrderDate = updatedData.workOrderDate;
+                    row.dataset.serial = updatedData.serial;
+                    row.dataset.model = updatedData.model;
+                    row.dataset.draftAmount = updatedData.draftAmount;
+                    row.dataset.taxAmount = updatedData.taxAmount;
+                    row.dataset.invoiceAmount = updatedData.invoiceAmount;
+                    row.dataset.sapStatus = updatedData.sapStatus;
+
+                    // Update the displayed cell content (this assumes cells are ordered correctly)
+                    row.querySelector('[data-column-id="invoice-num"]').textContent = updatedData.invoiceId;
+                    row.querySelector('[data-column-id="account-num"]').textContent = updatedData.accountNum;
+                    row.querySelector('[data-column-id="name"]').textContent = updatedData.customerName;
+                    row.querySelector('[data-column-id="payment-mode"]').textContent = updatedData.paymentMode;
+                    row.querySelector('[data-column-id="date"]').textContent = updatedData.date;
+                    row.querySelector('[data-column-id="work-order"]').textContent = updatedData.workOrder;
+                    row.querySelector('[data-column-id="work-order-date"]').textContent = updatedData.workOrderDate;
+                    row.querySelector('[data-column-id="serial"]').textContent = updatedData.serial;
+                    row.querySelector('[data-column-id="model"]').textContent = updatedData.model;
+                    row.querySelector('[data-column-id="draft-amount"]').textContent = parseFloat(updatedData.draftAmount).toFixed(2);
+                    row.querySelector('[data-column-id="tax-amount"]').textContent = parseFloat(updatedData.taxAmount).toFixed(2);
+                    row.querySelector('[data-column-id="invoice-amount"]').textContent = parseFloat(updatedData.invoiceAmount).toFixed(2);
+                    row.querySelector('[data-column-id="sap-status"]').textContent = updatedData.sapStatus;
+
+                    alert('Saving changes (simulated): ' + JSON.stringify(updatedData, null, 2));
+                    closeModal();
+                    // In a real app: send updatedData to backend, then refresh table row
+                });
+
+                document.getElementById('cancel-edit').addEventListener('click', closeModal);
+            });
+        });
+
+        // Copy to Clipboard functionality
+        copyToClipboardButton.addEventListener('click', () => {
+            const textToCopy = modalContent.textContent;
+            try {
+                // Using document.execCommand('copy') for better compatibility in iframes
+                const textarea = document.createElement('textarea');
+                textarea.value = textToCopy;
+                textarea.style.position = 'fixed'; // Avoid scrolling to bottom
+                document.body.appendChild(textarea);
+                textarea.focus();
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('Copied to clipboard!'); // Using alert as per instructions for temporary messages
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                alert('Failed to copy text.');
+            }
+        });
+
+        // --- Pagination Logic (Simple & Compact with Edit) ---
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let totalItems = 5; // Initial hardcoded rows count
+        let totalPages = Math.ceil(totalItems / itemsPerPage);
+
+        const paginationInfo = document.getElementById('pagination-info');
+        const prevPageBtn = document.getElementById('prevPage');
+        const nextPageBtn = document.getElementById('nextPage');
+        const currentPageInput = document.getElementById('currentPageInput');
+        const totalPagesSpan = document.getElementById('totalPagesSpan');
+
+        function updatePaginationDisplay() {
+            totalItems = originalRows.length; // Update total items based on filtered/added rows
+            totalPages = Math.ceil(totalItems / itemsPerPage);
+
+            const startItem = (currentPage - 1) * itemsPerPage + 1;
+            const endItem = Math.min(currentPage * itemsPerPage, totalItems);
+            paginationInfo.textContent = `View ${startItem} - ${endItem} of ${totalItems}`;
+            currentPageInput.value = currentPage;
+            totalPagesSpan.textContent = totalPages;
+
+            // Disable/enable buttons
+            prevPageBtn.disabled = currentPage === 1;
+            nextPageBtn.disabled = currentPage === totalPages;
+
+            prevPageBtn.classList.toggle('opacity-50', currentPage === 1);
+            prevPageBtn.classList.toggle('cursor-not-allowed', currentPage === 1);
+            nextPageBtn.classList.toggle('opacity-50', currentPage === totalPages);
+            nextPageBtn.classList.toggle('cursor-not-allowed', currentPage === totalPages);
+
+            renderTableRows(); // Render only the visible rows
+        }
+
+        function renderTableRows() {
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const rowsToDisplay = originalRows.slice(startIndex, endIndex);
+
+            const invoiceTableBody = document.getElementById('invoice-table-body');
+            invoiceTableBody.innerHTML = ''; // Clear current rows
+
+            rowsToDisplay.forEach(row => {
+                invoiceTableBody.appendChild(row);
+            });
+            attachRowSpecificEventListeners(); // Re-attach event listeners for newly rendered rows
+        }
+
+
+        // Event listeners for pagination buttons
+        prevPageBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                updatePaginationDisplay();
+                // In a real app, you'd fetch data for currentPage here
+            }
+        });
+
+        nextPageBtn.addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                updatePaginationDisplay();
+                // In a real app, you'd fetch data for currentPage here
+            }
+        });
+
+        // Event listener for direct page input
+        currentPageInput.addEventListener('change', (event) => {
+            let newPage = parseInt(event.target.value, 10);
+            if (isNaN(newPage) || newPage < 1) {
+                newPage = 1;
+            } else if (newPage > totalPages) {
+                newPage = totalPages;
+            }
+            currentPage = newPage;
+            updatePaginationDisplay();
+            // In a real app, you'd fetch data for currentPage here
+        });
+
+        // --- Column Search/Filter Logic ---
+        const searchInputs = document.querySelectorAll('.search-input-field'); // Select the input fields
+        const searchToggleIcons = document.querySelectorAll('.search-toggle-icon'); // Select the icons
+        const invoiceTableBody = document.getElementById('invoice-table-body');
+        let originalRows = Array.from(invoiceTableBody.children); // Store original rows
+
+        // Toggle search input visibility when icon is clicked
+        searchToggleIcons.forEach(icon => {
+            icon.addEventListener('click', (event) => {
+                event.stopPropagation(); // Prevent drag-and-drop from interfering
+                const searchInputWrapper = icon.closest('.column-header-content').querySelector('.search-input-wrapper');
+                const searchInputField = searchInputWrapper.querySelector('.search-input-field');
+
+                // Close any other open search inputs
+                searchInputs.forEach(input => {
+                    if (input !== searchInputField && input.classList.contains('active')) {
+                        input.classList.remove('active');
+                        input.closest('.search-input-wrapper').classList.remove('active');
+                        input.value = ''; // Clear value when hiding
+                    }
+                });
+
+                searchInputWrapper.classList.toggle('active');
+                searchInputField.classList.toggle('active');
+
+                if (searchInputField.classList.contains('active')) {
+                    searchInputField.focus(); // Focus the input when it becomes active
+                } else {
+                    searchInputField.value = ''; // Clear search when hiding
+                }
+                applyFilters(); // Re-apply filters to clear the current column's filter
+            });
+        });
+
+        function applyFilters() {
+            const filters = {};
+            searchInputs.forEach(input => {
+                // Only apply filter if the input is active (visible) and has a value
+                if (input.classList.contains('active') && input.value.trim() !== '') {
+                    const columnId = input.closest('th').dataset.columnId;
+                    filters[columnId] = input.value.toLowerCase();
+                }
+            });
+
+            // Re-filter from the complete set of original rows
+            const currentlyFilteredRows = Array.from(document.querySelectorAll('#invoice-table-body tr')).filter(row => {
+                 let match = true;
+                for (const columnId in filters) {
+                    const filterValue = filters[columnId];
+                    if (filterValue) {
+                        const cell = row.querySelector(`[data-column-id="${columnId}"]`);
+                        if (cell) {
+                            // Text content for most, use dataset for hidden values if needed
+                            const cellText = (row.dataset[camelCase(columnId)] || cell.textContent).toLowerCase();
+                            if (!cellText.includes(filterValue)) {
+                                match = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                return match;
+            });
+            // Update originalRows with the new filtered set for pagination to work on
+            originalRows = currentlyFilteredRows;
+            currentPage = 1; // Reset to first page after filtering
+            updatePaginationDisplay();
+        }
+
+        function camelCase(str) {
+            return str.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+        }
+
+
+        searchInputs.forEach(input => {
+            input.addEventListener('input', applyFilters);
+        });
+
+        // --- Drag and Drop Logic ---
+        let draggedItem = null; // The element being dragged (e.g., sidebar <li>, table <tr>, table <th>)
+        let dropTarget = null;  // The element currently being hovered over as a potential drop target
+
+        // Generic dragstart handler
+        function handleDragStart(e) {
+            // Prevent drag if clicking on a search input or an interactive icon within table cells
+            if (e.target.classList.contains('search-input-field') || e.target.classList.contains('search-toggle-icon') ||
+                e.target.closest('.fa-edit') || e.target.closest('.fa-envelope') || e.target.closest('.fa-tags') ||
+                e.target.closest('.fa-clipboard-check') || e.target.closest('.fa-exclamation-triangle') || e.target.closest('.fa-gavel') ||
+                e.target.closest('.sentiment-btn') || e.target.closest('.category-btn') || e.target.closest('.expand-description-btn') || e.target.closest('.summary-btn')) { 
+                e.preventDefault();
+                return;
+            }
+            
+            // Determine the specific draggable element based on its closest parent with a draggable class
+            const potentialDraggedItem = e.target.closest('.sidebar-item-draggable') || 
+                                         e.target.closest('.table-row-draggable') || 
+                                         e.target.closest('.table-header-draggable');
+            
+            if (!potentialDraggedItem) {
+                e.preventDefault(); // Not a draggable element, prevent default drag behavior
+                return;
+            }
+            draggedItem = potentialDraggedItem;
+
+            e.dataTransfer.effectAllowed = 'move';
+            // Set data based on the type of element being dragged
+            if (draggedItem.classList.contains('sidebar-invoice-link')) {
+                e.dataTransfer.setData('text/plain', draggedItem.dataset.targetTab); // For sidebar links, store the data-target-tab
+                e.dataTransfer.setData('text/drag-type', 'sidebar-invoice-link');
+            } else if (draggedItem.classList.contains('table-header-draggable')) {
+                 e.dataTransfer.setData('text/plain', draggedItem.dataset.columnId); // Store column ID
+                 e.dataTransfer.setData('text/drag-type', 'table-header');
+            } else if (draggedItem.classList.contains('table-row-draggable')) {
+                 e.dataTransfer.setData('text/plain', draggedItem.dataset.invoiceId); // Store row ID or index
+                 e.dataTransfer.setData('text/drag-type', 'table-row');
+            }
+            
+            draggedItem.classList.add('dragging');
+            console.log('DragStart:', draggedItem.id || draggedItem.textContent.trim(), 'Type:', e.dataTransfer.getData('text/drag-type'));
+        }
+
+        // Generic dragover handler
+        function handleDragOver(e) {
+            e.preventDefault(); // Crucial to allow a drop
+            e.dataTransfer.dropEffect = 'move'; // Visual feedback for allowed drop
+
+            const draggedType = e.dataTransfer.getData('text/drag-type');
+            
+            // Identify potential drop targets based on the dragged item's type
+            let potentialDropTarget = null;
+            if (draggedType === 'sidebar-invoice-link') {
+                // Since main tabs are removed, no longer a drop target for sidebar links
+                potentialDropTarget = null; // No longer a valid drop target
+            } else if (draggedType === 'table-row') {
+                potentialDropTarget = e.target.closest('.table-row-draggable');
+            } else if (draggedType === 'table-header') {
+                potentialDropTarget = e.target.closest('.table-header-draggable');
+            } else if (draggedType === 'sidebar-item') { // For reordering within sidebar itself
+                potentialDropTarget = e.target.closest('.sidebar-item-draggable');
+            }
+
+            // Remove highlight from previous drop target if it's different
+            if (dropTarget && dropTarget !== potentialDropTarget) {
+                dropTarget.classList.remove('drag-over', 'drag-over-tab');
+            }
+            dropTarget = potentialDropTarget; // Update the global dropTarget
+
+            if (dropTarget && draggedItem && dropTarget !== draggedItem) {
+                const dropType = dropTarget.dataset.dropType || 
+                               (dropTarget.classList.contains('sidebar-invoice-link') ? 'sidebar-invoice-link' :
+                               (dropTarget.classList.contains('sidebar-item-draggable') ? 'sidebar-item' :
+                               (dropTarget.classList.contains('table-row-draggable') ? 'table-row' : 
+                               (dropTarget.classList.contains('table-header-draggable') ? 'table-header' : ''))));
+
+                // Only allow drops if types are compatible
+                if (draggedType === dropType) { // Removed the sidebar-link to main-tab special case
+                    dropTarget.classList.add('drag-over');
+                } else {
+                    // If not a valid drop, ensure no highlight and prevent drop
+                    dropTarget.classList.remove('drag-over', 'drag-over-tab');
+                    dropTarget = null; 
+                }
+            }
+        }
+
+        // Generic dragenter handler
+        function handleDragEnter(e) {
+            e.preventDefault(); // Necessary for drop to work
+        }
+
+        // Generic dragleave handler
+        function handleDragLeave(e) {
+            // Check if relatedTarget is outside the current dropTarget or its children
+            if (dropTarget && !dropTarget.contains(e.relatedTarget)) {
+                dropTarget.classList.remove('drag-over', 'drag-over-tab');
+                dropTarget = null;
+            }
+        }
+
+        // Generic dragend handler (cleanup)
+        function handleDragEnd(e) {
+            if (draggedItem) {
+                draggedItem.classList.remove('dragging');
+            }
+            if (dropTarget) {
+                dropTarget.classList.remove('drag-over', 'drag-over-tab');
+            }
+            draggedItem = null;
+            dropTarget = null;
+            console.log('DragEnd: Cleanup complete.');
+        }
+
+        // --- Specific Drop Handlers ---
+
+        // Drop handler for sidebar items (reordering within sidebar)
+        function handleSidebarItemDrop(e) {
+            e.preventDefault();
+            const draggedType = e.dataTransfer.getData('text/drag-type');
+            const dropTargetElement = e.target.closest('.sidebar-item-draggable');
+
+            console.log('handleSidebarItemDrop: draggedType:', draggedType, 'dropTargetElement:', dropTargetElement);
+
+            if (draggedType === 'sidebar-item' && draggedItem && dropTargetElement && draggedItem !== dropTargetElement && draggedItem.parentNode === dropTargetElement.parentNode) {
+                const parent = dropTargetElement.parentNode;
+                const draggedIndex = Array.from(parent.children).indexOf(draggedItem);
+                const dropIndex = Array.from(parent.children).indexOf(dropTargetElement);
+
+                if (draggedIndex < dropIndex) {
+                    parent.insertBefore(draggedItem, dropTargetElement.nextSibling);
+                } else {
+                    parent.insertBefore(draggedItem, dropTargetElement);
+                }
+                console.log('Sidebar item reordered.');
+            } else {
+                console.log('Sidebar item drop ignored (invalid target or type mismatch).');
+            }
+        }
+
+        // Drop handler for table rows (reordering within table body)
+        function handleTableRowDrop(e) {
+            e.preventDefault();
+            const draggedType = e.dataTransfer.getData('text/drag-type');
+            const dropTargetElement = e.target.closest('.table-row-draggable');
+
+            console.log('handleTableRowDrop: draggedType:', draggedType, 'dropTargetElement:', dropTargetElement);
+
+            if (draggedType === 'table-row' && draggedItem && dropTargetElement && draggedItem !== dropTargetElement && draggedItem.parentNode === dropTargetElement.parentNode) {
+                const parent = dropTargetElement.parentNode;
+                const draggedIndex = Array.from(parent.children).indexOf(draggedItem);
+                const dropIndex = Array.from(parent.children).indexOf(dropTargetElement);
+
+                if (draggedIndex < dropIndex) {
+                    parent.insertBefore(draggedItem, dropTargetElement.nextSibling);
+                } else {
+                    parent.insertBefore(draggedItem, dropTargetElement);
+                }
+                // Update the originalRows array to reflect the new order
+                const [removed] = originalRows.splice(draggedIndex, 1);
+                originalRows.splice(dropIndex, 0, removed);
+                updatePaginationDisplay(); // Re-render rows based on new order
+                console.log('Table row reordered.');
+            } else {
+                console.log('Table row drop ignored (invalid target or type mismatch).');
+            }
+        }
+
+        // Drop handler for table headers (reordering columns)
+        function handleTableHeaderDrop(e) {
+            e.preventDefault();
+            const draggedType = e.dataTransfer.getData('text/drag-type');
+            const dropTargetElement = e.target.closest('.table-header-draggable');
+
+            console.log('handleTableHeaderDrop: draggedType:', draggedType, 'dropTargetElement:', dropTargetElement);
+
+            if (draggedType === 'table-header' && draggedItem && dropTargetElement && draggedItem !== dropTargetElement && draggedItem.parentNode === dropTargetElement.parentNode) {
+                const headerParent = draggedItem.parentNode;
+                const currentDraggedIndex = Array.from(headerParent.children).indexOf(draggedItem);
+                const currentTargetIndex = Array.from(headerParent.children).indexOf(dropTargetElement);
+
+                if (currentDraggedIndex < currentTargetIndex) {
+                    headerParent.insertBefore(draggedItem, dropTargetElement.nextSibling);
+                } else {
+                    headerParent.insertBefore(draggedItem, dropTargetElement);
+                }
+
+                // Reorder cells in each row
+                const tableBodyElement = document.getElementById('invoice-table-body');
+                const rows = tableBodyElement.querySelectorAll('tr');
+                rows.forEach(row => {
+                    const cells = Array.from(row.children);
+                    const draggedCell = cells[currentDraggedIndex];
+                    const targetCell = cells[currentTargetIndex];
+
+                    if (draggedCell && targetCell) {
+                        if (currentDraggedIndex < currentTargetIndex) {
+                            row.insertBefore(draggedCell, targetCell.nextSibling);
+                        } else {
+                            row.insertBefore(draggedCell, targetCell);
+                        }
+                    }
+                });
+                console.log('Table column reordered.');
+            } else {
+                console.log('Table header drop ignored (invalid target or type mismatch).');
+            }
+        }
+
+        // --- Attach Event Listeners ---
+        function attachDragAndDropListeners() {
+            // Remove existing listeners to prevent duplicates (important for re-initialization)
+            document.querySelectorAll('.sidebar-item-draggable, .table-row-draggable, .table-header-draggable').forEach(el => {
+                el.removeEventListener('dragstart', handleDragStart);
+                el.removeEventListener('dragover', handleDragOver);
+                el.removeEventListener('dragenter', handleDragEnter);
+                el.removeEventListener('dragleave', handleDragLeave);
+                el.removeEventListener('dragend', handleDragEnd);
+                el.removeEventListener('drop', handleSidebarItemDrop); 
+                el.removeEventListener('drop', handleTableRowDrop);
+                el.removeEventListener('drop', handleTableHeaderDrop);
+            });
+
+            // Attach dragstart and dragend to all draggable elements
+            document.querySelectorAll('.sidebar-item-draggable, .table-row-draggable, .table-header-draggable').forEach(el => {
+                el.addEventListener('dragstart', handleDragStart);
+                el.addEventListener('dragend', handleDragEnd);
+            });
+
+            // Attach dragover, dragenter, dragleave to all potential drop containers
+            document.querySelectorAll('#sidebar nav ul, #invoice-table-body, #table-header-row').forEach(container => {
+                container.addEventListener('dragover', handleDragOver);
+                container.addEventListener('dragenter', handleDragEnter);
+                container.addEventListener('dragleave', handleDragLeave);
+            });
+
+            // Attach specific drop handlers to their respective elements
+            document.querySelectorAll('#sidebar .sidebar-item-draggable').forEach(item => {
+                item.addEventListener('drop', handleSidebarItemDrop);
+            });
+            document.querySelectorAll('.table-row-draggable').forEach(row => {
+                row.addEventListener('drop', handleTableRowDrop);
+            });
+            document.querySelectorAll('.table-header-draggable').forEach(header => {
+                header.addEventListener('drop', handleTableHeaderDrop);
+            });
+        }
+
+        // Function to attach event listeners to newly added/rendered rows
+        function attachRowSpecificEventListeners() {
+            document.querySelectorAll('.send-mail-btn').forEach(button => {
+                button.removeEventListener('click', (event) => {}); // Remove old listeners
+                button.addEventListener('click', (event) => {
+                    const row = event.target.closest('tr');
+                    const invoiceId = row.dataset.invoiceId;
+                    const customerName = row.dataset.customerName;
+                    const amount = row.dataset.amount;
+                    const date = row.dataset.date;
+                    const status = row.dataset.sapStatus;
+                    openModal(`✨ Draft Email for Invoice: ${invoiceId}`);
+                    const prompt = `Draft a polite email to ${customerName} regarding invoice ${invoiceId} for the amount of $${amount} issued on ${date}. The current SAP status is "${status}".
+                    If the status is "Process Not Completed", the email should gently remind them about the outstanding process. If it's a completed process, it should confirm the service completion and payment (if applicable).
+                    Keep the tone professional and concise.`;
+                    callGeminiAPIText(prompt);
+                });
+            });
+
+            document.querySelectorAll('.edit-invoice-btn').forEach(button => {
+                button.removeEventListener('click', (event) => {}); // Remove old listeners
+                button.addEventListener('click', (event) => {
+                    const row = event.target.closest('tr');
+                    const invoiceData = {
+                        invoiceId: row.dataset.invoiceId,
+                        customerName: row.dataset.customerName,
+                        accountNum: row.dataset.accountNum,
+                        paymentMode: row.dataset.paymentMode,
+                        date: row.dataset.date,
+                        workOrder: row.dataset.workOrder,
+                        workOrderDate: row.dataset.workOrderDate,
+                        serial: row.dataset.serial,
+                        model: row.dataset.model,
+                        draftAmount: row.dataset.draftAmount,
+                        taxAmount: row.dataset.taxAmount,
+                        invoiceAmount: row.dataset.invoiceAmount,
+                        sapStatus: row.dataset.sapStatus,
+                    };
+
+                    openModal(`Edit Invoice: ${invoiceData.invoiceId}`);
+                    modalLoader.classList.add('hidden'); // Hide loader as we're showing form
+
+                    let formHtml = `
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <label for="edit-invoice-id" class="block text-theme-primary font-medium mb-1">Invoice ID</label>
+                                <input type="text" id="edit-invoice-id" value="${invoiceData.invoiceId}" class="w-full p-2 rounded input-theme" readonly>
+                            </div>
+                            <div>
+                                <label for="edit-customer-name" class="block text-theme-primary font-medium mb-1">Customer Name</label>
+                                <input type="text" id="edit-customer-name" value="${invoiceData.customerName}" class="w-full p-2 rounded input-theme">
+                            </div>
+                            <div>
+                                <label for="edit-account-num" class="block text-theme-primary font-medium mb-1">Customer Account</label>
+                                <input type="text" id="edit-account-num" value="${invoiceData.accountNum}" class="w-full p-2 rounded input-theme">
+                            </div>
+                            <div>
+                                <label for="edit-payment-mode" class="block text-theme-primary font-medium mb-1">Payment Mode</label>
+                                <input type="text" id="edit-payment-mode" value="${invoiceData.paymentMode}" class="w-full p-2 rounded input-theme">
+                            </div>
+                            <div>
+                                <label for="edit-date" class="block text-theme-primary font-medium mb-1">Date</label>
+                                <input type="date" id="edit-date" value="${invoiceData.date}" class="w-full p-2 rounded input-theme">
+                            </div>
+                            <div>
+                                <label for="edit-work-order" class="block text-theme-primary font-medium mb-1">Work Order</label>
+                                <input type="text" id="edit-work-order" value="${invoiceData.workOrder}" class="w-full p-2 rounded input-theme">
+                            </div>
+                            <div>
+                                <label for="edit-work-order-date" class="block text-theme-primary font-medium mb-1">Work Order Date</label>
+                                <input type="date" id="edit-work-order-date" value="${invoiceData.workOrderDate}" class="w-full p-2 rounded input-theme">
+                            </div>
+                            <div>
+                                <label for="edit-serial" class="block text-theme-primary font-medium mb-1">Serial</label>
+                                <input type="text" id="edit-serial" value="${invoiceData.serial}" class="w-full p-2 rounded input-theme">
+                            </div>
+                            <div>
+                                <label for="edit-model" class="block text-theme-primary font-medium mb-1">Model</label>
+                                <input type="text" id="edit-model" value="${invoiceData.model}" class="w-full p-2 rounded input-theme">
+                            </div>
+                            <div>
+                                <label for="edit-draft-amount" class="block text-theme-primary font-medium mb-1">Draft Invoice Amount</label>
+                                <input type="number" id="edit-draft-amount" value="${invoiceData.draftAmount}" class="w-full p-2 rounded input-theme" step="0.01">
+                            </div>
+                            <div>
+                                <label for="edit-tax-amount" class="block text-theme-primary font-medium mb-1">Tax Amount</label>
+                                <input type="number" id="edit-tax-amount" value="${invoiceData.taxAmount}" class="w-full p-2 rounded input-theme" step="0.01">
+                            </div>
+                            <div>
+                                <label for="edit-invoice-amount" class="block text-theme-primary font-medium mb-1">Invoice Amount</label>
+                                <input type="number" id="edit-invoice-amount" value="${invoiceData.invoiceAmount}" class="w-full p-2 rounded input-theme" step="0.01">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="edit-sap-status" class="block text-theme-primary font-medium mb-1">SAP Status</label>
+                                <input type="text" id="edit-sap-status" value="${invoiceData.sapStatus}" class="w-full p-2 rounded input-theme">
+                            </div>
+                        </div>
+                        <div class="flex justify-end space-x-3 mt-6">
+                            <button id="save-invoice-changes" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200">Save Changes</button>
+                            <button id="cancel-edit" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition duration-200">Cancel</button>
+                        </div>
+                    `;
+                    modalContent.innerHTML = formHtml;
+                    copyToClipboardButton.classList.add('hidden'); // Hide copy button for edit form
+
+                    document.getElementById('save-invoice-changes').addEventListener('click', () => {
+                        const updatedData = {
+                            invoiceId: document.getElementById('edit-invoice-id').value,
+                            customerName: document.getElementById('edit-customer-name').value,
+                            accountNum: document.getElementById('edit-account-num').value,
+                            paymentMode: document.getElementById('edit-payment-mode').value,
+                            date: document.getElementById('edit-date').value,
+                            workOrder: document.getElementById('edit-work-order').value,
+                            workOrderDate: document.getElementById('edit-work-order-date').value,
+                            serial: document.getElementById('edit-serial').value,
+                            model: document.getElementById('edit-model').value,
+                            draftAmount: document.getElementById('edit-draft-amount').value,
+                            taxAmount: document.getElementById('edit-tax-amount').value,
+                            invoiceAmount: document.getElementById('edit-invoice-amount').value,
+                            sapStatus: document.getElementById('edit-sap-status').value,
+                        };
+
+                        // Update the row's dataset attributes
+                        row.dataset.invoiceId = updatedData.invoiceId;
+                        row.dataset.customerName = updatedData.customerName;
+                        row.dataset.accountNum = updatedData.accountNum;
+                        row.dataset.paymentMode = updatedData.paymentMode;
+                        row.dataset.date = updatedData.date;
+                        row.dataset.workOrder = updatedData.workOrder;
+                        row.dataset.workOrderDate = updatedData.workOrderDate;
+                        row.dataset.serial = updatedData.serial;
+                        row.dataset.model = updatedData.model;
+                        row.dataset.draftAmount = updatedData.draftAmount;
+                        row.dataset.taxAmount = updatedData.taxAmount;
+                        row.dataset.invoiceAmount = updatedData.invoiceAmount;
+                        row.dataset.sapStatus = updatedData.sapStatus;
+
+                        // Update the displayed cell content
+                        row.querySelector('[data-column-id="invoice-num"]').textContent = updatedData.invoiceId;
+                        row.querySelector('[data-column-id="account-num"]').textContent = updatedData.accountNum;
+                        row.querySelector('[data-column-id="name"]').textContent = updatedData.customerName;
+                        row.querySelector('[data-column-id="payment-mode"]').textContent = updatedData.paymentMode;
+                        row.querySelector('[data-column-id="date"]').textContent = updatedData.date;
+                        row.querySelector('[data-column-id="work-order"]').textContent = updatedData.workOrder;
+                        row.querySelector('[data-column-id="work-order-date"]').textContent = updatedData.workOrderDate;
+                        row.querySelector('[data-column-id="serial"]').textContent = updatedData.serial;
+                        row.querySelector('[data-column-id="model"]').textContent = updatedData.model;
+                        row.querySelector('[data-column-id="draft-amount"]').textContent = parseFloat(updatedData.draftAmount).toFixed(2);
+                        row.querySelector('[data-column-id="tax-amount"]').textContent = parseFloat(updatedData.taxAmount).toFixed(2);
+                        row.querySelector('[data-column-id="invoice-amount"]').textContent = parseFloat(updatedData.invoiceAmount).toFixed(2);
+                        row.querySelector('[data-column-id="sap-status"]').textContent = updatedData.sapStatus;
+
+                        alert('Saving changes (simulated): ' + JSON.stringify(updatedData, null, 2));
+                        closeModal();
+                    });
+
+                    document.getElementById('cancel-edit').addEventListener('click', closeModal);
+                });
+            });
+
+            // Re-attach all other AI-powered button listeners as well
+            document.querySelectorAll('.suggest-tags-btn').forEach(btn => btn.addEventListener('click', (event) => {
+                const row = event.target.closest('tr');
+                const invoiceId = row.dataset.invoiceId;
+                const customerName = row.dataset.customerName;
+                const amount = row.dataset.amount;
+                const model = row.dataset.model;
+                const workOrder = row.dataset.workOrder;
+                openModal(`✨ Suggested Tags for: ${invoiceId}`);
+                callGeminiAPITagging(`Suggest 3-5 relevant tags or categories for an invoice with ID: ${invoiceId}, Customer: ${customerName}, Amount: $${amount}, Model: ${model}, Work Order: ${workOrder}. Respond in JSON array format like ["Tag1", "Tag2"].`);
+            }));
+
+            document.querySelectorAll('.next-steps-btn').forEach(btn => btn.addEventListener('click', (event) => {
+                const row = event.target.closest('tr');
+                const invoiceId = row.dataset.invoiceId;
+                const customerName = row.dataset.customerName;
+                const amount = row.dataset.amount;
+                const date = row.dataset.date;
+                const status = row.dataset.sapStatus;
+                const model = row.dataset.model;
+                const workOrder = row.dataset.workOrder;
+                openModal(`✨ Next Steps for: ${invoiceId}`);
+                callGeminiAPINextSteps(`Based on invoice ${invoiceId} for ${customerName} ($${amount}, ${date}, status: ${status}, model: ${model}, work order: ${workOrder}), suggest 2-3 actionable next steps in JSON array format.`);
+            }));
+
+            document.querySelectorAll('.anomaly-btn').forEach(btn => btn.addEventListener('click', (event) => {
+                const row = event.target.closest('tr');
+                const invoiceId = row.dataset.invoiceId;
+                const customerName = row.dataset.customerName;
+                const amount = row.dataset.amount;
+                const date = row.dataset.date;
+                const status = row.dataset.sapStatus;
+                const model = row.dataset.model;
+                const workOrder = row.dataset.workOrder;
+                openModal(`✨ Anomaly Detection for: ${invoiceId}`);
+                callGeminiAPIAnomalyDetection(`Analyze invoice ${invoiceId} (Customer: ${customerName}, Amount: $${amount}, Date: ${date}, Status: ${status}, Model: ${model}, Work Order: ${workOrder}) for anomalies. Provide 'is_anomalous': true/false and 'reason' in JSON format.`);
+            }));
+
+            document.querySelectorAll('.compliance-btn').forEach(btn => btn.addEventListener('click', (event) => {
+                const row = event.target.closest('tr');
+                const invoiceId = row.dataset.invoiceId;
+                const customerName = row.dataset.customerName;
+                const amount = row.dataset.amount;
+                const date = row.dataset.date;
+                const status = row.dataset.sapStatus;
+                const model = row.dataset.model;
+                const workOrder = row.dataset.workOrder;
+                openModal(`✨ Compliance Check for: ${invoiceId}`);
+                callGeminiAPIComplianceCheck(`Perform a compliance check on invoice ${invoiceId} (Customer: ${customerName}, Amount: $${amount}, Date: ${date}, Status: ${status}, Model: ${model}, Work Order: ${workOrder}). Provide 'is_compliant': true/false, 'issues': [], and 'recommendations': [] in JSON format.`);
+            }));
+
+            document.querySelectorAll('.sentiment-btn').forEach(btn => btn.addEventListener('click', (event) => {
+                const row = event.target.closest('tr');
+                const customerName = row.dataset.customerName;
+                openModal(`✨ Sentiment Analysis for: ${customerName}`);
+                callGeminiAPISentimentAnalysis(`Analyze the sentiment for customer "${customerName}". Provide 'sentiment' (Positive, Negative, Neutral) and 'reason' in JSON format.`);
+            }));
+
+            document.querySelectorAll('.category-btn').forEach(btn => btn.addEventListener('click', (event) => {
+                const row = event.target.closest('tr');
+                const invoiceId = row.dataset.invoiceId;
+                const customerName = row.dataset.customerName;
+                const amount = row.dataset.amount;
+                const model = row.dataset.model;
+                const workOrder = row.dataset.workOrder;
+                openModal(`✨ Category for: ${invoiceId}`);
+                callGeminiAPICategorization(`Categorize invoice ${invoiceId} (Customer: ${customerName}, Amount: $${amount}, Model: ${model}, Work Order: ${workOrder}) into one of "Software License", "Hardware Purchase", "Consulting Service", "Maintenance", "Travel Expenses", "Other". Provide 'category' and 'explanation' in JSON format.`);
+            }));
+
+            document.querySelectorAll('.expand-description-btn').forEach(btn => btn.addEventListener('click', (event) => {
+                const row = event.target.closest('tr');
+                const invoiceId = row.dataset.invoiceId;
+                const customerName = row.dataset.customerName;
+                const amount = row.dataset.amount;
+                const date = row.dataset.date;
+                const status = row.dataset.sapStatus;
+                const model = row.dataset.model;
+                const workOrder = row.dataset.workOrder;
+                openModal(`✨ Expanded Description for: ${invoiceId}`);
+                callGeminiAPIExpandDescription(`Generate a detailed description for invoice ${invoiceId} (Customer: ${customerName}, Amount: $${amount}, Date: ${date}, Status: ${status}, Model: ${model}, Work Order: ${workOrder}).`);
+            }));
+
+            document.querySelectorAll('.summary-btn').forEach(btn => btn.addEventListener('click', (event) => {
+                const row = event.target.closest('tr');
+                const invoiceId = row.dataset.invoiceId;
+                const customerName = row.dataset.customerName;
+                const amount = row.dataset.amount;
+                const date = row.dataset.date;
+                const status = row.dataset.sapStatus;
+                const model = row.dataset.model;
+                const workOrder = row.dataset.workOrder;
+                openModal(`✨ Summary for: ${invoiceId}`);
+                callGeminiAPISummary(`Provide a concise summary and key takeaways for invoice ${invoiceId} (Customer: ${customerName}, Amount: $${amount}, Date: ${date}, Status: ${status}, Model: ${model}, Work Order: ${workOrder}).`);
+            }));
+        }
+
+
+        // Initial call to attach listeners on page load
+        window.addEventListener('load', () => {
+            // Store initial rows from the DOM once
+            originalRows = Array.from(document.querySelectorAll('#invoice-table-body tr'));
+            updatePaginationDisplay();
+            adjustTableColumns();
+            attachDragAndDropListeners(); // Call the new attachment function
+            attachRowSpecificEventListeners(); // Attach event listeners to initial rows
+            // Set initial header text for customer-invoice tab
+            activateMainContentHeader('Customer Invoice'); // Ensure this is called on load
+            showContentArea('customer-invoice'); // Show customer invoice by default
+        });
+
+        // --- Quick Access Button Functionality ---
+        document.getElementById('home-icon').addEventListener('click', () => {
+            activateMainContentHeader('Customer Invoice'); // Now updates the H2 directly
+            showContentArea('customer-invoice'); // Make sure the correct content area is visible
+            alert('Navigating to Home/Customer Invoice...');
+        });
+
+        document.getElementById('dashboard-icon').addEventListener('click', () => {
+            activateMainContentHeader('Dashboard Overview'); // Update H2 header
+            showContentArea('dashboard-content');
+            generateChart(); // Generate default chart when dashboard is shown
+        });
+
+        document.getElementById('refresh-icon').addEventListener('click', () => {
+            alert('Refreshing data...');
+            // In a real app, you'd implement actual data refresh logic here
+            // For now, re-render to reflect any changes if data was added/edited
+            // (Note: full refresh would require re-fetching from a server)
+            originalRows = Array.from(document.querySelectorAll('#invoice-table-body tr')); // Re-capture current state
+            applyFilters(); // Re-apply any active filters
+        });
+
+        // "Add New" button event listener (moved from original)
+        document.getElementById('add-new-icon').addEventListener('click', () => {
+            addRowModal.classList.remove('hidden');
+            newInvoiceForm.reset(); // Clear the form fields
+            // Set default date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('new-date').value = today;
+            document.getElementById('new-work-order-date').value = today;
+
+            // Ensure the main content area is the customer invoice table
+            showContentArea('customer-invoice');
+            activateMainContentHeader('Customer Invoice');
+        });
+
+        document.getElementById('export-excel-icon').addEventListener('click', () => {
+            exportTableToCsv(); // Call the CSV export function
+        });
+
+        document.getElementById('export-pdf-icon').addEventListener('click', () => {
+            exportTableToPdf(); // Call the PDF export function
+        });
+
+        document.getElementById('advance-filter-icon').addEventListener('click', () => {
+            alert('Opening advance filter options...');
+            // In a real app, you'd implement actual advance filter logic here
+        });
+
+        document.getElementById('logout-icon').addEventListener('click', () => {
+            alert('Logging out...');
+            // In a real app, you'd implement logout logic
+        });
+
+        // Function to export table data to PDF
+        function exportTableToPdf() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('landscape'); // 'landscape' for wider tables
+
+            const table = document.querySelector('.invoice-table');
+            const headers = [];
+            const rows = [];
+
+            // Get headers
+            table.querySelectorAll('thead th').forEach(th => {
+                // Exclude search inputs from headers and hidden columns
+                if (th.style.display !== 'none') { // Only export visible columns
+                    const titleSpan = th.querySelector('.column-header-title span');
+                    if (titleSpan) {
+                        headers.push(titleSpan.textContent.trim());
+                    }
+                }
+            });
+
+            // Get row data
+            table.querySelectorAll('tbody tr').forEach(tr => {
+                const rowData = [];
+                tr.querySelectorAll('td').forEach((td, index) => {
+                    // Only include data for visible columns
+                    if (table.querySelectorAll('thead th')[index].style.display !== 'none') {
+                        let cellText;
+                        // For cells with icons, get the relevant dataset value or a placeholder
+                        if (td.dataset.columnId === 'edit') {
+                            cellText = 'Edit';
+                        } else if (td.dataset.columnId === 'send-mail') {
+                            cellText = 'Send Mail';
+                        } else if (td.dataset.columnId === 'tags') {
+                            cellText = 'Tags';
+                        } else if (td.dataset.columnId === 'next-steps') {
+                            cellText = 'Next Steps';
+                        } else if (td.dataset.columnId === 'anomaly') {
+                            cellText = 'Anomaly';
+                        } else if (td.dataset.columnId === 'compliance') {
+                            cellText = 'Compliance';
+                        } else if (td.dataset.columnId === 'sentiment') {
+                            cellText = 'Sentiment';
+                        } else if (td.dataset.columnId === 'category') {
+                            cellText = 'Category';
+                        } else if (td.dataset.columnId === 'description') {
+                            cellText = 'Description';
+                        } else if (td.dataset.columnId === 'summary') {
+                            cellText = 'Summary';
+                        }
+                        else {
+                            cellText = td.textContent.trim();
+                        }
+                        rowData.push(cellText);
+                    }
+                });
+                rows.push(rowData);
+            });
+
+            // AutoTable plugin usage
+            doc.autoTable({
+                head: [headers],
+                body: rows,
+                startY: 20,
+                headStyles: {
+                    fillColor: [31, 41, 55], // Corresponds to --bg-tertiary (gray-800)
+                    textColor: [255, 255, 255], // White
+                    fontStyle: 'bold',
+                    fontSize: 8,
+                    halign: 'center'
+                },
+                styles: {
+                    fontSize: 7,
+                    cellPadding: 2,
+                    valign: 'middle',
+                    halign: 'left',
+                    textColor: [0, 0, 0] // Black for content text
+                },
+                alternateRowStyles: {
+                    fillColor: [243, 244, 246] // Light gray for alternate rows
+                },
+                didDrawPage: function (data) {
+                    // Header
+                    doc.setFontSize(10);
+                    doc.setTextColor(40);
+                    doc.text("HCLSoftware - Customer Invoice Report", data.settings.margin.left, 10);
+
+                    // Footer
+                    let str = "Page " + doc.internal.getNumberOfPages();
+                    doc.setFontSize(8);
+                    doc.text(str, doc.internal.pageSize.width - data.settings.margin.right, doc.internal.pageSize.height - 10);
+                }
+            });
+
+            doc.save('customer_invoices.pdf');
+            alert('Exported to PDF!');
+        }
+
+        // Function to export table data to CSV
+        function exportTableToCsv() {
+            const table = document.querySelector('.invoice-table');
+            let csv = [];
+
+            // Get headers
+            const headers = [];
+            table.querySelectorAll('thead th').forEach(th => {
+                if (th.style.display !== 'none') { // Only export visible columns
+                    const titleSpan = th.querySelector('.column-header-title span');
+                    if (titleSpan) {
+                        headers.push(`"${titleSpan.textContent.trim().replace(/"/g, '""')}"`); // Quote and escape double quotes
+                    }
+                }
+            });
+            csv.push(headers.join(','));
+
+            // Get row data
+            table.querySelectorAll('tbody tr').forEach(tr => {
+                const rowData = [];
+                tr.querySelectorAll('td').forEach((td, index) => {
+                    if (table.querySelectorAll('thead th')[index].style.display !== 'none') {
+                        let cellText;
+                        // For cells with icons, use a placeholder text or specific data
+                        if (td.dataset.columnId === 'edit') {
+                            cellText = 'Edit Action';
+                        } else if (td.dataset.columnId === 'send-mail') {
+                            cellText = 'Send Mail Action';
+                        } else if (td.dataset.columnId === 'tags') {
+                            cellText = 'Tags Action';
+                        } else if (td.dataset.columnId === 'next-steps') {
+                            cellText = 'Next Steps Action';
+                        } else if (td.dataset.columnId === 'anomaly') {
+                            cellText = 'Anomaly Action';
+                        } else if (td.dataset.columnId === 'compliance') {
+                            cellText = 'Compliance Action';
+                        } else if (td.dataset.columnId === 'sentiment') {
+                            cellText = 'Sentiment Action';
+                        } else if (td.dataset.columnId === 'category') {
+                            cellText = 'Category Action';
+                        } else if (td.dataset.columnId === 'description') {
+                            cellText = 'Description Action';
+                        } else if (td.dataset.columnId === 'summary') {
+                            cellText = 'Summary Action';
+                        } else {
+                            cellText = td.textContent.trim();
+                        }
+                        rowData.push(`"${cellText.replace(/"/g, '""')}"`); // Quote and escape double quotes
+                    }
+                });
+                csv.push(rowData.join(','));
+            });
+
+            const csvString = csv.join('\n');
+            const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.setAttribute('download', 'customer_invoices.csv');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            alert('Exported to CSV!');
+        }
+
+        // --- Dashboard Logic (moved here for better organization) ---
+        const dashboardContent = document.getElementById('dashboard-content');
+        const chartTypeSelect = document.getElementById('chartType');
+        const generateChartBtn = document.getElementById('generateChartBtn');
+        const myChartCanvas = document.getElementById('myChart');
+        const chartMessage = document.getElementById('chartMessage');
+        let myChartInstance = null; // To hold the chart instance
+
+        // Function to generate and render the chart
+        function generateChart() {
+            if (myChartInstance) {
+                myChartInstance.destroy(); // Destroy existing chart before creating a new one
+            }
+
+            const selectedChartType = chartTypeSelect.value;
+            // Use originalRows to get all data, not just currently displayed page
+            const allInvoiceRows = Array.from(document.querySelectorAll('#invoice-table-body tr')).concat(originalRows); // Combine displayed and stored for full data
+
+            if (allInvoiceRows.length === 0) {
+                chartMessage.textContent = "No data available to generate charts.";
+                chartMessage.classList.remove('hidden');
+                return;
+            } else {
+                chartMessage.classList.add('hidden');
+            }
+
+            let labels = [];
+            let data = [];
+            let chartConfig = {};
+
+            if (selectedChartType === 'bar') {
+                // Example: Bar chart - Invoice Amounts by Customer
+                const customerAmounts = {};
+                allInvoiceRows.forEach(row => {
+                    const customerName = row.dataset.customerName;
+                    const amount = parseFloat(row.dataset.invoiceAmount) || parseFloat(row.dataset.draftAmount) || 0;
+                    customerAmounts[customerName] = (customerAmounts[customerName] || 0) + amount;
+                });
+                labels = Object.keys(customerAmounts);
+                data = Object.values(customerAmounts);
+
+                chartConfig = {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Total Invoice Amount',
+                            data: data,
+                            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Amount ($)',
+                                    color: getComputedStyle(document.body).getPropertyValue('--text-primary')
+                                },
+                                ticks: {
+                                    color: getComputedStyle(document.body).getPropertyValue('--text-secondary')
+                                },
+                                grid: {
+                                    color: getComputedStyle(document.body).getPropertyValue('--border-color')
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Customer',
+                                    color: getComputedStyle(document.body).getPropertyValue('--text-primary')
+                                },
+                                ticks: {
+                                    color: getComputedStyle(document.body).getPropertyValue('--text-secondary')
+                                },
+                                grid: {
+                                    color: getComputedStyle(document.body).getPropertyValue('--border-color')
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: getComputedStyle(document.body).getPropertyValue('--text-primary')
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Invoice Amounts by Customer',
+                                color: getComputedStyle(document.body).getPropertyValue('--text-primary')
+                            }
+                        }
+                    }
+                };
+            } else if (selectedChartType === 'pie') {
+                // Example: Pie chart - Payment Modes Distribution
+                const paymentModes = {};
+                allInvoiceRows.forEach(row => {
+                    const mode = row.dataset.paymentMode || 'N/A';
+                    paymentModes[mode] = (paymentModes[mode] || 0) + 1;
+                });
+                labels = Object.keys(paymentModes);
+                data = Object.values(paymentModes);
+
+                const colors = [
+                    'rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)', 'rgba(153, 102, 255, 0.6)', 'rgba(255, 159, 64, 0.6)'
+                ];
+                const borderColors = [
+                    'rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)'
+                ];
+
+                chartConfig = {
+                    type: 'pie',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Number of Invoices',
+                            data: data,
+                            backgroundColor: colors.slice(0, labels.length),
+                            borderColor: borderColors.slice(0, labels.length),
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: getComputedStyle(document.body).getPropertyValue('--text-primary')
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Payment Modes Distribution',
+                                color: getComputedStyle(document.body).getPropertyValue('--text-primary')
+                            }
+                        }
+                    }
+                };
+            } else if (selectedChartType === 'line') {
+                // Example: Line chart - Invoices Over Time (simplified by date for demo)
+                const invoicesByDate = {};
+                allInvoiceRows.forEach(row => {
+                    const date = row.dataset.date; // e.g., "31-Jan-2025"
+                    // Simple parsing for demo; consider a more robust date parsing for real apps
+                    invoicesByDate[date] = (invoicesByDate[date] || 0) + 1;
+                });
+
+                // Sort dates to ensure correct line chart progression
+                const sortedDates = Object.keys(invoicesByDate).sort((a, b) => {
+                    // Simple date comparison for "DD-Mon-YYYY" format
+                    const [dayA, monthA, yearA] = a.split('-');
+                    const [dayB, monthB, yearB] = b.split('-');
+                    const dateA = new Date(`${monthA} 1, ${yearA}`); // Use '1' for day to avoid invalid date issues
+                    const dateB = new Date(`${monthB} 1, ${yearB}`);
+                    return dateA - dateB;
+                });
+
+                labels = sortedDates;
+                data = sortedDates.map(date => invoicesByDate[date]);
+
+                chartConfig = {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Number of Invoices',
+                            data: data,
+                            fill: false,
+                            borderColor: 'rgba(255, 159, 64, 1)',
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Number of Invoices',
+                                    color: getComputedStyle(document.body).getPropertyValue('--text-primary')
+                                },
+                                ticks: {
+                                    color: getComputedStyle(document.body).getPropertyValue('--text-secondary')
+                                },
+                                grid: {
+                                    color: getComputedStyle(document.body).getPropertyValue('--border-color')
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Date',
+                                    color: getComputedStyle(document.body).getPropertyValue('--text-primary')
+                                },
+                                ticks: {
+                                    color: getComputedStyle(document.body).getPropertyValue('--text-secondary')
+                                },
+                                grid: {
+                                    color: getComputedStyle(document.body).getPropertyValue('--border-color')
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: getComputedStyle(document.body).getPropertyValue('--text-primary')
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Invoices Over Time',
+                                color: getComputedStyle(document.body).getPropertyValue('--text-primary')
+                            }
+                        }
+                    }
+                };
+            }
+
+            myChartInstance = new Chart(myChartCanvas, chartConfig);
+        }
+
+        // Event listener for Dashboard quick access icon (already present, but ensure it calls showContentArea)
+        document.getElementById('dashboard-icon').addEventListener('click', () => {
+            activateMainContentHeader('Dashboard Overview'); // Update H2 header
+            showContentArea('dashboard-content');
+            generateChart(); // Generate default chart when dashboard is shown
+        });
+
+        // Event listener for chart type selection and generate button
+        generateChartBtn.addEventListener('click', generateChart);
+        chartTypeSelect.addEventListener('change', generateChart); // Also generate on type change
+
+        // --- "Add New" Row Logic (moved here for better organization) ---
+        const addRowModal = document.getElementById('addRowModal');
+        const closeAddRowModalBtn = document.getElementById('closeAddRowModal');
+        const newInvoiceForm = document.getElementById('newInvoiceForm');
+        const cancelAddRowBtn = document.getElementById('cancelAddRow');
+
+        // Event listener for "Add New" quick access icon (updated)
+        document.getElementById('add-new-icon').addEventListener('click', () => {
+            addRowModal.classList.remove('hidden');
+            newInvoiceForm.reset(); // Clear form fields
+            // Set default date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('new-date').value = today;
+            document.getElementById('new-work-order-date').value = today;
+
+            // Ensure the main content area is the customer invoice table
+            showContentArea('customer-invoice');
+            activateMainContentHeader('Customer Invoice');
+        });
+
+        closeAddRowModalBtn.addEventListener('click', () => {
+            addRowModal.classList.add('hidden');
+        });
+
+        cancelAddRowBtn.addEventListener('click', () => {
+            addRowModal.classList.add('hidden');
+        });
+
+        newInvoiceForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // Prevent default form submission
+
+            const formData = {
+                invoiceId: document.getElementById('new-invoice-id').value,
+                accountNum: document.getElementById('new-customer-account').value,
+                customerName: document.getElementById('new-customer-name').value,
+                paymentMode: document.getElementById('new-payment-mode').value,
+                date: document.getElementById('new-date').value,
+                workOrder: document.getElementById('new-work-order').value,
+                workOrderDate: document.getElementById('new-work-order-date').value,
+                serial: document.getElementById('new-serial').value,
+                model: document.getElementById('new-model').value,
+                draftAmount: document.getElementById('new-draft-amount').value,
+                taxAmount: document.getElementById('new-tax-amount').value,
+                invoiceAmount: document.getElementById('new-invoice-amount').value,
+                sapStatus: document.getElementById('new-sap-status').value,
+            };
+
+            appendNewRowToTable(formData);
+
+            alert('New Invoice Added (simulated)!');
+            addRowModal.classList.add('hidden'); // Hide the modal after submission
+        });
+
+        function appendNewRowToTable(data) {
+            const tableBody = document.getElementById('invoice-table-body');
+            const newRow = document.createElement('tr');
+            newRow.classList.add('hover-bg-theme-hover', 'transition', 'duration-200', 'table-row-draggable');
+            newRow.setAttribute('draggable', 'true');
+
+            // Set data attributes for the new row
+            newRow.dataset.invoiceId = data.invoiceId;
+            newRow.dataset.customerName = data.customerName;
+            newRow.dataset.accountNum = data.accountNum;
+            newRow.dataset.paymentMode = data.paymentMode;
+            newRow.dataset.date = data.date;
+            newRow.dataset.workOrder = data.workOrder;
+            newRow.dataset.workOrderDate = data.workOrderDate;
+            newRow.dataset.serial = data.serial;
+            newRow.dataset.model = data.model;
+            newRow.dataset.draftAmount = data.draftAmount;
+            newRow.dataset.taxAmount = data.taxAmount;
+            newRow.dataset.invoiceAmount = data.invoiceAmount;
+            newRow.dataset.sapStatus = data.sapStatus;
+
+            // Populate the cells based on existing table structure
+            newRow.innerHTML = `
+                <td><i class="fas fa-edit text-theme-tertiary hover:text-theme-primary cursor-pointer edit-invoice-btn"></i></td>
+                <td data-column-id="invoice-num" class="text-theme-secondary">${data.invoiceId}</td>
+                <td data-column-id="account-num" class="text-theme-tertiary hide-on-sm">${data.accountNum}</td>
+                <td data-column-id="name" class="text-theme-secondary">${data.customerName}</td>
+                <td data-column-id="payment-mode" class="text-theme-tertiary hide-on-sm">${data.paymentMode}</td>
+                <td data-column-id="date" class="text-theme-secondary">${data.date}</td>
+                <td data-column-id="work-order" class="text-theme-tertiary hide-on-md">${data.workOrder}</td>
+                <td data-column-id="work-order-date" class="text-theme-tertiary hide-on-md">${data.workOrderDate || 'N/A'}</td>
+                <td data-column-id="serial" class="text-theme-tertiary hide-on-md">${data.serial || 'N/A'}</td>
+                <td data-column-id="model" class="text-theme-tertiary hide-on-sm">${data.model || 'N/A'}</td>
+                <td data-column-id="draft-amount" class="text-theme-primary">${parseFloat(data.draftAmount).toFixed(2)}</td>
+                <td data-column-id="tax-amount" class="text-theme-primary">${parseFloat(data.taxAmount).toFixed(2)}</td>
+                <td data-column-id="invoice-amount" class="text-theme-primary">${parseFloat(data.invoiceAmount).toFixed(2)}</td>
+                <td data-column-id="sap-status" class="text-theme-tertiary hide-on-sm">${data.sapStatus}</td>
+                <td data-column-id="send-mail" class="text-theme-tertiary hide-on-sm"><i class="fas fa-envelope hover:text-theme-primary cursor-pointer send-mail-btn"></i></td>
+                <td data-column-id="tags" class="text-theme-tertiary hide-on-sm"><i class="fas fa-tags hover:text-theme-primary cursor-pointer suggest-tags-btn"></i></td>
+                <td data-column-id="next-steps" class="text-theme-tertiary hide-on-sm"><i class="fas fa-clipboard-check hover:text-theme-primary cursor-pointer next-steps-btn"></i></td>
+                <td data-column-id="anomaly" class="text-theme-tertiary hide-on-sm"><i class="fas fa-exclamation-triangle hover:text-theme-primary cursor-pointer anomaly-btn"></i></td>
+                <td data-column-id="compliance" class="text-theme-tertiary hide-on-sm"><i class="fas fa-gavel hover:text-theme-primary cursor-pointer compliance-btn"></i></td>
+                <td data-column-id="sentiment" class="text-theme-tertiary hide-on-sm"><i class="fas fa-meh hover:text-theme-primary cursor-pointer sentiment-btn"></i></td>
+                <td data-column-id="category" class="text-theme-tertiary hide-on-sm"><i class="fas fa-folder-open hover:text-theme-primary cursor-pointer category-btn"></i></td>
+                <td data-column-id="description" class="text-theme-tertiary hide-on-sm"><i class="fas fa-align-left hover:text-theme-primary cursor-pointer expand-description-btn"></i></td>
+                <td data-column-id="summary" class="text-theme-tertiary hide-on-sm"><i class="fas fa-file-alt hover:text-theme-primary cursor-pointer summary-btn"></i></td>
+            `;
+
+            originalRows.unshift(newRow); // Add to the beginning of originalRows array
+            currentPage = 1; // Go to first page to see the new row
+            updatePaginationDisplay(); // Re-render table and update pagination
+            adjustTableColumns(); // Re-apply responsive column hiding
+            attachDragAndDropListeners(); // Re-attach D&D listeners for the new row
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knowledge Base - User Portal</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Knowledge Base specific styles */
+        .kb-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .kb-category {
+            background-color: var(--widget-bg);
+            color: var(--text-color);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+            transition: var(--transition);
+        }
+
+        .kb-category:hover {
+            transform: translateY(-5px);
+        }
+
+        .kb-category-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--hover-bg);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            font-size: 20px;
+        }
+
+        .kb-category h3 {
+            margin-bottom: 10px;
+        }
+
+        .kb-category p {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+
+        .kb-articles {
+            background-color: var(--widget-bg);
+            color: var(--text-color);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .kb-articles-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .kb-search {
+            display: flex;
+            align-items: center;
+            background-color: var(--hover-bg);
+            border-radius: 4px;
+            padding: 5px 10px;
+            width: 300px;
+        }
+
+        .kb-search input {
+            border: none;
+            background: transparent;
+            padding: 5px;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .kb-search button {
+            background: transparent;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+        }
+
+        .kb-article-list {
+            padding: 0;
+        }
+
+        .kb-article {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .kb-article:hover {
+            background-color: var(--hover-bg);
+        }
+
+        .kb-article h4 {
+            margin-bottom: 5px;
+        }
+
+        .kb-article-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--accent-color);
+        }
+
+        .kb-article-tags {
+            display: flex;
+            gap: 5px;
+        }
+
+        .kb-tag {
+            background-color: var(--hover-bg);
+            color: var(--text-color);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .kb-tag:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .kb-category.active {
+            border: 2px solid var(--primary-color);
+            transform: translateY(-5px);
+        }
+
+        .kb-no-results {
+            padding: 30px;
+            text-align: center;
+            background-color: var(--hover-bg);
+            color: var(--text-color);
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .kb-no-results p {
+            margin-bottom: 15px;
+            color: var(--accent-color);
+        }
+
+        #reset-kb-filter {
+            display: none;
+            margin-left: 10px;
+        }
+
+        /* Modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-container {
+            background-color: var(--widget-bg);
+            color: var(--text-color);
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: var(--accent-color);
+        }
+
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            max-height: calc(80vh - 60px);
+        }
+
+        .filter-section {
+            margin-bottom: 20px;
+        }
+
+        .filter-section h4 {
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: var(--accent-color);
+        }
+
+        .filter-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .filter-options label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .filter-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="portal-container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <h1>User<span>Portal</span></h1>
+            </div>
+            <div class="search-container">
+                <input type="text" id="global-search" placeholder="Search across the portal...">
+                <button id="search-button"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="user-menu">
+                <div class="notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </div>
+                <div class="user-profile">
+                    <img src="https://via.placeholder.com/40" alt="User Profile">
+                    <div class="user-info">
+                        <span class="user-name">John Doe</span>
+                        <span class="user-role">Admin</span>
+                    </div>
+                    <div class="dropdown-menu">
+                        <ul>
+                            <li><a href="account.html"><i class="fas fa-user"></i> My Account</a></li>
+                            <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                            <li><a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-container">
+            <!-- Sidebar -->
+            <nav class="sidebar">
+                <ul>
+                    <li><a href="../index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li class="active"><a href="knowledge-base.html"><i class="fas fa-book"></i> Knowledge Base</a></li>
+                    <li><a href="tickets.html"><i class="fas fa-ticket-alt"></i> Support Tickets</a></li>
+                    <li><a href="documents.html"><i class="fas fa-file-alt"></i> Documents</a></li>
+                    <li><a href="account.html"><i class="fas fa-user-cog"></i> Account</a></li>
+                    <li><a href="analytics.html"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+                    <li class="admin-only"><a href="#"><i class="fas fa-users-cog"></i> User Management</a></li>
+                </ul>
+            </nav>
+
+            <!-- Content Area -->
+            <main class="content">
+                <div class="page-header">
+                    <h2>Knowledge Base</h2>
+                    <div class="actions">
+                        <button class="btn-secondary"><i class="fas fa-filter"></i> Filter</button>
+                        <button class="btn-primary admin-only"><i class="fas fa-plus"></i> New Article</button>
+                    </div>
+                </div>
+
+                <!-- Knowledge Base Categories -->
+                <div class="kb-categories">
+                    <div class="kb-category">
+                        <div class="kb-category-icon">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <h3>Products</h3>
+                        <p>Information about our products, features, and specifications.</p>
+                        <a href="#" class="btn-secondary">View Articles</a>
+                    </div>
+                    <div class="kb-category">
+                        <div class="kb-category-icon">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <h3>Services</h3>
+                        <p>Details about our services, implementation, and best practices.</p>
+                        <a href="#" class="btn-secondary">View Articles</a>
+                    </div>
+                    <div class="kb-category">
+                        <div class="kb-category-icon">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <h3>FAQs</h3>
+                        <p>Frequently asked questions and their answers.</p>
+                        <a href="#" class="btn-secondary">View Articles</a>
+                    </div>
+                    <div class="kb-category">
+                        <div class="kb-category-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <h3>Troubleshooting</h3>
+                        <p>Solutions to common problems and troubleshooting guides.</p>
+                        <a href="#" class="btn-secondary">View Articles</a>
+                    </div>
+                </div>
+
+                <!-- Knowledge Base Articles -->
+                <div class="kb-articles">
+                    <div class="kb-articles-header">
+                        <h3>Recent Articles</h3>
+                        <div class="kb-search">
+                            <input type="text" placeholder="Search articles...">
+                            <button><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                    <ul class="kb-article-list">
+                        <li class="kb-article">
+                            <h4><a href="#">Getting Started with Our Platform</a></h4>
+                            <p>A comprehensive guide to help you get started with our platform and its features.</p>
+                            <div class="kb-article-meta">
+                                <span>Updated: 2 days ago</span>
+                                <div class="kb-article-tags">
+                                    <span class="kb-tag">Getting Started</span>
+                                    <span class="kb-tag">Guide</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="kb-article">
+                            <h4><a href="#">How to Configure Your Account Settings</a></h4>
+                            <p>Learn how to configure your account settings for optimal performance and security.</p>
+                            <div class="kb-article-meta">
+                                <span>Updated: 1 week ago</span>
+                                <div class="kb-article-tags">
+                                    <span class="kb-tag">Account</span>
+                                    <span class="kb-tag">Settings</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="kb-article">
+                            <h4><a href="#">Troubleshooting Common Issues</a></h4>
+                            <p>Solutions to the most common issues users encounter with our platform.</p>
+                            <div class="kb-article-meta">
+                                <span>Updated: 2 weeks ago</span>
+                                <div class="kb-article-tags">
+                                    <span class="kb-tag">Troubleshooting</span>
+                                    <span class="kb-tag">Support</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="kb-article">
+                            <h4><a href="#">API Documentation and Examples</a></h4>
+                            <p>Comprehensive documentation of our API with examples and use cases.</p>
+                            <div class="kb-article-meta">
+                                <span>Updated: 1 month ago</span>
+                                <div class="kb-article-tags">
+                                    <span class="kb-tag">API</span>
+                                    <span class="kb-tag">Development</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="../js/theme-utils.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/search-part2.js"></script>
+    <script src="../js/search-part3.js"></script>
+    <script src="../js/search-part4.js"></script>
+    <script src="../js/profile-manager.js"></script>
+    <script src="../js/search-fix.js"></script>
+    <script src="../js/knowledge-base.js"></script>
+</body>
+</html>

@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debit & Credit Note Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Lighter blue-gray background */
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+        }
+        /* Custom styles for drag-and-drop feedback */
+        .drag-over-debit {
+            border: 2px dashed #6366f1; /* Indigo 500 */
+            background-color: #e0e7ff; /* Indigo 100 */
+        }
+        .drag-over-credit {
+            border: 2px dashed #10b981; /* Emerald 500 */
+            background-color: #d1fae5; /* Emerald 100 */
+        }
+        .draggable-item {
+            cursor: grab;
+            transition: transform 0.1s ease-in-out, opacity 0.1s ease-in-out;
+        }
+        .draggable-item:active {
+            cursor: grabbing;
+        }
+        /* Styling for debit note specific items */
+        .debit-note-header {
+            background-color: #eef2ff; /* Indigo 50 */
+            border-bottom: 1px solid #c7d2fe; /* Indigo 200 */
+        }
+        /* Styling for credit note specific items */
+        .credit-note-header {
+            background-color: #ecfdf5; /* Emerald 50 */
+            border-bottom: 1px solid #a7f3d0; /* Emerald 200 */
+        }
+        .credit-note-dropzone {
+            border-color: #a7f3d0; /* Emerald 200 */
+        }
+        .credit-note-text {
+            color: #059669; /* Emerald 600 */
+        }
+        .debit-note-text {
+            color: #4f46e5; /* Indigo 600 */
+        }
+        .summary-card {
+            background-color: #f0f9ff; /* Light blue for summary */
+            border: 1px solid #e0f2fe;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .summary-item {
+            text-align: center;
+            min-width: 150px;
+        }
+        .summary-label {
+            font-size: 0.9rem;
+            color: #64748b; /* Slate 500 */
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        .summary-value {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700;
+        }
+        /* Success popup styles */
+        .success-popup {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #10b981;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .success-popup.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-4 sm:p-6 bg-gray-50">
+
+    <div class="container mx-auto p-6 sm:p-8 max-w-7xl w-full">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800">Debit & Credit Note Transaction Settlement</h1>
+            <a href="Dasboard.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-300 ease-in-out transform hover:scale-105">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Back to Dashboard
+            </a>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-item">
+                <p class="summary-label">Total Debit Notes Value (Money Received)</p>
+                <p id="total-debit-value" class="summary-value text-indigo-700">$0.00</p>
+            </div>
+            <div class="summary-item">
+                <p class="summary-label">Total Credit Notes Value (Money Paid)</p>
+                <p id="total-credit-value" class="summary-value text-emerald-700">$0.00</p>
+            </div>
+        </div>
+
+        <!-- Document Types Section -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Document Types</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                <div class="document-type-card cursor-pointer transition-all duration-200 hover:scale-105" data-doc-type="Warranty Claim">
+                    <div class="bg-white p-4 rounded-lg shadow-md border-2 border-gray-200 hover:border-purple-400 hover:shadow-lg">
+                        <div class="text-center">
+                            <div class="bg-purple-100 p-3 rounded-full w-12 h-12 mx-auto mb-3 flex items-center justify-center">
+                                <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="font-semibold text-gray-800 text-sm">Warranty Claim</h3>
+                            <p class="text-xs text-gray-500 mt-1">Filter transactions</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="document-type-card cursor-pointer transition-all duration-200 hover:scale-105" data-doc-type="Mandatory">
+                    <div class="bg-white p-4 rounded-lg shadow-md border-2 border-gray-200 hover:border-red-400 hover:shadow-lg">
+                        <div class="text-center">
+                            <div class="bg-red-100 p-3 rounded-full w-12 h-12 mx-auto mb-3 flex items-center justify-center">
+                                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="font-semibold text-gray-800 text-sm">Mandatory Claim</h3>
+                            <p class="text-xs text-gray-500 mt-1">Filter transactions</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="document-type-card cursor-pointer transition-all duration-200 hover:scale-105" data-doc-type="GDR Settlement">
+                    <div class="bg-white p-4 rounded-lg shadow-md border-2 border-gray-200 hover:border-blue-400 hover:shadow-lg">
+                        <div class="text-center">
+                            <div class="bg-blue-100 p-3 rounded-full w-12 h-12 mx-auto mb-3 flex items-center justify-center">
+                                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="font-semibold text-gray-800 text-sm">GDR Settlement</h3>
+                            <p class="text-xs text-gray-500 mt-1">Filter transactions</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="document-type-card cursor-pointer transition-all duration-200 hover:scale-105" data-doc-type="Sales Invoice">
+                    <div class="bg-white p-4 rounded-lg shadow-md border-2 border-gray-200 hover:border-green-400 hover:shadow-lg">
+                        <div class="text-center">
+                            <div class="bg-green-100 p-3 rounded-full w-12 h-12 mx-auto mb-3 flex items-center justify-center">
+                                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                                </svg>
+                            </div>
+                            <h3 class="font-semibold text-gray-800 text-sm">Sales Invoice</h3>
+                            <p class="text-xs text-gray-500 mt-1">Filter transactions</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="document-type-card cursor-pointer transition-all duration-200 hover:scale-105" data-doc-type="Purchase Invoice">
+                    <div class="bg-white p-4 rounded-lg shadow-md border-2 border-gray-200 hover:border-orange-400 hover:shadow-lg">
+                        <div class="text-center">
+                            <div class="bg-orange-100 p-3 rounded-full w-12 h-12 mx-auto mb-3 flex items-center justify-center">
+                                <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="font-semibold text-gray-800 text-sm">Purchase Invoice</h3>
+                            <p class="text-xs text-gray-500 mt-1">Filter transactions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clear Filter Button -->
+            <div class="text-center mt-4">
+                <button id="clear-filter-btn" class="hidden px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors duration-200">
+                    Clear Filter - Show All Transactions
+                </button>
+            </div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-6 lg:gap-8">
+            <div class="flex-1 bg-white p-5 rounded-lg shadow-md border border-gray-200">
+                <div class="flex justify-between items-center mb-5">
+                    <h2 class="text-xl sm:text-2xl font-semibold text-gray-700">Available Transactions</h2>
+                    <!-- Customer Search -->
+                    <div class="relative">
+                        <input type="text" id="customer-search" placeholder="Search by customer..."
+                               class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm w-64">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                        <button id="clear-customer-search" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div id="transactions-list" class="space-y-3 min-h-[100px]">
+                    <p class="text-gray-500 italic text-sm text-center py-4" id="no-available-transactions-message">No transactions available.</p>
+                </div>
+            </div>
+
+            <div class="flex-1 bg-white p-5 rounded-lg shadow-md border border-gray-200">
+                <h2 class="text-xl sm:text-2xl font-semibold text-gray-700 mb-5 flex justify-between items-center debit-note-header p-3 -mx-5 -mt-5 rounded-t-lg">
+                    <span>Debit Notes (Money Received) <span id="debit-note-count" class="text-lg sm:text-xl font-bold debit-note-text ml-2">(0)</span></span>
+                    <button id="create-debit-note-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-1.5 px-3 sm:py-2 sm:px-4 rounded-lg shadow-md transition-all duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base">
+                        Create New DN
+                    </button>
+                </h2>
+
+                <div id="debit-notes-container" class="space-y-4 mb-6 pt-4">
+                    </div>
+
+                <div class="border-t border-gray-200 pt-5 mt-auto">
+                    <h3 class="text-lg sm:text-xl font-semibold text-gray-700 mb-3">Created Debit Note IDs</h3>
+                    <div id="created-debit-notes-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                        <p class="text-gray-500 italic text-sm col-span-full text-center" id="no-debit-notes-message">No debit notes created yet.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex-1 bg-white p-5 rounded-lg shadow-md border border-gray-200">
+                <h2 class="text-xl sm:text-2xl font-semibold text-gray-700 mb-5 flex justify-between items-center credit-note-header p-3 -mx-5 -mt-5 rounded-t-lg">
+                    <span>Credit Notes (Money Paid) <span id="credit-note-count" class="text-lg sm:text-xl font-bold credit-note-text ml-2">(0)</span></span>
+                    <button id="create-credit-note-btn" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-1.5 px-3 sm:py-2 sm:px-4 rounded-lg shadow-md transition-all duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base">
+                        Create New CN
+                    </button>
+                </h2>
+
+                <div id="credit-notes-container" class="space-y-4 mb-6 pt-4">
+                    </div>
+
+                <div class="border-t border-gray-200 pt-5 mt-auto">
+                    <h3 class="text-lg sm:text-xl font-semibold text-gray-700 mb-3">Created Credit Note IDs</h3>
+                    <div id="created-credit-notes-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                        <p class="text-gray-500 italic text-sm col-span-full text-center" id="no-credit-notes-message">No credit notes created yet.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Popup -->
+    <div id="success-popup" class="success-popup">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+        <span id="success-message">Transaction saved successfully!</span>
+    </div>
+
+    <script>
+        // --- Tax Types Configuration ---
+        const TAX_TYPES = [
+            { name: 'GST 5%', rate: 5 },
+            { name: 'GST 12%', rate: 12 },
+            { name: 'GST 18%', rate: 18 },
+            { name: 'GST 28%', rate: 28 },
+            { name: 'IGST 5%', rate: 5 },
+            { name: 'IGST 12%', rate: 12 },
+            { name: 'IGST 18%', rate: 18 },
+            { name: 'IGST 28%', rate: 28 },
+            { name: 'CGST 9%', rate: 9 },
+            { name: 'SGST 9%', rate: 9 },
+            { name: 'No Tax', rate: 0 }
+        ];
+
+        /**
+         * Gets the tax rate for a given tax type
+         * @param {string} taxType - The tax type name
+         * @returns {number} The tax rate percentage
+         */
+        function getTaxRate(taxType) {
+            const tax = TAX_TYPES.find(t => t.name === taxType);
+            return tax ? tax.rate : 0;
+        }
+
+        /**
+         * Shows tax selection modal
+         * @param {string} noteType - 'debit' or 'credit'
+         * @param {function} callback - Callback function to execute with selected tax type
+         */
+        function showTaxSelectionModal(noteType, callback) {
+            // Create modal overlay
+            const modalOverlay = document.createElement('div');
+            modalOverlay.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+
+            // Create modal content
+            const modalContent = document.createElement('div');
+            modalContent.className = 'bg-white rounded-lg shadow-xl p-6 w-full max-w-md mx-4';
+
+            const noteTypeColor = noteType === 'debit' ? 'indigo' : 'emerald';
+
+            modalContent.innerHTML = `
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-800">
+                        Select Tax Type for ${noteType.charAt(0).toUpperCase() + noteType.slice(1)} Note
+                    </h3>
+                    <button id="close-modal" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="mb-4">
+                    <p class="text-sm text-gray-600 mb-4">Choose the applicable tax type for this ${noteType} note:</p>
+                    <div class="grid grid-cols-2 gap-2 max-h-60 overflow-y-auto">
+                        ${TAX_TYPES.map(tax => `
+                            <button class="tax-option p-3 text-left border border-gray-200 rounded-lg hover:border-${noteTypeColor}-500 hover:bg-${noteTypeColor}-50 transition-colors duration-200" data-tax="${tax.name}">
+                                <div class="font-medium text-gray-800">${tax.name}</div>
+                                <div class="text-xs text-gray-500">${tax.rate}% rate</div>
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-3">
+                    <button id="cancel-modal" class="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50">
+                        Cancel
+                    </button>
+                </div>
+            `;
+
+            modalOverlay.appendChild(modalContent);
+            document.body.appendChild(modalOverlay);
+
+            // Add event listeners
+            const closeModal = () => {
+                document.body.removeChild(modalOverlay);
+            };
+
+            modalContent.querySelector('#close-modal').addEventListener('click', closeModal);
+            modalContent.querySelector('#cancel-modal').addEventListener('click', closeModal);
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) closeModal();
+            });
+
+            // Add tax option selection
+            modalContent.querySelectorAll('.tax-option').forEach(button => {
+                button.addEventListener('click', () => {
+                    const selectedTax = button.dataset.tax;
+                    closeModal();
+                    callback(selectedTax);
+                });
+            });
+        }
+
+        // --- Data Mocking ---
+        // Changed amount to number for calculations
+        let transactions = [
+            { id: 'T001', description: 'Mandatory Settlement for Q1', status: 'Mandatory Done', amount: 12500.00, type: 'debit', customer: 'Acme Corp' },
+            { id: 'T002', description: 'Warranty Claim for Product X', status: 'Warranty Claim Done', amount: 3200.00, type: 'credit', customer: 'Beta Ltd' },
+            { id: 'T003', description: 'GDR Settlement for Shares A', status: 'GDR Settlement Done', amount: 50000.00, type: 'credit', customer: 'Acme Corp' },
+            { id: 'T004', description: 'Mandatory Settlement for Q2', status: 'Mandatory Done', amount: 8900.00, type: 'debit', customer: 'Delta Inc' },
+            { id: 'T005', description: 'Warranty Claim for Service Y', status: 'Warranty Claim Done', amount: 1500.00, type: 'credit', customer: 'Beta Ltd' },
+            { id: 'T006', description: 'GDR Settlement for Bonds B', status: 'GDR Settlement Done', amount: 25000.00, type: 'credit', customer: 'Gamma LLC' },
+            { id: 'T007', description: 'Pending Review for Q3', status: 'Pending', amount: 7000.00, type: 'neutral', customer: 'Acme Corp' },
+            { id: 'T008', description: 'Sales Invoice Campaign Alpha', status: 'Sales Invoice Campaign Done', amount: 15000.00, type: 'debit', customer: 'Delta Inc' },
+            { id: 'T009', description: 'Customer Invoice Campaign Beta', status: 'Customer Invoice Campaign Done', amount: 2800.00, type: 'credit', customer: 'Gamma LLC' }
+        ];
+
+        // Keep track of which transactions are assigned to which note type
+        let debitNotesData = {}; // { 'DN-UUID1': ['T001', 'T002'], 'DN-UUID2': ['T003'] }
+        let creditNotesData = {}; // { 'CN-UUID1': ['T004', 'T005'] }
+
+        // Global variable to store the ID of the transaction currently being dragged (FIX for dataTransfer issue)
+        let currentDraggedTransactionId = null;
+
+        // --- DOM Elements ---
+        const transactionsList = document.getElementById('transactions-list');
+        const noAvailableTransactionsMessage = document.getElementById('no-available-transactions-message');
+
+        // Debit Note Elements
+        const debitNotesContainer = document.getElementById('debit-notes-container');
+        const createDebitNoteBtn = document.getElementById('create-debit-note-btn');
+        const debitNoteCountSpan = document.getElementById('debit-note-count');
+        const createdDebitNotesListDiv = document.getElementById('created-debit-notes-list');
+        const noDebitNotesMessage = document.getElementById('no-debit-notes-message');
+
+        // Credit Note Elements
+        const creditNotesContainer = document.getElementById('credit-notes-container');
+        const createCreditNoteBtn = document.getElementById('create-credit-note-btn');
+        const creditNoteCountSpan = document.getElementById('credit-note-count');
+        const createdCreditNotesListDiv = document.getElementById('created-credit-notes-list');
+        const noCreditNotesMessage = document.getElementById('no-credit-notes-message');
+
+        // Summary Elements
+        const totalDebitValueSpan = document.getElementById('total-debit-value');
+        const totalCreditValueSpan = document.getElementById('total-credit-value');
+
+        // Document Type Filter Elements
+        const documentTypeCards = document.querySelectorAll('.document-type-card');
+        const clearFilterBtn = document.getElementById('clear-filter-btn');
+
+        // Current filter state
+        let currentFilter = null;
+        let currentCustomerFilter = '';
+
+        // Document Type to Keyword mapping (moved outside DOMContentLoaded for global access)
+        const docTypeToKeyword = {
+            "Warranty Claim": "Warranty Claim",
+            "Mandatory": "Mandatory",
+            "GDR Settlement": "GDR Settlement",
+            "Sales Invoice": "Sales Invoice",
+            "Purchase Invoice": "Purchase Invoice"
+        };
+
+        // Party Ledger data to track customer-wise transactions
+        let partyLedger = {};
+
+
+        // --- Helper Functions ---
+
+        /**
+         * Formats a number as currency.
+         * @param {number} amount - The amount to format.
+         * @returns {string} The formatted currency string.
+         */
+        function formatCurrency(amount) {
+            return `$${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        }
+
+        /**
+         * Extracts document type from transaction status or description
+         * @param {object} transaction - Transaction object
+         * @returns {string} The document type
+         */
+        function extractDocumentType(transaction) {
+            if (!transaction) return 'General';
+
+            const status = transaction.status || '';
+            const description = transaction.description || '';
+
+            // Check status first for document type patterns
+            if (status.toLowerCase().includes('warranty')) return 'Warranty Claim';
+            if (status.toLowerCase().includes('mandatory')) return 'Mandatory';
+            if (status.toLowerCase().includes('gdr')) return 'GDR Settlement';
+            if (status.toLowerCase().includes('sales invoice')) return 'Sales Invoice';
+            if (status.toLowerCase().includes('purchase invoice')) return 'Purchase Invoice';
+
+            // Check description as fallback
+            if (description.toLowerCase().includes('warranty')) return 'Warranty Claim';
+            if (description.toLowerCase().includes('mandatory')) return 'Mandatory';
+            if (description.toLowerCase().includes('gdr')) return 'GDR Settlement';
+            if (description.toLowerCase().includes('sales invoice')) return 'Sales Invoice';
+            if (description.toLowerCase().includes('purchase invoice')) return 'Purchase Invoice';
+
+            return 'General';
+        }
+
+        /**
+         * Generates a unique ID for new notes.
+         * @param {string} prefix - 'DN-' for Debit Note, 'CN-' for Credit Note.
+         * @returns {string} A unique ID.
+         */
+        function generateUniqueId(prefix) {
+            return prefix + crypto.randomUUID().substring(0, 8); // Shorter UUID for display
+        }
+
+        /**
+         * Shows success popup with message
+         * @param {string} message - Success message to display
+         */
+        function showSuccessPopup(message = 'Transaction saved successfully!') {
+            const popup = document.getElementById('success-popup');
+            const messageSpan = document.getElementById('success-message');
+
+            messageSpan.textContent = message;
+            popup.classList.add('show');
+
+            // Auto-hide after 3 seconds
+            setTimeout(() => {
+                popup.classList.remove('show');
+            }, 3000);
+        }
+
+        /**
+         * Updates party ledger data when transaction is moved
+         * @param {string} customerId - Customer ID/name
+         * @param {object} transaction - Transaction object
+         * @param {string} noteType - 'debit' or 'credit'
+         * @param {string} noteId - Note ID
+         */
+        function updatePartyLedger(customerId, transaction, noteType, noteId) {
+            if (!partyLedger[customerId]) {
+                partyLedger[customerId] = {
+                    customerName: customerId,
+                    debitNotes: [],
+                    creditNotes: [],
+                    totalDebit: 0,
+                    totalCredit: 0
+                };
+            }
+
+            const entry = {
+                noteId: noteId,
+                transactionId: transaction.id,
+                amount: transaction.amount,
+                description: transaction.description,
+                timestamp: new Date().toISOString()
+            };
+
+            if (noteType === 'debit') {
+                partyLedger[customerId].debitNotes.push(entry);
+                partyLedger[customerId].totalDebit += transaction.amount;
+            } else {
+                partyLedger[customerId].creditNotes.push(entry);
+                partyLedger[customerId].totalCredit += transaction.amount;
+            }
+
+            // Save to localStorage
+            localStorage.setItem('partyLedger', JSON.stringify(partyLedger));
+        }
+
+        /**
+         * Renders a single transaction item.
+         * @param {object} transaction - The transaction object.
+         * @returns {HTMLElement} The created transaction div element.
+         */
+        function createTransactionElement(transaction) {
+            const transactionDiv = document.createElement('div');
+            transactionDiv.id = `transaction-${transaction.id}`; // Unique ID for the DOM element
+            transactionDiv.classList.add(
+                'draggable-item',
+                'bg-white', 'p-4', 'rounded-lg', 'shadow', 'border', 'border-gray-200',
+                'flex', 'flex-col', 'md:flex-row', 'md:items-center', 'justify-between', 'gap-2',
+                'transition-all', 'duration-200', 'ease-in-out' // Smooth transitions
+            );
+            transactionDiv.setAttribute('draggable', 'true'); // Make it draggable
+            transactionDiv.dataset.transactionId = transaction.id; // Store the transaction ID
+            transactionDiv.dataset.transactionType = transaction.type; // Store the transaction type
+
+            // Determine status color
+            let statusColor = 'text-green-600';
+            let statusBg = 'bg-green-100';
+            if (transaction.status === 'Pending') {
+                statusColor = 'text-yellow-600';
+                statusBg = 'bg-yellow-100';
+                transactionDiv.setAttribute('draggable', 'false'); // Make pending transactions not draggable
+                transactionDiv.classList.add('opacity-50', 'cursor-not-allowed'); // Visual cue for non-draggable
+            }
+
+            // Determine type badge color and text
+            let typeBadgeColor = '';
+            let typeBadgeText = '';
+            if (transaction.type === 'debit') {
+                typeBadgeColor = 'bg-indigo-100 text-indigo-800';
+                typeBadgeText = 'Debit Type';
+            } else if (transaction.type === 'credit') {
+                typeBadgeColor = 'bg-emerald-100 text-emerald-800';
+                typeBadgeText = 'Credit Type';
+            } else {
+                // For 'neutral' or other types, make it non-draggable and greyed out
+                typeBadgeColor = 'bg-gray-100 text-gray-800';
+                typeBadgeText = 'N/A Type';
+                transactionDiv.setAttribute('draggable', 'false');
+                transactionDiv.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+
+
+            transactionDiv.innerHTML = `
+                <div class="flex-1">
+                    <div class="font-semibold text-gray-800 mb-1">${transaction.description}</div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <div class="flex items-center">
+                            <svg class="w-4 h-4 text-blue-500 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                            <span class="text-sm font-medium text-blue-700">${transaction.customer || 'N/A'}</span>
+                        </div>
+                        <span class="${typeBadgeColor} text-xs font-semibold px-2 py-1 rounded-full">${typeBadgeText}</span>
+                    </div>
+                    <div class="text-xs text-gray-400">${transaction.status}</div>
+                </div>
+                <div class="flex flex-col items-end gap-1">
+                    <span class="${statusBg} ${statusColor} text-sm font-medium px-3 py-1 rounded-full">${transaction.amount ? formatCurrency(transaction.amount) : ''}</span>
+                </div>
+            `;
+
+            // Event listeners for dragging
+            transactionDiv.addEventListener('dragstart', handleDragStart);
+            transactionDiv.addEventListener('dragend', handleDragEnd);
+
+            return transactionDiv;
+        }
+
+        /**
+         * Filters transactions by customer name
+         * @param {string} customerFilter - Customer name filter
+         */
+        function filterTransactionsByCustomer(customerFilter) {
+            currentCustomerFilter = customerFilter.toLowerCase();
+            renderTransactions();
+        }
+
+        /**
+         * Renders all initial transactions.
+         */
+        function renderTransactions() {
+            transactionsList.innerHTML = ''; // Clear existing list
+            let availableCount = 0;
+            transactions.forEach(transaction => {
+                // Only render transactions that are not yet assigned to any debit or credit note
+                let isAssignedToDebit = false;
+                for (const noteId in debitNotesData) {
+                    const noteData = debitNotesData[noteId];
+                    const arr = Array.isArray(noteData) ? noteData : (noteData.transactions || []);
+                    if (arr.includes(transaction.id)) {
+                        isAssignedToDebit = true;
+                        break;
+                    }
+                }
+                let isAssignedToCredit = false;
+                for (const noteId in creditNotesData) {
+                    const noteData = creditNotesData[noteId];
+                    const arr = Array.isArray(noteData) ? noteData : (noteData.transactions || []);
+                    if (arr.includes(transaction.id)) {
+                        isAssignedToCredit = true;
+                        break;
+                    }
+                }
+
+                // Apply customer filter
+                let matchesCustomerFilter = true;
+                if (currentCustomerFilter) {
+                    const customerName = (transaction.customer || '').toLowerCase();
+                    matchesCustomerFilter = customerName.includes(currentCustomerFilter);
+                }
+
+                // Apply document type filter if active
+                let matchesDocFilter = true;
+                if (currentFilter) {
+                    const keyword = docTypeToKeyword[currentFilter].toLowerCase();
+                    matchesDocFilter = (
+                        (transaction.description && transaction.description.toLowerCase().includes(keyword)) ||
+                        (transaction.status && transaction.status.toLowerCase().includes(keyword))
+                    );
+                }
+
+                if (!isAssignedToDebit && !isAssignedToCredit && matchesCustomerFilter && matchesDocFilter) {
+                    transactionsList.appendChild(createTransactionElement(transaction));
+                    availableCount++;
+                }
+            });
+            if (availableCount === 0) {
+                noAvailableTransactionsMessage.classList.remove('hidden');
+                transactionsList.appendChild(noAvailableTransactionsMessage);
+            } else {
+                noAvailableTransactionsMessage.classList.add('hidden');
+            }
+        }
+
+        /**
+         * Shows tax type selection modal for debit note
+         */
+        function showDebitNoteTaxModal() {
+            showTaxSelectionModal('debit', (taxType) => {
+                createDebitNoteWithTax(taxType);
+            });
+        }
+
+        /**
+         * Creates and appends a new Debit Note container to the DOM with tax type.
+         */
+        function createDebitNoteWithTax(taxType) {
+            const debitNoteId = generateUniqueId('DN-');
+            debitNotesData[debitNoteId] = {
+                transactions: [],
+                taxType: taxType,
+                taxRate: getTaxRate(taxType)
+            };
+
+            const debitNoteDiv = document.createElement('div');
+            debitNoteDiv.id = debitNoteId; // Set the ID for the drop zone
+            debitNoteDiv.classList.add(
+                'debit-note-dropzone', // Specific class for debit note drop zone
+                'bg-white', 'p-5', 'rounded-lg', 'shadow-sm', 'border', 'border-gray-300',
+                'min-h-[120px]', 'flex', 'flex-col', 'gap-3',
+                'transition-all', 'duration-200', 'ease-in-out' // Smooth transitions
+            );
+
+            debitNoteDiv.innerHTML = `
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="text-lg font-semibold text-gray-700">Debit Note: ${debitNoteId}</h3>
+                    <span class="bg-indigo-100 text-indigo-800 text-xs font-medium px-2 py-1 rounded-full">
+                        ${taxType}
+                    </span>
+                </div>
+                <div class="dropped-transactions-container space-y-2">
+                    <p class="text-gray-500 text-sm italic empty-message text-center py-2">Drag debit-type transactions here (Money Received).</p>
+                </div>
+            `;
+
+            // Event listeners for dropping specific to debit notes
+            debitNoteDiv.addEventListener('dragover', handleDragOverDebit);
+            debitNoteDiv.addEventListener('dragleave', handleDragLeaveDebit);
+            debitNoteDiv.addEventListener('drop', handleDropDebit);
+
+            debitNotesContainer.appendChild(debitNoteDiv);
+
+            // Don't update count here - only count notes with transactions
+            updateCreatedDebitNotesList();
+            // Don't update totals or save until transactions are added
+        }
+
+        /**
+         * Creates and appends a new Debit Note container to the DOM (legacy function).
+         */
+        function createDebitNote() {
+            showDebitNoteTaxModal();
+        }
+
+        /**
+         * Shows tax type selection modal for credit note
+         */
+        function showCreditNoteTaxModal() {
+            showTaxSelectionModal('credit', (taxType) => {
+                createCreditNoteWithTax(taxType);
+            });
+        }
+
+        /**
+         * Creates and appends a new Credit Note container to the DOM with tax type.
+         */
+        function createCreditNoteWithTax(taxType) {
+            const creditNoteId = generateUniqueId('CN-');
+            creditNotesData[creditNoteId] = {
+                transactions: [],
+                taxType: taxType,
+                taxRate: getTaxRate(taxType)
+            };
+
+            const creditNoteDiv = document.createElement('div');
+            creditNoteDiv.id = creditNoteId; // Set the ID for the drop zone
+            creditNoteDiv.classList.add(
+                'credit-note-dropzone', // Specific class for credit note drop zone
+                'bg-white', 'p-5', 'rounded-lg', 'shadow-sm', 'border', 'border-gray-300',
+                'min-h-[120px]', 'flex', 'flex-col', 'gap-3',
+                'transition-all', 'duration-200', 'ease-in-out' // Smooth transitions
+            );
+            // Apply specific credit note border color
+            creditNoteDiv.style.borderColor = '#a7f3d0'; // Emerald 200
+
+            creditNoteDiv.innerHTML = `
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="text-lg font-semibold text-gray-700">Credit Note: ${creditNoteId}</h3>
+                    <span class="bg-emerald-100 text-emerald-800 text-xs font-medium px-2 py-1 rounded-full">
+                        ${taxType}
+                    </span>
+                </div>
+                <div class="dropped-transactions-container space-y-2">
+                    <p class="text-gray-500 text-sm italic empty-message text-center py-2">Drag credit-type transactions here (Money Paid).</p>
+                </div>
+            `;
+
+            // Event listeners for dropping specific to credit notes
+            creditNoteDiv.addEventListener('dragover', handleDragOverCredit);
+            creditNoteDiv.addEventListener('dragleave', handleDragLeaveCredit);
+            creditNoteDiv.addEventListener('drop', handleDropCredit);
+
+            creditNotesContainer.appendChild(creditNoteDiv);
+
+            // Don't update count here - only count notes with transactions
+            updateCreatedCreditNotesList();
+            // Don't update totals or save until transactions are added
+        }
+
+        /**
+         * Creates and appends a new Credit Note container to the DOM (legacy function).
+         */
+        function createCreditNote() {
+            showCreditNoteTaxModal();
+        }
+
+        /**
+         * Updates the display of transactions within a specific debit note.
+         * @param {string} debitNoteId - The ID of the debit note to update.
+         */
+        function updateDebitNoteDisplay(debitNoteId) {
+            const debitNoteDiv = document.getElementById(debitNoteId);
+            if (!debitNoteDiv) return;
+
+            const droppedContainer = debitNoteDiv.querySelector('.dropped-transactions-container');
+            let emptyMessageElement = debitNoteDiv.querySelector('.empty-message');
+
+            droppedContainer.innerHTML = ''; // Clear existing items
+
+            const noteData = debitNotesData[debitNoteId];
+            const transactionArray = Array.isArray(noteData) ? noteData : (noteData?.transactions || []);
+
+            if (transactionArray.length > 0) {
+                if (emptyMessageElement) emptyMessageElement.classList.add('hidden');
+
+                transactionArray.forEach(transactionId => {
+                    const transaction = transactions.find(t => t.id === transactionId);
+                    if (transaction) {
+                        const transactionItem = document.createElement('div');
+                        transactionItem.classList.add(
+                            'bg-gray-100', 'p-3', 'rounded-md', 'border', 'border-gray-200',
+                            'text-sm', 'text-gray-700', 'flex', 'justify-between', 'items-center',
+                            'transition-all', 'duration-200', 'ease-in-out', 'group' // Smooth transitions
+                        );
+                        transactionItem.innerHTML = `
+                            <div class="flex-1">
+                                <span class="font-medium text-gray-800">${transaction.description}</span>
+                                <div class="flex items-center mt-1">
+                                    <svg class="w-3 h-3 text-blue-500 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                    <span class="text-blue-600 text-xs font-medium">${transaction.customer || 'N/A'}</span>
+                                </div>
+                                <span class="text-gray-500 text-xs block">(ID: ${transaction.id})</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="font-medium text-gray-800">${formatCurrency(transaction.amount)}</span>
+                                <button class="remove-transaction-btn opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-red-500 hover:text-red-700 hover:bg-red-50 p-1 rounded"
+                                        data-transaction-id="${transactionId}"
+                                        data-note-id="${debitNoteId}"
+                                        data-note-type="debit"
+                                        title="Remove transaction">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        `;
+
+                        // Add event listener for remove button
+                        const removeBtn = transactionItem.querySelector('.remove-transaction-btn');
+                        removeBtn.addEventListener('click', handleRemoveTransaction);
+
+                        droppedContainer.appendChild(transactionItem);
+                    }
+                });
+            } else {
+                if (emptyMessageElement) emptyMessageElement.classList.remove('hidden');
+                else { // Create if it doesn't exist
+                    emptyMessageElement = document.createElement('p');
+                    emptyMessageElement.classList.add('text-gray-500', 'text-sm', 'italic', 'empty-message', 'text-center', 'py-2');
+                    emptyMessageElement.textContent = 'Drag debit-type transactions here (Money Received).';
+                    droppedContainer.appendChild(emptyMessageElement);
+                }
+            }
+        }
+
+        /**
+         * Updates the display of transactions within a specific credit note.
+         * @param {string} creditNoteId - The ID of the credit note to update.
+         */
+        function updateCreditNoteDisplay(creditNoteId) {
+            const creditNoteDiv = document.getElementById(creditNoteId);
+            if (!creditNoteDiv) return;
+
+            const droppedContainer = creditNoteDiv.querySelector('.dropped-transactions-container');
+            let emptyMessageElement = creditNoteDiv.querySelector('.empty-message');
+
+            droppedContainer.innerHTML = ''; // Clear existing items
+
+            const noteData = creditNotesData[creditNoteId];
+            const transactionArray = Array.isArray(noteData) ? noteData : (noteData?.transactions || []);
+
+            if (transactionArray.length > 0) {
+                if (emptyMessageElement) emptyMessageElement.classList.add('hidden');
+
+                transactionArray.forEach(transactionId => {
+                    const transaction = transactions.find(t => t.id === transactionId);
+                    if (transaction) {
+                        const transactionItem = document.createElement('div');
+                        transactionItem.classList.add(
+                            'bg-gray-100', 'p-3', 'rounded-md', 'border', 'border-gray-200',
+                            'text-sm', 'text-gray-700', 'flex', 'justify-between', 'items-center',
+                            'transition-all', 'duration-200', 'ease-in-out', 'group' // Smooth transitions
+                        );
+                        transactionItem.innerHTML = `
+                            <div class="flex-1">
+                                <span class="font-medium text-gray-800">${transaction.description}</span>
+                                <div class="flex items-center mt-1">
+                                    <svg class="w-3 h-3 text-blue-500 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                    <span class="text-blue-600 text-xs font-medium">${transaction.customer || 'N/A'}</span>
+                                </div>
+                                <span class="text-gray-500 text-xs block">(ID: ${transaction.id})</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="font-medium text-gray-800">${formatCurrency(transaction.amount)}</span>
+                                <button class="remove-transaction-btn opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-red-500 hover:text-red-700 hover:bg-red-50 p-1 rounded"
+                                        data-transaction-id="${transactionId}"
+                                        data-note-id="${creditNoteId}"
+                                        data-note-type="credit"
+                                        title="Remove transaction">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        `;
+
+                        // Add event listener for remove button
+                        const removeBtn = transactionItem.querySelector('.remove-transaction-btn');
+                        removeBtn.addEventListener('click', handleRemoveTransaction);
+
+                        droppedContainer.appendChild(transactionItem);
+                    }
+                });
+            } else {
+                if (emptyMessageElement) emptyMessageElement.classList.remove('hidden');
+                else { // Create if it doesn't exist
+                    emptyMessageElement = document.createElement('p');
+                    emptyMessageElement.classList.add('text-gray-500', 'text-sm', 'italic', 'empty-message', 'text-center', 'py-2');
+                    emptyMessageElement.textContent = 'Drag credit-type transactions here (Money Paid).';
+                    droppedContainer.appendChild(emptyMessageElement);
+                }
+            }
+        }
+
+        /**
+         * Handles removing a transaction from a note
+         * @param {Event} event - The click event from the remove button
+         */
+        function handleRemoveTransaction(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            const button = event.currentTarget;
+            const transactionId = button.dataset.transactionId;
+            const noteId = button.dataset.noteId;
+            const noteType = button.dataset.noteType;
+
+            console.log(`Removing transaction ${transactionId} from ${noteType} note ${noteId}`);
+
+            // Remove from the appropriate note data
+            if (noteType === 'debit') {
+                const noteData = debitNotesData[noteId];
+                const transactionArray = Array.isArray(noteData) ? noteData : noteData.transactions;
+                const index = transactionArray.indexOf(transactionId);
+                if (index > -1) {
+                    transactionArray.splice(index, 1);
+                    updateDebitNoteDisplay(noteId);
+                }
+            } else if (noteType === 'credit') {
+                const noteData = creditNotesData[noteId];
+                const transactionArray = Array.isArray(noteData) ? noteData : noteData.transactions;
+                const index = transactionArray.indexOf(transactionId);
+                if (index > -1) {
+                    transactionArray.splice(index, 1);
+                    updateCreditNoteDisplay(noteId);
+                }
+            }
+
+            // Re-render the transaction in the available transactions list
+            if (currentFilter) {
+                filterTransactionsByDocType(currentFilter);
+            } else {
+                renderTransactions();
+            }
+            updateAllNoteDisplays();
+            updateDebitNoteCount(); // Update counts after removal
+            updateCreditNoteCount();
+            updateTotalsSummary(); // Always show all assigned totals
+            saveNotesToLocalStorage();
+
+            console.log(`Transaction ${transactionId} removed and returned to available transactions`);
+        }
+
+        /**
+         * Updates the displayed count of debit notes (only counts notes with transactions).
+         */
+        function updateDebitNoteCount() {
+            // Count only notes that have transactions
+            let count = 0;
+            for (const noteId in debitNotesData) {
+                const noteData = debitNotesData[noteId];
+                const transactionArray = Array.isArray(noteData) ? noteData : (noteData.transactions || []);
+                if (transactionArray.length > 0) {
+                    count++;
+                }
+            }
+            debitNoteCountSpan.textContent = `(${count})`;
+        }
+
+        /**
+         * Updates the displayed count of credit notes (only counts notes with transactions).
+         */
+        function updateCreditNoteCount() {
+            // Count only notes that have transactions
+            let count = 0;
+            for (const noteId in creditNotesData) {
+                const noteData = creditNotesData[noteId];
+                const transactionArray = Array.isArray(noteData) ? noteData : (noteData.transactions || []);
+                if (transactionArray.length > 0) {
+                    count++;
+                }
+            }
+            creditNoteCountSpan.textContent = `(${count})`;
+        }
+
+        /**
+         * Updates the list of created debit note IDs.
+         */
+        function updateCreatedDebitNotesList() {
+            const debitNoteIds = Object.keys(debitNotesData);
+            createdDebitNotesListDiv.innerHTML = ''; // Clear existing list
+
+            if (debitNoteIds.length === 0) {
+                noDebitNotesMessage.classList.remove('hidden');
+                // Ensure noDebitNotesMessage spans full columns in grid
+                noDebitNotesMessage.classList.add('col-span-full');
+                createdDebitNotesListDiv.appendChild(noDebitNotesMessage);
+            } else {
+                if (noDebitNotesMessage) noDebitNotesMessage.classList.add('hidden');
+
+                debitNoteIds.forEach(id => {
+                    const idSpan = document.createElement('span');
+                    idSpan.classList.add(
+                        'bg-indigo-100', 'text-indigo-800', 'text-xs', 'font-medium',
+                        'px-2.5', 'py-1', 'rounded-full', 'select-all', // Added py-1 for more vertical padding
+                        'flex', 'items-center', 'justify-center' // Center text in case of varying lengths
+                    );
+                    idSpan.textContent = id;
+                    createdDebitNotesListDiv.appendChild(idSpan);
+                });
+            }
+        }
+
+        /**
+         * Updates the list of created credit note IDs.
+         */
+        function updateCreatedCreditNotesList() {
+            const creditNoteIds = Object.keys(creditNotesData);
+            createdCreditNotesListDiv.innerHTML = ''; // Clear existing list
+
+            if (creditNoteIds.length === 0) {
+                noCreditNotesMessage.classList.remove('hidden');
+                // Ensure noCreditNotesMessage spans full columns in grid
+                noCreditNotesMessage.classList.add('col-span-full');
+                createdCreditNotesListDiv.appendChild(noCreditNotesMessage);
+            } else {
+                if (noCreditNotesMessage) noCreditNotesMessage.classList.add('hidden');
+
+                creditNoteIds.forEach(id => {
+                    const idSpan = document.createElement('span');
+                    idSpan.classList.add(
+                        'bg-emerald-100', 'text-emerald-800', 'text-xs', 'font-medium',
+                        'px-2.5', 'py-1', 'rounded-full', 'select-all', // Added py-1 for more vertical padding
+                        'flex', 'items-center', 'justify-center' // Center text in case of varying lengths
+                    );
+                    idSpan.textContent = id;
+                    createdCreditNotesListDiv.appendChild(idSpan);
+                });
+            }
+        }
+
+        /**
+         * Calculates and updates the total values for Debit and Credit Notes in the summary.
+         */
+        function updateTotalsSummary(filterDocType = null) {
+            let totalDebitAmount = 0;
+            let totalCreditAmount = 0;
+            if (filterDocType) {
+                // More robust filter: match document type in status or description, case-insensitive, and allow partial match
+                const keyword = docTypeToKeyword[filterDocType].toLowerCase();
+                for (const dnId in debitNotesData) {
+                    const noteData = debitNotesData[dnId];
+                    const transactionArray = Array.isArray(noteData) ? noteData : (noteData.transactions || []);
+                    transactionArray.forEach(transactionId => {
+                        const transaction = getTransactionDetails(transactionId);
+                        if (
+                            transaction && transaction.amount && (
+                                (transaction.description && transaction.description.toLowerCase().includes(keyword)) ||
+                                (transaction.status && transaction.status.toLowerCase().includes(keyword))
+                            )
+                        ) {
+                            totalDebitAmount += transaction.amount;
+                        }
+                    });
+                }
+                for (const cnId in creditNotesData) {
+                    const noteData = creditNotesData[cnId];
+                    const transactionArray = Array.isArray(noteData) ? noteData : (noteData.transactions || []);
+                    transactionArray.forEach(transactionId => {
+                        const transaction = getTransactionDetails(transactionId);
+                        if (
+                            transaction && transaction.amount && (
+                                (transaction.description && transaction.description.toLowerCase().includes(keyword)) ||
+                                (transaction.status && transaction.status.toLowerCase().includes(keyword))
+                            )
+                        ) {
+                            totalCreditAmount += transaction.amount;
+                        }
+                    });
+                }
+            } else {
+                // Sum all assigned transactions
+                for (const dnId in debitNotesData) {
+                    const noteData = debitNotesData[dnId];
+                    const transactionArray = Array.isArray(noteData) ? noteData : (noteData.transactions || []);
+                    transactionArray.forEach(transactionId => {
+                        const transaction = getTransactionDetails(transactionId);
+                        if (transaction && transaction.amount) {
+                            totalDebitAmount += transaction.amount;
+                        }
+                    });
+                }
+                for (const cnId in creditNotesData) {
+                    const noteData = creditNotesData[cnId];
+                    const transactionArray = Array.isArray(noteData) ? noteData : (noteData.transactions || []);
+                    transactionArray.forEach(transactionId => {
+                        const transaction = getTransactionDetails(transactionId);
+                        if (transaction && transaction.amount) {
+                            totalCreditAmount += transaction.amount;
+                        }
+                    });
+                }
+            }
+            totalDebitValueSpan.textContent = formatCurrency(totalDebitAmount);
+            totalCreditValueSpan.textContent = formatCurrency(totalCreditAmount);
+            // Save to localStorage for dashboard sync
+            saveNotesToLocalStorage();
+        }
+
+        /**
+         * Saves the current state of debit and credit notes to localStorage
+         */
+        function saveNotesToLocalStorage() {
+            const notesData = {
+                debitNotes: {},
+                creditNotes: {},
+                timestamp: new Date().toISOString()
+            };
+
+            // Save debit notes with transaction details
+            for (const dnId in debitNotesData) {
+                const noteData = debitNotesData[dnId];
+                const transactionArray = Array.isArray(noteData) ? noteData : (noteData.transactions || []);
+
+                notesData.debitNotes[dnId] = {
+                    transactions: transactionArray.map(transactionId => {
+                        const transaction = transactions.find(t => t.id === transactionId);
+                        return transaction ? {
+                            id: transaction.id,
+                            description: transaction.description,
+                            amount: transaction.amount,
+                            status: transaction.status,
+                            customerName: transaction.customer || 'N/A',
+                            documentType: extractDocumentType(transaction)
+                        } : null;
+                    }).filter(t => t !== null),
+                    totalAmount: transactionArray.reduce((sum, transactionId) => {
+                        const transaction = transactions.find(t => t.id === transactionId);
+                        return sum + (transaction ? transaction.amount : 0);
+                    }, 0),
+                    taxType: noteData.taxType || 'No Tax',
+                    taxRate: noteData.taxRate || 0
+                };
+            }
+
+            // Save credit notes with transaction details
+            for (const cnId in creditNotesData) {
+                const noteData = creditNotesData[cnId];
+                const transactionArray = Array.isArray(noteData) ? noteData : (noteData.transactions || []);
+
+                notesData.creditNotes[cnId] = {
+                    transactions: transactionArray.map(transactionId => {
+                        const transaction = transactions.find(t => t.id === transactionId);
+                        return transaction ? {
+                            id: transaction.id,
+                            description: transaction.description,
+                            amount: transaction.amount,
+                            status: transaction.status,
+                            customerName: transaction.customer || 'N/A',
+                            documentType: extractDocumentType(transaction)
+                        } : null;
+                    }).filter(t => t !== null),
+                    totalAmount: transactionArray.reduce((sum, transactionId) => {
+                        const transaction = transactions.find(t => t.id === transactionId);
+                        return sum + (transaction ? transaction.amount : 0);
+                    }, 0),
+                    taxType: noteData.taxType || 'No Tax',
+                    taxRate: noteData.taxRate || 0
+                };
+            }
+
+            localStorage.setItem('creditDebitNotes', JSON.stringify(notesData));
+            console.log('Notes saved to localStorage:', notesData);
+        }
+
+
+        // --- Generic Drag and Drop Handlers (used for all draggable items) ---
+
+        /**
+         * Handles the start of a drag operation.
+         * @param {DragEvent} event - The dragstart event.
+         */
+        function handleDragStart(event) {
+            console.log('Drag Start:', event.target.id, 'Type:', event.target.dataset.transactionType); // DEBUG
+            // Store the transaction ID in the global variable
+            currentDraggedTransactionId = event.target.dataset.transactionId;
+            // Only set the ID in dataTransfer for minimal data transfer
+            event.dataTransfer.setData('text/plain', event.target.dataset.transactionId);
+            event.dataTransfer.effectAllowed = 'move';
+            event.target.classList.add('opacity-75', 'scale-95');
+        }
+
+        /**
+         * Helper function to get transaction details from the global array.
+         * @param {string} transactionId - The ID of the transaction.
+         * @returns {object|null} The transaction object or null if not found.
+         */
+        function getTransactionDetails(transactionId) {
+            return transactions.find(t => t.id === transactionId);
+        }
+
+
+        /**
+         * Handles the end of a drag operation.
+         * @param {DragEvent} event - The dragend event.
+         */
+        function handleDragEnd(event) {
+            console.log('Drag End:', event.target.id); // DEBUG
+            event.target.classList.remove('opacity-75', 'scale-95');
+            // Clear the global variable after drag ends
+            currentDraggedTransactionId = null;
+        }
+
+        // --- Drag Over/Leave for Debit Notes ---
+        function handleDragOverDebit(event) {
+            event.preventDefault(); // Crucial for allowing drops
+            // Use the global variable to get the transaction ID
+            const transaction = getTransactionDetails(currentDraggedTransactionId);
+            const transactionType = transaction ? transaction.type : null;
+
+            const targetDropzone = event.target.closest('.debit-note-dropzone');
+            console.log('Drag Over Debit:', targetDropzone?.id, 'Dragged Type:', transactionType); // DEBUG
+
+            if (transactionType === 'debit') {
+                event.dataTransfer.dropEffect = 'move';
+                if (targetDropzone) {
+                    targetDropzone.classList.add('drag-over-debit');
+                }
+            } else {
+                event.dataTransfer.dropEffect = 'none'; // Indicate it's not droppable
+            }
+        }
+
+        function handleDragLeaveDebit(event) {
+            const targetDropzone = event.target.closest('.debit-note-dropzone');
+            console.log('Drag Leave Debit:', targetDropzone?.id); // DEBUG
+            if (targetDropzone) {
+                targetDropzone.classList.remove('drag-over-debit');
+            }
+        }
+
+        // --- Drag Over/Leave for Credit Notes ---
+        function handleDragOverCredit(event) {
+            event.preventDefault(); // Crucial for allowing drops
+            // Use the global variable to get the transaction ID
+            const transaction = getTransactionDetails(currentDraggedTransactionId);
+            const transactionType = transaction ? transaction.type : null;
+
+            const targetDropzone = event.target.closest('.credit-note-dropzone');
+            console.log('Drag Over Credit:', targetDropzone?.id, 'Dragged Type:', transactionType); // DEBUG
+
+            if (transactionType === 'credit') {
+                event.dataTransfer.dropEffect = 'move';
+                if (targetDropzone) {
+                    targetDropzone.classList.add('drag-over-credit');
+                }
+            } else {
+                event.dataTransfer.dropEffect = 'none'; // Indicate it's not droppable
+            }
+        }
+
+        function handleDragLeaveCredit(event) {
+            const targetDropzone = event.target.closest('.credit-note-dropzone');
+            console.log('Drag Leave Credit:', targetDropzone?.id); // DEBUG
+            if (targetDropzone) {
+                targetDropzone.classList.remove('drag-over-credit');
+            }
+        }
+
+        // --- Drop Handlers ---
+
+        /**
+         * Handles a transaction being dropped onto a Debit Note.
+         * @param {DragEvent} event - The drop event.
+         */
+        function handleDropDebit(event) {
+            console.log('handleDropDebit function called.'); // DEBUG: Confirm function entry
+            event.preventDefault(); // Ensure default browser behavior (like opening a link) is prevented
+
+            const debitNoteDropzone = event.target.closest('.debit-note-dropzone');
+            if (!debitNoteDropzone) {
+                console.log('Drop Debit: No debit note dropzone found for target, or drop occurred on a child element not within a dropzone.'); // DEBUG
+                return;
+            }
+
+            debitNoteDropzone.classList.remove('drag-over-debit');
+
+            // Use the global variable for transactionId
+            const transactionId = currentDraggedTransactionId;
+            const transaction = getTransactionDetails(transactionId);
+            const transactionType = transaction ? transaction.type : null;
+
+            console.log('Drop Debit Data:', 'Transaction ID:', transactionId, 'Transaction Type:', transactionType, 'Target DN:', debitNoteDropzone.id); // DEBUG
+
+            const droppedTransactionElement = document.getElementById(`transaction-${transactionId}`);
+
+            console.log('Transaction object found:', transaction); // DEBUG
+            console.log('Transaction status:', transaction?.status); // DEBUG
+            console.log('Transaction type from object (for validation):', transactionType); // DEBUG
+
+            if (transaction && transaction.status && transaction.status.includes('Done') && transactionType === 'debit') {
+                removeFromAllNotes(transactionId);
+                if (Array.isArray(debitNotesData[debitNoteDropzone.id])) {
+                    debitNotesData[debitNoteDropzone.id].push(transactionId);
+                } else {
+                    debitNotesData[debitNoteDropzone.id].transactions.push(transactionId);
+                }
+                if (droppedTransactionElement) {
+                    droppedTransactionElement.remove();
+                }
+
+                // Update party ledger
+                updatePartyLedger(transaction.customer || 'Unknown', transaction, 'debit', debitNoteDropzone.id);
+
+                updateDebitNoteDisplay(debitNoteDropzone.id);
+                // --- Fix: re-apply filter if active ---
+                if (currentFilter) {
+                    filterTransactionsByDocType(currentFilter);
+                } else {
+                    renderTransactions();
+                }
+                updateAllNoteDisplays();
+                updateDebitNoteCount();
+                updateTotalsSummary(currentFilter); // Pass current filter to update totals correctly
+                saveNotesToLocalStorage();
+
+                // Show success popup
+                showSuccessPopup(`Transaction saved successfully to Debit Note ${debitNoteDropzone.id}!`);
+
+                console.log(`SUCCESS: Transaction ${transactionId} (Debit Type) dropped into Debit Note ${debitNoteDropzone.id}`);
+            } else {
+                console.log(`FAIL: Transaction ${transactionId} cannot be dropped into a Debit Note. Condition check failed.`); // DEBUG
+                console.log(`  - Transaction exists: ${!!transaction}`);
+                console.log(`  - Status includes 'Done': ${transaction?.status?.includes('Done')}`);
+                console.log(`  - Transaction type from object is 'debit': ${transactionType === 'debit'}`);
+                // You could add a temporary UI message here for the user
+            }
+        }
+
+        /**
+         * Handles a transaction being dropped onto a Credit Note.
+         * @param {DragEvent} event - The drop event.
+         */
+        function handleDropCredit(event) {
+            console.log('handleDropCredit function called.'); // DEBUG: Confirm function entry
+            event.preventDefault(); // Ensure default browser behavior (like opening a link) is prevented
+
+            const creditNoteDropzone = event.target.closest('.credit-note-dropzone');
+            if (!creditNoteDropzone) {
+                console.log('Drop Credit: No credit note dropzone found for target, or drop occurred on a child element not within a dropzone.'); // DEBUG
+                return;
+            }
+
+            creditNoteDropzone.classList.remove('drag-over-credit');
+
+            // Use the global variable for transactionId
+            const transactionId = currentDraggedTransactionId;
+            const transaction = getTransactionDetails(transactionId);
+            const transactionType = transaction ? transaction.type : null;
+
+            console.log('Drop Credit Data:', 'Transaction ID:', transactionId, 'Transaction Type:', transactionType, 'Target CN:', creditNoteDropzone.id); // DEBUG
+
+            const droppedTransactionElement = document.getElementById(`transaction-${transactionId}`);
+
+            console.log('Transaction object found:', transaction); // DEBUG
+            console.log('Transaction status:', transaction?.status); // DEBUG
+            console.log('Transaction type from object (for validation):', transactionType); // DEBUG
+
+            if (transaction && transaction.status && transaction.status.includes('Done') && transactionType === 'credit') {
+                removeFromAllNotes(transactionId);
+                if (Array.isArray(creditNotesData[creditNoteDropzone.id])) {
+                    creditNotesData[creditNoteDropzone.id].push(transactionId);
+                } else {
+                    creditNotesData[creditNoteDropzone.id].transactions.push(transactionId);
+                }
+                if (droppedTransactionElement) {
+                    droppedTransactionElement.remove();
+                }
+
+                // Update party ledger
+                updatePartyLedger(transaction.customer || 'Unknown', transaction, 'credit', creditNoteDropzone.id);
+
+                updateCreditNoteDisplay(creditNoteDropzone.id);
+                // --- Fix: re-apply filter if active ---
+                if (currentFilter) {
+                    filterTransactionsByDocType(currentFilter);
+                } else {
+                    renderTransactions();
+                }
+                updateAllNoteDisplays();
+                updateCreditNoteCount();
+                updateTotalsSummary(currentFilter); // Pass current filter to update totals correctly
+                saveNotesToLocalStorage();
+
+                // Show success popup
+                showSuccessPopup(`Transaction saved successfully to Credit Note ${creditNoteDropzone.id}!`);
+
+                console.log(`SUCCESS: Transaction ${transactionId} (Credit Type) dropped into Credit Note ${creditNoteDropzone.id}`);
+            } else {
+                console.log(`FAIL: Transaction ${transactionId} cannot be dropped into a Credit Note. Condition check failed.`); // DEBUG
+                console.log(`  - Transaction exists: ${!!transaction}`);
+                console.log(`  - Status includes 'Done': ${transaction?.status?.includes('Done')}`);
+                console.log(`  - Transaction type from object is 'credit': ${transactionType === 'credit'}`);
+                // You could add a temporary UI message here for the user
+            }
+        }
+
+        /**
+         * Removes a transaction from all debit/credit notes.
+         * This ensures a transaction is only ever in one note.
+         * @param {string} transactionId - The ID of the transaction to remove.
+         */
+        function removeFromAllNotes(transactionId) {
+            let wasRemoved = false;
+            // Check Debit Notes
+            for (const dnId in debitNotesData) {
+                const noteData = debitNotesData[dnId];
+                const transactionArray = Array.isArray(noteData) ? noteData : noteData.transactions;
+                const index = transactionArray.indexOf(transactionId);
+                if (index > -1) {
+                    transactionArray.splice(index, 1);
+                    updateDebitNoteDisplay(dnId);
+                    wasRemoved = true;
+                    break;
+                }
+            }
+            // Check Credit Notes
+            for (const cnId in creditNotesData) {
+                const noteData = creditNotesData[cnId];
+                const transactionArray = Array.isArray(noteData) ? noteData : noteData.transactions;
+                const index = transactionArray.indexOf(transactionId);
+                if (index > -1) {
+                    transactionArray.splice(index, 1);
+                    updateCreditNoteDisplay(cnId);
+                    wasRemoved = true;
+                    break;
+                }
+            }
+            return wasRemoved;
+        }
+
+        /**
+         * Updates the display of all debit and credit notes. Useful if transactions move between notes.
+         */
+        function updateAllNoteDisplays() {
+            Object.keys(debitNotesData).forEach(id => updateDebitNoteDisplay(id));
+            Object.keys(creditNotesData).forEach(id => updateCreditNoteDisplay(id));
+        }
+
+        /**
+         * Filters transactions by document type (moved outside DOMContentLoaded for global access)
+         * @param {string} docType - The document type to filter by
+         */
+        function filterTransactionsByDocType(docType) {
+            transactionsList.innerHTML = '';
+            let availableCount = 0;
+            const keyword = docTypeToKeyword[docType].toLowerCase();
+
+            // Collect all assigned transaction IDs
+            const assignedToDebit = new Set();
+            for (const noteId in debitNotesData) {
+                const noteData = debitNotesData[noteId];
+                const arr = Array.isArray(noteData) ? noteData : (noteData.transactions || []);
+                arr.forEach(id => assignedToDebit.add(id));
+            }
+            const assignedToCredit = new Set();
+            for (const noteId in creditNotesData) {
+                const noteData = creditNotesData[noteId];
+                const arr = Array.isArray(noteData) ? noteData : (noteData.transactions || []);
+                arr.forEach(id => assignedToCredit.add(id));
+            }
+
+            transactions.forEach(transaction => {
+                // Only show transactions matching the docType and not already assigned
+                const isAssignedToDebit = assignedToDebit.has(transaction.id);
+                const isAssignedToCredit = assignedToCredit.has(transaction.id);
+                if (
+                    !isAssignedToDebit &&
+                    !isAssignedToCredit &&
+                    (
+                        (transaction.description && transaction.description.toLowerCase().includes(keyword)) ||
+                        (transaction.status && transaction.status.toLowerCase().includes(keyword))
+                    )
+                ) {
+                    transactionsList.appendChild(createTransactionElement(transaction));
+                    availableCount++;
+                }
+            });
+            if (availableCount === 0) {
+                noAvailableTransactionsMessage.classList.remove('hidden');
+                transactionsList.appendChild(noAvailableTransactionsMessage);
+            } else {
+                noAvailableTransactionsMessage.classList.add('hidden');
+            }
+            clearFilterBtn.classList.remove('hidden');
+            currentFilter = docType;
+            updateTotalsSummary(); // Always show all assigned totals
+        }
+
+
+        // --- Initial Render ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTransactions(); // Renders initial available transactions
+
+            // Create one default debit note and one credit note on load
+            createDebitNote();
+            createCreditNote();
+
+            // Attach event listeners for buttons after the DOM is fully loaded
+            if (createDebitNoteBtn) {
+                createDebitNoteBtn.addEventListener('click', createDebitNote);
+            } else {
+                console.error('Error: createDebitNoteBtn not found on DOMContentLoaded!');
+            }
+
+            if (createCreditNoteBtn) {
+                createCreditNoteBtn.addEventListener('click', createCreditNote);
+            } else {
+                console.error('Error: createCreditNoteBtn not found on DOMContentLoaded!');
+            }
+
+            // Ensure counts, lists, and summary are updated on initial load
+            updateDebitNoteCount();
+            updateCreatedDebitNotesList();
+            updateCreditNoteCount();
+            updateCreatedCreditNotesList();
+            updateTotalsSummary();
+
+            // --- Document Type Filtering ---
+
+            documentTypeCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const docType = card.getAttribute('data-doc-type');
+                    filterTransactionsByDocType(docType);
+                });
+            });
+
+            clearFilterBtn.addEventListener('click', () => {
+                currentFilter = null;
+                renderTransactions();
+                clearFilterBtn.classList.add('hidden');
+            });
+
+            // --- Customer Search Functionality ---
+            const customerSearchInput = document.getElementById('customer-search');
+            const clearCustomerSearchBtn = document.getElementById('clear-customer-search');
+
+            if (customerSearchInput) {
+                customerSearchInput.addEventListener('input', (e) => {
+                    const searchValue = e.target.value.trim();
+                    if (searchValue) {
+                        clearCustomerSearchBtn.classList.remove('hidden');
+                        filterTransactionsByCustomer(searchValue);
+                    } else {
+                        clearCustomerSearchBtn.classList.add('hidden');
+                        currentCustomerFilter = '';
+                        renderTransactions();
+                    }
+                });
+            }
+
+            if (clearCustomerSearchBtn) {
+                clearCustomerSearchBtn.addEventListener('click', () => {
+                    customerSearchInput.value = '';
+                    currentCustomerFilter = '';
+                    clearCustomerSearchBtn.classList.add('hidden');
+                    renderTransactions();
+                });
+            }
+
+            // Load party ledger data from localStorage
+            const savedPartyLedger = localStorage.getItem('partyLedger');
+            if (savedPartyLedger) {
+                try {
+                    partyLedger = JSON.parse(savedPartyLedger);
+                } catch (error) {
+                    console.error('Error loading party ledger data:', error);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
