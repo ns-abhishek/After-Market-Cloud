@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jaguar F-PACE CPQ Configurator - B&W UI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/lucide-react@0.292.0/dist/umd/lucide.min.js"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background-color: #ffffff;
+      color: #111827;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .dark body {
+      background-color: #000000;
+      color: #f3f4f6;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #e5e7eb;
+    }
+
+    .dark ::-webkit-scrollbar-track {
+      background: #1f2937;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #9ca3af;
+      border-radius: 10px;
+    }
+
+    .dark ::-webkit-scrollbar-thumb {
+      background: #4b5563;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #6b7280;
+    }
+
+    .dark ::-webkit-scrollbar-thumb:hover {
+      background: #374151;
+    }
+
+    /* Custom radio button styling */
+    .custom-radio input[type="radio"] {
+      opacity: 0;
+      position: fixed;
+      width: 0;
+    }
+
+    .custom-radio label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 1.1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      background-color: #f3f4f6;
+      color: #374151;
+    }
+
+    .dark .custom-radio label {
+      background-color: #374151;
+      border-color: #4b5563;
+      color: #d1d5db;
+    }
+
+    .custom-radio input[type="radio"]:checked+label {
+      background-color: #111827;
+      border-color: #111827;
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .dark .custom-radio input[type="radio"]:checked+label {
+      background-color: #ffffff;
+      border-color: #ffffff;
+      color: #000000;
+    }
+
+    .custom-radio input[type="radio"]:focus-visible+label {
+      outline: 2px solid #2563eb;
+      outline-offset: 2px;
+    }
+
+    .dark .custom-radio input[type="radio"]:focus-visible+label {
+      outline: 2px solid #60a5fa;
+    }
+
+    .custom-radio label:hover {
+      border-color: #9ca3af;
+      background-color: #e5e7eb;
+    }
+
+    .dark .custom-radio label:hover {
+      border-color: #6b7280;
+      background-color: #4b5563;
+    }
+
+    .custom-radio input[type="radio"]:checked+label:hover {
+      background-color: #374151;
+      border-color: #374151;
+    }
+
+    .dark .custom-radio input[type="radio"]:checked+label:hover {
+      background-color: #e5e7eb;
+      border-color: #e5e7eb;
+    }
+
+    .custom-radio .info-icon {
+      margin-left: 0.5rem;
+      color: #4b5563;
+      /* dark:text-gray-600 for light theme */
+    }
+
+    .dark .custom-radio .info-icon {
+      color: #9ca3af;
+      /* dark:text-gray-400 for dark theme */
+    }
+
+    .custom-radio input[type="radio"]:checked+label .info-icon {
+      color: #9ca3af;
+      /* dark:text-gray-400 for light theme checked */
+    }
+
+    .dark .custom-radio input[type="radio"]:checked+label .info-icon {
+      color: #374151;
+      /* dark:text-gray-700 for dark theme checked */
+    }
+
+
+    /* Custom checkbox styling */
+    .custom-checkbox label {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 0.75rem;
+      background-color: #f3f4f6;
+      border-radius: 0.5rem;
+      transition: background-color 0.2s;
+      color: #374151;
+      border: 1px solid #e5e7eb;
+    }
+
+    .dark .custom-checkbox label {
+      background-color: #374151;
+      color: #d1d5db;
+      border-color: #4b5563;
+    }
+
+    .custom-checkbox label:hover {
+      background-color: #e5e7eb;
+    }
+
+    .dark .custom-checkbox label:hover {
+      background-color: #4b5563;
+    }
+
+    .custom-checkbox input[type="checkbox"] {
+      appearance: none;
+      background-color: #ffffff;
+      border: 1px solid #9ca3af;
+      border-radius: 0.25rem;
+      width: 1.25rem;
+      height: 1.25rem;
+      margin-right: 0.75rem;
+      position: relative;
+      transition: background-color 0.2s, border-color 0.2s;
+      flex-shrink: 0;
+    }
+
+    .dark .custom-checkbox input[type="checkbox"] {
+      background-color: #4b5563;
+      border-color: #6b7280;
+    }
+
+    .custom-checkbox input[type="checkbox"]:checked {
+      background-color: #111827;
+      border-color: #111827;
+    }
+
+    .dark .custom-checkbox input[type="checkbox"]:checked {
+      background-color: #ffffff;
+      border-color: #ffffff;
+    }
+
+    .custom-checkbox input[type="checkbox"]:checked::after {
+      content: '✔';
+      position: absolute;
+      color: #ffffff;
+      font-size: 0.8rem;
+      font-weight: bold;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .dark .custom-checkbox input[type="checkbox"]:checked::after {
+      color: #000000;
+    }
+
+    .custom-checkbox input[type="checkbox"]:focus-visible {
+      outline: 2px solid #2563eb;
+      outline-offset: 2px;
+    }
+
+    .dark .custom-checkbox input[type="checkbox"]:focus-visible {
+      outline: 2px solid #60a5fa;
+    }
+
+    /* Tooltip styling */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+    }
+
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: max-content;
+      max-width: 200px;
+      background-color: #111827;
+      color: #ffffff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 6px 12px;
+      position: absolute;
+      z-index: 50;
+      bottom: 130%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 0.8rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    /* General Panel Styling */
+    .panel {
+      background-color: #f9fafb;
+      color: #111827;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      border: 1px solid #e5e7eb;
+      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .dark .panel {
+      background-color: #1f2937;
+      color: #d1d5db;
+      border-color: #374151;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Price update animation class */
+    .price-updated-animation {
+      transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55) !important;
+    }
+
+    /* Notification styling */
+    #copy-notification,
+    #compatibility-notification {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100%);
+      padding: 10px 20px;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      z-index: 100;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+      background-color: #111827;
+      color: #ffffff;
+    }
+
+    .dark #copy-notification,
+    .dark #compatibility-notification {
+      background-color: #f3f4f6;
+      color: #111827;
+    }
+
+    #copy-notification.show,
+    #compatibility-notification.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Modal Styling */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      z-index: 1000;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      width: 90%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    body:not(.dark) .modal-content {
+      background-color: #ffffff;
+      color: #111827;
+    }
+
+    .dark .modal-content {
+      background-color: #1f2937;
+      color: #f3f4f6;
+    }
+
+    /* View Selector Buttons */
+    .view-btn {
+      transition: all 0.2s ease-in-out;
+      border: 1px solid #d1d5db;
+      /* light theme */
+      background-color: #f3f4f6;
+      /* light theme */
+      color: #374151;
+      /* light theme */
+    }
+
+    .dark .view-btn {
+      border-color: #4b5563;
+      /* dark theme */
+      background-color: #374151;
+      /* dark theme */
+      color: #d1d5db;
+      /* dark theme */
+    }
+
+    .view-btn:hover {
+      border-color: #9ca3af;
+      /* light theme */
+      background-color: #e5e7eb;
+      /* light theme */
+    }
+
+    .dark .view-btn:hover {
+      border-color: #6b7280;
+      /* dark theme */
+      background-color: #4b5563;
+      /* dark theme */
+    }
+
+    .view-btn.active-view {
+      background-color: #111827;
+      /* light theme active */
+      border-color: #111827;
+      /* light theme active */
+      color: #ffffff;
+      /* light theme active */
+      font-weight: 600;
+    }
+
+    .dark .view-btn.active-view {
+      background-color: #ffffff;
+      /* dark theme active */
+      border-color: #ffffff;
+      /* dark theme active */
+      color: #000000;
+      /* dark theme active */
+    }
+
+    .recent-item-btn {
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    /* Cart */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .car-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .car-card {
+      background-color: #f9f9f9;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .car-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      border-color: #999999;
+    }
+
+    .car-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      display: block;
+    }
+
+    .car-card h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #111111;
+    }
+
+    .car-card p {
+      font-size: 0.9rem;
+      color: #555555;
+      margin-bottom: 15px;
+    }
+
+    .configure-btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #111111;
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 6px;
+      transition: background-color 0.2s ease;
+    }
+
+    .configure-btn:hover {
+      background-color: #333333;
+    }
+
+    @media (min-width: 640px) {
+      .car-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .car-card img {
+        height: 180px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .car-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .car-card img {
+        height: 200px;
+      }
+    }
+
+    .configuratorcontainer {
+      display: none;
+    }
+
+    /* ======================================== Cart ======================================== */
+    .cartcontainer {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .car-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .cart_car-card {
+      width: 100%;
+      height: 70vh;
+      max-height: 600px;
+      /* Prevent excessive height on large screens */
+      background-color: #f9f9f9;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .cart_car-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      border-color: #999999;
+    }
+
+    .car-image-container {
+      position: relative;
+      width: 100%;
+      height: 60%;
+      /* Relative to card height */
+      margin-bottom: 15px;
+    }
+
+    .car-image {
+      display: none;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+
+    .car-image-radio {
+      display: none;
+    }
+
+    .car-image-radio:checked+.car-image {
+      display: block;
+    }
+
+    .carousel-dots {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 1;
+    }
+
+    .carousel-dot {
+      width: 10px;
+      height: 10px;
+      background-color: #999999;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .car-image-radio:checked+.car-image+.carousel-dots .carousel-dot,
+    .carousel-dot:hover {
+      background-color: #111111;
+    }
+
+    .cart_car-card h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #111111;
+    }
+
+    .cart_car-card p {
+      font-size: 0.9rem;
+      color: #555555;
+      margin-bottom: 15px;
+      flex-grow: 1;
+    }
+
+    .cart-configure-btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #111111;
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 6px;
+      transition: background-color 0.2s ease;
+      align-self: flex-start;
+    }
+
+    .cart-configure-btn:hover {
+      background-color: #333333;
+    }
+
+    @media (max-width: 640px) {
+      .cart_car-card {
+        height: 60vh;
+        max-height: 500px;
+        padding: 15px;
+      }
+
+      .car-image-container {
+        height: 50%;
+      }
+
+      .cart_car-card h3 {
+        font-size: 1.25rem;
+      }
+
+      .cart_car-card p {
+        font-size: 0.85rem;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .car-image-container {
+        height: 65%;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <!-- ======================================== Cart ======================================== -->
+  <div class="cartcontainer">
+    <header class="py-6 mb-8">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center" style="width: 100%;justify-content: center;">
+          <svg data-lucide="car" class="w-10 h-10 sm:w-12 sm:h-12 text-gray-900 dark:text-white mr-3 sm:mr-4"></svg>
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white">
+            Jaguar
+          </h1>
+        </div>
+        <button id="theme-toggle" title="Toggle theme"
+          class="p-2 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400">
+          <svg id="theme-toggle-dark-icon" class="hidden lucide lucide-moon" xmlns="http://www.w3.org/2000/svg"
+            width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+          </svg>
+          <svg id="theme-toggle-light-icon" class="hidden lucide lucide-sun" xmlns="http://www.w3.org/2000/svg"
+            width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2" />
+            <path d="M12 20v2" />
+            <path d="m4.93 4.93 1.41 1.41" />
+            <path d="m17.66 17.66 1.41 1.41" />
+            <path d="M2 12h2" />
+            <path d="M20 12h2" />
+            <path d="m6.34 17.66-1.41 1.41" />
+            <path d="m19.07 4.93-1.41 1.41" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="car-list">
+      <div class="cart_car-card">
+        <div class="car-image-container" role="region" aria-label="Jaguar F-PACE image carousel">
+          <input type="radio" name="f-pace-img" id="f-pace-img1" class="car-image-radio" checked
+            aria-label="Jaguar F-PACE Front view">
+          <img src="Images/Right.png" alt="Jaguar F-PACE Front" class="car-image">
+          <input type="radio" name="f-pace-img" id="f-pace-img2" class="car-image-radio"
+            aria-label="Jaguar F-PACE Side view">
+          <img src="Images/Front.png" alt="Jaguar F-PACE Side" class="car-image">
+          <input type="radio" name="f-pace-img" id="f-pace-img3" class="car-image-radio"
+            aria-label="Jaguar F-PACE Rear view">
+          <img src="Images/Left.png" alt="Jaguar F-PACE Rear" class="car-image">
+          <div class="carousel-dots">
+            <label for="f-pace-img1" class="carousel-dot" aria-label="Select Jaguar F-PACE Front view"></label>
+            <label for="f-pace-img2" class="carousel-dot" aria-label="Select Jaguar F-PACE Side view"></label>
+            <label for="f-pace-img3" class="carousel-dot" aria-label="Select Jaguar F-PACE Rear view"></label>
+          </div>
+        </div>
+        <h3>Jaguar F-PACE</h3>
+        <p>Luxury performance SUV with dynamic driving.</p>
+        <button class="cart-configure-btn">Configure</button>
+      </div>
+      <div class="cart_car-card">
+        <div class="car-image-container" role="region" aria-label="Jaguar XF image carousel">
+          <input type="radio" name="xf-img" id="xf-img1" class="car-image-radio" checked
+            aria-label="Jaguar XF Front view">
+          <img src="Images/JaguarXF1.png" alt="Jaguar XF Front" class="car-image">
+          <input type="radio" name="xf-img" id="xf-img2" class="car-image-radio" aria-label="Jaguar XF Side view">
+          <img src="Images/JaguarXF2.png" alt="Jaguar XF Side" class="car-image">
+          <input type="radio" name="xf-img" id="xf-img3" class="car-image-radio" aria-label="Jaguar XF Rear view">
+          <img src="Images/JaguarXF3.png" alt="Jaguar XF Rear" class="car-image">
+          <div class="carousel-dots">
+            <label for="xf-img1" class="carousel-dot" aria-label="Select Jaguar XF Front view"></label>
+            <label for="xf-img2" class="carousel-dot" aria-label="Select Jaguar XF Side view"></label>
+            <label for="xf-img3" class="carousel-dot" aria-label="Select Jaguar XF Rear view"></label>
+          </div>
+        </div>
+        <h3>Jaguar XF</h3>
+        <p>Elegant sedan with advanced technology.</p>
+        <button class="cart-configure-btn">Configure</button>
+      </div>
+      <div class="cart_car-card">
+        <div class="car-image-container" role="region" aria-label="Jaguar XE image carousel">
+          <input type="radio" name="xe-img" id="xe-img1" class="car-image-radio" checked
+            aria-label="Jaguar XE Front view">
+          <img src="Images/JaguarXE1.png" alt="Jaguar XE Front" class="car-image">
+          <input type="radio" name="xe-img" id="xe-img2" class="car-image-radio" aria-label="Jaguar XE Side view">
+          <img src="Images/JaguarXE2.png" alt="Jaguar XE Side" class="car-image">
+          <input type="radio" name="xe-img" id="xe-img3" class="car-image-radio" aria-label="Jaguar XE Rear view">
+          <img src="Images/JaguarXE3.png" alt="Jaguar XE Rear" class="car-image">
+          <div class="carousel-dots">
+            <label for="xe-img1" class="carousel-dot" aria-label="Select Jaguar XE Front view"></label>
+            <label for="xe-img2" class="carousel-dot" aria-label="Select Jaguar XE Side view"></label>
+            <label for="xe-img3" class="carousel-dot" aria-label="Select Jaguar XE Rear view"></label>
+          </div>
+        </div>
+        <h3>Jaguar XE</h3>
+        <p>Compact saloon with agile performance.</p>
+        <button class="cart-configure-btn">Configure</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================== Configurator ======================================== -->
+  <div class="container mx-auto max-w-7xl px-4 configuratorcontainer">
+    <header class="py-6 mb-8">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <svg data-lucide="car" class="w-10 h-10 sm:w-12 sm:h-12 text-gray-900 dark:text-white mr-3 sm:mr-4"></svg>
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white">
+            Jaguar F-PACE Configurator
+          </h1>
+        </div>
+        <button id="closeconfiguratorcontainer" class="cart-configure-btn">Close</button>
+      </div>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+      <div class="lg:col-span-2 panel">
+        <div class="flex items-center mb-6">
+          <svg data-lucide="settings-2" class="w-7 h-7 text-gray-700 dark:text-gray-300 mr-3"></svg>
+          <h2 class="text-2xl font-semibold">Configure Your Jaguar F-PACE</h2>
+        </div>
+
+        <div class="form-group mb-6">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Select View</label>
+          <div id="view-selector" class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <button data-view="front"
+              class="view-btn flex items-center justify-center flex-1 p-2.5 rounded-lg text-sm font-medium">
+              <svg data-lucide="layout-grid" class="w-4 h-4 mr-2 hidden sm:inline"></svg>Front
+            </button>
+            <button data-view="back"
+              class="view-btn flex items-center justify-center flex-1 p-2.5 rounded-lg text-sm font-medium">
+              <svg data-lucide="chevrons-right" class="w-4 h-4 mr-2 hidden sm:inline"></svg>Back
+            </button>
+            <button data-view="left"
+              class="view-btn flex items-center justify-center flex-1 p-2.5 rounded-lg text-sm font-medium">
+              <svg data-lucide="arrow-left-to-line" class="w-4 h-4 mr-2 hidden sm:inline"></svg>Left
+            </button>
+            <button data-view="right"
+              class="view-btn flex items-center justify-center flex-1 p-2.5 rounded-lg text-sm font-medium">
+              <svg data-lucide="arrow-right-to-line" class="w-4 h-4 mr-2 hidden sm:inline"></svg>Right
+            </button>
+          </div>
+        </div>
+
+        <div id="part-options" class="space-y-6">
+        </div>
+        <div id="compatibility-notification-container" class="mt-4">
+        </div>
+
+
+        <div class="form-group mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+          <label class="block text-lg font-semibold mb-3">Premium Add-Ons</label>
+          <div class="space-y-3 custom-checkbox">
+            <label>
+              <input type="checkbox" id="premium-interior">
+              <span class="text-sm">Premium Interior Package <span
+                  class="text-gray-500 dark:text-gray-400">($5,000)</span></span>
+            </label>
+            <label>
+              <input type="checkbox" id="tech-package">
+              <span class="text-sm">Advanced Technology Package <span
+                  class="text-gray-500 dark:text-gray-400">($3,000)</span></span>
+            </label>
+          </div>
+        </div>
+        <div id="recent-parts-container" class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="text-lg font-semibold">Recently Selected</h3>
+            <button id="clear-recent-parts" title="Clear recent selections"
+              class="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+              <svg data-lucide="trash-2" class="w-4 h-4"></svg>
+            </button>
+          </div>
+          <div id="recent-parts-list" class="space-y-2 text-sm">
+            <p class="text-gray-500 dark:text-gray-400 italic">No recent selections yet.</p>
+          </div>
+        </div>
+
+        <div class="mt-8 space-y-3">
+          <button id="save-config"
+            class="w-full flex items-center justify-center py-3 px-4 bg-gray-800 hover:bg-black text-white dark:bg-gray-200 dark:hover:bg-white dark:text-black font-semibold rounded-lg shadow-md transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-300 focus:ring-opacity-75">
+            <svg data-lucide="save" class="w-5 h-5 mr-2"></svg>
+            Save Configuration
+          </button>
+          <button id="reset-config"
+            class="w-full flex items-center justify-center py-3 px-4 bg-gray-600 hover:bg-gray-700 text-white font-semibold rounded-lg shadow-md transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-75 dark:bg-gray-500 dark:hover:bg-gray-400">
+            <svg data-lucide="rotate-ccw" class="w-5 h-5 mr-2"></svg>
+            Reset Configuration
+          </button>
+        </div>
+      </div>
+
+      <div class="lg:col-span-1 panel sticky top-6">
+        <div class="flex items-center mb-6">
+          <svg data-lucide="image" class="w-7 h-7 text-gray-700 dark:text-gray-300 mr-3"></svg>
+          <h2 class="text-2xl font-semibold">Preview & Quote</h2>
+        </div>
+
+        <div
+          class="preview mb-6 bg-gray-200 dark:bg-black p-3 rounded-lg shadow-inner border border-gray-300 dark:border-gray-700">
+          <img id="preview-image" src="Images/Front.png" alt="Jaguar F-PACE Front View"
+            class="w-full h-auto object-contain rounded-md mb-3 max-h-52 sm:max-h-60"
+            onerror="this.onerror=null; this.src='https://placehold.co/600x400/F3F4F6/111827?text=Preview+Unavailable'; this.alt='Preview image is unavailable or local image not found.';">
+
+          <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2 text-center">Selected Components:</h3>
+          <div id="part-images" class="grid grid-cols-3 gap-2 justify-items-center">
+          </div>
+        </div>
+
+        <div class="quote-details space-y-1 text-sm mb-6">
+          <p class="flex justify-between"><strong>Model:</strong> <span class="text-gray-700 dark:text-gray-300">Jaguar
+              F-PACE</span></p>
+          <hr class="border-gray-200 dark:border-gray-700 my-1.5">
+          <h4 class="font-semibold mt-2 mb-1">Cost Breakdown:</h4>
+          <p class="flex justify-between ml-2">Base Price: <span class="text-gray-700 dark:text-gray-300">$<span
+                id="quote-base-price">60000.00</span></span></p>
+          <p class="flex justify-between ml-2">Selected Parts Total: <span
+              class="text-gray-700 dark:text-gray-300">$<span id="quote-parts-total">0.00</span></span></p>
+          <p class="flex justify-between ml-2">Premium Add-Ons Total: <span
+              class="text-gray-700 dark:text-gray-300">$<span id="quote-addons-total">0.00</span></span></p>
+          <hr class="border-gray-200 dark:border-gray-700 my-1.5">
+          <p class="flex justify-between text-gray-600 dark:text-gray-400">Subtotal: <span
+              class="text-gray-700 dark:text-gray-300">$<span id="quote-subtotal">60000.00</span></span></p>
+          <p class="flex justify-between text-gray-600 dark:text-gray-400">Discount Applied: <span>-$<span
+                id="quote-discount">0.00</span></span></p>
+          <hr class="border-gray-200 dark:border-gray-700 my-1.5">
+          <p class="flex justify-between text-xl font-bold mt-2"><strong>Total Price:</strong> <span
+              id="quote-total-container" class="text-gray-900 dark:text-white">$<span
+                id="quote-total">60000.00</span></span></p>
+          <hr class="border-gray-200 dark:border-gray-700 mt-2 mb-1.5">
+          <h4 class="font-semibold mt-3 mb-1">Summary:</h4>
+          <p><strong>View:</strong> <span id="quote-view" class="text-gray-700 dark:text-gray-300">Front</span></p>
+          <div><strong>Parts:</strong> <span id="quote-parts"
+              class="text-gray-700 dark:text-gray-300 block mt-0.5 leading-normal text-xs">None</span></div>
+          <div><strong>Add-Ons:</strong> <span id="quote-addons"
+              class="text-gray-700 dark:text-gray-300 block mt-0.5 text-xs">None</span></div>
+        </div>
+        <div class="space-y-3">
+          <button id="generate-quote"
+            class="w-full flex items-center justify-center py-3 px-4 bg-gray-800 hover:bg-black text-white font-semibold rounded-lg shadow-md transition-colors focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-75 dark:bg-white dark:hover:bg-gray-200 dark:text-black">
+            <svg data-lucide="download-cloud" class="w-5 h-5 mr-2"></svg>
+            Download Quote
+          </button>
+          <button id="copy-summary"
+            class="w-full flex items-center justify-center py-3 px-4 bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white font-semibold rounded-lg shadow-md transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-500 focus:ring-opacity-75">
+            <svg data-lucide="copy" class="w-5 h-5 mr-2"></svg>
+            Copy Summary
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-12 panel">
+      <div class="flex items-center mb-6">
+        <svg data-lucide="sparkles" class="w-7 h-7 text-gray-700 dark:text-gray-300 mr-3"></svg>
+        <h2 class="text-2xl font-semibold">Why Choose the Jaguar F-PACE?</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div
+          class="bg-white dark:bg-gray-700/50 p-5 rounded-lg shadow hover:shadow-md transition-shadow duration-300 border border-gray-200 dark:border-gray-600/50 hover:border-gray-300 dark:hover:border-gray-500">
+          <div class="flex items-start">
+            <svg data-lucide="check-circle"
+              class="w-5 h-5 text-gray-800 dark:text-white mr-2.5 mt-0.5 flex-shrink-0"></svg>
+            <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">A luxury performance SUV offering an
+              exhilarating blend of practicality and efficiency.</p>
+          </div>
+        </div>
+        <div
+          class="bg-white dark:bg-gray-700/50 p-5 rounded-lg shadow hover:shadow-md transition-shadow duration-300 border border-gray-200 dark:border-gray-600/50 hover:border-gray-300 dark:hover:border-gray-500">
+          <div class="flex items-start">
+            <svg data-lucide="check-circle"
+              class="w-5 h-5 text-gray-800 dark:text-white mr-2.5 mt-0.5 flex-shrink-0"></svg>
+            <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">Features an option for an all-electric
+              powertrain, catering to eco-conscious drivers without compromising on power.</p>
+          </div>
+        </div>
+        <div
+          class="bg-white dark:bg-gray-700/50 p-5 rounded-lg shadow hover:shadow-md transition-shadow duration-300 border border-gray-200 dark:border-gray-600/50 hover:border-gray-300 dark:hover:border-gray-500">
+          <div class="flex items-start">
+            <svg data-lucide="check-circle"
+              class="w-5 h-5 text-gray-800 dark:text-white mr-2.5 mt-0.5 flex-shrink-0"></svg>
+            <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">Boasts a unique combination of stunning
+              looks, exceptional agility, and dynamic driving capabilities.</p>
+          </div>
+        </div>
+        <div
+          class="bg-white dark:bg-gray-700/50 p-5 rounded-lg shadow hover:shadow-md transition-shadow duration-300 border border-gray-200 dark:border-gray-600/50 hover:border-gray-300 dark:hover:border-gray-500">
+          <div class="flex items-start">
+            <svg data-lucide="check-circle"
+              class="w-5 h-5 text-gray-800 dark:text-white mr-2.5 mt-0.5 flex-shrink-0"></svg>
+            <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">Equipped with advanced, driver-focused
+              technology for a seamlessly connected and intuitive experience.</p>
+          </div>
+        </div>
+        <div
+          class="bg-white dark:bg-gray-700/50 p-5 rounded-lg shadow hover:shadow-md transition-shadow duration-300 border border-gray-200 dark:border-gray-600/50 hover:border-gray-300 dark:hover:border-gray-500 md:col-span-2">
+          <div class="flex items-start">
+            <svg data-lucide="check-circle"
+              class="w-5 h-5 text-gray-800 dark:text-white mr-2.5 mt-0.5 flex-shrink-0"></svg>
+            <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">Showcases an award-winning design,
+              meticulously crafted for both thrilling performance and supreme comfort.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="text-center mt-12 py-6 border-t border-gray-200 dark:border-gray-700">
+      <p class="text-xs text-gray-500 dark:text-gray-400">&copy; ${new Date().getFullYear()} Jaguar Land Rover Limited.
+        CPQ Configurator by Gemini.</p>
+    </footer>
+  </div>
+
+  <div id="part-detail-modal" class="modal-overlay">
+    <div class="modal-content panel">
+      <div class="flex justify-between items-center mb-4">
+        <h3 id="modal-part-name" class="text-xl font-semibold">Part Details</h3>
+        <button id="close-modal-btn"
+          class="p-1 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700">
+          <svg data-lucide="x" class="w-6 h-6"></svg>
+        </button>
+      </div>
+      <img id="modal-part-image" src="" alt="Part Image"
+        class="w-full h-64 object-contain rounded-md mb-4 bg-gray-200 dark:bg-black border border-gray-300 dark:border-gray-700">
+      <p id="modal-part-description" class="text-sm mb-2"></p>
+      <p class="text-lg font-semibold">Price: $<span id="modal-part-price">0.00</span></p>
+    </div>
+  </div>
+
+  <div id="copy-notification" class="bg-gray-800 dark:bg-gray-200 text-white dark:text-black">Summary Copied!</div>
+  <div id="compatibility-notification" class="bg-gray-800 dark:bg-gray-200 text-white dark:text-black"></div>
+
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <script>
+    if (typeof jQuery === 'undefined') { console.error('jQuery is not loaded.'); }
+
+    jQuery(document).ready(function ($) {
+      const carData = {
+        basePrice: 60000,
+        views: {
+          front: { image: 'Images/Front.png', parts: { grille: [{ name: 'Standard Grille', price: 0, image: 'https://i.ebayimg.com/images/g/2dwAAeSwhSdoB~PX/s-l1600.webp', tooltip: 'Classic grille design' }, { name: 'Sport Grille', price: 500, image: 'https://i.ebayimg.com/images/g/WxYAAeSwX0VoB~PX/s-l1600.webp', tooltip: 'Sporty grille with bold accents' }, { name: 'Premium Grille', price: 1000, image: 'https://i.ebayimg.com/images/g/y1kAAeSwveBn13VZ/s-l960.webp', tooltip: 'Luxury grille with chrome finish' }], headlights: [{ name: 'Standard LED', price: 0, image: 'https://boodmo.com/media/cache/part_zoom_horizontal/images/parts/39c8d4848056d828a219c697d2a82b2f.webp', tooltip: 'Efficient LED headlights' }, { name: 'Matrix LED', price: 800, image: 'https://i.ebayimg.com/images/g/6zwAAeSwFYVoE8Jo/s-l1600.webp', tooltip: 'Advanced Matrix LED for better visibility' }, { name: 'Adaptive LED', price: 1500, image: 'https://5.imimg.com/data5/SELLER/Default/2023/1/CV/OQ/GG/44067946/7c9d6b32-41de-4d33-b5ab-e6a4e72a30e0-1000x1000.jpg', tooltip: 'Adaptive LED with dynamic lighting' }], bumper: [{ name: 'Standard Bumper', price: 0, image: 'https://i.ebayimg.com/images/g/2hkAAOSwZbRoIzOt/s-l1600.webp', tooltip: 'Sleek standard bumper' }, { name: 'Sport Bumper', price: 600, image: 'https://i.ebayimg.com/images/g/LPAAAOSwijNnEpVT/s-l1600.webp', tooltip: 'Aggressive sport bumper' }, { name: 'Premium Bumper', price: 1200, image: 'https://i.ebayimg.com/images/g/I5cAAOSw5z1nUwwg/s-l1600.webp', tooltip: 'Premium bumper with chrome accents' }] } },
+          back: { image: 'Images/Back.png', parts: { taillights: [{ name: 'Standard Tail Lights', price: 0, image: 'https://5.imimg.com/data5/SELLER/Default/2020/10/QX/NY/KZ/63741770/jaguar-xe-car-tail-lights-250x250.jpg', tooltip: 'Standard LED tail lights' }, { name: 'LED Tail Lights', price: 400, image: 'https://s.alicdn.com/@sc04/kf/H8b87787148b2440d9e75698a83852964v.png_720x720q50.jpg', tooltip: 'Enhanced LED tail lights' }, { name: 'Dynamic LED', price: 900, image: 'https://s.alicdn.com/@sc04/kf/Hb25cbe1b40f0414083c1dd7ddd79bb07u.png_720x720q50.jpg', tooltip: 'Dynamic LED with animations' }], rearbumper: [{ name: 'Standard Rear Bumper', price: 0, image: 'https://i.ebayimg.com/images/g/9CcAAOSw0jBoA3c5/s-l1600.webp', tooltip: 'Standard rear bumper design' }, { name: 'Sport Rear Bumper', price: 600, image: 'https://i.ebayimg.com/images/g/ZAgAAOSwaW9mahEq/s-l1600.webp', tooltip: 'Sporty rear bumper' }, { name: 'Premium Rear Bumper', price: 1100, image: 'https://i.ebayimg.com/images/g/B44AAOSw10pm2F9u/s-l1600.webp', tooltip: 'Premium rear bumper with accents' }], exhaust: [{ name: 'Standard Exhaust', price: 0, image: 'https://s.alicdn.com/@sc04/kf/Hd8eaa99b0b744b7d973f93d6ec2ec361R.png_720x720q50.jpg', tooltip: 'Standard exhaust system' }, { name: 'Sport Exhaust', price: 700, image: 'https://s.alicdn.com/@sc04/kf/H2a6c12fe6fba4bb88ec06d5917b3c273B.jpg_720x720q50.jpg', tooltip: 'Sport exhaust with enhanced sound' }, { name: 'Premium Exhaust', price: 1300, image: 'https://s.alicdn.com/@sc04/kf/Hd627c8424eb84de69c9fdccd36e606d1T.png_720x720q50.jpg', tooltip: 'Premium exhaust with polished tips' }] } },
+          left: { image: 'Images/Left.png', parts: { wheels: [{ name: '18-inch Alloy', price: 0, image: 'https://store.jaguar.com/media/catalog/product/cache/7ae39dc60a91a42f981219f89723d2b9/6/f/6fd70a09b0424fea8ad5ed0408a76ad7.jpg', tooltip: '18-inch alloy wheels' }, { name: '20-inch Sport Alloy', price: 1000, image: 'https://store.jaguar.com/media/catalog/product/cache/42788f9c7149b76a46ae238a1bb4b101/t/2/t2r4748_1.jpg', tooltip: '20-inch sport alloy wheels' }, { name: '22-inch Premium Alloy', price: 2000, image: 'https://store.jaguar.com/media/catalog/product/cache/42788f9c7149b76a46ae238a1bb4b101/t/2/t2r3286_1.jpg', tooltip: '22-inch premium alloy wheels' }], mirrors: [{ name: 'Standard Mirrors', price: 0, image: 'https://s.alicdn.com/@sc04/kf/H9ee665eb2da342bba19a2f52375f9f11P.jpg_720x720q50.jpg', tooltip: 'Standard side mirrors' }, { name: 'Heated Mirrors', price: 300, image: 'https://5.imimg.com/data5/SELLER/Default/2022/10/EC/JE/BX/107906401/jaguar-xf-car-side-mirror-1000x1000.jpg', tooltip: 'Heated side mirrors' }, { name: 'Auto-Dimming Mirrors', price: 600, image: 'https://s.alicdn.com/@sc04/kf/Hfb2bbe79cd4d4fcb85a803b76397fe7cX.jpg_300x300.jpg', tooltip: 'Auto-dimming side mirrors' }], handles: [{ name: 'Standard Handles', price: 0, image: 'https://s.alicdn.com/@sc04/kf/Hc80c86692ae44512bfe0630d7fed2bdft.jpg_720x720q50.jpg', tooltip: 'Standard door handles' }, { name: 'Chrome Handles', price: 200, image: 'https://s.alicdn.com/@sc04/kf/HTB1jNwYKeGSBuNjSspbq6AiipXab.jpg_720x720q50.jpg', tooltip: 'Chrome door handles' }, { name: 'Body-Color Handles', price: 400, image: 'https://s.alicdn.com/@sc04/kf/Hc8038e6cee7a4d92a67dfb7f69498502p.jpg_720x720q50.jpg', tooltip: 'Body-color door handles' }] } },
+          right: { image: 'Images/Right.png', parts: { wheels: [{ name: '18-inch Alloy', price: 0, image: 'https://store.jaguar.com/media/catalog/product/cache/7ae39dc60a91a42f981219f89723d2b9/6/f/6fd70a09b0424fea8ad5ed0408a76ad7.jpg', tooltip: '18-inch alloy wheels' }, { name: '20-inch Sport Alloy', price: 1000, image: 'https://store.jaguar.com/media/catalog/product/cache/42788f9c7149b76a46ae238a1bb4b101/t/2/t2r4748_1.jpg', tooltip: '20-inch sport alloy wheels' }, { name: '22-inch Premium Alloy', price: 2000, image: 'https://store.jaguar.com/media/catalog/product/cache/42788f9c7149b76a46ae238a1bb4b101/t/2/t2r3286_1.jpg', tooltip: '22-inch premium alloy wheels' }], mirrors: [{ name: 'Standard Mirrors', price: 0, image: 'https://s.alicdn.com/@sc04/kf/H9ee665eb2da342bba19a2f52375f9f11P.jpg_720x720q50.jpg', tooltip: 'Standard side mirrors' }, { name: 'Heated Mirrors', price: 300, image: 'https://5.imimg.com/data5/SELLER/Default/2022/10/EC/JE/BX/107906401/jaguar-xf-car-side-mirror-1000x1000.jpg', tooltip: 'Heated side mirrors' }, { name: 'Auto-Dimming Mirrors', price: 600, image: 'https://s.alicdn.com/@sc04/kf/Hfb2bbe79cd4d4fcb85a803b76397fe7cX.jpg_300x300.jpg', tooltip: 'Auto-dimming side mirrors' }], handles: [{ name: 'Standard Handles', price: 0, image: 'https://s.alicdn.com/@sc04/kf/Hc80c86692ae44512bfe0630d7fed2bdft.jpg_720x720q50.jpg', tooltip: 'Standard door handles' }, { name: 'Chrome Handles', price: 200, image: 'https://s.alicdn.com/@sc04/kf/HTB1jNwYKeGSBuNjSspbq6AiipXab.jpg_720x720q50.jpg', tooltip: 'Chrome door handles' }, { name: 'Body-Color Handles', price: 400, image: 'https://s.alicdn.com/@sc04/kf/Hc8038e6cee7a4d92a67dfb7f69498502p.jpg_720x720q50.jpg', tooltip: 'Body-color door handles' }] } }
+        },
+        addOns: { premiumInterior: 5000, techPackage: 3000 }
+      };
+
+      const lightTheme = 'light';
+      const darkTheme = 'dark';
+      const themeToggleBtn = document.getElementById('theme-toggle');
+      const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+      const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+      const previewImageEl = document.getElementById('preview-image');
+      const copyNotificationEl = $('#copy-notification');
+      const compatibilityNotificationEl = $('#compatibility-notification');
+      const modalEl = $('#part-detail-modal');
+      let compatibilityTimeout;
+      const MAX_RECENT_PARTS = 5;
+      let recentParts = JSON.parse(localStorage.getItem('recentJaguarParts')) || [];
+
+
+      function getThemedFallbackPlaceholderUrl(isDarkMode, text = "Preview Unavailable") {
+        const themeBg = isDarkMode ? '000000' : 'F3F4F6';
+        const themeFg = isDarkMode ? 'FFFFFF' : '111827';
+        return `https://placehold.co/600x400/${themeBg}/${themeFg}?text=${encodeURIComponent(text)}`;
+      }
+
+      function applyTheme(theme) {
+        const isDarkMode = theme === darkTheme;
+        document.documentElement.classList.toggle('dark', isDarkMode);
+        themeToggleDarkIcon.classList.toggle('hidden', !isDarkMode);
+        themeToggleLightIcon.classList.toggle('hidden', isDarkMode);
+
+        if (previewImageEl) {
+          previewImageEl.onerror = function () {
+            this.onerror = null;
+            this.src = getThemedFallbackPlaceholderUrl(isDarkMode, `Jaguar F-PACE ${$('#view-selector .active-view').data('view') || 'Front'} View`);
+          };
+          // If src is already a placeholder, update it
+          if (previewImageEl.src.includes('placehold.co')) {
+            previewImageEl.src = getThemedFallbackPlaceholderUrl(isDarkMode, `Jaguar F-PACE ${$('#view-selector .active-view').data('view') || 'Front'} View`);
+          }
+        }
+        updatePartImages();
+      }
+
+      function toggleTheme() {
+        const currentTheme = document.documentElement.classList.contains('dark') ? darkTheme : lightTheme;
+        const newTheme = currentTheme === darkTheme ? lightTheme : darkTheme;
+        localStorage.setItem('theme', newTheme);
+        applyTheme(newTheme);
+        const currentView = $('#view-selector .active-view').data('view') || 'front';
+        $('#preview-image').attr('src', carData.views[currentView].image);
+      }
+
+      const storedTheme = localStorage.getItem('theme');
+      const initialTheme = (storedTheme === darkTheme || storedTheme === lightTheme) ? storedTheme : lightTheme;
+      if (!localStorage.getItem('theme')) { localStorage.setItem('theme', lightTheme); }
+      applyTheme(initialTheme);
+      themeToggleBtn.addEventListener('click', toggleTheme);
+
+      // New View Selector Logic
+      const $viewSelectorButtons = $('#view-selector .view-btn');
+      function setActiveViewButton(selectedView) {
+        $viewSelectorButtons.removeClass('active-view');
+        $viewSelectorButtons.filter(`[data-view="${selectedView}"]`).addClass('active-view');
+      }
+
+      $viewSelectorButtons.on('click', function () {
+        const selectedView = $(this).data('view');
+        setActiveViewButton(selectedView);
+        updatePartOptions(selectedView);
+      });
+
+
+      function updatePartOptions(view) {
+        const $partOptions = $('#part-options');
+        $partOptions.empty();
+        const parts = carData.views[view].parts;
+        const isDarkMode = document.documentElement.classList.contains('dark');
+
+        Object.keys(parts).forEach(partKey => {
+          const options = parts[partKey];
+          const $fieldset = $('<fieldset>').addClass('mb-6').attr('id', `fieldset-${partKey}`); // Add ID for scrolling
+          const $legend = $('<legend>')
+            .addClass('text-base font-semibold text-gray-700 dark:text-gray-200 mb-2 capitalize')
+            .text(partKey.replace(/([A-Z0-9])/g, ' $1').trim());
+
+          const $optionsContainer = $('<div>').addClass('grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-3 gap-y-2.5 custom-radio');
+          options.forEach((opt, index) => {
+            const radioId = `part-${partKey}-${index}`;
+            const $radioWrapper = $('<div>').addClass('tooltip');
+            const $radio = $('<input>').attr({ type: 'radio', name: `part-${partKey}`, id: radioId, value: opt.name, 'data-price': opt.price, 'data-image': opt.image, 'data-tooltip': opt.tooltip, 'aria-label': `${opt.name} for ${partKey} ($${opt.price})` });
+            if (index === 0) $radio.prop('checked', true);
+
+            const $labelContent = $('<span>').text(`${opt.name} ($${opt.price.toLocaleString()})`);
+            const $infoIcon = $(`<p class="info-icon w-4 h-4 cursor-pointer flex-shrink-0" data-part-key="${partKey}" data-option-index="${index}">ⓘ</p>`);
+            const $label = $('<label>').attr('for', radioId).append($labelContent, $infoIcon);
+
+            const $tooltipText = $('<span>').addClass('tooltiptext').text(opt.tooltip || opt.name);
+            $radioWrapper.append($radio, $label, $tooltipText);
+            $optionsContainer.append($radioWrapper);
+          });
+          $fieldset.append($legend, $optionsContainer);
+          $partOptions.append($fieldset);
+        });
+        if (typeof lucide !== 'undefined') { lucide.createIcons(); }
+
+        $('#preview-image').attr('src', carData.views[view].image)
+          .attr('alt', `Jaguar F-PACE ${view.charAt(0).toUpperCase() + view.slice(1)} View`);
+        setActiveViewButton(view); // Update active view button
+        updatePartImages();
+        calculatePrice();
+      }
+
+      function showPartDetailModal(partKey, optionIndex) {
+        const view = $('#view-selector .active-view').data('view') || 'front';
+        const optionData = carData.views[view].parts[partKey][optionIndex];
+        if (!optionData) return;
+
+        $('#modal-part-name').text(optionData.name);
+        $('#modal-part-image').attr('src', optionData.image).attr('alt', optionData.name);
+        $('#modal-part-image').on('error', function () {
+          const isDarkMode = document.documentElement.classList.contains('dark');
+          $(this).attr('src', getThemedFallbackPlaceholderUrl(isDarkMode, optionData.name));
+        });
+        $('#modal-part-description').text(optionData.tooltip || 'No description available.');
+        $('#modal-part-price').text(optionData.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+
+        modalEl.addClass('active');
+      }
+
+      $('#part-options').on('click', '.info-icon', function (e) {
+        e.stopPropagation();
+        const partKey = $(this).data('part-key');
+        const optionIndex = $(this).data('option-index');
+        showPartDetailModal(partKey, optionIndex);
+      });
+
+      $('#close-modal-btn').on('click', function () { modalEl.removeClass('active'); });
+      modalEl.on('click', function (e) { if (e.target === this) { modalEl.removeClass('active'); } });
+
+      function updatePartImages() {
+        const $partImagesContainer = $('#part-images');
+        $partImagesContainer.empty();
+        const isDarkMode = document.documentElement.classList.contains('dark');
+        $('input[type="radio"][name^="part-"]:checked').each(function () {
+          const $radio = $(this);
+          const imageUrl = $radio.data('image');
+          const partName = $radio.attr('name').replace('part-', '');
+          const optionName = $radio.val();
+          if (imageUrl) {
+            const imgWrapperBgClass = isDarkMode ? 'bg-gray-800' : 'bg-gray-100';
+            const imgWrapperBorderClass = isDarkMode ? 'border-gray-700' : 'border-gray-300';
+            const $imgWrapper = $('<div>').addClass(`${imgWrapperBgClass} p-1 rounded-md shadow border ${imgWrapperBorderClass}`);
+            const $img = $('<img>').attr({ src: imageUrl, alt: `${optionName} - ${partName}`, loading: 'lazy', class: 'w-16 h-16 sm:w-20 sm:h-20 object-contain rounded-sm' })
+              .on('error', function () {
+                const placeholderBg = isDarkMode ? '1f2937' : 'e5e7eb';
+                const placeholderTextCol = isDarkMode ? 'd1d5db' : '374151';
+                $(this).attr('src', `https://placehold.co/80x80/${placeholderBg}/${placeholderTextCol}?text=${partName.substring(0, 3).toUpperCase()}`);
+                $(this).attr('alt', `Image for ${optionName} unavailable`);
+              });
+            $imgWrapper.append($img);
+            $partImagesContainer.append($imgWrapper);
+          }
+        });
+      }
+
+      function showCompatibilityNotification(message) {
+        const container = $('#compatibility-notification-container');
+        container.empty(); // Clear previous messages
+        const notification = $('<div>')
+          .addClass('p-3 mb-3 rounded-md text-sm border')
+          .addClass(document.documentElement.classList.contains('dark')
+            ? 'bg-yellow-700/30 border-yellow-500/50 text-yellow-200'
+            : 'bg-yellow-100 border-yellow-300 text-yellow-700')
+          .text(message);
+        container.append(notification);
+
+        clearTimeout(compatibilityTimeout);
+        compatibilityTimeout = setTimeout(() => {
+          notification.fadeOut(500, function () { $(this).remove(); });
+        }, 5000);
+      }
+
+      function checkCompatibility() {
+        const selectedBumper = $('input[name="part-bumper"]:checked').val();
+        const selectedExhaust = $('input[name="part-exhaust"]:checked').val();
+        if (selectedBumper === 'Sport Bumper' && selectedExhaust === 'Standard Exhaust') {
+          showCompatibilityNotification("Suggestion: 'Sport Exhaust' pairs well with your 'Sport Bumper'.");
+        } else {
+          //$('#compatibility-notification-container').empty(); // Clear if compatible or rule doesn't apply
+        }
+      }
+
+      function addRecentPart(partKey, optionName, price) {
+        const newItem = { partKey, optionName, price, id: `${partKey}-${optionName.replace(/\s+/g, '-')}` };
+        // Remove if already exists to move to top
+        recentParts = recentParts.filter(item => item.id !== newItem.id);
+        recentParts.unshift(newItem); // Add to the beginning
+        if (recentParts.length > MAX_RECENT_PARTS) {
+          recentParts.pop(); // Keep only MAX_RECENT_PARTS
+        }
+        localStorage.setItem('recentJaguarParts', JSON.stringify(recentParts));
+        displayRecentParts();
+      }
+
+      function displayRecentParts() {
+        const $list = $('#recent-parts-list');
+        $list.empty();
+        if (recentParts.length === 0) {
+          $list.html('<p class="text-gray-500 dark:text-gray-400 italic">No recent selections yet.</p>');
+          return;
+        }
+        recentParts.forEach(item => {
+          const $itemBtn = $('<button>')
+            .addClass('recent-item-btn block w-full text-left px-3 py-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700')
+            .attr('data-part-key', item.partKey)
+            .attr('data-option-name', item.optionName)
+            .html(`<span class="font-medium text-gray-700 dark:text-gray-300">${item.partKey.replace(/([A-Z0-9])/g, ' $1').trim().replace(/^\w/, c => c.toUpperCase())}:</span> ${item.optionName} <span class="text-xs text-gray-500 dark:text-gray-400">($${item.price.toLocaleString()})</span>`);
+          $list.append($itemBtn);
+        });
+      }
+      $('#recent-parts-list').on('click', '.recent-item-btn', function () {
+        const partKey = $(this).data('part-key');
+        const optionName = $(this).data('option-name');
+        // Find the radio button and select it
+        $(`input[name="part-${partKey}"][value="${optionName}"]`).prop('checked', true).trigger('change');
+        // Scroll to the part
+        const fieldsetElement = document.getElementById(`fieldset-${partKey}`);
+        if (fieldsetElement) {
+          fieldsetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      });
+      $('#clear-recent-parts').on('click', function () {
+        recentParts = [];
+        localStorage.removeItem('recentJaguarParts');
+        displayRecentParts();
+      });
+
+
+      function calculatePrice() {
+        const currentView = $('#view-selector .active-view').data('view') || 'front';
+        const premiumInteriorSelected = $('#premium-interior').is(':checked');
+        const techPackageSelected = $('#tech-package').is(':checked');
+        let currentPrice = carData.basePrice;
+        let partsTotal = 0;
+        let addonsTotal = 0;
+        let partsSummaryArray = [];
+
+        $('input[type="radio"][name^="part-"]:checked').each(function () {
+          const $radio = $(this);
+          const partPrice = parseFloat($radio.data('price')) || 0;
+          partsTotal += partPrice;
+          partsSummaryArray.push(`${$radio.attr('name').replace('part-', '').replace(/([A-Z0-9])/g, ' $1').trim().replace(/^\w/, c => c.toUpperCase())}: ${$radio.val()} ($${partPrice.toLocaleString()})`);
+        });
+        currentPrice += partsTotal;
+
+        if (premiumInteriorSelected) addonsTotal += carData.addOns.premiumInterior;
+        if (techPackageSelected) addonsTotal += carData.addOns.techPackage;
+        currentPrice += addonsTotal;
+
+        const discountAmount = currentPrice > 70000 ? 0.1 * currentPrice : 0;
+        const finalTotalPrice = currentPrice - discountAmount;
+        const subtotal = currentPrice;
+
+
+        $('#quote-base-price').text(carData.basePrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+        $('#quote-parts-total').text(partsTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+        $('#quote-addons-total').text(addonsTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+        $('#quote-subtotal').text(subtotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+
+        $('#quote-view').text(currentView.charAt(0).toUpperCase() + currentView.slice(1));
+        $('#quote-parts').html(partsSummaryArray.length > 0 ? partsSummaryArray.join('<br>') : 'None');
+        let addonsText = [];
+        if (premiumInteriorSelected) addonsText.push('Premium Interior');
+        if (techPackageSelected) addonsText.push('Advanced Tech');
+        $('#quote-addons').text(addonsText.length > 0 ? addonsText.join(', ') : 'None');
+        $('#quote-discount').text(discountAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+
+        const quoteTotalEl = $('#quote-total');
+        const oldTotal = parseFloat(quoteTotalEl.text().replace(/,/g, ''));
+        quoteTotalEl.text(finalTotalPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+
+        if (oldTotal !== finalTotalPrice && !isNaN(oldTotal)) {
+          const quoteTotalContainer = $('#quote-total-container');
+          quoteTotalContainer.addClass('price-updated-animation transform scale-110');
+          setTimeout(() => {
+            quoteTotalContainer.removeClass('price-updated-animation transform scale-110');
+          }, 700);
+        }
+        checkCompatibility();
+      }
+
+      $('#part-options').on('change', 'input[type="radio"]', function () {
+        updatePartImages();
+        calculatePrice();
+        const partKey = $(this).attr('name').replace('part-', '');
+        const optionName = $(this).val();
+        const price = parseFloat($(this).data('price'));
+        addRecentPart(partKey, optionName, price);
+      });
+      $('#premium-interior, #tech-package').on('change', calculatePrice);
+
+      $('#reset-config').on('click', function () {
+        setActiveViewButton('front');
+        updatePartOptions('front');
+        $('#premium-interior, #tech-package').prop('checked', false);
+        calculatePrice();
+      });
+
+      $('#save-config').on('click', function () { /* ... same as before ... */ });
+      function getQuoteText() { /* ... same as before ... */ return ""; }
+      $('#generate-quote').on('click', function () { /* ... same as before ... */ });
+      $('#copy-summary').on('click', function () { /* ... same as before ... */ });
+
+      // Initial setup
+      updatePartOptions($('#view-selector .active-view').data('view') || 'front');
+      displayRecentParts(); // Display recent parts on load
+      if (typeof lucide !== 'undefined') { lucide.createIcons(); }
+      else { console.error("Lucide icons library not loaded."); }
+    });
+
+    $(".cart-configure-btn").on("click", function () {
+      $(".cartcontainer").css("display", "none");
+      $(".configuratorcontainer").css("display", "block");
+    });
+
+    $("#closeconfiguratorcontainer").on("click", function () {
+      $(".cartcontainer").css("display", "block");
+      $(".configuratorcontainer").css("display", "none");
+    });
+
+  </script>
+</body>
+
+</html>
