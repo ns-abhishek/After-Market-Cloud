@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bay Management - Bay Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-warehouse"></i> Bay Management</h2>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a href="bay-management.html" class="nav-link">
+                        <i class="fas fa-boxes"></i>
+                        <span>Bay Management</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="shipment-tracking.html" class="nav-link">
+                        <i class="fas fa-shipping-fast"></i>
+                        <span>Shipment Tracking</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="scheduling.html" class="nav-link">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Scheduling</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="customer-management.html" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        <span>Customer Management</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1>Bay Configuration</h1>
+                    <p>Manage warehouse bay allocations and status</p>
+                </div>
+                <div class="header-right">
+                    <button class="btn-primary" onclick="toggleDragDropMode()" id="newBayBtn">
+                        <i class="fas fa-plus"></i>
+                        New
+                    </button>
+                </div>
+            </header>
+
+            <!-- Bay Configuration Controls -->
+            <section class="bay-controls-section">
+                <div class="controls-container">
+                    <div class="control-group">
+                        <label for="branchSelect">Branch:</label>
+                        <select id="branchSelect" onchange="filterByBranch()">
+                            <option value="Branch 11">Branch 11</option>
+                            <option value="Branch 12">Branch 12</option>
+                            <option value="Branch 13">Branch 13</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="workshopSelect">Workshop:</label>
+                        <select id="workshopSelect" onchange="filterByWorkshop()">
+                            <option value="Bay Area">Bay Area</option>
+                            <option value="Service Area">Service Area</option>
+                            <option value="Storage Area">Storage Area</option>
+                        </select>
+                    </div>
+
+                    <div class="control-actions">
+                        <button class="btn-icon-text" onclick="deleteBays()" title="Delete Selected">
+                            <i class="fas fa-trash"></i>
+                            Delete
+                        </button>
+                        <button class="btn-icon-text" onclick="bulkActivateBays()" title="Activate Selected">
+                            <i class="fas fa-check-circle"></i>
+                            Activate
+                        </button>
+                        <button class="btn-icon-text" onclick="bulkDeactivateBays()" title="Deactivate Selected">
+                            <i class="fas fa-times-circle"></i>
+                            Deactivate
+                        </button>
+                        <button class="btn-icon-text" onclick="quickSearch()" title="Quick Search (Ctrl+F)">
+                            <i class="fas fa-search-plus"></i>
+                            Quick Search
+                        </button>
+                        <button class="btn-icon-text" onclick="exportBays()" title="Export All">
+                            <i class="fas fa-download"></i>
+                            Export All
+                        </button>
+                        <button class="btn-icon-text" onclick="exportSelectedBays()" title="Export Selected">
+                            <i class="fas fa-file-export"></i>
+                            Export Selected
+                        </button>
+                        <button class="btn-icon-text" onclick="refreshBays()" title="Refresh (Ctrl+R)">
+                            <i class="fas fa-sync-alt"></i>
+                            Refresh
+                        </button>
+                        <button class="btn-icon-text" onclick="clearColumnFilters()" title="Clear Filters (Esc)">
+                            <i class="fas fa-filter"></i>
+                            Clear Filters
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bay Statistics -->
+            <section class="bay-stats-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-warehouse"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalBaysCount">25</h3>
+                            <p>Total Bays</p>
+                            <div class="stat-progress">
+                                <div class="stat-progress-fill" id="totalBaysProgress" style="width: 100%"></div>
+                            </div>
+                            <div class="stat-percentage" id="totalBaysPercentage">100%</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon occupied">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="occupiedBaysCount">16</h3>
+                            <p>Occupied Bays</p>
+                            <div class="stat-progress">
+                                <div class="stat-progress-fill occupied" id="occupiedBaysProgress" style="width: 64%"></div>
+                            </div>
+                            <div class="stat-percentage" id="occupiedBaysPercentage">64%</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon available">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="availableBaysCount">7</h3>
+                            <p>Available Bays</p>
+                            <div class="stat-progress">
+                                <div class="stat-progress-fill available" id="availableBaysProgress" style="width: 28%"></div>
+                            </div>
+                            <div class="stat-percentage" id="availableBaysPercentage">28%</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon pending">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="maintenanceBaysCount">2</h3>
+                            <p>Under Maintenance</p>
+                            <div class="stat-progress">
+                                <div class="stat-progress-fill maintenance" id="maintenanceBaysProgress" style="width: 8%"></div>
+                            </div>
+                            <div class="stat-percentage" id="maintenanceBaysPercentage">8%</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bay Filters -->
+            <section class="filters-section">
+                <div class="filters-container">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="baySearchInput" placeholder="Search bays..." onkeyup="filterBays()">
+                    </div>
+                    <div class="filter-group">
+                        <select id="bayStatusFilter" onchange="filterBays()">
+                            <option value="">All Status</option>
+                            <option value="available">Available</option>
+                            <option value="occupied">Occupied</option>
+                            <option value="maintenance">Maintenance</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <select id="baySectionFilter" onchange="filterBays()">
+                            <option value="">All Sections</option>
+                            <option value="A">Section A</option>
+                            <option value="B">Section B</option>
+                            <option value="C">Section C</option>
+                            <option value="D">Section D</option>
+                            <option value="General">General Bays</option>
+                        </select>
+                    </div>
+                    <button class="btn-secondary" onclick="resetBayFilters()">
+                        <i class="fas fa-undo"></i>
+                        Reset
+                    </button>
+                </div>
+            </section>
+
+            <!-- Bay Configuration Table -->
+            <section class="bay-table-section">
+                <div class="bay-config-table-container">
+                    <table class="bay-config-table">
+                        <thead>
+                            <tr class="header-row">
+                                <th class="checkbox-col">
+                                    <div class="header-content">
+                                        <input type="checkbox" id="selectAll" onchange="toggleSelectAll()">
+                                    </div>
+                                </th>
+                                <th class="edit-col">
+                                    <div class="header-content">
+                                        <span class="header-title">Edit</span>
+                                    </div>
+                                </th>
+                                <th class="delete-col">
+                                    <div class="header-content">
+                                        <span class="header-title">Delete</span>
+                                    </div>
+                                </th>
+                                <th class="code-col">
+                                    <div class="header-content">
+                                        <div class="header-title-row">
+                                            <span class="header-title">Code</span>
+                                            <i class="fas fa-sort sort-icon" onclick="sortBayConfig('code')"></i>
+                                        </div>
+                                        <input type="text" class="header-search" id="codeSearch" placeholder="Search code..." onkeyup="filterByColumn('code', this.value)">
+                                    </div>
+                                </th>
+                                <th class="description-col">
+                                    <div class="header-content">
+                                        <div class="header-title-row">
+                                            <span class="header-title">Bay Description</span>
+                                        </div>
+                                        <input type="text" class="header-search" id="descriptionSearch" placeholder="Search description..." onkeyup="filterByColumn('description', this.value)">
+                                    </div>
+                                </th>
+                                <th class="type-col">
+                                    <div class="header-content">
+                                        <div class="header-title-row">
+                                            <span class="header-title">Bay Type</span>
+                                        </div>
+                                        <div class="filter-combo">
+                                            <input type="text" class="header-search-input" id="typeSearchInput" placeholder="Search type..." onkeyup="filterByColumn('type', this.value)">
+                                            <select class="header-search-select" id="typeSearch" onchange="filterByColumn('type', this.value)">
+                                                <option value="">All Types</option>
+                                                <option value="Working">Working</option>
+                                                <option value="Outside Branch">Outside Branch</option>
+                                                <option value="Maintenance">Maintenance</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="active-col">
+                                    <div class="header-content">
+                                        <div class="header-title-row">
+                                            <span class="header-title">Status</span>
+                                        </div>
+                                        <div class="filter-combo">
+                                            <input type="text" class="header-search-input" id="activeSearchInput" placeholder="Search status..." onkeyup="filterByColumn('active', this.value)">
+                                            <select class="header-search-select" id="activeSearch" onchange="filterByColumn('active', this.value)">
+                                                <option value="">All</option>
+                                                <option value="Active">Active</option>
+                                                <option value="Inactive">Inactive</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="bayConfigTableBody">
+                            <!-- Bay configuration rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination-container">
+                    <div class="pagination-info">
+                        <span>Showing <span id="currentPage">1</span> - <span id="totalPages">10</span> of <span id="totalRecords">135</span> bays</span>
+                    </div>
+                    <div class="pagination-controls">
+                        <button class="btn-pagination" onclick="previousPage()" title="Previous Page">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <select id="pageSize" onchange="changePageSize()">
+                            <option value="10">10 per page</option>
+                            <option value="25">25 per page</option>
+                            <option value="50">50 per page</option>
+                            <option value="100">100 per page</option>
+                        </select>
+                        <button class="btn-pagination" onclick="nextPage()" title="Next Page">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="pagination-shortcuts">
+                        <small>Shortcuts: Ctrl+A (Select All), Ctrl+D (Deselect), Ctrl+F (Search), Esc (Clear Filters)</small>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Drag & Drop Section Layout -->
+            <section class="drag-drop-section" id="dragDropSection" style="display: none;">
+                <div class="section-header">
+                    <div class="drag-header-content">
+                        <div class="drag-header-text">
+                            <h3><i class="fas fa-arrows-alt"></i> Drag & Drop Bay Management</h3>
+                            <p>Drag bays to appropriate sections based on their status</p>
+                        </div>
+                        <button class="btn-primary" onclick="openModal('addBayModal')">
+                            <i class="fas fa-plus"></i> Add Bay
+                        </button>
+                    </div>
+                </div>
+
+                <div class="sections-container">
+                    <div class="bay-section" data-section="A">
+                        <div class="section-header-card">
+                            <h4><i class="fas fa-warehouse"></i> Section A</h4>
+                            <span class="section-type">Working Bays</span>
+                        </div>
+                        <div class="section-drop-zone" data-section="A" data-type="Working">
+                            <div class="drop-zone-content">
+                                <i class="fas fa-plus-circle"></i>
+                                <span>Drop Working Bays Here</span>
+                            </div>
+                            <div class="section-bays" id="sectionA-bays"></div>
+                        </div>
+                    </div>
+
+                    <div class="bay-section" data-section="B">
+                        <div class="section-header-card">
+                            <h4><i class="fas fa-building"></i> Section B</h4>
+                            <span class="section-type">Outside Branch</span>
+                        </div>
+                        <div class="section-drop-zone" data-section="B" data-type="Outside Branch">
+                            <div class="drop-zone-content">
+                                <i class="fas fa-plus-circle"></i>
+                                <span>Drop Outside Branch Bays Here</span>
+                            </div>
+                            <div class="section-bays" id="sectionB-bays"></div>
+                        </div>
+                    </div>
+
+                    <div class="bay-section" data-section="C">
+                        <div class="section-header-card">
+                            <h4><i class="fas fa-tools"></i> Section C</h4>
+                            <span class="section-type">Maintenance</span>
+                        </div>
+                        <div class="section-drop-zone" data-section="C" data-type="Maintenance">
+                            <div class="drop-zone-content">
+                                <i class="fas fa-plus-circle"></i>
+                                <span>Drop Maintenance Bays Here</span>
+                            </div>
+                            <div class="section-bays" id="sectionC-bays"></div>
+                        </div>
+                    </div>
+
+                    <div class="bay-section" data-section="D">
+                        <div class="section-header-card">
+                            <h4><i class="fas fa-cogs"></i> Section D</h4>
+                            <span class="section-type">General Purpose</span>
+                        </div>
+                        <div class="section-drop-zone" data-section="D" data-type="Working">
+                            <div class="drop-zone-content">
+                                <i class="fas fa-plus-circle"></i>
+                                <span>Drop General Bays Here</span>
+                            </div>
+                            <div class="section-bays" id="sectionD-bays"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Unassigned Bays Pool -->
+                <div class="unassigned-section">
+                    <div class="section-header-card">
+                        <h4><i class="fas fa-question-circle"></i> Unassigned Bays</h4>
+                        <span class="section-type">Drag these to appropriate sections</span>
+                    </div>
+                    <div class="unassigned-bays" id="unassignedBays">
+                        <!-- Bays that don't match their section type will appear here -->
+                    </div>
+                </div>
+
+                <!-- Make Changes Button (Hidden by default) -->
+                <div class="make-changes-section" id="makeChangesSection" style="display: none;">
+                    <div class="make-changes-card">
+                        <div class="changes-summary" id="changesSummary">
+                            <h4><i class="fas fa-clipboard-check"></i> Pending Changes</h4>
+                            <div class="changes-list" id="changesList">
+                                <!-- Changes will be listed here -->
+                            </div>
+                        </div>
+                        <div class="changes-actions">
+                            <button class="btn-secondary" onclick="cancelChanges()">
+                                <i class="fas fa-times"></i> Cancel Changes
+                            </button>
+                            <button class="btn-primary" onclick="makeChanges()">
+                                <i class="fas fa-save"></i> Make Changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Add Bay Modal -->
+    <div id="addBayModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Bay</h3>
+                <span class="close" onclick="closeModal('addBayModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="bayForm">
+                    <div class="form-group">
+                        <label for="bayNumber">Bay Number</label>
+                        <input type="text" id="bayNumber" name="bayNumber" placeholder="e.g., A01, B02" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="baySection">Section</label>
+                        <select id="baySection" name="baySection" required>
+                            <option value="">Select Section</option>
+                            <option value="A">Section A</option>
+                            <option value="B">Section B</option>
+                            <option value="C">Section C</option>
+                            <option value="D">Section D</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="bayCapacity">Capacity (cubic meters)</label>
+                        <input type="number" id="bayCapacity" name="bayCapacity" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bayDescription">Description</label>
+                        <textarea id="bayDescription" name="bayDescription" rows="3" placeholder="Optional description"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="closeModal('addBayModal')">Cancel</button>
+                        <button type="submit" class="btn-primary">Add Bay</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bay Details Modal -->
+    <div id="bayDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Bay Details</h3>
+                <span class="close" onclick="closeModal('bayDetailsModal')">&times;</span>
+            </div>
+            <div class="modal-body" id="bayDetailsContent">
+                <!-- Bay details will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Allocate Bay Modal -->
+    <div id="allocateBayModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Allocate Bay</h3>
+                <span class="close" onclick="closeModal('allocateBayModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="allocateBayForm">
+                    <div class="form-group">
+                        <label for="selectedBay">Bay Number</label>
+                        <input type="text" id="selectedBay" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="allocateCustomer">Customer Name</label>
+                        <input type="text" id="allocateCustomer" name="allocateCustomer" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="allocateShipment">Shipment Number</label>
+                        <input type="text" id="allocateShipment" name="allocateShipment" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="allocateNotes">Notes</label>
+                        <textarea id="allocateNotes" name="allocateNotes" rows="3" placeholder="Optional notes"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="closeModal('allocateBayModal')">Cancel</button>
+                        <button type="submit" class="btn-primary">Allocate Bay</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="universal-filter.js"></script>
+    <script src="script.js"></script>
+    <script src="bay-management.js"></script>
+</body>
+</html>

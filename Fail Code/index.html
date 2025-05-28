@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fail Code Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-left">
+            <div class="logo">HCLSoftware</div>
+        </div>
+        <div class="header-right">
+            <span class="welcome-text">Welcome Admin</span>
+            <i class="fas fa-sign-out-alt logout-icon"></i>
+        </div>
+    </header>
+
+    <div class="container">
+        <main>
+            <!-- Warranty Type Section -->
+            <div class="primary-segment-section">
+                <h3>Warranty Type</h3>
+                <div class="warranty-type-container">
+                    <div class="primary-segment-dropdown">
+                        <div class="searchable-dropdown-container">
+                            <input type="text" id="warrantyTypeSearch" class="form-control" placeholder="Search and Select..." readonly>
+                            <i class="fas fa-search dropdown-icon" style="right: 35px; opacity: 0.6;"></i>
+                            <i class="fas fa-chevron-down dropdown-icon"></i>
+                            <div class="dropdown-list" id="warrantyDropdownList">
+                                <!-- Options will be populated here -->
+                            </div>
+                        </div>
+                        <select id="warrantyType" class="form-control" style="display: none;">
+                            <option value="">--Select Warranty Type--</option>
+                        </select>
+                    </div>
+                    <button type="button" id="clearWarrantyBtn" class="btn btn-clear" disabled>
+                        <i class="fas fa-times"></i> CLEAR
+                    </button>
+                </div>
+            </div>
+
+            <!-- Fail Codes Section -->
+            <div class="fail-codes-section">
+                <div class="section-header">
+                    <h3>Fail Codes</h3>
+                    <div class="action-buttons">
+                        <button type="button" id="addBtn" class="btn btn-outline-primary">
+                            <i class="fas fa-plus"></i> Add
+                        </button>
+                        <button type="button" id="deleteBtn" class="btn btn-outline-danger" disabled>
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                        <button type="button" id="saveBtn" class="btn btn-outline-success" disabled>
+                            <i class="fas fa-save"></i> Save
+                        </button>
+                        <button type="button" id="exportBtn" class="btn btn-outline-secondary">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                        <button type="button" id="refreshBtn" class="btn btn-outline-info">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-controls">
+                    <div class="search-controls">
+                        <div class="table-search">
+                            <input type="text" id="failCodeSearch" placeholder="Search fail codes..." class="search-input">
+                            <i class="fas fa-search search-icon"></i>
+                        </div>
+                        <div class="table-search">
+                            <input type="text" id="descriptionSearch" placeholder="Search descriptions..." class="search-input">
+                            <i class="fas fa-search search-icon"></i>
+                        </div>
+                        <button type="button" id="clearSearchBtn" class="btn btn-clear" disabled>
+                            <i class="fas fa-times"></i> CLEAR
+                        </button>
+                    </div>
+                    <div class="records-per-page">
+                        <label for="recordsPerPage">Show:</label>
+                        <select id="recordsPerPage" class="form-control">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        <span>records per page</span>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table id="failCodeTable" class="data-table">
+                        <thead>
+                            <tr>
+                                <th width="50"><input type="checkbox" id="selectAll"></th>
+                                <th width="80">Edit</th>
+                                <th width="80">Delete</th>
+                                <th width="120">Fail Code</th>
+                                <th>Fail Code Description</th>
+                                <th width="120">Is Active?</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination">
+                    <div class="pagination-info">
+                        <span id="paginationInfo">Showing 0 to 0 of 0 entries</span>
+                    </div>
+                    <div class="pagination-controls">
+                        <button id="prevPage" class="btn btn-sm"><i class="fas fa-chevron-left"></i></button>
+                        <span id="pageInfo" class="page-info">Page 1 of 1</span>
+                        <button id="nextPage" class="btn btn-sm"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <!-- Add Record Modal -->
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <h3>Add New Fail Code</h3>
+            <form id="addForm">
+                <div class="form-group">
+                    <label for="newFailCode">Fail Code *</label>
+                    <input type="text" id="newFailCode" class="form-control" placeholder="Enter fail code" required>
+                </div>
+                <div class="form-group">
+                    <label for="newFailDescription">Fail Code Description *</label>
+                    <input type="text" id="newFailDescription" class="form-control" placeholder="Enter description" required>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="newIsActive" checked>
+                        Is Active
+                    </label>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" id="addSubmit" class="btn btn-outline-success">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                    <button type="button" id="addCancel" class="btn btn-outline-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h3>Confirm Action</h3>
+            <p id="confirmMessage">Are you sure you want to perform this action?</p>
+            <div class="modal-buttons">
+                <button id="confirmYes" class="btn btn-danger">Yes</button>
+                <button id="confirmNo" class="btn btn-secondary">No</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

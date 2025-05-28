@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HCL Technologies - Warehouse Management System</title>
+
+    <!-- Material Design Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles/main.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Enhanced Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <i class="material-icons">menu</i>
+                </button>
+                <div class="logo-container">
+                    <div class="logo">HCL</div>
+                    <span class="app-title">Technologies - Warehouse Management</span>
+                </div>
+                <div class="system-status">
+                    <span class="status-indicator online"></span>
+                    <span class="status-text">System Online</span>
+                </div>
+            </div>
+            <div class="header-center">
+                <div class="breadcrumb" id="breadcrumb">
+                    <span class="breadcrumb-item">
+                        <i class="material-icons">home</i>
+                        Dashboard
+                    </span>
+                    <span class="breadcrumb-separator">
+                        <i class="material-icons">chevron_right</i>
+                    </span>
+                    <span class="breadcrumb-item">Warehouse</span>
+                    <span class="breadcrumb-separator">
+                        <i class="material-icons">chevron_right</i>
+                    </span>
+                    <span class="breadcrumb-item active">Bin Location Management</span>
+                </div>
+                <div class="search-container">
+                    <i class="material-icons search-icon">search</i>
+                    <input type="text" id="globalSearch" placeholder="Search bins, locations, items..." class="search-input">
+                    <div class="search-suggestions" id="searchSuggestions">
+                        <!-- Search suggestions will be populated -->
+                    </div>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="view-switcher">
+                    <button class="view-btn active" data-view="dashboard" title="Dashboard (Alt+1)">
+                        <i class="material-icons">dashboard</i>
+                        <span class="view-label">Dashboard</span>
+                    </button>
+                    <button class="view-btn" data-view="table" title="Table View (Alt+2)">
+                        <i class="material-icons">table_chart</i>
+                        <span class="view-label">Table</span>
+                    </button>
+                    <button class="view-btn" data-view="grid" title="Grid View (Alt+3)">
+                        <i class="material-icons">grid_view</i>
+                        <span class="view-label">Grid</span>
+                    </button>
+                    <button class="view-btn" data-view="kanban" title="Kanban Board (Alt+4)">
+                        <i class="material-icons">view_kanban</i>
+                        <span class="view-label">Kanban</span>
+                    </button>
+                    <button class="view-btn" data-view="map" title="Warehouse Map (Alt+5)">
+                        <i class="material-icons">map</i>
+                        <span class="view-label">Map</span>
+                    </button>
+                    <button class="view-btn" data-view="analytics" title="Analytics (Alt+6)">
+                        <i class="material-icons">analytics</i>
+                        <span class="view-label">Analytics</span>
+                    </button>
+                    <button class="view-btn" data-view="timeline" title="Timeline (Alt+7)">
+                        <i class="material-icons">timeline</i>
+                        <span class="view-label">Timeline</span>
+                    </button>
+                </div>
+                <div class="header-actions">
+                    <button class="header-btn" id="notificationsBtn" title="Notifications">
+                        <i class="material-icons">notifications</i>
+                        <span class="notification-badge">5</span>
+                    </button>
+                    <button class="header-btn" id="helpBtn" title="Help (F1)">
+                        <i class="material-icons">help_outline</i>
+                    </button>
+                    <button class="header-btn" id="fullscreenBtn" title="Fullscreen (F11)">
+                        <i class="material-icons">fullscreen</i>
+                    </button>
+                    <button class="btn btn-icon" id="quickAccessBtn" title="Quick Access">
+                        <i class="material-icons">apps</i>
+                    </button>
+                    <button class="header-btn" id="quickActionsBtn" title="Quick Actions">
+                        <i class="material-icons">flash_on</i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar Overlay for Mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-content">
+                <!-- Enhanced Navigation Search -->
+                <div class="nav-search">
+                    <div class="search-input-container">
+                        <i class="material-icons search-icon">search</i>
+                        <input type="text" id="navSearch" placeholder="Search menus..." class="nav-search-input" autocomplete="off">
+                        <button class="search-clear" id="navSearchClear" style="display: none;">
+                            <i class="material-icons">clear</i>
+                        </button>
+                    </div>
+                    <div class="nav-search-results" id="navSearchResults" style="display: none;">
+                        <!-- Search results will be populated here -->
+                    </div>
+                </div>
+
+                <nav class="sidebar-nav">
+                    <div class="nav-section">
+                        <div class="nav-section-title">Warehouse Operations</div>
+                        <a class="nav-link active" href="#" data-module="warehouse">
+                            <i class="material-icons">warehouse</i>
+                            <span>WAREHOUSE</span>
+                            <i class="material-icons nav-arrow">expand_more</i>
+                            <div class="nav-submenu">
+                                <div class="submenu-header">
+                                    <span>Location Management</span>
+                                </div>
+                                <div class="submenu-content">
+                                    <a href="#" class="submenu-item active">
+                                        <i class="material-icons">inventory_2</i>
+                                        <span>Bin Location Management</span>
+                                    </a>
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">map</i>
+                                        <span>Zone Management</span>
+                                    </a>
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">view_module</i>
+                                        <span>Rack Configuration</span>
+                                    </a>
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">layers</i>
+                                        <span>Level Management</span>
+                                    </a>
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">qr_code</i>
+                                        <span>Barcode Management</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </a>
+                        <a class="nav-link" href="#" data-module="inventory">
+                            <i class="material-icons">inventory</i>
+                            <span>INVENTORY</span>
+                            <i class="material-icons nav-arrow">expand_more</i>
+                            <div class="nav-submenu">
+                                <div class="submenu-header">
+                                    <span>Stock Management</span>
+                                </div>
+                                <div class="submenu-content">
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">trending_up</i>
+                                        <span>Stock Levels</span>
+                                    </a>
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">swap_horiz</i>
+                                        <span>Stock Movements</span>
+                                    </a>
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">tune</i>
+                                        <span>Stock Adjustments</span>
+                                    </a>
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">fact_check</i>
+                                        <span>Cycle Counting</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </a>
+                        <a class="nav-link" href="#" data-module="operations">
+                            <i class="material-icons">local_shipping</i>
+                            <span>OPERATIONS</span>
+                            <i class="material-icons nav-arrow">expand_more</i>
+                            <div class="nav-submenu">
+                                <div class="submenu-header">
+                                    <span>Warehouse Operations</span>
+                                </div>
+                                <div class="submenu-content">
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">input</i>
+                                        <span>Receiving</span>
+                                    </a>
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">shopping_cart</i>
+                                        <span>Picking</span>
+                                    </a>
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">output</i>
+                                        <span>Shipping</span>
+                                    </a>
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">compare_arrows</i>
+                                        <span>Transfers</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="nav-section">
+                        <div class="nav-section-title">Management</div>
+                        <a class="nav-link" href="#" data-module="scheduler">
+                            <i class="material-icons">schedule</i>
+                            <span>SCHEDULER</span>
+                            <div class="nav-dropdown">
+                                <div class="dropdown-item">Task Queue</div>
+                                <div class="dropdown-item">Schedules</div>
+                                <div class="dropdown-item">Monitoring</div>
+                            </div>
+                        </a>
+                        <a class="nav-link" href="#" data-module="config">
+                            <i class="material-icons">tune</i>
+                            <span>CONFIG</span>
+                            <div class="nav-dropdown">
+                                <div class="dropdown-item">System Settings</div>
+                                <div class="dropdown-item">User Preferences</div>
+                                <div class="dropdown-item">Security</div>
+                            </div>
+                        </a>
+                        <a class="nav-link active" href="#" data-module="dashboard">
+                            <i class="material-icons">dashboard</i>
+                            <span>DASHBOARD</span>
+                            <div class="nav-dropdown">
+                                <div class="dropdown-item">Overview</div>
+                                <div class="dropdown-item">Analytics</div>
+                                <div class="dropdown-item">Reports</div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="nav-section">
+                        <div class="nav-section-title">Analytics</div>
+                        <a class="nav-link" href="#" data-module="reports">
+                            <i class="material-icons">assessment</i>
+                            <span>REPORTS</span>
+                            <div class="nav-dropdown">
+                                <div class="dropdown-item">Performance</div>
+                                <div class="dropdown-item">Utilization</div>
+                                <div class="dropdown-item">Efficiency</div>
+                            </div>
+                        </a>
+                        <a class="nav-link" href="#" data-module="analytics">
+                            <i class="material-icons">analytics</i>
+                            <span>ANALYTICS</span>
+                            <div class="nav-dropdown">
+                                <div class="dropdown-item">Trends</div>
+                                <div class="dropdown-item">Forecasting</div>
+                                <div class="dropdown-item">Insights</div>
+                            </div>
+                        </a>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- Enhanced Profile Section at Bottom -->
+            <div class="sidebar-profile">
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <img src="https://via.placeholder.com/48x48/000000/FFFFFF?text=W" alt="Warehouse" class="avatar-img">
+                            <div class="status-indicator online"></div>
+                        </div>
+                        <div class="profile-info">
+                            <div class="profile-name">Warehouse Manager</div>
+                            <div class="profile-role">Operations Manager</div>
+                            <div class="profile-branch">Branch: WH01 • HCL Technologies</div>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="profile-btn" id="profileMenuBtn" title="Profile Menu">
+                                <i class="material-icons">expand_less</i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <span class="stat-value">156</span>
+                            <span class="stat-label">Active Bins</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">23</span>
+                            <span class="stat-label">Critical</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">94%</span>
+                            <span class="stat-label">Efficiency</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-menu" id="profileMenu">
+                    <div class="profile-menu-header">
+                        <h4>Account Settings</h4>
+                    </div>
+                    <a href="#" class="profile-menu-item">
+                        <i class="material-icons">person</i>
+                        <span>My Profile</span>
+                        <i class="material-icons menu-arrow">chevron_right</i>
+                    </a>
+                    <a href="#" class="profile-menu-item">
+                        <i class="material-icons">settings</i>
+                        <span>Preferences</span>
+                        <i class="material-icons menu-arrow">chevron_right</i>
+                    </a>
+                    <a href="#" class="profile-menu-item">
+                        <i class="material-icons">notifications</i>
+                        <span>Notifications</span>
+                        <div class="notification-badge">5</div>
+                    </a>
+                    <a href="#" class="profile-menu-item">
+                        <i class="material-icons">security</i>
+                        <span>Security</span>
+                        <i class="material-icons menu-arrow">chevron_right</i>
+                    </a>
+                    <a href="#" class="profile-menu-item">
+                        <i class="material-icons">help</i>
+                        <span>Help & Support</span>
+                        <i class="material-icons menu-arrow">chevron_right</i>
+                    </a>
+                    <div class="profile-menu-divider"></div>
+                    <a href="#" class="profile-menu-item logout">
+                        <i class="material-icons">logout</i>
+                        <span>Sign Out</span>
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Action Bar -->
+            <div class="action-bar">
+                <div class="action-left">
+                    <h1 class="page-title">Bin Location Management</h1>
+                    <span class="page-subtitle">Comprehensive warehouse bin tracking and inventory optimization</span>
+                </div>
+                <div class="action-right">
+                    <div class="action-group">
+                        <button class="btn btn-secondary" id="printBtn">
+                            <i class="material-icons">print</i>
+                            Print
+                        </button>
+                        <div class="btn-dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" id="importBtn">
+                                <i class="material-icons">upload</i>
+                                Import
+                                <i class="material-icons dropdown-arrow">arrow_drop_down</i>
+                            </button>
+                            <div class="dropdown-menu" id="importMenu">
+                                <div class="dropdown-item" data-import="csv">
+                                    <i class="material-icons">description</i>
+                                    Import CSV
+                                </div>
+                                <div class="dropdown-item" data-import="excel">
+                                    <i class="material-icons">table_chart</i>
+                                    Import Excel
+                                </div>
+                                <div class="dropdown-item" data-import="json">
+                                    <i class="material-icons">code</i>
+                                    Import JSON
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <div class="dropdown-item" data-import="template">
+                                    <i class="material-icons">download</i>
+                                    Download Template
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-group">
+                        <div class="btn-dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" id="exportBtn">
+                                <i class="material-icons">file_download</i>
+                                Export
+                                <i class="material-icons dropdown-arrow">arrow_drop_down</i>
+                            </button>
+                            <div class="dropdown-menu" id="exportMenu">
+                                <div class="dropdown-item" data-export="csv">
+                                    <i class="material-icons">description</i>
+                                    Export as CSV
+                                </div>
+                                <div class="dropdown-item" data-export="excel">
+                                    <i class="material-icons">table_chart</i>
+                                    Export as Excel
+                                </div>
+                                <div class="dropdown-item" data-export="pdf">
+                                    <i class="material-icons">picture_as_pdf</i>
+                                    Export as PDF
+                                </div>
+                                <div class="dropdown-item" data-export="json">
+                                    <i class="material-icons">code</i>
+                                    Export as JSON
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary" id="refreshBtn">
+                            <i class="material-icons">refresh</i>
+                            Refresh
+                        </button>
+                        <button class="btn btn-secondary" id="scanBarcodeBtn">
+                            <i class="material-icons">qr_code_scanner</i>
+                            Scan Barcode
+                        </button>
+                        <button class="btn btn-primary" id="addBinBtn">
+                            <i class="material-icons">add_box</i>
+                            Add Bin Location
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard View -->
+            <div class="view-container" id="dashboardView">
+                <!-- Quick Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="material-icons">inventory_2</i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="totalBins">156</div>
+                            <div class="stat-label">Total Bins</div>
+                            <div class="stat-change positive">
+                                <i class="material-icons">trending_up</i>
+                                <span>+12 this week</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon occupied">
+                            <i class="material-icons">inventory</i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="occupiedBins">89</div>
+                            <div class="stat-label">Occupied Bins</div>
+                            <div class="stat-change neutral">
+                                <i class="material-icons">trending_flat</i>
+                                <span>57% utilization</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon empty">
+                            <i class="material-icons">inbox</i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="emptyBins">44</div>
+                            <div class="stat-label">Available Bins</div>
+                            <div class="stat-change positive">
+                                <i class="material-icons">trending_up</i>
+                                <span>28% available</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon critical">
+                            <i class="material-icons">warning</i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="criticalBins">23</div>
+                            <div class="stat-label">Critical Issues</div>
+                            <div class="stat-change negative">
+                                <i class="material-icons">trending_down</i>
+                                <span>Needs attention</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard Content Grid -->
+                <div class="dashboard-grid">
+                    <!-- Real-Time Activity Widget -->
+                    <div class="dashboard-widget">
+                        <div class="widget-header">
+                            <h3>Real-Time Activity</h3>
+                            <div class="widget-controls">
+                                <button class="widget-btn" title="Refresh">
+                                    <i class="material-icons">refresh</i>
+                                </button>
+                                <button class="widget-btn" title="Settings">
+                                    <i class="material-icons">settings</i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="widget-content">
+                            <div class="activity-feed" id="realTimeActivity">
+                                <div class="activity-item">
+                                    <div class="activity-icon receiving">
+                                        <i class="material-icons">input</i>
+                                    </div>
+                                    <div class="activity-details">
+                                        <div class="activity-title">Bin A01-R01-L03 allocated</div>
+                                        <div class="activity-time">2 minutes ago</div>
+                                        <div class="activity-meta">Zone A • Item: ITM001</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon picking">
+                                        <i class="material-icons">shopping_cart</i>
+                                    </div>
+                                    <div class="activity-details">
+                                        <div class="activity-title">Pick completed from C02-R05-L01</div>
+                                        <div class="activity-time">5 minutes ago</div>
+                                        <div class="activity-meta">Zone C • Qty: 25 units</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon transfer">
+                                        <i class="material-icons">compare_arrows</i>
+                                    </div>
+                                    <div class="activity-details">
+                                        <div class="activity-title">Transfer initiated B03-R02-L02</div>
+                                        <div class="activity-time">8 minutes ago</div>
+                                        <div class="activity-meta">Zone B → Zone D</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon maintenance">
+                                        <i class="material-icons">build</i>
+                                    </div>
+                                    <div class="activity-details">
+                                        <div class="activity-title">Maintenance completed on D01-R01-L01</div>
+                                        <div class="activity-time">12 minutes ago</div>
+                                        <div class="activity-meta">Zone D • Status: Active</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Zone Performance Widget -->
+                    <div class="dashboard-widget">
+                        <div class="widget-header">
+                            <h3>Zone Performance</h3>
+                            <div class="widget-controls">
+                                <button class="widget-btn" title="View Details">
+                                    <i class="material-icons">open_in_new</i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="widget-content">
+                            <div class="zone-performance" id="zonePerformance">
+                                <div class="zone-item">
+                                    <div class="zone-header">
+                                        <div class="zone-name">Zone A - Receiving</div>
+                                        <div class="zone-efficiency">92%</div>
+                                    </div>
+                                    <div class="zone-stats">
+                                        <div class="zone-stat">
+                                            <span class="stat-label">Capacity:</span>
+                                            <span class="stat-value">45/50</span>
+                                        </div>
+                                        <div class="zone-stat">
+                                            <span class="stat-label">Utilization:</span>
+                                            <span class="stat-value">90%</span>
+                                        </div>
+                                    </div>
+                                    <div class="zone-progress">
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 90%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="zone-item">
+                                    <div class="zone-header">
+                                        <div class="zone-name">Zone B - Storage</div>
+                                        <div class="zone-efficiency">88%</div>
+                                    </div>
+                                    <div class="zone-stats">
+                                        <div class="zone-stat">
+                                            <span class="stat-label">Capacity:</span>
+                                            <span class="stat-value">120/150</span>
+                                        </div>
+                                        <div class="zone-stat">
+                                            <span class="stat-label">Utilization:</span>
+                                            <span class="stat-value">80%</span>
+                                        </div>
+                                    </div>
+                                    <div class="zone-progress">
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 80%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="zone-item">
+                                    <div class="zone-header">
+                                        <div class="zone-name">Zone C - Picking</div>
+                                        <div class="zone-efficiency">95%</div>
+                                    </div>
+                                    <div class="zone-stats">
+                                        <div class="zone-stat">
+                                            <span class="stat-label">Capacity:</span>
+                                            <span class="stat-value">65/80</span>
+                                        </div>
+                                        <div class="zone-stat">
+                                            <span class="stat-label">Utilization:</span>
+                                            <span class="stat-value">81%</span>
+                                        </div>
+                                    </div>
+                                    <div class="zone-progress">
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 81%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="zone-item">
+                                    <div class="zone-header">
+                                        <div class="zone-name">Zone D - Shipping</div>
+                                        <div class="zone-efficiency">76%</div>
+                                    </div>
+                                    <div class="zone-stats">
+                                        <div class="zone-stat">
+                                            <span class="stat-label">Capacity:</span>
+                                            <span class="stat-value">35/60</span>
+                                        </div>
+                                        <div class="zone-stat">
+                                            <span class="stat-label">Utilization:</span>
+                                            <span class="stat-value">58%</span>
+                                        </div>
+                                    </div>
+                                    <div class="zone-progress">
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 58%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table View -->
+            <div class="view-container" id="tableView" style="display: none;">
+                <div class="table-container">
+                    <table class="data-table" id="binTable">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAll"></th>
+                                <th>Bin Code</th>
+                                <th>Zone</th>
+                                <th>Aisle</th>
+                                <th>Rack</th>
+                                <th>Level</th>
+                                <th>Status</th>
+                                <th>Item Code</th>
+                                <th>Quantity</th>
+                                <th>Capacity</th>
+                                <th>Utilization</th>
+                                <th>Priority</th>
+                                <th>Last Updated</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="binTableBody">
+                            <!-- Table rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Grid View -->
+            <div class="view-container" id="gridView" style="display: none;">
+                <div class="grid-container" id="binGrid">
+                    <!-- Grid cards will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Kanban View -->
+            <div class="view-container" id="kanbanView" style="display: none;">
+                <div class="kanban-board">
+                    <div class="kanban-header">
+                        <h3>Bin Status Management</h3>
+                        <div class="kanban-controls">
+                            <button class="kanban-btn" id="autoArrangeBtn">
+                                <i class="material-icons">auto_fix_high</i>
+                                Auto Arrange
+                            </button>
+                            <button class="kanban-btn" id="bulkMoveBtn">
+                                <i class="material-icons">move_up</i>
+                                Bulk Move
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="kanban-columns">
+                        <div class="kanban-column" data-status="empty" id="emptyColumn">
+                            <div class="column-header empty">
+                                <div class="column-title">
+                                    <i class="material-icons">inbox</i>
+                                    <span>Empty Bins</span>
+                                </div>
+                                <div class="column-count" id="emptyColumnCount">0</div>
+                            </div>
+                            <div class="column-content" id="emptyColumnContent">
+                                <!-- Empty bins will be rendered here -->
+                            </div>
+                        </div>
+
+                        <div class="kanban-column" data-status="occupied" id="occupiedColumn">
+                            <div class="column-header occupied">
+                                <div class="column-title">
+                                    <i class="material-icons">inventory</i>
+                                    <span>Occupied Bins</span>
+                                </div>
+                                <div class="column-count" id="occupiedColumnCount">0</div>
+                            </div>
+                            <div class="column-content" id="occupiedColumnContent">
+                                <!-- Occupied bins will be rendered here -->
+                            </div>
+                        </div>
+
+                        <div class="kanban-column" data-status="reserved" id="reservedColumn">
+                            <div class="column-header reserved">
+                                <div class="column-title">
+                                    <i class="material-icons">bookmark</i>
+                                    <span>Reserved Bins</span>
+                                </div>
+                                <div class="column-count" id="reservedColumnCount">0</div>
+                            </div>
+                            <div class="column-content" id="reservedColumnContent">
+                                <!-- Reserved bins will be rendered here -->
+                            </div>
+                        </div>
+
+                        <div class="kanban-column" data-status="blocked" id="blockedColumn">
+                            <div class="column-header blocked">
+                                <div class="column-title">
+                                    <i class="material-icons">block</i>
+                                    <span>Blocked Bins</span>
+                                </div>
+                                <div class="column-count" id="blockedColumnCount">0</div>
+                            </div>
+                            <div class="column-content" id="blockedColumnContent">
+                                <!-- Blocked bins will be rendered here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Map View -->
+            <div class="view-container" id="mapView" style="display: none;">
+                <div class="warehouse-map">
+                    <div class="map-header">
+                        <h3>Warehouse Floor Plan</h3>
+                        <div class="map-controls">
+                            <button class="map-btn" id="zoomIn" title="Zoom In">
+                                <i class="material-icons">zoom_in</i>
+                            </button>
+                            <button class="map-btn" id="zoomOut" title="Zoom Out">
+                                <i class="material-icons">zoom_out</i>
+                            </button>
+                            <button class="map-btn" id="resetView" title="Reset View">
+                                <i class="material-icons">center_focus_strong</i>
+                            </button>
+                            <button class="map-btn" id="toggleHeatmap" title="Toggle Heatmap">
+                                <i class="material-icons">thermostat</i>
+                            </button>
+                            <button class="map-btn" id="toggle3D" title="3D View">
+                                <i class="material-icons">view_in_ar</i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="map-main">
+                        <div class="map-container" id="warehouseMapContainer">
+                            <!-- Warehouse Layout -->
+                            <div class="warehouse-layout">
+                                <!-- Receiving Area -->
+                                <div class="warehouse-zone zone-a" data-zone="A">
+                                    <div class="zone-header">
+                                        <h4>Zone A - Receiving</h4>
+                                        <span class="zone-capacity">45/50</span>
+                                    </div>
+                                    <div class="zone-aisles">
+                                        <div class="aisle" data-aisle="01">
+                                            <div class="aisle-label">Aisle 01</div>
+                                            <div class="rack-row">
+                                                <div class="rack" data-rack="R01">
+                                                    <div class="bin-slot occupied" data-bin="A01-R01-L01" title="A01-R01-L01 - Occupied">A01</div>
+                                                    <div class="bin-slot empty" data-bin="A01-R01-L02" title="A01-R01-L02 - Empty">A02</div>
+                                                    <div class="bin-slot reserved" data-bin="A01-R01-L03" title="A01-R01-L03 - Reserved">A03</div>
+                                                </div>
+                                                <div class="rack" data-rack="R02">
+                                                    <div class="bin-slot empty" data-bin="A01-R02-L01" title="A01-R02-L01 - Empty">A04</div>
+                                                    <div class="bin-slot occupied" data-bin="A01-R02-L02" title="A01-R02-L02 - Occupied">A05</div>
+                                                    <div class="bin-slot empty" data-bin="A01-R02-L03" title="A01-R02-L03 - Empty">A06</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Storage Area -->
+                                <div class="warehouse-zone zone-b" data-zone="B">
+                                    <div class="zone-header">
+                                        <h4>Zone B - Storage</h4>
+                                        <span class="zone-capacity">120/150</span>
+                                    </div>
+                                    <div class="zone-aisles">
+                                        <div class="aisle" data-aisle="02">
+                                            <div class="aisle-label">Aisle 02</div>
+                                            <div class="rack-row">
+                                                <div class="rack" data-rack="R01">
+                                                    <div class="bin-slot occupied" data-bin="B02-R01-L01" title="B02-R01-L01 - Occupied">B01</div>
+                                                    <div class="bin-slot blocked" data-bin="B02-R01-L02" title="B02-R01-L02 - Blocked">B02</div>
+                                                    <div class="bin-slot occupied" data-bin="B02-R01-L03" title="B02-R01-L03 - Occupied">B03</div>
+                                                </div>
+                                                <div class="rack" data-rack="R02">
+                                                    <div class="bin-slot empty" data-bin="B02-R02-L01" title="B02-R02-L01 - Empty">B04</div>
+                                                    <div class="bin-slot occupied" data-bin="B02-R02-L02" title="B02-R02-L02 - Occupied">B05</div>
+                                                    <div class="bin-slot reserved" data-bin="B02-R02-L03" title="B02-R02-L03 - Reserved">B06</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Picking Area -->
+                                <div class="warehouse-zone zone-c" data-zone="C">
+                                    <div class="zone-header">
+                                        <h4>Zone C - Picking</h4>
+                                        <span class="zone-capacity">65/80</span>
+                                    </div>
+                                    <div class="zone-aisles">
+                                        <div class="aisle" data-aisle="03">
+                                            <div class="aisle-label">Aisle 03</div>
+                                            <div class="rack-row">
+                                                <div class="rack" data-rack="R01">
+                                                    <div class="bin-slot occupied" data-bin="C03-R01-L01" title="C03-R01-L01 - Occupied">C01</div>
+                                                    <div class="bin-slot empty" data-bin="C03-R01-L02" title="C03-R01-L02 - Empty">C02</div>
+                                                    <div class="bin-slot occupied" data-bin="C03-R01-L03" title="C03-R01-L03 - Occupied">C03</div>
+                                                </div>
+                                                <div class="rack" data-rack="R02">
+                                                    <div class="bin-slot empty" data-bin="C03-R02-L01" title="C03-R02-L01 - Empty">C04</div>
+                                                    <div class="bin-slot reserved" data-bin="C03-R02-L02" title="C03-R02-L02 - Reserved">C05</div>
+                                                    <div class="bin-slot occupied" data-bin="C03-R02-L03" title="C03-R02-L03 - Occupied">C06</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Shipping Area -->
+                                <div class="warehouse-zone zone-d" data-zone="D">
+                                    <div class="zone-header">
+                                        <h4>Zone D - Shipping</h4>
+                                        <span class="zone-capacity">35/60</span>
+                                    </div>
+                                    <div class="zone-aisles">
+                                        <div class="aisle" data-aisle="04">
+                                            <div class="aisle-label">Aisle 04</div>
+                                            <div class="rack-row">
+                                                <div class="rack" data-rack="R01">
+                                                    <div class="bin-slot occupied" data-bin="D04-R01-L01" title="D04-R01-L01 - Occupied">D01</div>
+                                                    <div class="bin-slot reserved" data-bin="D04-R01-L02" title="D04-R01-L02 - Reserved">D02</div>
+                                                    <div class="bin-slot empty" data-bin="D04-R01-L03" title="D04-R01-L03 - Empty">D03</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="map-sidebar">
+                            <div class="map-legend">
+                                <h4>Legend</h4>
+                                <div class="legend-items">
+                                    <div class="legend-item">
+                                        <div class="legend-color empty"></div>
+                                        <span>Empty (44)</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <div class="legend-color occupied"></div>
+                                        <span>Occupied (89)</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <div class="legend-color reserved"></div>
+                                        <span>Reserved (12)</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <div class="legend-color blocked"></div>
+                                        <span>Blocked (11)</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="map-info">
+                                <h4>Zone Statistics</h4>
+                                <div class="zone-stats">
+                                    <div class="zone-stat-item">
+                                        <div class="zone-stat-header">
+                                            <span class="zone-name">Zone A</span>
+                                            <span class="zone-utilization">90%</span>
+                                        </div>
+                                        <div class="zone-progress">
+                                            <div class="zone-progress-bar" style="width: 90%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="zone-stat-item">
+                                        <div class="zone-stat-header">
+                                            <span class="zone-name">Zone B</span>
+                                            <span class="zone-utilization">80%</span>
+                                        </div>
+                                        <div class="zone-progress">
+                                            <div class="zone-progress-bar" style="width: 80%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="zone-stat-item">
+                                        <div class="zone-stat-header">
+                                            <span class="zone-name">Zone C</span>
+                                            <span class="zone-utilization">81%</span>
+                                        </div>
+                                        <div class="zone-progress">
+                                            <div class="zone-progress-bar" style="width: 81%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="zone-stat-item">
+                                        <div class="zone-stat-header">
+                                            <span class="zone-name">Zone D</span>
+                                            <span class="zone-utilization">58%</span>
+                                        </div>
+                                        <div class="zone-progress">
+                                            <div class="zone-progress-bar" style="width: 58%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics View -->
+            <div class="view-container" id="analyticsView" style="display: none;">
+                <div class="analytics-dashboard">
+                    <div class="analytics-header">
+                        <h2>Warehouse Analytics</h2>
+                        <div class="analytics-controls">
+                            <select id="analyticsTimeRange">
+                                <option value="today">Today</option>
+                                <option value="week">This Week</option>
+                                <option value="month" selected>This Month</option>
+                                <option value="quarter">This Quarter</option>
+                                <option value="year">This Year</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="analytics-grid">
+                        <div class="analytics-widget">
+                            <h3>Utilization Trends</h3>
+                            <div class="chart-container" id="utilizationChart">
+                                <!-- Chart will be rendered here -->
+                            </div>
+                        </div>
+                        <div class="analytics-widget">
+                            <h3>Zone Performance</h3>
+                            <div class="chart-container" id="zoneChart">
+                                <!-- Chart will be rendered here -->
+                            </div>
+                        </div>
+                        <div class="analytics-widget">
+                            <h3>Activity Distribution</h3>
+                            <div class="chart-container" id="activityChart">
+                                <!-- Chart will be rendered here -->
+                            </div>
+                        </div>
+                        <div class="analytics-widget">
+                            <h3>Efficiency Metrics</h3>
+                            <div class="chart-container" id="efficiencyChart">
+                                <!-- Chart will be rendered here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline View -->
+            <div class="view-container" id="timelineView" style="display: none;">
+                <div class="timeline-container">
+                    <div class="timeline-header">
+                        <h2>Warehouse Timeline</h2>
+                        <div class="timeline-controls">
+                            <button class="timeline-btn active" data-period="day">Day</button>
+                            <button class="timeline-btn" data-period="week">Week</button>
+                            <button class="timeline-btn" data-period="month">Month</button>
+                        </div>
+                    </div>
+                    <div class="timeline-content" id="timelineContent">
+                        <!-- Timeline events will be rendered here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Quick Actions Modal -->
+    <div class="quick-panel" id="quickActionsPanel">
+        <div class="quick-panel-overlay"></div>
+        <div class="quick-panel-content">
+            <div class="quick-panel-header">
+                <h3>Quick Actions</h3>
+                <button class="quick-panel-close">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div class="quick-panel-body">
+                <div class="quick-actions-grid">
+                    <div class="quick-action-item" data-action="scan">
+                        <div class="quick-action-icon">
+                            <i class="material-icons">qr_code_scanner</i>
+                        </div>
+                        <span>Scan Barcode</span>
+                    </div>
+                    <div class="quick-action-item" data-action="add-bin">
+                        <div class="quick-action-icon">
+                            <i class="material-icons">add_box</i>
+                        </div>
+                        <span>Add Bin</span>
+                    </div>
+                    <div class="quick-action-item" data-action="bulk-move">
+                        <div class="quick-action-icon">
+                            <i class="material-icons">move_up</i>
+                        </div>
+                        <span>Bulk Move</span>
+                    </div>
+                    <div class="quick-action-item" data-action="export">
+                        <div class="quick-action-icon">
+                            <i class="material-icons">file_download</i>
+                        </div>
+                        <span>Export Data</span>
+                    </div>
+                    <div class="quick-action-item" data-action="import">
+                        <div class="quick-action-icon">
+                            <i class="material-icons">upload</i>
+                        </div>
+                        <span>Import Data</span>
+                    </div>
+                    <div class="quick-action-item" data-action="print">
+                        <div class="quick-action-icon">
+                            <i class="material-icons">print</i>
+                        </div>
+                        <span>Print Report</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Access Modal -->
+    <div class="quick-panel" id="quickAccessPanel">
+        <div class="quick-panel-overlay"></div>
+        <div class="quick-panel-content">
+            <div class="quick-panel-header">
+                <h3>Quick Access</h3>
+                <button class="quick-panel-close">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div class="quick-panel-body">
+                <div class="quick-access-sections">
+                    <div class="quick-access-section">
+                        <h4>Recent Views</h4>
+                        <div class="quick-access-items">
+                            <div class="quick-access-item" data-view="dashboard">
+                                <i class="material-icons">dashboard</i>
+                                <span>Dashboard</span>
+                            </div>
+                            <div class="quick-access-item" data-view="kanban">
+                                <i class="material-icons">view_kanban</i>
+                                <span>Kanban Board</span>
+                            </div>
+                            <div class="quick-access-item" data-view="map">
+                                <i class="material-icons">map</i>
+                                <span>Warehouse Map</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="quick-access-section">
+                        <h4>Frequent Actions</h4>
+                        <div class="quick-access-items">
+                            <div class="quick-access-item" data-action="search">
+                                <i class="material-icons">search</i>
+                                <span>Search Bins</span>
+                            </div>
+                            <div class="quick-access-item" data-action="filter">
+                                <i class="material-icons">filter_list</i>
+                                <span>Filter Data</span>
+                            </div>
+                            <div class="quick-access-item" data-action="refresh">
+                                <i class="material-icons">refresh</i>
+                                <span>Refresh Data</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barcode Scanner Modal -->
+    <div class="modal" id="barcodeScannerModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content scanner-modal">
+            <div class="modal-header">
+                <h2>Barcode Scanner</h2>
+                <button class="modal-close">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="scanner-container">
+                    <div class="scanner-viewport">
+                        <div class="scanner-frame">
+                            <div class="scanner-line"></div>
+                            <div class="scanner-corners">
+                                <div class="corner top-left"></div>
+                                <div class="corner top-right"></div>
+                                <div class="corner bottom-left"></div>
+                                <div class="corner bottom-right"></div>
+                            </div>
+                        </div>
+                        <div class="scanner-instructions">
+                            <i class="material-icons">qr_code_scanner</i>
+                            <p>Position the barcode within the frame</p>
+                            <p class="scanner-tip">Make sure the barcode is clearly visible and well-lit</p>
+                        </div>
+                    </div>
+                    <div class="scanner-controls">
+                        <button class="btn btn-secondary" id="toggleFlashlight">
+                            <i class="material-icons">flashlight_on</i>
+                            Toggle Flash
+                        </button>
+                        <button class="btn btn-secondary" id="switchCamera">
+                            <i class="material-icons">flip_camera_android</i>
+                            Switch Camera
+                        </button>
+                    </div>
+                    <div class="scanner-result" id="scannerResult" style="display: none;">
+                        <div class="result-icon">
+                            <i class="material-icons">check_circle</i>
+                        </div>
+                        <div class="result-text">
+                            <strong>Scanned Successfully!</strong>
+                            <p id="scannedCode"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelScanBtn">Cancel</button>
+                <button type="button" class="btn btn-primary" id="manualEntryBtn">Manual Entry</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Bin Modal -->
+    <div class="modal" id="addBinModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Bin Location</h2>
+                <button class="modal-close">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addBinForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="binCode">Bin Code</label>
+                            <input type="text" id="binCode" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="zone">Zone</label>
+                            <select id="zone" required>
+                                <option value="">Select Zone</option>
+                                <option value="A">Zone A - Receiving</option>
+                                <option value="B">Zone B - Storage</option>
+                                <option value="C">Zone C - Picking</option>
+                                <option value="D">Zone D - Shipping</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="aisle">Aisle</label>
+                            <input type="text" id="aisle" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="rack">Rack</label>
+                            <input type="text" id="rack" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="level">Level</label>
+                            <input type="text" id="level" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="binType">Bin Type</label>
+                            <select id="binType" required>
+                                <option value="">Select Type</option>
+                                <option value="standard">Standard</option>
+                                <option value="bulk">Bulk Storage</option>
+                                <option value="picking">Picking Bin</option>
+                                <option value="quarantine">Quarantine</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="capacity">Capacity</label>
+                            <input type="number" id="capacity" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="description">Description</label>
+                            <textarea id="description" rows="3"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="saveBinBtn">Save Bin Location</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script src="scripts/warehouse-management.js"></script>
+</body>
+</html>

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grid with Advanced Search</title>
+  <link rel="stylesheet" href="AdvSearchStyles.css">
+  <style>
+    body {
+      background-color: #ffffff !important; /* White background */
+      color: #000 !important; /* Black text */
+    }
+    .container {
+      background-color: #ffffff; /* White background */
+      color: #000; /* Black text */
+      padding: 20px;
+      overflow-x: auto; /* Enable horizontal scrolling if content overflows */
+    }
+    .top-search-bar {
+      background-color: #ffffff; /* Black background */
+      color: #000000; /* White text */
+      padding: 20px 0;
+      position: relative;
+    }
+    .top-search-bar input {
+      background-color: #222; /* Darker gray background */
+      color: #fff; /* White text */
+      border: 1px solid #555; /* Gray border */
+      padding: 10px;
+      border-radius: 4px;
+    }
+    .top-search-bar button {
+      background-color: #333; /* Dark gray background */
+      color: #fff; /* White text */
+      border: 1px solid #555; /* Gray border */
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .top-search-bar button:hover {
+      background-color: #444; /* Slightly lighter gray on hover */
+    }
+    input, select, textarea {
+      background-color: #222; /* Darker gray background */
+      color: #fff; /* White text */
+      border: 1px solid #555; /* Gray border */
+      padding: 5px;
+      border-radius: 4px;
+    }
+    table {
+      background-color: #111; /* Black background */
+      color: #fff; /* White text */
+      border-collapse: collapse;
+      width: 100%; /* Ensure table takes full width of the container */
+      min-width: 800px; /* Set a minimum width for the table */
+    }
+    th, td {
+      border: 1px solid #555; /* Gray border */
+      padding: 10px;
+    }
+    th {
+      background-color: #333; /* Dark gray background */
+    }
+    .modal-content {
+      background-color: #111; /* Black background */
+      color: #fff; /* White text */
+      border: 1px solid #555; /* Gray border */
+      border-radius: 5px;
+    }
+    .quick-filters {
+      background-color: #222; /* Darker gray background */
+      border: 1px solid #555; /* Gray border */
+    }
+    .quick-filters-label {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #ffffff; /* Black text */
+    }
+    .page-header {
+      text-align: center;
+      margin: 0; /* Remove extra space above the header */
+      padding: 20px 0; /* Add padding for spacing inside the header */
+      font-size: 24px;
+      font-weight: bold;
+      color: #ffffff; /* White text */
+      background-color: #000000; /* Black background */
+    }
+    #global-search {
+    width: 50%;
+    display: inline-block;
+    padding: 9px !important;
+    background-color: rgb(34, 34, 34);
+    color: rgb(255, 255, 255);
+    border: 1px solid rgb(85, 85, 85);
+    border-radius: 4px;
+}
+    .menu-bar {
+      display: flex;
+      background-color: #000000; /* Dark gray background */
+      padding: 10px 0;
+      justify-content: center;
+    }
+    .menu-item {
+      color: #fff; /* White text */
+      padding: 10px 20px;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      border-right: 1px solid #555; /* Divider between menu items */
+    }
+    .menu-item:last-child {
+      border-right: none; /* Remove border for the last item */
+    }
+    .menu-item:hover {
+      background-color: #444; /* Slightly lighter gray on hover */
+    }
+    .menu-item.active {
+      background-color: #fff; /* White background for active menu */
+      color: #000; /* Black text for active menu */
+      border-bottom: 3px solid orange; /* Orange underline for active menu */
+    }
+    .hamburger {
+      position: fixed;
+      left: 20px;
+      background-color: #333; /* Dark gray background */
+      color: #fff; /* White text */
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 1000; /* Ensure it stays above other elements */
+    }
+    .side-menu {
+      width: 200px;
+      background-color: #333; /* Dark gray background */
+      color: #fff; /* White text */
+      position: fixed;
+      top: 0;
+      left: -220px; /* Initially hidden */
+      height: 100%;
+      padding-top: 60px; /* Space for the header */
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      transition: left 0.3s ease; /* Smooth slide-in effect */
+    }
+    .side-menu.open {
+      left: 0; /* Slide in when open */
+    }
+    .side-menu a {
+      display: block;
+      color: #fff; /* White text */
+      padding: 10px 20px;
+      text-decoration: none;
+      font-size: 16px;
+      border-bottom: 1px solid #444; /* Divider between menu items */
+    }
+    .side-menu a:hover {
+      background-color: #444; /* Slightly lighter gray on hover */
+    }
+    .side-menu a.active {
+      background-color: #fff; /* White background for active menu */
+      color: #000; /* Black text for active menu */
+    }
+    .content {
+      margin-left: 0; /* No margin when side menu is hidden */
+      padding: 20px;
+      transition: margin-left 0.3s ease; /* Smooth content shift */
+    }
+    .content.menu-open {
+      margin-left: 220px; /* Adjust margin when side menu is open */
+    }
+    .search-suggestions-container {
+      position: absolute;
+      top: calc(100% + -30px); /* Align directly below the search box with a small gap */
+      left: calc(100% - 1210px);; /* Align with the left edge of the search box */
+      background-color: #fff; /* White background */
+      border: 1px solid #ccc; /* Light gray border */
+      border-radius: 4px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+      max-height: 200px; /* Limit height */
+      overflow-y: auto; /* Scroll if too many suggestions */
+      width: 50%; /* Match the width of the search box */
+      z-index: 1000; /* Ensure it stays above other elements */
+      display: none; /* Hidden by default */
+    }
+    .suggestion-item {
+      padding: 10px;
+      cursor: pointer;
+    }
+    .suggestion-item:hover {
+      background-color: #f0f0f0; /* Light gray on hover */
+    }
+  </style>
+</head>
+<body>
+  <button class="hamburger" onclick="toggleSideMenu()">☰</button>
+  <div class="page-header">Advanced Search</div>
+  <div class="menu-bar">
+    <a href="#" class="menu-item active">Company</a>
+    <a href="#" class="menu-item">Employee</a>
+    <a href="#" class="menu-item">Product</a>
+  </div>
+  <div class="side-menu" id="side-menu">
+    <a href="#" >Dashboard</a>
+    <a href="#" class="active">Company</a>
+    <a href="#">Employee</a>
+    <a href="#">Product</a>
+    <a href="#">Customer</a>
+  </div>
+  <div class="content" id="content">
+    <div class="top-search-bar" style="position: relative;">
+      <input type="text" id="global-search" class="form-control" style="width: 50%; display: inline-block;" placeholder="Search documents, data, or users">
+      <div id="search-suggestions-container" class="search-suggestions-container"></div>
+      <button class="btn btn-primary" onclick="openAdvancedSearch()" style="margin-left: 10px;">
+        <span class="search-icon">🔍</span> Advanced Search
+      </button>
+    </div>
+
+    <div class="container">
+      <!-- Grid Header -->
+      <div class="grid-header">
+        <h1>Company Data Grid</h1>
+        <button class="btn-advance-search" onclick="openAdvancedSearch()">Advanced Search</button>
+      </div>
+      
+      <!-- Grid Table -->
+      <div style="overflow-x: auto;"> <!-- Add scrollable wrapper -->
+        <table id="data-grid">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Industry</th>
+              <th>Location</th>
+              <th>Revenue</th>
+              <th>Established Date</th> <!-- New Date Column -->
+              <th>Active</th> <!-- New Yes/No Column -->
+            </tr>
+          </thead>
+          <tbody id="grid-body">
+            <!-- Data rows will be populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Grid Footer -->
+      <div class="grid-footer">
+        <div class="pager">
+          <button onclick="prevPage()" id="prev-btn" disabled>Previous</button>
+          <span id="page-info"></span>
+          <button onclick="nextPage()" id="next-btn">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Advanced Search Modal -->
+  <div id="advanced-search-modal" class="modal">
+    <div class="modal-content">
+      <div style="background-color: #333; color: #fff; padding: 10px; border-radius: 5px; text-align: center; position: relative;">
+        <span class="close" onclick="closeAdvancedSearch()" style="position: absolute; top: 10px; right: 15px; font-size: 20px; cursor: pointer; color: #fff;">&times;</span>
+        <h2 style="margin: 0;">
+          <span class="search-icon">🔍</span> Advanced Search
+        </h2>
+      </div>
+      
+      <label class="quick-filters-label">Quick Filters</label>
+      <div id="quick-filters-container" class="quick-filters" style="padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+      </div>
+
+      <div class="filter-section">
+        <!-- Condition Dropdown (Starts appearing from the second filter) -->
+        <select id="condition" class="condition-dropdown" style="display: none;">
+          <option value="AND">AND</option>
+          <option value="OR">OR</option>
+        </select>
+
+        <!-- Field Dropdown -->
+        <label for="field">Field:</label>
+        <select id="field">
+          <option value="0">--Select--</option>
+          <option value="Name">Name</option>
+          <option value="Industry">Industry</option>
+          <option value="Location">Location</option>
+          <option value="Revenue">Revenue</option>
+          <option value="EstablishedDate">Established Date</option> <!-- New Date Field -->
+          <option value="Active">Active</option> <!-- New Yes/No Field -->
+        </select>
+
+        <!-- Operator Dropdown -->
+        <label for="operator">Operator:</label>
+        <select id="operator">
+          <option value="0">--Select--</option>
+          <option value="equals">Equals</option>
+          <option value="notequals">Not Equals</option>
+          <option value="greaterthan">Greater Than</option>
+          <option value="lessthan">Less Than</option>
+          <option value="greaterthanorequals">Greater Than or Equals</option>
+          <option value="lessthanorequals">Less Than or Equals</option>
+          <option value="contains">Contains</option>
+          <option value="doesnotcontain">Does Not Contain</option>
+          <option value="startswith">Starts With</option>
+          <option value="endswith">Ends With</option>
+          <option value="isnull">Is Null</option>
+          <option value="isnotnull">Is Not Null</option>
+        </select>
+
+        <!-- Value Field -->
+        <label for="value">Value:</label>
+        <div id="value-container">
+          <input type="text" id="value" placeholder="Enter value"> <!-- Default Textbox -->
+        </div>
+
+        <button class="btn-add-filter" onclick="addFilter()">Add Filter</button>
+      </div>
+
+      <h3>📄 Applied Filters</h3>
+      <textarea id="query-display" readonly></textarea>
+
+      <div id="applied-filters-list"></div>
+
+      <div class="modal-actions">
+        <button class="btn-search" onclick="applyFilters()">Search</button>
+        <button class="btn-reset" onclick="resetFilters()">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="AdvSearchScript.js"></script>
+</body>
+</html>

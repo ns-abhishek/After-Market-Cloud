@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#1a73e8">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Attachment UI - Google Framework</title>
+
+    <!-- Google Web Components -->
+    <script type="module" src="https://unpkg.com/@google-web-components/google-chart?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-button?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-icon-button?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-icon?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-dialog?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-drawer?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-top-app-bar?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-list?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-checkbox?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-formfield?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-select?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-textfield?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-fab?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-snackbar?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-tab-bar?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-tab?module"></script>
+
+    <!-- Google APIs -->
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://accounts.google.com/gsi/client"></script>
+
+    <!-- Material Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles/material-theme.css">
+    <link rel="stylesheet" href="styles/app.css">
+</head>
+<body class="mdc-typography">
+    <!-- App Bar with Google Web Components -->
+    <mwc-top-app-bar id="app-bar">
+        <mwc-icon-button icon="menu" slot="navigationIcon"></mwc-icon-button>
+        <div slot="title">Attachment Management</div>
+        <mwc-icon-button icon="search" slot="actionItems"></mwc-icon-button>
+        <mwc-icon-button icon="notifications" slot="actionItems"></mwc-icon-button>
+        <mwc-icon-button icon="account_circle" slot="actionItems"></mwc-icon-button>
+    </mwc-top-app-bar>
+
+    <!-- Main Content -->
+    <div class="app-content-wrapper">
+        <div class="app-content">
+            <!-- Drawer using Google Web Components -->
+            <mwc-drawer hasHeader type="dismissible" id="app-drawer">
+                <div slot="title">Attachment UI</div>
+                <div slot="subtitle">Google Framework</div>
+                <div slot="content">
+                    <mwc-list>
+                        <mwc-list-item selected activated graphic="icon">
+                            <span>Attachments</span>
+                            <mwc-icon slot="graphic">attach_file</mwc-icon>
+                        </mwc-list-item>
+                        <mwc-list-item graphic="icon">
+                            <span>Documents</span>
+                            <mwc-icon slot="graphic">folder</mwc-icon>
+                        </mwc-list-item>
+                        <mwc-list-item graphic="icon">
+                            <span>Images</span>
+                            <mwc-icon slot="graphic">image</mwc-icon>
+                        </mwc-list-item>
+                        <li divider padded role="separator"></li>
+                        <mwc-list-item graphic="icon">
+                            <span>Preferences</span>
+                            <mwc-icon slot="graphic">settings</mwc-icon>
+                        </mwc-list-item>
+                        <mwc-list-item graphic="icon">
+                            <span>Help & Feedback</span>
+                            <mwc-icon slot="graphic">help</mwc-icon>
+                        </mwc-list-item>
+                    </mwc-list>
+                </div>
+            </mwc-drawer>
+
+            <!-- Main Content Area -->
+            <main class="main-content">
+                <!-- Ticket Info Card using Google Web Components -->
+                <div class="google-card ticket-info-card">
+                    <div class="google-card__content">
+                        <div class="ticket-header">
+                            <h2>Ticket #SKT/1/2019</h2>
+                            <div class="status-chip">
+                                <span>Open</span>
+                            </div>
+                        </div>
+                        <div class="ticket-details">
+                            <div class="ticket-details-grid">
+                                <div class="ticket-details-column">
+                                    <p><strong>Type:</strong> Support Request</p>
+                                    <p><strong>Created:</strong> Jan 15, 2023</p>
+                                </div>
+                                <div class="ticket-details-column">
+                                    <p><strong>Assigned to:</strong> John Smith</p>
+                                    <p><strong>Priority:</strong> Medium</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Attachments Section using Google Web Components -->
+                <section class="attachments-section">
+                    <div class="section-header">
+                        <h2>Attachments</h2>
+                        <div class="section-actions">
+                            <!-- View Toggle with Google Web Components -->
+                            <mwc-tab-bar id="view-toggle">
+                                <mwc-tab label="List" icon="view_list" id="list-tab"></mwc-tab>
+                                <mwc-tab label="Grid" icon="grid_view" id="grid-tab"></mwc-tab>
+                            </mwc-tab-bar>
+
+                            <!-- Upload Button with Google Web Components -->
+                            <mwc-button raised icon="upload_file" id="upload-button">
+                                Upload
+                            </mwc-button>
+                        </div>
+                    </div>
+
+                    <!-- File Upload Area -->
+                    <div class="file-upload-area" id="dropzone">
+                        <mwc-icon>cloud_upload</mwc-icon>
+                        <p>Drag files here or click to upload</p>
+                        <p class="upload-caption">Supported files: Images, PDF, Office, Text (Max: 10MB)</p>
+                        <input type="file" id="fileInput" class="file-input" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt" multiple hidden>
+                    </div>
+
+                    <!-- List View with Google Web Components -->
+                    <div class="view-container list-view active" id="list-view">
+                        <table class="google-table">
+                            <thead>
+                                <tr>
+                                    <th class="checkbox-cell">
+                                        <mwc-checkbox id="select-all-checkbox"></mwc-checkbox>
+                                    </th>
+                                    <th>File</th>
+                                    <th>Size</th>
+                                    <th>Uploaded By</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attachment-list">
+                                <!-- Attachment items will be added here dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Grid View with Google Web Components -->
+                    <div class="view-container grid-view" id="grid-view">
+                        <div class="google-grid" id="attachment-grid">
+                            <!-- Grid items will be added here dynamically -->
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Upload Dialog using Google Web Components -->
+    <mwc-dialog id="upload-dialog" heading="Upload Attachment" scrimClickAction="">
+        <div class="dialog-content">
+            <div class="file-preview-area">
+                <mwc-icon class="file-icon">description</mwc-icon>
+                <div class="file-details">
+                    <span class="selected-filename">No file selected</span>
+                    <mwc-button id="dialog-choose-file-btn">Choose File</mwc-button>
+                </div>
+            </div>
+
+            <mwc-select id="file-reference-select" label="Attached To">
+                <mwc-list-item value="">-- Select Reference --</mwc-list-item>
+                <mwc-list-item value="BSKY">BSKY - Design - colour exploration</mwc-list-item>
+                <mwc-list-item value="Research">Preliminary research</mwc-list-item>
+                <mwc-list-item value="Documentation">System documentation</mwc-list-item>
+            </mwc-select>
+
+            <mwc-formfield label="Requires Signature">
+                <mwc-checkbox id="require-signature-checkbox"></mwc-checkbox>
+            </mwc-formfield>
+        </div>
+
+        <mwc-button slot="secondaryAction" dialogAction="cancel">Cancel</mwc-button>
+        <mwc-button slot="primaryAction" raised id="upload-confirm-btn">Upload</mwc-button>
+    </mwc-dialog>
+
+    <!-- File Viewer Dialog using Google Web Components -->
+    <mwc-dialog id="file-viewer-dialog" heading="File Viewer" scrimClickAction="">
+        <div class="file-viewer-content" id="file-viewer-container">
+            <!-- File content will be displayed here -->
+        </div>
+
+        <mwc-button slot="secondaryAction" dialogAction="close">Close</mwc-button>
+        <mwc-button slot="primaryAction" raised icon="download" id="download-file-btn">Download</mwc-button>
+    </mwc-dialog>
+
+    <!-- Snackbar for notifications using Google Web Components -->
+    <mwc-snackbar id="app-snackbar" labelText="">
+        <mwc-button slot="action">OK</mwc-button>
+    </mwc-snackbar>
+
+    <!-- Scripts -->
+    <script src="scripts/material-components.js"></script>
+    <script src="scripts/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,1579 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Kit Management (Improved Detail Panel)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- Full CSS with modifications for detail panel --- */
+        :root {
+            --primary-color: #003366; /* HCL-like Dark Blue */
+            --secondary-color: #0055A4; /* Lighter Blue */
+            --accent-color: #FDB515;
+            --light-gray: #f4f6f8;
+            --medium-gray: #dfe3e8;
+            --dark-gray: #6c757d;
+            --text-color: #343a40;
+            --danger-color: #dc3545;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --white-color: #ffffff;
+            --border-radius: 6px;
+            --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --modal-header-bg: #001f5c;
+            --modal-header-button-bg: #003366;
+            --modal-form-label-color: #333;
+            --modal-input-border: #ccc;
+            --modal-section-header-bg: #e9ecef;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: var(--light-gray);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background-color: var(--primary-color);
+            color: var(--white-color);
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+            .sidebar-header h2 {
+                margin: 0;
+                font-size: 1.5em;
+                font-weight: 600;
+            }
+
+        .sidebar-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0 0 0;
+        }
+
+        .sidebar-nav li a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #e0e0e0;
+            text-decoration: none;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            font-size: 0.95em;
+            cursor: pointer;
+        }
+
+            .sidebar-nav li a .nav-text {
+                flex-grow: 1;
+            }
+
+            .sidebar-nav li a .arrow-icon {
+                margin-left: auto;
+                transition: transform 0.2s ease;
+                font-size: 0.8em;
+            }
+
+            .sidebar-nav li a i {
+                margin-right: 12px;
+                width: 20px;
+                text-align: center;
+            }
+
+            .sidebar-nav li a:hover, .sidebar-nav li.active > a {
+                background-color: var(--secondary-color);
+                color: var(--white-color);
+                font-weight: 500;
+            }
+
+                .sidebar-nav li.active > a:not(.has-submenu) {
+                    border-left: 3px solid var(--accent-color);
+                    padding-left: 17px;
+                }
+
+        .sidebar-nav li.active-parent > a {
+            background-color: var(--secondary-color);
+            color: var(--white-color);
+        }
+
+            .sidebar-nav li.active-parent > a .arrow-icon {
+                transform: rotate(90deg);
+            }
+
+        .sidebar-nav ul.submenu {
+            list-style: none;
+            padding-left: 0;
+            margin-left: 0;
+            background-color: rgba(0,0,0,0.15);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+            .sidebar-nav ul.submenu li a {
+                padding-left: 40px;
+                font-size: 0.9em;
+            }
+
+            .sidebar-nav ul.submenu li.active a {
+                border-left: 3px solid var(--accent-color);
+                padding-left: 37px;
+                font-weight: bold;
+            }
+
+        .main-content-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .top-bar {
+            background-color: var(--white-color);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid var(--medium-gray);
+            flex-shrink: 0;
+        }
+
+            .top-bar .search-bar input {
+                padding: 8px 12px;
+                border: 1px solid var(--medium-gray);
+                border-radius: var(--border-radius);
+                min-width: 250px;
+            }
+
+            .top-bar .user-info {
+                display: flex;
+                align-items: center;
+            }
+
+                .top-bar .user-info span {
+                    margin-right: 15px;
+                    font-size: 0.9em;
+                }
+
+                .top-bar .user-info .icon-button {
+                    background: none;
+                    border: none;
+                    color: var(--dark-gray);
+                    font-size: 1.3em;
+                    margin-left: 15px;
+                    cursor: pointer;
+                }
+
+        .page-content {
+            padding: 30px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+            .content-section.active {
+                display: block;
+            }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+            .content-header h1 {
+                font-size: 1.8em;
+                margin: 0;
+                color: var(--primary-color);
+            }
+
+            .content-header .action-buttons button {
+                padding: 10px 18px;
+                border: none;
+                border-radius: var(--border-radius);
+                cursor: pointer;
+                font-size: 0.9em;
+                font-weight: 500;
+                margin-left: 10px;
+                transition: background-color 0.2s ease;
+            }
+
+            .content-header .action-buttons .btn-km-new, .content-header .action-buttons .btn-kb-new {
+                background-color: var(--secondary-color);
+                color: var(--white-color);
+            }
+
+                .content-header .action-buttons .btn-km-new:hover, .content-header .action-buttons .btn-kb-new:hover {
+                    background-color: var(--primary-color);
+                }
+
+            .content-header .action-buttons .btn-filter, .content-header .action-buttons .btn-export, .content-header .action-buttons .btn-refresh, .content-header .action-buttons .btn-kb-adv-search {
+                background-color: var(--medium-gray);
+                color: var(--text-color);
+            }
+
+                .content-header .action-buttons .btn-filter:hover, .content-header .action-buttons .btn-export:hover, .content-header .action-buttons .btn-refresh:hover, .content-header .action-buttons .btn-kb-adv-search:hover {
+                    background-color: #c8ced3;
+                }
+
+            .content-header .action-buttons .btn-icon {
+                padding: 10px 12px;
+            }
+
+        .data-table-container {
+            background-color: var(--white-color);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow-x: auto;
+        }
+
+        .table-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        table.data-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+            table.data-table th, table.data-table td {
+                padding: 12px 15px;
+                text-align: left;
+                border-bottom: 1px solid var(--medium-gray);
+                font-size: 0.9em;
+                white-space: nowrap;
+            }
+
+                table.data-table td.wrap-text {
+                    white-space: normal;
+                }
+
+            table.data-table th {
+                background-color: var(--light-gray);
+                font-weight: 600;
+                color: var(--dark-gray);
+            }
+
+            table.data-table td .action-icon {
+                color: var(--secondary-color);
+                cursor: pointer;
+                margin-right: 10px;
+                font-size: 1.1em;
+            }
+
+                table.data-table td .action-icon.delete {
+                    color: var(--danger-color);
+                }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: var(--white-color);
+            margin: 3% auto;
+            padding: 0;
+            border: 1px solid #888;
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        #kitMakingModal .modal-content, #kitBreakingModal .modal-content {
+            width: 85%;
+            max-width: 1100px;
+        }
+
+        #kitMakingModal .modal-header, #kitBreakingModal .modal-header {
+            padding: 8px 15px;
+            background-color: var(--modal-header-bg);
+            color: var(--white-color);
+            border-top-left-radius: var(--border-radius);
+            border-top-right-radius: var(--border-radius);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+            #kitMakingModal .modal-header h2, #kitBreakingModal .modal-header h2 {
+                margin: 0;
+                font-size: 1.1em;
+                font-weight: 600;
+            }
+
+            #kitMakingModal .modal-header .header-buttons .close-x-btn, #kitBreakingModal .modal-header .header-buttons .close-x-btn {
+                background-color: var(--modal-header-button-bg);
+                color: var(--white-color);
+                border: 1px solid var(--white-color);
+                padding: 3px 7px;
+                font-weight: bold;
+                cursor: pointer;
+                border-radius: 3px;
+            }
+
+                #kitMakingModal .modal-header .header-buttons .close-x-btn:hover, #kitBreakingModal .modal-header .header-buttons .close-x-btn:hover {
+                    background-color: var(--secondary-color);
+                }
+
+            #kitMakingModal .modal-header .header-buttons .btn-save-header, #kitBreakingModal .modal-header .header-buttons .btn-save-header {
+                background-color: var(--modal-header-button-bg);
+                color: var(--white-color);
+                border: 1px solid var(--white-color);
+                padding: 5px 12px;
+                margin-left: 8px;
+                border-radius: 3px;
+                font-size: 0.85em;
+                font-weight: 500;
+                cursor: pointer;
+            }
+
+                #kitMakingModal .modal-header .header-buttons .btn-save-header:hover, #kitBreakingModal .modal-header .header-buttons .btn-save-header:hover {
+                    background-color: var(--secondary-color);
+                }
+
+        #kitMakingModal .modal-body, #kitBreakingModal .modal-body {
+            padding: 20px;
+            max-height: calc(100vh - 160px);
+            overflow-y: auto;
+        }
+
+        .kit-form-grid {
+            display: grid;
+            grid-template-columns: auto 1fr auto 1fr;
+            gap: 12px 15px;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+            .kit-form-grid label {
+                font-size: 0.85em;
+                color: var(--modal-form-label-color);
+                text-align: right;
+                padding-right: 5px;
+                font-weight: 500;
+            }
+
+                .kit-form-grid label.required::after {
+                    content: " *";
+                    color: var(--danger-color);
+                }
+
+            .kit-form-grid input[type="text"], .kit-form-grid input[type="date"], .kit-form-grid input[type="number"], .kit-form-grid select {
+                width: 100%;
+                padding: 6px 8px;
+                border: 1px solid var(--modal-input-border);
+                border-radius: 3px;
+                box-sizing: border-box;
+                font-size: 0.85em;
+                background-color: #fdfdff;
+            }
+
+            .kit-form-grid .input-with-button, .kit-form-grid .display-with-icon {
+                display: flex;
+                align-items: center;
+            }
+
+                .kit-form-grid .input-with-button input, .kit-form-grid .display-with-icon .display-only-field {
+                    flex-grow: 1;
+                    border-top-right-radius: 0;
+                    border-bottom-right-radius: 0;
+                }
+
+                .kit-form-grid .input-with-button button, .kit-form-grid .display-with-icon .icon-button {
+                    padding: 6px 10px;
+                    border: 1px solid var(--modal-input-border);
+                    border-left: none;
+                    background-color: #e9ecef;
+                    cursor: pointer;
+                    border-top-right-radius: 3px;
+                    border-bottom-right-radius: 3px;
+                    font-size: 0.8em;
+                    color: var(--text-color);
+                }
+
+                    .kit-form-grid .input-with-button button i, .kit-form-grid .display-with-icon .icon-button i {
+                        margin-right: 0;
+                    }
+
+                .kit-form-grid .display-with-icon .icon-button {
+                    height: 30.5px;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 0 8px;
+                }
+
+        .display-only-field {
+            padding: 7px 8px;
+            font-size: 0.85em;
+            color: var(--text-color);
+            background-color: var(--light-gray);
+            border: 1px solid var(--medium-gray);
+            border-radius: 3px;
+            min-height: 18px;
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .kit-form-grid .remarks-label {
+            grid-column: 1 / 2;
+            align-self: start;
+            padding-top: 6px;
+        }
+
+        .kit-form-grid .remarks-input {
+            grid-column: 2 / 5;
+        }
+
+        .kit-form-grid textarea {
+            width: 100%;
+            min-height: 60px;
+            padding: 6px 8px;
+            border: 1px solid var(--modal-input-border);
+            border-radius: 3px;
+            font-size: 0.85em;
+            resize: vertical;
+            background-color: #fdfdff;
+        }
+
+        .part-details-section {
+            margin-top: 25px;
+        }
+
+        .part-details-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--modal-section-header-bg);
+            padding: 8px 12px;
+            border: 1px solid var(--medium-gray);
+            border-bottom: none;
+            border-top-left-radius: var(--border-radius);
+            border-top-right-radius: var(--border-radius);
+        }
+
+            .part-details-header h3 {
+                margin: 0;
+                font-size: 1em;
+                font-weight: 600;
+            }
+
+            .part-details-header .add-part-btn {
+                background-color: var(--secondary-color);
+                color: var(--white-color);
+                border: none;
+                padding: 6px 12px;
+                border-radius: 3px;
+                font-size: 0.85em;
+                font-weight: 500;
+                cursor: pointer;
+            }
+
+                .part-details-header .add-part-btn i {
+                    margin-right: 5px;
+                }
+
+                .part-details-header .add-part-btn:hover {
+                    background-color: var(--primary-color);
+                }
+
+        #kitMakingModal .data-table-container, #kitBreakingModal .data-table-container {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            padding: 0;
+        }
+
+        #kitMakingModal table.part-details-table, #kitBreakingModal table.part-details-table {
+            min-width: auto;
+        }
+
+            #kitMakingModal table.part-details-table th, #kitMakingModal table.part-details-table td, #kitBreakingModal table.part-details-table th, #kitBreakingModal table.part-details-table td {
+                padding: 8px 10px;
+                font-size: 0.8em;
+                white-space: normal;
+            }
+
+                #kitMakingModal table.part-details-table td input[type="number"] {
+                    width: 60px;
+                    padding: 4px;
+                    font-size: 0.9em;
+                    text-align: right;
+                    border: none;/*1px solid var(--medium-gray);*/
+                    border-radius: 3px;
+                }
+
+                #kitMakingModal table.part-details-table td .action-icon-bom, #kitBreakingModal table.part-details-table td .action-icon-bom {
+                    color: var(--dark-gray);
+                    cursor: pointer;
+                    margin: 0 3px;
+                    font-size: 1em;
+                }
+
+                    #kitMakingModal table.part-details-table td .action-icon-bom.delete:hover, #kitBreakingModal table.part-details-table td .action-icon-bom.delete:hover {
+                        color: var(--danger-color);
+                    }
+
+                    #kitMakingModal table.part-details-table td .action-icon-bom.view:hover, #kitBreakingModal table.part-details-table td .action-icon-bom.view:hover {
+                        color: var(--secondary-color);
+                    }
+
+                #kitMakingModal table.part-details-table td.stock-warning {
+                    color: var(--danger-color);
+                    font-weight: bold;
+                }
+
+        #kitMakingModal .no-records-message, #kitBreakingModal .no-records-message {
+            text-align: center;
+            padding: 15px;
+            color: var(--dark-gray);
+            font-size: 0.9em;
+        }
+
+        #kitMakingModal .modal-footer, #kitBreakingModal .modal-footer {
+            padding: 10px 15px;
+            background-color: #f0f0f0;
+            border-top: 1px solid var(--medium-gray);
+            text-align: right;
+            border-bottom-left-radius: var(--border-radius);
+            border-bottom-right-radius: var(--border-radius);
+        }
+
+            #kitMakingModal .modal-footer button, #kitBreakingModal .modal-footer button {
+                background-color: var(--modal-header-button-bg);
+                color: var(--white-color);
+                border: 1px solid var(--white-color);
+                padding: 6px 15px;
+                margin-left: 8px;
+                border-radius: 3px;
+                font-size: 0.9em;
+                font-weight: 500;
+                cursor: pointer;
+            }
+
+                #kitMakingModal .modal-footer button.btn-save-footer:hover, #kitBreakingModal .modal-footer button.btn-save-footer:hover {
+                    background-color: var(--success-color);
+                    border-color: var(--success-color);
+                }
+
+                #kitMakingModal .modal-footer button.btn-exit-footer:hover, #kitBreakingModal .modal-footer button.btn-exit-footer:hover {
+                    background-color: var(--dark-gray);
+                    border-color: var(--dark-gray);
+                }
+
+        #partSearchModal .modal-content {
+            width: 70%;
+            max-width: 800px;
+        }
+
+        #partSearchModal .modal-header {
+            padding: 15px 25px;
+            background-color: var(--primary-color);
+            color: white;
+            border-bottom: 1px solid #eee;
+            border-top-left-radius: var(--border-radius);
+            border-top-right-radius: var(--border-radius);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+            #partSearchModal .modal-header h2 {
+                margin: 0;
+                font-size: 1.3em;
+            }
+
+            #partSearchModal .modal-header .close-button {
+                color: white;
+                font-size: 1.8em;
+                font-weight: bold;
+                cursor: pointer;
+                opacity: 0.8;
+            }
+
+                #partSearchModal .modal-header .close-button:hover {
+                    opacity: 1;
+                }
+
+        #partSearchModal .modal-body {
+            padding: 20px;
+        }
+
+        #partSearchModal .search-controls {
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+            #partSearchModal .search-controls input {
+                flex-grow: 1;
+                padding: 8px 12px;
+                border: 1px solid var(--medium-gray);
+                border-radius: var(--border-radius);
+            }
+
+        #partSearchModal .data-table-container {
+            padding: 0;
+            box-shadow: none;
+            border: 1px solid var(--medium-gray);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        #partSearchModal table.data-table th, #partSearchModal table.data-table td {
+            font-size: 0.85em;
+            padding: 8px 10px;
+        }
+
+        #partSearchModal table.data-table tbody tr:hover {
+            background-color: var(--light-gray);
+            cursor: pointer;
+        }
+
+        #partSearchModal .pagination {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        #partSearchModal .modal-footer {
+            padding: 15px 25px;
+            background-color: #f9f9f9;
+            border-top: 1px solid #eee;
+            text-align: right;
+            border-bottom-left-radius: var(--border-radius);
+            border-bottom-right-radius: var(--border-radius);
+        }
+
+            #partSearchModal .modal-footer button {
+                padding: 10px 18px;
+                border: none;
+                border-radius: var(--border-radius);
+                cursor: pointer;
+                font-size: 0.9em;
+                font-weight: 500;
+                margin-left: 10px;
+            }
+
+            #partSearchModal .modal-footer .btn-cancel-search {
+                background-color: var(--medium-gray);
+                color: var(--text-color);
+            }
+
+                #partSearchModal .modal-footer .btn-cancel-search:hover {
+                    background-color: #c8ced3;
+                }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: var(--border-radius);
+            color: var(--white-color);
+            font-size: 0.9em;
+            z-index: 2000;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            .notification.success {
+                background-color: var(--success-color);
+            }
+
+            .notification.error {
+                background-color: var(--danger-color);
+            }
+
+            .notification.info {
+                background-color: var(--secondary-color);
+            }
+
+        /* MODIFIED Styles for Detail Panel for better layout */
+        .detail-panel {
+            position: fixed;
+            top: 0;
+            right: -70%; /*70*/
+            width: 70%;
+            max-width: 1400px;
+            height: 100vh;
+            background-color: var(--white-color);
+            box-shadow: -3px 0 10px rgba(0,0,0,0.15);
+            z-index: 1055;
+            transition: right 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+
+            .detail-panel.open {
+                right: 0;
+            }
+
+        .detail-panel-header {
+            background-color: var(--primary-color);
+            color: var(--white-color);
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+            .detail-panel-header h3 {
+                margin: 0;
+                font-size: 1.2em;
+            }
+
+            .detail-panel-header .icon-button {
+                background: none;
+                border: none;
+                color: var(--white-color);
+                font-size: 1.5em;
+                cursor: pointer;
+            }
+
+        .detail-panel-body {
+            padding: 20px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+            .detail-panel-body .parts-master-grid {
+                display: grid;
+                grid-template-columns: repeat(4, auto 1fr); /* L-V L-V L-V L-V */
+                gap: 10px 15px;
+                font-size: 0.85em;
+                margin-bottom: 20px;
+            }
+
+                .detail-panel-body .parts-master-grid dt {
+                    font-weight: 500;
+                    color: var(--dark-gray);
+                    text-align: left;
+                    padding-right: 5px;
+                    grid-column: span 1;
+                }
+
+                .detail-panel-body .parts-master-grid dd {
+                    margin: 0;
+                    background-color: var(--light-gray);
+                    padding: 6px 8px;
+                    border-radius: var(--border-radius);
+                    border: 1px solid var(--medium-gray);
+                    font-size: 0.95em;
+                    word-break: break-all;
+                    grid-column: span 1;
+                    min-height: 18px;
+                }
+
+                .detail-panel-body .parts-master-grid .checkbox-group {
+                    grid-column: span 2;
+                    display: flex;
+                    align-items: center;
+                    padding: 6px 0;
+                    background-color: transparent;
+                    border: none;
+                }
+
+                    .detail-panel-body .parts-master-grid .checkbox-group input[type="checkbox"] {
+                        margin-right: 8px;
+                        height: 1.1em;
+                        width: 1.1em;
+                        vertical-align: middle;
+                    }
+
+                    .detail-panel-body .parts-master-grid .checkbox-group label {
+                        font-weight: normal;
+                        font-size: 0.95em;
+                        color: var(--text-color);
+                        text-align: left;
+                        margin-bottom: 0;
+                    }
+
+                .detail-panel-body .parts-master-grid .dd-link a {
+                    color: var(--secondary-color);
+                    text-decoration: underline;
+                }
+
+                    .detail-panel-body .parts-master-grid .dd-link a:hover {
+                        color: var(--primary-color);
+                    }
+
+        .detail-panel-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--medium-gray);
+            margin-bottom: 15px;
+        }
+
+            .detail-panel-tabs .tab-link {
+                background: none;
+                border: none;
+                padding: 10px 15px;
+                cursor: pointer;
+                font-size: 0.9em;
+                color: var(--dark-gray);
+                border-bottom: 3px solid transparent;
+            }
+
+                .detail-panel-tabs .tab-link.active, .detail-panel-tabs .tab-link:hover {
+                    color: var(--primary-color);
+                    border-bottom-color: var(--primary-color);
+                    font-weight: 500;
+                }
+
+        .detail-panel-body .tab-content {
+            display: none;
+        }
+
+            .detail-panel-body .tab-content.active {
+                display: block;
+            }
+
+            .detail-panel-body .tab-content h4 {
+                margin-top: 0;
+                margin-bottom: 15px;
+                color: var(--secondary-color);
+                border-bottom: 1px solid var(--light-gray);
+                padding-bottom: 8px;
+            }
+
+        .detail-panel-body .detail-section-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+            .detail-panel-body .detail-section-table th, .detail-panel-body .detail-section-table td {
+                font-size: 0.8em;
+                padding: 6px 8px;
+                border: 1px solid var(--medium-gray);
+                text-align: left;
+                white-space: normal;
+                word-break: break-word;
+            }
+
+            .detail-panel-body .detail-section-table th {
+                background-color: var(--light-gray);
+            }
+        /* a.part-detail-link { color: var(--secondary-color); text-decoration: none; cursor: pointer; } */
+        /* a.part-detail-link:hover { color: var(--primary-color); text-decoration: underline; } */
+    </style>
+</head>
+<body>
+    <!-- HTML Structure (Sidebar, Top Bar, Main Content, Modals, Detail Panel) -->
+    <!-- ... (The full HTML body from the previous "Fully Corrected + Detail Panel" response) ... -->
+    <aside class="sidebar"> <div class="sidebar-header"><h2>HCLSoftware</h2></div> <nav class="sidebar-nav"> <ul> <li><a href="#" data-target="dashboardContent"><i class="fas fa-tachometer-alt"></i> <span class="nav-text">Dashboard</span></a></li> <li class="active-parent"> <a href="#" class="has-submenu"><i class="fas fa-box-open"></i> <span class="nav-text">Parts</span> <span class="arrow-icon"><i class="fas fa-chevron-right"></i></span></a> <ul class="submenu" style="max-height: 500px;"> <li id="navKitMaking" class="active"><a href="#" data-target="kitMakingContent"><i class="fas fa-cogs"></i> Kit Making</a></li> <li id="navKitBreaking"><a href="#" data-target="kitBreakingContent"><i class="fas fa-unlink"></i> Kit Breaking</a></li> </ul> </li> <li><a href="#" data-target="serviceContent"><i class="fas fa-tools"></i> <span class="nav-text">Service</span></a></li> </ul> </nav> </aside>
+    <div class="main-content-wrapper">
+        <header class="top-bar"> <div class="search-bar"><input type="text" placeholder="Search for anything..."></div> <div class="user-info"> <span>Welcome, Admin - Branch 11</span> <button class="icon-button" title="Notifications"><i class="fas fa-bell"></i></button> <button class="icon-button" title="List"><i class="fas fa-list-ul"></i></button> <button class="icon-button" title="Calendar"><i class="fas fa-calendar-alt"></i></button> <button class="icon-button" title="Home"><i class="fas fa-home"></i></button> <button class="icon-button" title="User Profile"><i class="fas fa-user-circle"></i></button> </div> </header>
+        <main class="page-content">
+            <div id="kitMakingContent" class="content-section active">
+                <div class="content-header"><h1>Kit Making</h1><div class="action-buttons"><button id="kmFilterBtn" class="btn-filter"><i class="fas fa-filter"></i> Filters</button><button id="kmExportBtn" class="btn-export"><i class="fas fa-file-export"></i> Export</button><button id="kmRefreshBtn" class="btn-refresh"><i class="fas fa-sync-alt"></i> Refresh</button><button id="kmAddNewBtn" class="btn-km-new"><i class="fas fa-plus"></i> New Kit</button></div></div>
+                <div class="data-table-container"><div class="table-controls" id="kmTableControls" style="display:none;"><input type="text" id="kmSearchInput" placeholder="Search Kit Making..."></div><table class="data-table"><thead><tr><th><input type="checkbox" id="kmSelectAllCheckbox"></th><th>Kit Making #</th><th>Date</th><th>Prefix</th><th>Kit Part #</th><th>Kit Part Description</th><th>Warehouse Loc.</th><th>Status</th><th>Actions</th></tr></thead><tbody id="kitMakingTableBody"></tbody></table><div class="pagination" id="kitMakingPagination"></div></div>
+            </div>
+            <div id="kitBreakingContent" class="content-section">
+                <div class="content-header"><h1>Kit Breaking</h1><div class="action-buttons"><button id="kbAdvanceSearchBtn" class="btn-kb-adv-search"><i class="fas fa-search-plus"></i> Advance Search</button><button id="kbExportBtn" class="btn-export"><i class="fas fa-file-export"></i> Export</button><button id="kbRefreshBtn" class="btn-refresh"><i class="fas fa-sync-alt"></i> Refresh</button><button class="btn-refresh btn-icon" title="Alt Refresh"><i class="fas fa-globe"></i></button><button id="kbAddNewBtn" class="btn-kb-new"><i class="fas fa-plus"></i> New</button></div></div>
+                <div class="data-table-container"><div class="table-controls" id="kbTableControls" style="display:none;"><input type="text" id="kbSearchInput" placeholder="Search Kit Breaking..."></div><table class="data-table"><thead><tr><th>Edit</th><th>Kit Breaking #</th><th>Date</th><th>Prefix</th><th>Kit Part #</th><th class="wrap-text">Kit Part Description</th></tr></thead><tbody id="kitBreakingTableBody"></tbody></table><div class="pagination" id="kitBreakingPagination"></div></div>
+            </div>
+            <div id="dashboardContent" class="content-section"><div class="content-header"><h1>Dashboard</h1></div><p>Dashboard content goes here.</p></div>
+            <div id="serviceContent" class="content-section"><div class="content-header"><h1>Service</h1></div><p>Service module content goes here.</p></div>
+        </main>
+    </div>
+
+    <div id="kitMakingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="kmModalTitleDetailed">Add Making Of Kit</h2>
+                <div class="header-buttons">
+                    <button type="submit" form="kitMakingFormDetailed" class="btn-save-header"><i class="fas fa-save"></i> Save</button>
+                    <button type="button" class="btn-exit-header close-x-btn">×</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <form id="kitMakingFormDetailed">
+                    <input type="hidden" id="kmRecordIdDetailed">
+                    <div class="kit-form-grid">
+                        <label for="kmKitMakingNoDetailed" class="required">Kit Making # :</label><input type="text" id="kmKitMakingNoDetailed" name="kitMakingNo" required>
+                        <label for="kmDateDetailed" class="required">Kit Making Date :</label><input type="date" id="kmDateDetailed" name="kitMakingDate" required>
+                        <label for="kmKitPartNoDetailed" class="required">Kit Part # :</label><div class="input-with-button"><input type="text" id="kmKitPartNoDetailed" name="kitPartNo" required><button type="button" id="selectKitPartBtn" title="Select Kit Part"><i class="fas fa-search"></i> Select</button></div>
+                        <label for="kmKitPartDescDetailed">Kit Part Description :</label>
+                        <div class="display-with-icon">
+                            <span id="kmKitPartDescDisplay" class="display-only-field"></span>
+                            <button type="button" class="icon-button" id="viewMainKitPartDetailsBtnKM" title="View Kit Part Details" style="border-top-left-radius: 0; border-bottom-left-radius: 0; height: 30.5px; padding: 0 8px;"><i class="fas fa-eye"></i></button>
+                        </div>
+                        <label for="kmKitPartFreeStockDetailed">Kit Part Free Stock :</label><span id="kmKitPartFreeStockDisplay" class="display-only-field"></span>
+                        <label for="kmNumKitsToMakeDetailed" class="required">Number Of Kits To Make :</label><input type="number" id="kmNumKitsToMakeDetailed" name="numKitsToMake" min="1" value="1" required>
+                        <label for="kmWarehouseDetailed" class="required">Ware House :</label><select id="kmWarehouseDetailed" name="warehouse" required><option value="">-- Select Warehouse --</option><option value="177N-17N">177N-17N</option><option value="WH-B">177N-MB01</option><option value="WH-C">177N-WARR</option><option value="WH-D">177N-MB02</option><option value="WH-E">177N-MB03</option><option value="WH-F">177N-PROJ</option></select>
+                        <span /> <span />
+                        <label for="kmRemarksDetailed" class="remarks-label">Remarks:</label><textarea id="kmRemarksDetailed" name="remarks" class="remarks-input"></textarea>
+                    </div>
+                </form>
+                <div class="part-details-section"><div class="part-details-header"><h3>Part Details (Bill of Materials)</h3></div><div class="data-table-container"><table class="data-table part-details-table"><thead><tr><th>Prefix</th><th>Part #</th><th>Description</th><th>Bin Location</th><th>Available Stock</th><th>Quantity Of BOM</th><th>Quantity Required</th><th>Actions</th></tr></thead><tbody id="kitMakingPartDetailsTableBody"></tbody></table></div></div>
+            </div>
+            <div class="modal-footer"><button type="button" class="btn-exit-footer">Cancel</button><button type="submit" form="kitMakingFormDetailed" class="btn-save-footer"><i class="fas fa-save"></i> Save Kit</button></div>
+        </div>
+    </div>
+
+    <div id="kitBreakingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="kbModalTitleDetailed">Add Breaking Of Kit</h2>
+                <div class="header-buttons">
+                    <button type="submit" form="kitBreakingFormDetailed" class="btn-save-header"><i class="fas fa-save"></i> Save</button>
+                    <button type="button" class="btn-exit-header close-x-btn">×</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <form id="kitBreakingFormDetailed">
+                    <input type="hidden" id="kbRecordIdDetailed">
+                    <div class="kit-form-grid">
+                        <label for="kbKitBreakingNoDetailed" class="required">Kit Breaking # :</label><input type="text" id="kbKitBreakingNoDetailed" name="kitBreakingNo" required>
+                        <label for="kbDateDetailed" class="required">Kit Breaking Date :</label><input type="date" id="kbDateDetailed" name="kitBreakingDate" required>
+                        <label for="kbWarehouseDetailed" class="required">Ware House :</label><select id="kbWarehouseDetailed" name="warehouse" required><option value="">-- Select Warehouse --</option><option value="177N-17N">177N-17N</option><option value="WH-B">177N-MB01</option></select>
+                        <span />
+                        <label for="kbKitPartNoDetailed" class="required">Kit Part # :</label><div class="input-with-button"><input type="text" id="kbKitPartNoDetailed" name="kitPartNo" required><button type="button" id="selectBreakingKitPartBtn" title="Select Kit Part to Break"><i class="fas fa-search"></i> Select</button></div>
+                        <label for="kbKitPartDescDetailed">Kit Part Description :</label>
+                        <div class="display-with-icon">
+                            <span id="kbKitPartDescDisplay" class="display-only-field"></span>
+                            <button type="button" class="icon-button" id="viewMainKitPartDetailsBtnKB" title="View Kit Part Details" style="border-top-left-radius: 0; border-bottom-left-radius: 0; height: 30.5px; padding: 0 8px;"><i class="fas fa-eye"></i></button>
+                        </div>
+                        <label for="kbKitPartFreeStockDetailed">Kit Part Free Stock :</label><span id="kbKitPartFreeStockDisplay" class="display-only-field"></span>
+                        <label for="kbNumKitsToBreakDetailed" class="required">Number Of Kits To Break :</label><input type="number" id="kbNumKitsToBreakDetailed" name="numKitsToBreak" min="1" value="1" required>
+                        <label for="kbRemarksDetailed" class="remarks-label">Remarks:</label><textarea id="kbRemarksDetailed" name="remarks" class="remarks-input"></textarea>
+                    </div>
+                </form>
+                <div class="part-details-section"><div class="part-details-header"><h3>Parts Details (Components to be Released)</h3></div><div class="data-table-container"><table class="data-table part-details-table"><thead><tr><th>Prefix</th><th>Part #</th><th>Description</th><th>Bin Location</th><th>Quantity Of BOM</th><th>Quantity Released</th></tr></thead><tbody id="kitBreakingPartDetailsTableBody"></tbody></table></div></div>
+            </div>
+            <div class="modal-footer"><button type="button" class="btn-exit-footer">Cancel</button><button type="submit" form="kitBreakingFormDetailed" class="btn-save-footer"><i class="fas fa-save"></i> Save Record</button></div>
+        </div>
+    </div>
+
+
+    <div id="partSearchModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header"><h2>Select Kit Part</h2><span class="close-button" id="closePartSearchModalBtn">×</span></div>
+            <div class="modal-body"><div class="search-controls"><input type="text" id="partSearchModalInput" placeholder="Search by Part # or Description..."></div><div class="data-table-container"><table class="data-table"><thead><tr><th>Part #</th><th>Prefix</th><th>Description</th><th>Available Stock</th></tr></thead><tbody id="partSearchModalTableBody"></tbody></table></div><div class="pagination" id="partSearchModalPagination"><button id="partSearchPrevPageBtn" disabled>« Prev</button><span>Page <span id="partSearchCurrentPage">1</span> of <span id="partSearchTotalPages">1</span></span><button id="partSearchNextPageBtn" disabled>Next »</button></div></div>
+            <div class="modal-footer"><button type="button" class="btn-cancel-search" id="cancelPartSearchBtn">Cancel</button></div>
+        </div>
+    </div>
+    <div id="partMasterDetailPanel" class="detail-panel">
+        <div class="detail-panel-header"><h3 id="detailPanelTitle">Part Master Details</h3><button id="closeDetailPanelBtn" class="icon-button">×</button></div>
+        <div class="detail-panel-body">
+            <div id="panelMainPartInfo" class="parts-master-grid" style="display:none;">
+                <div class="field-group"><dt>Part # :</dt><dd id="panelPartNo"></dd></div>
+                <div class="field-group"><dt>Description :</dt><dd id="panelPartDescription"></dd></div>
+                <div class="field-group"><dt>Alias Part #:</dt><dd id="panelAliasPartNo"></dd></div>
+                <div class="field-group"><dt>Movement :</dt><dd id="panelMovement"></dd></div>
+                <div class="field-group"><dt>Part Type:</dt><dd id="panelPartType"></dd></div>
+                <div class="field-group"><dt>Salvage Part # :</dt><dd id="panelSalvagePartNo"></dd></div>
+                <div class="field-group"><dt>Weight:</dt><dd id="panelWeight"></dd></div>
+                <div class="field-group"><dt>Dimension :</dt><dd id="panelDimension"></dd></div>
+                <div class="field-group"><dt>Part Category :</dt><dd id="panelPartCategory"></dd></div>
+                <div class="field-group"><dt>Part Function Group :</dt><dd id="panelPartFunctionGroup"></dd></div>
+                <div class="field-group"><dt>Excise Tariff Code:</dt><dd id="panelExciseTariffCode"></dd></div>
+                <div class="field-group"><dt>Unit Of Measurement :</dt><dd id="panelUOM"></dd></div>
+                <div class="field-group"><dt>Parts Disposition:</dt><dd id="panelPartsDisposition"></dd></div>
+                <div class="field-group"><dt>Supersession Details:</dt><dd id="panelSupersessionDetails" class="dd-link"><a href="#">View</a></dd></div>
+                <div class="field-group checkbox-group"><input type="checkbox" id="panelIsActive" disabled><label for="panelIsActive">Is Active?</label></div>
+                <div class="field-group checkbox-group"><input type="checkbox" id="panelIsHazardous" disabled><label for="panelIsHazardous">Is Hazardous?</label></div>
+                <div class="field-group checkbox-group"><input type="checkbox" id="panelIsComponent" disabled><label for="panelIsComponent">Is Component?</label></div>
+                <div class="field-group checkbox-group"><input type="checkbox" id="panelIsPartOfKit" disabled><label for="panelIsPartOfKit">Is Part Of Kit?</label></div>
+                <div class="field-group checkbox-group"><input type="checkbox" id="panelIsKitPart" disabled><label for="panelIsKitPart">Is Kit Part?</label></div>
+                <div class="field-group checkbox-group"><input type="checkbox" id="panelIsLocal" disabled><label for="panelIsLocal">Is Local?</label></div>
+            </div>
+            <div class="detail-panel-tabs">
+                <button class="tab-link active" data-tab="panelPartStockDetails">Stock Details</button>
+                <button class="tab-link" data-tab="panelPartManufacturerDetails">Manufacturer</button>
+                <button class="tab-link" data-tab="panelPartAssetDetails">Asset</button>
+                <button class="tab-link" data-tab="panelPartCompetitorDetails">Competitor</button>
+            </div>
+            <div id="panelPartStockDetails" class="tab-content active">
+                <h4>Parts Stock Details</h4>
+                <table class="data-table detail-section-table"><thead><tr><th>Edit</th><th>Branch Name</th><th>Bin Location</th><th>Ware House</th><th>Available Stock</th><th>Bin Stock</th><th>Total Stock</th><th>Serial #</th><th>Damaged Qty</th><th>First Demand</th><th>Last Demand</th><th>First Issued</th><th>Last Issued</th><th>Last Stock Check</th></tr></thead><tbody id="panelStockDetailsTableBody"><tr><td colspan="14" class="no-records-message">No stock details available.</td></tr></tbody></table>
+            </div>
+            <div id="panelPartManufacturerDetails" class="tab-content">
+                <h4>Manufacturer Details</h4>
+                <table class="data-table detail-section-table"><thead><tr><th>Edit</th><th>Branch Name</th><th>Bin Location</th><th>Ware House</th><th>Available Stock</th><th>Bin Stock</th><th>Total Stock</th><th>Serial #</th><th>Damaged Qty</th><th>First Demand</th><th>Last Demand</th><th>First Issued</th><th>Last Issued</th><th>Last Stock Check</th></tr></thead><tbody id="panelStockDetailsTableBody"><tr><td colspan="14" class="no-records-message">No stock details available.</td></tr></tbody></table>
+            </div>
+            <div id="panelPartAssetDetails" class="tab-content">
+                <h4>Asset Details</h4>
+                <table class="data-table detail-section-table"><thead><tr><th>Edit</th><th>Branch Name</th><th>Bin Location</th><th>Ware House</th><th>Available Stock</th><th>Bin Stock</th><th>Total Stock</th><th>Serial #</th><th>Damaged Qty</th><th>First Demand</th><th>Last Demand</th><th>First Issued</th><th>Last Issued</th><th>Last Stock Check</th></tr></thead><tbody id="panelStockDetailsTableBody"><tr><td colspan="14" class="no-records-message">No stock details available.</td></tr></tbody></table>
+            </div>
+            <div id="panelPartCompetitorDetails" class="tab-content">
+                <h4>Manufacturer Details</h4>
+                <table class="data-table detail-section-table"><thead><tr><th>Edit</th><th>Branch Name</th><th>Bin Location</th><th>Ware House</th><th>Available Stock</th><th>Bin Stock</th><th>Total Stock</th><th>Serial #</th><th>Damaged Qty</th><th>First Demand</th><th>Last Demand</th><th>First Issued</th><th>Last Issued</th><th>Last Stock Check</th></tr></thead><tbody id="panelStockDetailsTableBody"><tr><td colspan="14" class="no-records-message">No stock details available.</td></tr></tbody></table>
+            </div>
+        </div>
+    </div>
+    <div id="notificationArea"></div>
+
+    <script>
+        // --- FULL JAVASCRIPT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("DOM Content Loaded. Initializing script...");
+
+            // --- Core Elements ---
+            const sidebarNav = document.querySelector('.sidebar-nav');
+            const contentSections = document.querySelectorAll('.content-section');
+            const notificationArea = document.getElementById('notificationArea');
+
+            // --- Sidebar Navigation Logic ---
+            if (sidebarNav) {
+                sidebarNav.addEventListener('click', function (e) {
+                    const link = e.target.closest('a'); if (!link) return;
+                    const parentLi = link.parentElement; const targetContentId = link.dataset.target;
+                    if (link.classList.contains('has-submenu')) {
+                        e.preventDefault(); parentLi.classList.toggle('active-parent');
+                        const submenu = parentLi.querySelector('.submenu');
+                        if (submenu) { submenu.style.maxHeight = parentLi.classList.contains('active-parent') ? submenu.scrollHeight + "px" : '0'; }
+                    } else if (targetContentId) {
+                        e.preventDefault();
+                        sidebarNav.querySelectorAll('li.active').forEach(li => li.classList.remove('active'));
+                        parentLi.classList.add('active');
+                        sidebarNav.querySelectorAll('li.active-parent').forEach(li => { if (!li.contains(parentLi)) li.classList.remove('active-parent'); });
+                        const grandParentLi = parentLi.closest('ul.submenu')?.parentElement;
+                        if (grandParentLi && grandParentLi.tagName === 'LI') {
+                            grandParentLi.classList.add('active-parent');
+                            const grandParentSubmenu = grandParentLi.querySelector('.submenu');
+                            if (grandParentSubmenu) grandParentSubmenu.style.maxHeight = grandParentSubmenu.scrollHeight + "px";
+                        }
+                        contentSections.forEach(section => section.classList.toggle('active', section.id === targetContentId));
+                    }
+                });
+            }
+            const initialActiveLi = document.querySelector('.sidebar-nav li.active');
+            if (initialActiveLi && initialActiveLi.querySelector('a[data-target]')) {
+                const initialTargetId = initialActiveLi.querySelector('a[data-target]').dataset.target;
+                const targetEl = document.getElementById(initialTargetId);
+                if (targetEl) {
+                    contentSections.forEach(s => s.classList.remove('active')); // Ensure only one is active
+                    targetEl.classList.add('active');
+                    console.log("Initial active section set to:", initialTargetId);
+                } else {
+                    console.warn("Initial active target element not found:", initialTargetId);
+                }
+                const parentLi = initialActiveLi.closest('ul.submenu')?.parentElement;
+                if (parentLi && parentLi.classList.contains('has-submenu')) {
+                    parentLi.classList.add('active-parent');
+                    if (parentLi.querySelector('.submenu')) parentLi.querySelector('.submenu').style.maxHeight = parentLi.querySelector('.submenu').scrollHeight + "px";
+                }
+            } else if (initialActiveLi && initialActiveLi.classList.contains('has-submenu')) { // If only a parent is active initially
+                const initialSubmenu = initialActiveLi.querySelector('.submenu');
+                if (initialSubmenu && initialActiveLi.classList.contains('active-parent')) {
+                    initialSubmenu.style.maxHeight = initialSubmenu.scrollHeight + "px";
+                }
+            } else if (contentSections.length > 0) { // Fallback if no active link
+                contentSections[0].classList.add('active');
+                console.log("Fallback: Initial active section set to:", contentSections[0].id);
+            }
+
+
+            // --- Notification Function ---
+            function showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+                if (notificationArea) notificationArea.appendChild(notification); else console.error("Notification area not found");
+                requestAnimationFrame(() => { notification.classList.add('show'); });
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => { notification.remove(); }, 300);
+                }, 3000);
+            }
+
+            let currentModalContext = null;
+
+            // --- Generic Modal Setup ---
+            function setupModal(modalId, openBtnId, formId, titlePrefix = "Item", modalTypeContext = null) {
+                const modal = document.getElementById(modalId);
+                if (!modal) { console.error(`Modal with ID ${modalId} not found.`); return { openModalHandler: () => { console.error(`Cannot open modal ${modalId}, not found.`) }, closeModalHandler: () => { } }; }
+                const openBtn = document.getElementById(openBtnId);
+                const form = document.getElementById(formId);
+                const modalTitleEl = modal.querySelector('.modal-header h2');
+                const recordIdInput = form ? form.querySelector('input[type="hidden"]') : null;
+
+                const openModalHandler = (editData = null) => {
+                    console.log(`Opening modal: ${modalId} with context: ${modalTypeContext}`, "Edit data:", editData);
+                    if (form) form.reset();
+                    if (recordIdInput) recordIdInput.value = '';
+                    const today = new Date().toISOString().split('T')[0];
+
+                    currentModalContext = modalTypeContext;
+
+                    if (editData) {
+                        if (modalTitleEl) modalTitleEl.textContent = `Edit ${titlePrefix}`;
+                        if (recordIdInput) recordIdInput.value = editData.id;
+                        if (currentModalContext === 'kitMaking') {
+                            document.getElementById('kmKitMakingNoDetailed').value = editData.kitMakingNo || '';
+                            document.getElementById('kmDateDetailed').value = editData.date || today;
+                            document.getElementById('kmKitPartNoDetailed').value = editData.kitPartNo || '';
+                            if (kmKitPartDescDisplay) kmKitPartDescDisplay.textContent = editData.kitPartDesc || '';
+                            if (kmKitPartFreeStockDisplay) kmKitPartFreeStockDisplay.textContent = editData.kitPartFreeStock || '';
+                            document.getElementById('kmNumKitsToMakeDetailed').value = editData.numKitsToMake || '1';
+                            document.getElementById('kmWarehouseDetailed').value = editData.warehouseLoc || '';
+                            document.getElementById('kmRemarksDetailed').value = editData.remarks || '';
+                            currentKitPartDetails = editData.partDetails ? JSON.parse(JSON.stringify(editData.partDetails)) : [];
+                        } else if (currentModalContext === 'kitBreaking') {
+                            document.getElementById('kbKitBreakingNoDetailed').value = editData.kitBreakingNo || '';
+                            document.getElementById('kbDateDetailed').value = editData.date || today;
+                            document.getElementById('kbWarehouseDetailed').value = editData.warehouseLoc || '';
+                            document.getElementById('kbKitPartNoDetailed').value = editData.kitPartNo || '';
+                            if (kbKitPartDescDisplay) kbKitPartDescDisplay.textContent = editData.kitPartDesc || '';
+                            if (kbKitPartFreeStockDisplay) kbKitPartFreeStockDisplay.textContent = editData.kitPartFreeStock || '';
+                            document.getElementById('kbNumKitsToBreakDetailed').value = editData.numKitsToBreak || '1';
+                            document.getElementById('kbRemarksDetailed').value = editData.remarks || '';
+                            currentKitBreakingPartDetails = editData.partDetails ? JSON.parse(JSON.stringify(editData.partDetails)) : [];
+                        }
+                    } else {
+                        if (modalTitleEl) modalTitleEl.textContent = `Add New ${titlePrefix}`;
+                        if (currentModalContext === 'kitMaking') {
+                            if (document.getElementById('kmDateDetailed')) document.getElementById('kmDateDetailed').value = today;
+                            if (document.getElementById('kmNumKitsToMakeDetailed')) document.getElementById('kmNumKitsToMakeDetailed').value = '1';
+                            if (kmKitPartDescDisplay) kmKitPartDescDisplay.textContent = '';
+                            if (kmKitPartFreeStockDisplay) kmKitPartFreeStockDisplay.textContent = '';
+                            currentKitPartDetails = [];
+                        } else if (currentModalContext === 'kitBreaking') {
+                            if (document.getElementById('kbDateDetailed')) document.getElementById('kbDateDetailed').value = today;
+                            if (document.getElementById('kbNumKitsToBreakDetailed')) document.getElementById('kbNumKitsToBreakDetailed').value = '1';
+                            if (kbKitPartDescDisplay) kbKitPartDescDisplay.textContent = '';
+                            if (kbKitPartFreeStockDisplay) kbKitPartFreeStockDisplay.textContent = '';
+                            currentKitBreakingPartDetails = [];
+                        }
+                    }
+
+                    if (currentModalContext === 'kitMaking') { renderKitMakingPartDetails(); calculateAllRequiredQuantities(); }
+                    else if (currentModalContext === 'kitBreaking') { renderKitBreakingPartDetails(); calculateAllReleasedQuantities(); }
+                    modal.style.display = 'block';
+                };
+
+                const closeModalHandler = () => {
+                    modal.style.display = 'none';
+                    if (modalId === 'kitMakingModal' || modalId === 'kitBreakingModal') {
+                        currentModalContext = null;
+                    }
+                };
+
+                if (openBtn) {
+                    openBtn.addEventListener('click', () => openModalHandler(null));
+                }
+
+                const closeButtons = [];
+                if (modalId === 'kitMakingModal' || modalId === 'kitBreakingModal') {
+                    const headerCloseBtn = modal.querySelector('.btn-exit-header.close-x-btn');
+                    if (headerCloseBtn) closeButtons.push(headerCloseBtn);
+                    const exitFooterBtn = modal.querySelector('.btn-exit-footer');
+                    if (exitFooterBtn) closeButtons.push(exitFooterBtn);
+                } else {
+                    const headerCloseBtn = modal.querySelector('.close-button');
+                    if (headerCloseBtn) closeButtons.push(headerCloseBtn);
+                    const cancelBtn = modal.querySelector('.btn-cancel') || modal.querySelector('.btn-cancel-search');
+                    if (cancelBtn) closeButtons.push(cancelBtn);
+                }
+                closeButtons.forEach(btn => btn?.addEventListener('click', closeModalHandler));
+                window.addEventListener('click', (event) => { if (event.target === modal) closeModalHandler(); });
+
+                return { openModalHandler, closeModalHandler };
+            }
+
+            // --- Initialize Modals ---
+            const kmModalControls = setupModal('kitMakingModal', 'kmAddNewBtn', 'kitMakingFormDetailed', 'Making Of Kit', 'kitMaking');
+            const kbModalControls = setupModal('kitBreakingModal', 'kbAddNewBtn', 'kitBreakingFormDetailed', 'Breaking Of Kit', 'kitBreaking');
+
+            // --- Kit Making Data & Logic ---
+            let nextKitMakingId = 6; // Adjusted
+            let kitMakingData = [
+                { id: 1, kitMakingNo: 'KM177N1V2025', date: '2025-01-13', prefix: 'P', kitPartNo: '192200', kitPartDesc: 'BLOWER CASING', warehouseLoc: '177N-17N', status: 'Completed', numKitsToMake: 5, remarks: 'Urgent order', kitPartFreeStock: '20', partDetails: [{ id: 'PD001', internalId: 'COMP001', prefix: 'A', partNo: 'COMP001', description: 'Component 1', bin: 'A1-01', stock: 50, bomQty: 2 }] },
+                { id: 2, kitMakingNo: 'KM177N1V2024', date: '2025-01-02', prefix: 'N', kitPartNo: 'G1200853', kitPartDesc: 'FILTER-WATER (NO INHBIT CHG)', warehouseLoc: '177N-17N', status: 'In Progress', numKitsToMake: 10, remarks: '', kitPartFreeStock: '15', partDetails: [] },
+                { id: 3, kitMakingNo: 'KM177N1V2024A', date: '2024-04-30', prefix: 'N', kitPartNo: 'WF2122', kitPartDesc: 'FILTER, WATER', warehouseLoc: '177N-17N', status: 'Pending', numKitsToMake: 2, remarks: 'Check stock', kitPartFreeStock: '5', partDetails: [] },
+                { id: 4, kitMakingNo: 'KM177N1V2023', date: '2023-09-22', prefix: 'N', kitPartNo: 'G1200853', kitPartDesc: 'FILTER-WATER (NO INHBIT CHG)', warehouseLoc: '177N-17N', status: 'Completed', numKitsToMake: 7, remarks: '', kitPartFreeStock: '10', partDetails: [] },
+                { id: 5, kitMakingNo: 'KM177N1V/09/2023', date: '2023-09-07', prefix: 'P', kitPartNo: 'G1095046', kitPartDesc: 'ANCRAGE >SS 011604', warehouseLoc: '177N-17N', status: 'Pending', numKitsToMake: 3, remarks: 'New Request', kitPartFreeStock: '0', partDetails: [] }
+            ];
+            const kitMakingTableBody = document.getElementById('kitMakingTableBody');
+            function renderKitMakingTable() {
+                if (!kitMakingTableBody) { console.error("kitMakingTableBody not found"); return; }
+                kitMakingTableBody.innerHTML = '';
+                kitMakingData.forEach(item => {
+                    const row = kitMakingTableBody.insertRow();
+                    row.innerHTML = `<td><input type="checkbox" class="row-checkbox" data-id="${item.id}"></td> <td>${item.kitMakingNo}</td><td>${item.date}</td><td>${item.prefix || ''}</td> <td>${item.kitPartNo}</td><td class="wrap-text">${item.kitPartDesc}</td><td>${item.warehouseLoc}</td><td>${item.status}</td> <td> <i class="fas fa-edit action-icon edit" data-id="${item.id}" title="Edit"></i> <i class="fas fa-trash-alt action-icon delete" data-id="${item.id}" title="Delete"></i> </td> `;
+                });
+                console.log("Kit Making table rendered with " + kitMakingData.length + " items.");
+            }
+            if (kitMakingTableBody) {
+                kitMakingTableBody.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('edit')) {
+                        const id = parseInt(e.target.dataset.id);
+                        const itemToEdit = kitMakingData.find(item => item.id === id);
+                        if (itemToEdit) kmModalControls.openModalHandler(itemToEdit);
+                    }
+                });
+            }
+
+            const kitMakingFormDetailed = document.getElementById('kitMakingFormDetailed');
+            if (kitMakingFormDetailed) {
+                kitMakingFormDetailed.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const recordId = document.getElementById('kmRecordIdDetailed').value;
+                    const newKitRecord = {
+                        kitMakingNo: document.getElementById('kmKitMakingNoDetailed').value,
+                        date: document.getElementById('kmDateDetailed').value,
+                        kitPartNo: document.getElementById('kmKitPartNoDetailed').value,
+                        kitPartDesc: kmKitPartDescDisplay.textContent,
+                        kitPartFreeStock: kmKitPartFreeStockDisplay.textContent,
+                        numKitsToMake: parseInt(document.getElementById('kmNumKitsToMakeDetailed').value) || 0,
+                        warehouseLoc: document.getElementById('kmWarehouseDetailed').value,
+                        remarks: document.getElementById('kmRemarksDetailed').value,
+                        prefix: allAvailableParts.find(p => p.partNo === document.getElementById('kmKitPartNoDetailed').value)?.prefix || '',
+                        status: 'Pending',
+                        partDetails: JSON.parse(JSON.stringify(currentKitPartDetails))
+                    };
+
+                    if (recordId) {
+                        const index = kitMakingData.findIndex(item => item.id === parseInt(recordId));
+                        if (index > -1) { kitMakingData[index] = { ...kitMakingData[index], ...newKitRecord, id: parseInt(recordId) }; }
+                    } else {
+                        newKitRecord.id = nextKitMakingId++;
+                        kitMakingData.push(newKitRecord);
+                    }
+                    renderKitMakingTable();
+                    showNotification('Kit Making record saved successfully!', 'success');
+                    kmModalControls.closeModalHandler();
+                });
+            }
+
+            const kmKitPartNoInput = document.getElementById('kmKitPartNoDetailed');
+            const selectKitPartBtn = document.getElementById('selectKitPartBtn'); // For Kit Making
+            const kmKitPartDescDisplay = document.getElementById('kmKitPartDescDisplay');
+            const kmKitPartFreeStockDisplay = document.getElementById('kmKitPartFreeStockDisplay');
+            const kmNumKitsToMakeInput = document.getElementById('kmNumKitsToMakeDetailed');
+            const kmAddPartDetailBtn = document.getElementById('kmAddPartDetailBtn');
+            const kitMakingPartDetailsTableBody = document.getElementById('kitMakingPartDetailsTableBody');
+            let currentKitPartDetails = [];
+
+            let allAvailableParts = [
+                { partNo: 'VZ1900', prefix: 'N', description: 'BEARING (KIT)', stock: 174, bom: [{ id: 'PD_G1011194', internalId: 'G1011194', prefix: 'N', partNo: 'G1011194', description: 'KIT, VALVE REPAIR', bin: 'Rack Bin', stock: 87, bomQty: 2.00 }, { id: 'PD_G1011260', internalId: 'G1011260', prefix: 'N', partNo: 'G1011260', description: 'SWITCH', bin: 'Rack Bin', stock: 84, bomQty: 4.00 }], masterDetails: { partNo: 'VZ1900', aliasPartNo: 'VZ1900-ALT', partType: 'Normal', description: 'BEARING (KIT)', movement: 'Medium', salvagePartNo: '', weight: '0.5kg', dimension: '5x5x2 cm', partCategory: 'Bearings', partFunctionGroup: 'Rotation', exciseTariffCode: 'ETC001', uom: 'Each', partsDisposition: 'RTS', isHazardous: false, isComponent: false, isPartOfKit: false, isKitPart: true, isLocal: false, isActive: true, stockDetails: [{ branch: 'Branch 11', bin: 'Rack Bin A', wareHouse: '177N-177N', available: 174, total: 175, serial: 'VKZ1900SER', damaged: 1, firstDemand: '04-Aug-2023', lastDemand: '', firstIssued: '', lastIssued: '', lastStockCheck: '09-Jan-2025' }], manufacturer: 'Kit Master Inc.', assetDetails: 'Primary Bearing Kit Asset', competitor: 'CompBearings $50' } },
+                { partNo: 'YVR61120991', prefix: 'N', description: 'Excavator Software', stock: 0, bom: [], masterDetails: { stockDetails: [{ branch: 'Branch 11', bin: 'Software Shelf', wareHouse: 'Main WH', available: 0, total: 0, serial: 'EXCSW001', damaged: 0, firstDemand: 'N/A', lastDemand: 'N/A', firstIssued: 'N/A', lastIssued: 'N/A', lastStockCheck: '2024-07-01' }], manufacturer: 'SoftDev Co.' } },
+                { partNo: 'KP1001', prefix: 'A', description: 'Engine Assembly Kit Master', stock: 50, bom: [{ id: 'PD_ENGBLK', internalId: 'ENG-BLOCK', prefix: 'A', partNo: 'ENG-BLOCK', description: 'Engine Block', bin: 'A1-01', stock: 100, bomQty: 1 }, { id: 'PD_PISTSET', internalId: 'PISTON-SET', prefix: 'B', partNo: 'PISTON-SET', description: 'Piston Set (4pcs)', bin: 'A2', stock: 75, bomQty: 1 },], masterDetails: { stockDetails: [], manufacturer: 'Engine Parts Inc.' } },
+                { partNo: 'G1200853', prefix: 'N', description: 'FILTER-WATER (NO INHBIT CHG)', stock: 2, bom: [], masterDetails: { stockDetails: [{ branch: 'Branch 11', bin: 'FiltShelf', wareHouse: '177N-177N', available: 2, total: 10, serial: 'FILT123', damaged: 0, firstDemand: 'N/A', lastDemand: 'N/A', firstIssued: 'N/A', lastIssued: 'N/A', lastStockCheck: '2024-07-01' }], manufacturer: 'WaterPure Ltd.' } },
+                { partNo: 'X002277', prefix: 'N', description: 'SERVICE INDICATOR', stock: 0, bom: [], masterDetails: {} },
+                { partNo: 'WF2122', prefix: 'N', description: 'FILTER, WATER', stock: 62, bom: [{ id: 'COMP_A', internalId: 'COMP_A', partNo: 'FILT_MEDIA', description: 'Filter Media Pack', bomQty: 1, stock: 100, prefix: 'C' }, { id: 'COMP_B', internalId: 'COMP_B', partNo: 'FILT_CASE', description: 'Filter Casing', bomQty: 1, stock: 80, prefix: 'C' }], masterDetails: { stockDetails: [{ branch: 'Branch 11', bin: 'F-01', wareHouse: '177N-177N', available: 62, total: 70, damaged: 0, lastStockCheck: '2024-07-01' }], manufacturer: 'AquaFilters' } },
+                { partNo: 'WB22-11', prefix: 'P', description: 'F76 F77 FUSES', stock: 0, bom: [], masterDetails: {} },
+            ];
+            const allComponentParts = {
+                'G1011194': { partNo: 'G1011194', description: 'KIT, VALVE REPAIR', prefix: 'N', stock: 87, masterDetails: { partNo: 'G1011194', aliasPartNo: 'GKV-01', partType: 'Repair Kit', description: 'KIT, VALVE REPAIR', movement: 'High', salvagePartNo: 'SALV002', weight: '0.2kg', dimension: '10x3x1 cm', partCategory: 'Valves', partFunctionGroup: 'Repair Kits', exciseTariffCode: 'ETC002', uom: 'Set', partsDisposition: 'Returnable', isHazardous: false, isComponent: true, isPartOfKit: true, isKitPart: false, isLocal: true, isActive: true, stockDetails: [{ branch: 'Branch 11', bin: 'Rack Bin', wareHouse: '177N-177N', available: 87, total: 88, serial: 'SN112233', damaged: 0, firstDemand: '26-Sep-2023', lastDemand: '', firstIssued: '', lastIssued: '', lastStockCheck: '09-Jan-2025' }, { branch: 'Branch 11', bin: 'No bin', wareHouse: '177N-MB01', available: 9, total: 9, serial: '', damaged: 0, firstDemand: '', lastDemand: '', firstIssued: '', lastIssued: '', lastStockCheck: '' }], manufacturer: 'Valve Corp', assetDetails: 'Asset Info for Valve Kit', competitor: 'CompX Valve $10' } },
+                'G1011260': { partNo: 'G1011260', description: 'SWITCH', prefix: 'N', stock: 84, masterDetails: { partNo: 'G1011260', aliasPartNo: '', partType: 'Electrical', description: 'SWITCH', movement: 'Medium', salvagePartNo: '', weight: '0.05kg', dimension: '2x1x1 cm', partCategory: 'Switches', partFunctionGroup: 'Control', exciseTariffCode: 'ETC005', uom: 'Each', partsDisposition: 'RTS', isHazardous: false, isComponent: true, isPartOfKit: true, isKitPart: false, isLocal: false, isActive: true, stockDetails: [{ branch: 'Branch 11', bin: 'Rack A3', wareHouse: '177N-177N', available: 84, total: 100, serial: 'SW998877', damaged: 2, firstDemand: '2023-01-01', lastDemand: '2024-05-01', firstIssued: '2023-02-01', lastIssued: '2024-06-01', lastStockCheck: '2024-07-01' }], manufacturer: 'ElecSwitches Ltd.' } }
+            };
+
+            if (selectKitPartBtn) { selectKitPartBtn.addEventListener('click', () => { currentModalContext = 'kitMaking'; openPartSearchHandler(); }); }
+            if (kmNumKitsToMakeInput) { kmNumKitsToMakeInput.addEventListener('input', calculateAllRequiredQuantities); }
+            if (kmAddPartDetailBtn) { kmAddPartDetailBtn.addEventListener('click', () => { alert("Modal to search and add component part would open here."); const newPartId = `TEMP_${Date.now()}`; currentKitPartDetails.push({ id: newPartId, internalId: `COMP-${currentKitPartDetails.length + 1}`, prefix: 'X', partNo: `COMP-${currentKitPartDetails.length + 1}`, description: 'New Component', bin: 'C1', stock: 50, bomQty: 1 }); renderKitMakingPartDetails(); calculateAllRequiredQuantities(); }); }
+
+            function calculateRequiredQuantity(bomQty, numKits) { return (parseFloat(bomQty) || 0) * (parseInt(numKits) || 0); }
+            function calculateAllRequiredQuantities() { const numKits = kmNumKitsToMakeInput.value; if (kitMakingPartDetailsTableBody) { kitMakingPartDetailsTableBody.querySelectorAll('tr').forEach(row => { const bomQtyInput = row.querySelector('.bom-qty-input'); const reqQtyCell = row.querySelector('.req-qty-cell'); const stockCell = row.querySelector('.stock-cell'); const partInternalId = row.dataset.internalId; const part = currentKitPartDetails.find(p => p.internalId === partInternalId); if (bomQtyInput && reqQtyCell && part) { const requiredQty = calculateRequiredQuantity(bomQtyInput.value, numKits); reqQtyCell.textContent = requiredQty.toFixed(2); const availableStock = parseFloat(part.stock) || 0; stockCell.classList.toggle('stock-warning', availableStock < requiredQty); } }); } }
+
+            function renderKitMakingPartDetails() {
+                if (!kitMakingPartDetailsTableBody) return; kitMakingPartDetailsTableBody.innerHTML = ''; const numKits = kmNumKitsToMakeInput.value;
+                if (currentKitPartDetails.length === 0) { kitMakingPartDetailsTableBody.innerHTML = '<tr><td colspan="8" class="no-records-message">No Records To View. Select a Kit Part or Click "Add Component".</td></tr>'; return; }
+                currentKitPartDetails.forEach(part => {
+                    const row = kitMakingPartDetailsTableBody.insertRow(); row.dataset.internalId = part.internalId;
+                    const requiredQty = calculateRequiredQuantity(part.bomQty, numKits);
+                    row.innerHTML = `<td>${part.prefix}</td><td>${part.partNo}</td><td>${part.description}</td><td>${part.bin || ''}</td> <td class="stock-cell ${(part.stock < requiredQty) ? 'stock-warning' : ''}">${part.stock.toFixed(2)}</td> <td><input type="number" class="bom-qty-input" value="${part.bomQty.toFixed(2)}" min="0" step="0.01" data-internal-id="${part.internalId}"></td> <td class="req-qty-cell">${requiredQty.toFixed(2)}</td> <td><i class="fas fa-eye action-icon-bom view" data-part-no="${part.partNo}" title="View Part Details"></i> <i class="fas fa-trash-alt action-icon-bom delete" data-internal-id="${part.internalId}" title="Delete Part"></i></td> `;
+                });
+                kitMakingPartDetailsTableBody.querySelectorAll('.bom-qty-input').forEach(input => { input.addEventListener('input', (e) => { const partInternalId = e.target.dataset.internalId; const part = currentKitPartDetails.find(p => p.internalId === partInternalId); if (part) part.bomQty = parseFloat(e.target.value) || 0; calculateAllRequiredQuantities(); }); });
+                kitMakingPartDetailsTableBody.querySelectorAll('.action-icon-bom.delete').forEach(btn => { btn.addEventListener('click', (e) => { const partInternalIdToDelete = e.target.dataset.internalId; currentKitPartDetails = currentKitPartDetails.filter(p => p.internalId !== partInternalIdToDelete); renderKitMakingPartDetails(); calculateAllRequiredQuantities(); }); });
+                kitMakingPartDetailsTableBody.querySelectorAll('.action-icon-bom.view').forEach(btn => { btn.addEventListener('click', (e) => { const componentPartNo = e.target.dataset.partNo; openPartMasterDetailPanel(componentPartNo); }); });
+            }
+
+            // --- Kit Breaking Logic ---
+            let nextKitBreakingId = 3; let kitBreakingData = [{ id: 1, kitBreakingNo: 'KBX001', date: '2024-07-01', warehouseLoc: '177N-17N', kitPartNo: 'VZ1900', kitPartDesc: 'BEARING (KIT)', kitPartFreeStock: '174', numKitsToBreak: 1, remarks: 'Excess stock', partDetails: [{ internalId: 'G1011194', prefix: 'N', partNo: 'G1011194', description: 'KIT, VALVE REPAIR', bin: 'Rack Bin', bomQty: 2, releasedQty: 2 }] }, { id: 2, kitBreakingNo: 'KBX002', date: '2024-07-02', warehouseLoc: 'WH-B', kitPartNo: 'KP1001', kitPartDesc: 'Engine Assembly Kit Master', kitPartFreeStock: '50', numKitsToBreak: 2, remarks: 'For parts', partDetails: [{ internalId: 'ENG-BLOCK', prefix: 'A', partNo: 'ENG-BLOCK', description: 'Engine Block', bin: 'A1-01', bomQty: 1, releasedQty: 2 }] }];
+            const kitBreakingTableBody = document.getElementById('kitBreakingTableBody'); const kbKitPartNoInput = document.getElementById('kbKitPartNoDetailed'); const kbKitPartDescDisplay = document.getElementById('kbKitPartDescDisplay'); const kbKitPartFreeStockDisplay = document.getElementById('kbKitPartFreeStockDisplay'); const kbNumKitsToBreakInput = document.getElementById('kbNumKitsToBreakDetailed'); const kitBreakingPartDetailsTableBody = document.getElementById('kitBreakingPartDetailsTableBody'); let currentKitBreakingPartDetails = [];
+            function renderKitBreakingTable() { if (!kitBreakingTableBody) return; kitBreakingTableBody.innerHTML = ''; kitBreakingData.forEach(item => { const row = kitBreakingTableBody.insertRow(); const kitPrefix = allAvailableParts.find(p => p.partNo === item.kitPartNo)?.prefix || ''; row.innerHTML = `<td><i class="fas fa-edit action-icon edit" data-id="${item.id}" title="Edit"></i></td> <td>${item.kitBreakingNo}</td><td>${item.date}</td><td>${kitPrefix}</td> <td>${item.kitPartNo}</td><td class="wrap-text">${item.kitPartDesc}</td>`; }); }
+            if (kitBreakingTableBody) { kitBreakingTableBody.addEventListener('click', (e) => { if (e.target.classList.contains('edit')) { const id = parseInt(e.target.dataset.id); const itemToEdit = kitBreakingData.find(item => item.id === id); if (itemToEdit) kbModalControls.openModalHandler(itemToEdit); } }); }
+            const kitBreakingFormDetailed = document.getElementById('kitBreakingFormDetailed');
+            if (kitBreakingFormDetailed) {
+                kitBreakingFormDetailed.addEventListener('submit', function (e) {
+                    e.preventDefault(); const recordId = document.getElementById('kbRecordIdDetailed').value;
+                    const formData = new FormData(kitBreakingFormDetailed); const newRecord = { kitBreakingNo: formData.get('kitBreakingNo'), date: formData.get('kitBreakingDate'), warehouseLoc: formData.get('warehouse'), kitPartNo: formData.get('kitPartNo'), kitPartDesc: kbKitPartDescDisplay.textContent, kitPartFreeStock: kbKitPartFreeStockDisplay.textContent, numKitsToBreak: parseInt(formData.get('numKitsToBreak')) || 0, remarks: formData.get('remarks'), partDetails: JSON.parse(JSON.stringify(currentKitBreakingPartDetails)) };
+                    if (recordId) { const index = kitBreakingData.findIndex(item => item.id === parseInt(recordId)); if (index > -1) kitBreakingData[index] = { ...kitBreakingData[index], ...newRecord, id: parseInt(recordId) }; }
+                    else { newRecord.id = nextKitBreakingId++; kitBreakingData.push(newRecord); }
+                    renderKitBreakingTable(); showNotification('Kit Breaking record saved successfully!', 'success'); kbModalControls.closeModalHandler();
+                });
+            }
+            function calculateReleasedQuantity(bomQty, numKitsToBreak) { return (parseFloat(bomQty) || 0) * (parseInt(numKitsToBreak) || 0); }
+            function calculateAllReleasedQuantities() { const numKitsToBreak = kbNumKitsToBreakInput.value; if (kitBreakingPartDetailsTableBody) { kitBreakingPartDetailsTableBody.querySelectorAll('tr').forEach(row => { const partInternalId = row.dataset.internalId; const part = currentKitBreakingPartDetails.find(p => p.internalId === partInternalId); const bomQtyCell = row.cells[4]; const releasedQtyCell = row.cells[5]; if (bomQtyCell && releasedQtyCell && part) { releasedQtyCell.textContent = calculateReleasedQuantity(part.bomQty, numKitsToBreak).toFixed(2); } }); } }
+            if (kbNumKitsToBreakInput) kbNumKitsToBreakInput.addEventListener('input', calculateAllReleasedQuantities);
+            function renderKitBreakingPartDetails() {
+                if (!kitBreakingPartDetailsTableBody) return; kitBreakingPartDetailsTableBody.innerHTML = '';
+                const numKitsToBreak = kbNumKitsToBreakInput.value;
+                if (currentKitBreakingPartDetails.length === 0) { kitBreakingPartDetailsTableBody.innerHTML = '<tr><td colspan="6" class="no-records-message">Select a Kit Part to see components.</td></tr>'; return; }
+                currentKitBreakingPartDetails.forEach(part => {
+                    const row = kitBreakingPartDetailsTableBody.insertRow(); row.dataset.internalId = part.internalId;
+                    const releasedQty = calculateReleasedQuantity(part.bomQty, numKitsToBreak);
+                    row.innerHTML = `<td>${part.prefix}</td><td>${part.partNo}</td><td>${part.description}</td><td>${part.bin || ''}</td><td>${part.bomQty.toFixed(2)}</td><td>${releasedQty.toFixed(2)}</td>`;
+                });
+            }
+            const selectBreakingKitPartBtn = document.getElementById('selectBreakingKitPartBtn');
+            if (selectBreakingKitPartBtn) {
+                selectBreakingKitPartBtn.addEventListener('click', () => {
+                    currentModalContext = 'kitBreaking';
+                    openPartSearchHandler();
+                });
+            }
+
+
+            // --- Part Search Modal JS ---
+            const partSearchModal = document.getElementById('partSearchModal');
+            const closePartSearchModalBtn = document.getElementById('closePartSearchModalBtn');
+            const cancelPartSearchBtn = document.getElementById('cancelPartSearchBtn');
+            const partSearchModalTableBody = document.getElementById('partSearchModalTableBody');
+            const partSearchModalInput = document.getElementById('partSearchModalInput');
+
+            let filteredAvailableParts = [];
+            let partSearchCurrentPage = 1;
+            const partSearchRowsPerPage = 10;
+
+            function renderPartSearchTable() {
+                if (!partSearchModalTableBody) { console.error("partSearchModalTableBody not found"); return; }
+                partSearchModalTableBody.innerHTML = '';
+                const start = (partSearchCurrentPage - 1) * partSearchRowsPerPage;
+                const end = start + partSearchRowsPerPage;
+                const paginatedParts = filteredAvailableParts.slice(start, end);
+
+                if (paginatedParts.length === 0) {
+                    const row = partSearchModalTableBody.insertRow();
+                    const cell = row.insertCell();
+                    cell.colSpan = 4;
+                    cell.textContent = "No parts found.";
+                    cell.style.textAlign = "center";
+                } else {
+                    paginatedParts.forEach(part => {
+                        const row = partSearchModalTableBody.insertRow();
+                        row.dataset.partNo = part.partNo;
+                        row.dataset.description = part.description;
+                        row.dataset.stock = part.stock;
+                        row.dataset.prefix = part.prefix;
+                        row.innerHTML = `<td>${part.partNo}</td><td>${part.prefix}</td><td>${part.description}</td><td>${part.stock}</td>`;
+                    });
+                }
+                updatePartSearchPaginationControls();
+            }
+
+            function updatePartSearchPaginationControls() {
+                const totalPages = Math.ceil(filteredAvailableParts.length / partSearchRowsPerPage) || 1;
+                const currentPageEl = document.getElementById('partSearchCurrentPage');
+                const totalPagesEl = document.getElementById('partSearchTotalPages');
+                const prevBtn = document.getElementById('partSearchPrevPageBtn');
+                const nextBtn = document.getElementById('partSearchNextPageBtn');
+
+                if (currentPageEl) currentPageEl.textContent = partSearchCurrentPage;
+                if (totalPagesEl) totalPagesEl.textContent = totalPages;
+                if (prevBtn) prevBtn.disabled = partSearchCurrentPage === 1;
+                if (nextBtn) nextBtn.disabled = partSearchCurrentPage === totalPages;
+            }
+
+            const openPartSearchHandler = () => {
+                console.log("DEBUG: openPartSearchHandler called. Current context:", currentModalContext);
+                const currentInputElem = (currentModalContext === 'kitMaking') ? kmKitPartNoInput : kbKitPartNoInput;
+                const currentInputValue = currentInputElem ? currentInputElem.value : '';
+
+                if (partSearchModalInput) partSearchModalInput.value = currentInputValue;
+                else console.error("DEBUG: partSearchModalInput is null inside openPartSearchHandler");
+
+                if (!allAvailableParts || allAvailableParts.length === 0) {
+                    console.error("DEBUG: allAvailableParts is empty or undefined!");
+                    filteredAvailableParts = [];
+                } else {
+                    if (currentInputValue.trim() === "") {
+                        filteredAvailableParts = [...allAvailableParts];
+                    } else {
+                        filteredAvailableParts = allAvailableParts.filter(part =>
+                            part.partNo.toLowerCase().includes(currentInputValue.toLowerCase()) ||
+                            part.description.toLowerCase().includes(currentInputValue.toLowerCase())
+                        );
+                    }
+                }
+
+                partSearchCurrentPage = 1;
+                renderPartSearchTable();
+
+                if (partSearchModal) {
+                    partSearchModal.style.display = 'block';
+                    console.log("DEBUG: Part Search Modal display set to block.");
+                } else {
+                    console.error("DEBUG: partSearchModal element not found when trying to display!");
+                }
+            };
+
+            const closePartSearch = () => { if (partSearchModal) partSearchModal.style.display = 'none'; };
+            if (closePartSearchModalBtn) closePartSearchModalBtn.addEventListener('click', closePartSearch);
+            if (cancelPartSearchBtn) cancelPartSearchBtn.addEventListener('click', closePartSearch);
+            window.addEventListener('click', (event) => { if (event.target === partSearchModal) closePartSearch(); });
+
+            if (partSearchModalInput) {
+                partSearchModalInput.addEventListener('input', () => {
+                    const searchTerm = partSearchModalInput.value.toLowerCase();
+                    if (searchTerm.trim() === "") {
+                        filteredAvailableParts = [...allAvailableParts];
+                    } else {
+                        filteredAvailableParts = allAvailableParts.filter(part =>
+                            part.partNo.toLowerCase().includes(searchTerm) ||
+                            part.description.toLowerCase().includes(searchTerm)
+                        );
+                    }
+                    partSearchCurrentPage = 1;
+                    renderPartSearchTable();
+                });
+            }
+
+            if (partSearchModalTableBody) {
+                partSearchModalTableBody.addEventListener('click', (event) => {
+                    const clickedRow = event.target.closest('tr'); if (!clickedRow || clickedRow.querySelector('th')) return;
+                    const partNo = clickedRow.dataset.partNo;
+                    const description = clickedRow.dataset.description;
+                    const stock = clickedRow.dataset.stock;
+
+                    if (partNo) {
+                        const selectedKitData = allAvailableParts.find(p => p.partNo === partNo);
+                        if (currentModalContext === 'kitMaking') {
+                            if (kmKitPartNoInput) kmKitPartNoInput.value = partNo;
+                            if (kmKitPartDescDisplay) kmKitPartDescDisplay.textContent = description;
+                            if (kmKitPartFreeStockDisplay) kmKitPartFreeStockDisplay.textContent = stock;
+                            if (selectedKitData && selectedKitData.bom) { currentKitPartDetails = JSON.parse(JSON.stringify(selectedKitData.bom)); } else { currentKitPartDetails = []; }
+                            renderKitMakingPartDetails(); calculateAllRequiredQuantities();
+                        } else if (currentModalContext === 'kitBreaking') {
+                            if (kbKitPartNoInput) kbKitPartNoInput.value = partNo;
+                            if (kbKitPartDescDisplay) kbKitPartDescDisplay.textContent = description;
+                            if (kbKitPartFreeStockDisplay) kbKitPartFreeStockDisplay.textContent = stock;
+                            if (selectedKitData && selectedKitData.bom) { currentKitBreakingPartDetails = JSON.parse(JSON.stringify(selectedKitData.bom)); } else { currentKitBreakingPartDetails = []; }
+                            renderKitBreakingPartDetails(); calculateAllReleasedQuantities();
+                        }
+                        closePartSearch();
+                    }
+                });
+            }
+
+            const partSearchPrevPageBtn = document.getElementById('partSearchPrevPageBtn');
+            const partSearchNextPageBtn = document.getElementById('partSearchNextPageBtn');
+            if (partSearchPrevPageBtn) partSearchPrevPageBtn.addEventListener('click', () => { if (partSearchCurrentPage > 1) { partSearchCurrentPage--; renderPartSearchTable(); } });
+            if (partSearchNextPageBtn) partSearchNextPageBtn.addEventListener('click', () => { const totalPages = Math.ceil(filteredAvailableParts.length / partSearchRowsPerPage); if (partSearchCurrentPage < totalPages) { partSearchCurrentPage++; renderPartSearchTable(); } });
+
+            // --- Part Master Detail Panel JS ---
+            const partMasterDetailPanel = document.getElementById('partMasterDetailPanel'); const closeDetailPanelBtn = document.getElementById('closeDetailPanelBtn'); const detailPanelTitle = document.getElementById('detailPanelTitle'); const detailPanelTabs = document.querySelector('.detail-panel-tabs'); const detailPanelTabContents = document.querySelectorAll('.detail-panel-body .tab-content');
+            const panelMainPartInfo = document.getElementById('panelMainPartInfo');
+            const panelStockDetailsTableBody = document.getElementById('panelStockDetailsTableBody');
+
+            function populateMasterGrid(ddId, value) { const el = document.getElementById(ddId); if (el) el.textContent = value !== undefined && value !== null ? value : 'N/A'; else console.warn(`Element with ID ${ddId} not found for master grid.`); }
+            function populateCheckbox(cbId, value) { const el = document.getElementById(cbId); if (el) el.checked = value || false; else console.warn(`Checkbox with ID ${cbId} not found.`); }
+
+            function openPartMasterDetailPanel(partNoForDetail) {
+                console.log("Opening detail panel for:", partNoForDetail, "Current Context:", currentModalContext);
+                const isViewingMainKit = (currentModalContext === 'kitMaking' && kmKitPartNoInput.value === partNoForDetail) ||
+                    (currentModalContext === 'kitBreaking' && kbKitPartNoInput.value === partNoForDetail);
+                let dataRoot; let displayContext = '';
+
+                if (isViewingMainKit) { dataRoot = allAvailableParts.find(p => p.partNo === partNoForDetail); displayContext = `Kit: ${partNoForDetail}`; }
+                else { dataRoot = allComponentParts[partNoForDetail]; displayContext = `Component: ${partNoForDetail}`; }
+
+                if (detailPanelTitle) detailPanelTitle.textContent = `Details for ${displayContext}`;
+                else console.warn("detailPanelTitle element not found.");
+
+                const masterDetails = dataRoot?.masterDetails;
+
+                if (!masterDetails) {
+                    showNotification("Master details not found for: " + partNoForDetail, "error");
+                    if (panelMainPartInfo) panelMainPartInfo.style.display = 'none';
+                    if (panelStockDetailsTableBody) panelStockDetailsTableBody.innerHTML = '<tr><td colspan="14" class="no-records-message">No data available for stock.</td></tr>';
+                    if (document.getElementById('panelPartManuDetails')) document.getElementById('panelPartManuDetails').innerHTML = '<p>No manufacturer data.</p>';
+                    if (document.getElementById('panelPartAssetDetails')) document.getElementById('panelPartAssetDetails').innerHTML = '<p>No asset data.</p>';
+                    if (document.getElementById('panelPartCompetitorDetails')) document.getElementById('panelPartCompetitorDetails').innerHTML = '<p>No competitor data.</p>';
+                } else {
+                    if (panelMainPartInfo) panelMainPartInfo.style.display = 'grid';
+                    populateMasterGrid('panelPartNo', masterDetails.partNo); populateMasterGrid('panelAliasPartNo', masterDetails.aliasPartNo); populateMasterGrid('panelPartType', masterDetails.partType); populateMasterGrid('panelPartDescription', masterDetails.description); populateMasterGrid('panelMovement', masterDetails.movement); populateMasterGrid('panelSalvagePartNo', masterDetails.salvagePartNo); populateMasterGrid('panelWeight', masterDetails.weight); populateMasterGrid('panelDimension', masterDetails.dimension); populateMasterGrid('panelPartCategory', masterDetails.partCategory); populateMasterGrid('panelPartFunctionGroup', masterDetails.partFunctionGroup); populateMasterGrid('panelExciseTariffCode', masterDetails.exciseTariffCode); populateMasterGrid('panelUOM', masterDetails.uom); populateMasterGrid('panelPartsDisposition', masterDetails.partsDisposition);
+                    const supLink = document.getElementById('panelSupersessionDetails')?.querySelector('a');
+                    if (supLink) supLink.onclick = () => alert('View Supersession Details for ' + masterDetails.partNo);
+                    populateCheckbox('panelIsActive', masterDetails.isActive); populateCheckbox('panelIsHazardous', masterDetails.isHazardous); populateCheckbox('panelIsComponent', masterDetails.isComponent); populateCheckbox('panelIsPartOfKit', masterDetails.isPartOfKit); populateCheckbox('panelIsKitPart', masterDetails.isKitPart); populateCheckbox('panelIsLocal', masterDetails.isLocal);
+
+                    if (panelStockDetailsTableBody) {
+                        panelStockDetailsTableBody.innerHTML = '';
+                        if (masterDetails.stockDetails && masterDetails.stockDetails.length > 0) {
+                            masterDetails.stockDetails.forEach(stockItem => {
+                                const row = panelStockDetailsTableBody.insertRow();
+                                row.innerHTML = `<td><i class="fas fa-edit action-icon edit-stock" title="Edit Stock Detail"></i></td><td>${stockItem.branch || 'N/A'}</td><td>${stockItem.bin || 'N/A'}</td><td>${stockItem.wareHouse || 'N/A'}</td><td>${stockItem.available || 0}</td><td>${stockItem.binStock || stockItem.total || 0}</td><td>${stockItem.total || 0}</td><td>${stockItem.serial || 'N/A'}</td><td>${stockItem.damaged || 0}</td><td>${stockItem.firstDemand || 'N/A'}</td><td>${stockItem.lastDemand || 'N/A'}</td><td>${stockItem.firstIssued || 'N/A'}</td><td>${stockItem.lastIssued || 'N/A'}</td><td>${stockItem.lastStockCheck || 'N/A'}</td>`;
+                            });
+                        } else { panelStockDetailsTableBody.innerHTML = '<tr><td colspan="14" class="no-records-message">No stock details.</td></tr>'; }
+                    }
+                    if (document.getElementById('panelPartManuDetails')) document.getElementById('panelPartManuDetails').innerHTML = `<p>Manufacturer: ${masterDetails.manufacturer || 'N/A'}</p>`;
+                    if (document.getElementById('panelPartAssetDetails')) document.getElementById('panelPartAssetDetails').innerHTML = `<p>Asset Details: ${masterDetails.assetDetails || 'No asset details.'}</p>`;
+                    if (document.getElementById('panelPartCompetitorDetails')) document.getElementById('panelPartCompetitorDetails').innerHTML = `<p>Competitor Price: ${masterDetails.competitor || 'No competitor details.'}</p>`;
+                }
+
+                if (detailPanelTabs) detailPanelTabs.querySelector('.tab-link.active')?.classList.remove('active');
+                if (detailPanelTabContents) detailPanelTabContents.forEach(tc => tc.classList.remove('active'));
+                if (detailPanelTabs) detailPanelTabs.querySelector('.tab-link[data-tab="panelPartStockDetails"]')?.classList.add('active');
+                if (document.getElementById('panelPartStockDetails')) document.getElementById('panelPartStockDetails')?.classList.add('active');
+                if (partMasterDetailPanel) partMasterDetailPanel.classList.add('open');
+            }
+
+            function closePartMasterDetailPanel() { if (partMasterDetailPanel) partMasterDetailPanel.classList.remove('open'); }
+            if (closeDetailPanelBtn) { closeDetailPanelBtn.addEventListener('click', closePartMasterDetailPanel); }
+            if (detailPanelTabs) { detailPanelTabs.addEventListener('click', (e) => { if (e.target.classList.contains('tab-link')) { const targetTab = e.target.dataset.tab; detailPanelTabs.querySelector('.tab-link.active').classList.remove('active'); e.target.classList.add('active'); detailPanelTabContents.forEach(tc => tc.classList.toggle('active', tc.id === targetTab)); } }); }
+
+            const viewMainKitPartDetailsBtnKM = document.getElementById('viewMainKitPartDetailsBtnKM');
+            if (viewMainKitPartDetailsBtnKM) { viewMainKitPartDetailsBtnKM.addEventListener('click', () => { const mainKitPartNo = kmKitPartNoInput.value; if (mainKitPartNo) { currentModalContext = 'kitMaking'; openPartMasterDetailPanel(mainKitPartNo); } else { showNotification("No Kit Part selected to view details.", "info"); } }); }
+            const viewMainKitPartDetailsBtnKB = document.getElementById('viewMainKitPartDetailsBtnKB');
+            if (viewMainKitPartDetailsBtnKB) { viewMainKitPartDetailsBtnKB.addEventListener('click', () => { const mainKitPartNo = kbKitPartNoInput.value; if (mainKitPartNo) { currentModalContext = 'kitBreaking'; openPartMasterDetailPanel(mainKitPartNo); } else { showNotification("No Kit Part selected to view details.", "info"); } }); }
+
+            renderKitMakingTable();
+            renderKitBreakingTable();
+        });
+    </script>
+</body>
+</html> 

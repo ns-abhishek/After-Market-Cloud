@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Attachment View</title>
+    <link rel="stylesheet" href="attachment-view.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Satisfy&family=Permanent+Marker&display=swap">
+</head>
+<body>
+    <div class="ticket-container">
+        <!-- Ticket Header -->
+        <header class="ticket-header">
+            <div class="ticket-info">
+                <div class="ticket-field">
+                    <label>Ticket #:</label>
+                    <span>SKT/1/2019</span>
+                </div>
+                <div class="ticket-field">
+                    <label>Ticket Type:</label>
+                    <select class="modern-select">
+                        <option>Parts</option>
+                    </select>
+                </div>
+                <div class="ticket-field">
+                    <label>Status:</label>
+                    <span class="status-badge in-progress">InProgress</span>
+                </div>
+                <div class="ticket-field">
+                    <label>Parent Ticket #:</label>
+                    <span>-</span>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-dark">Save</button>
+                <button class="btn btn-secondary">Cancel</button>
+                <button class="btn btn-dark">Save & Progress</button>
+            </div>
+        </header>
+
+        <!-- Accordion Sections -->
+        <div class="accordion-section">
+            <div class="accordion-header">
+                <i class="fas fa-user-circle"></i>
+                <h2>Customer Details</h2>
+                <i class="fas fa-chevron-down toggle-icon"></i>
+            </div>
+            <div class="accordion-content">
+                <!-- Customer details content -->
+            </div>
+        </div>
+
+        <div class="accordion-section">
+            <div class="accordion-header">
+                <i class="fas fa-phone-alt"></i>
+                <h2>Call Details</h2>
+                <i class="fas fa-chevron-down toggle-icon"></i>
+            </div>
+            <div class="accordion-content">
+                <!-- Call details content -->
+            </div>
+        </div>
+
+        <div class="accordion-section">
+            <div class="accordion-header">
+                <i class="fas fa-exclamation-circle"></i>
+                <h2>Issue Details</h2>
+                <i class="fas fa-chevron-down toggle-icon"></i>
+            </div>
+            <div class="accordion-content">
+                <!-- Issue details content -->
+            </div>
+        </div>
+
+        <div class="accordion-section">
+            <div class="accordion-header">
+                <i class="fas fa-tasks"></i>
+                <h2>Actions</h2>
+                <i class="fas fa-chevron-down toggle-icon"></i>
+            </div>
+            <div class="accordion-content">
+                <!-- Actions content -->
+            </div>
+        </div>
+
+        <div class="accordion-section">
+            <div class="accordion-header">
+                <i class="fas fa-check-circle"></i>
+                <h2>Closure Details</h2>
+                <i class="fas fa-chevron-down toggle-icon"></i>
+            </div>
+            <div class="accordion-content">
+                <!-- Closure details content -->
+            </div>
+        </div>
+
+        <!-- Attachments Section - Expanded by default -->
+        <div class="accordion-section active">
+            <div class="accordion-header">
+                <i class="fas fa-paperclip"></i>
+                <h2>Attachments</h2>
+                <i class="fas fa-chevron-up toggle-icon"></i>
+            </div>
+            <div class="accordion-content show">
+                <!-- Attachment Upload Area -->
+                <div class="attachment-upload-area">
+                    <div class="upload-dropzone simplified" id="dropzone">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span class="upload-text">Drag files here or</span>
+                        <button class="btn upload-btn simplified-btn" id="mainChooseBtn" title="Select files to upload" style="background-color: #000000; color: white;">
+                            <i class="fas fa-file-upload" style="color: white;"></i> Upload
+                        </button>
+                        <input type="file" id="fileInput" class="file-input" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt">
+                        <div class="upload-info">
+                            <i class="fas fa-info-circle"></i>
+                            <span class="max-size">Supported files: Images, PDF, Office, Text (Max: 10MB)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Attachment Detail Section -->
+                <div class="attachment-detail-section">
+                    <div class="attachment-detail-header">
+                        <div class="attachment-detail-title">
+                            <i class="fas fa-list"></i>
+                            <span>Attachment Detail</span>
+                        </div>
+                        <div class="attachment-actions">
+                            <div class="view-toggle-buttons">
+                                <button class="view-toggle-btn active" id="listViewBtn" title="List view">
+                                    <i class="fas fa-list"></i>
+                                </button>
+                                <button class="view-toggle-btn" id="gridViewBtn" title="Grid view">
+                                    <i class="fas fa-th"></i>
+                                </button>
+                            </div>
+                            <button class="action-btn download-selected-btn" title="Download selected files">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="action-btn delete-selected-btn" title="Delete selected files">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <button class="refresh-btn" title="Refresh list">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Filter Options -->
+                    <div class="filter-options">
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <div class="filter-icon"><i class="fas fa-file-alt" title="Filter by file type"></i></div>
+                                <select class="filter-select" id="fileTypeFilter">
+                                    <option value="">All Types</option>
+                                    <option value="pdf">PDF</option>
+                                    <option value="doc,docx">Word</option>
+                                    <option value="xls,xlsx,csv">Excel</option>
+                                    <option value="jpg,jpeg,png,gif">Images</option>
+                                    <option value="txt,md">Text</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <div class="filter-icon"><i class="fas fa-tag" title="Filter by label"></i></div>
+                                <select class="filter-select" id="labelFilter">
+                                    <option value="">All Labels</option>
+                                    <option value="research">Research</option>
+                                    <option value="design">Design</option>
+                                    <option value="documentation">Docs</option>
+                                    <option value="important">Important</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <div class="filter-icon"><i class="fas fa-sort" title="Sort results"></i></div>
+                                <select class="filter-select" id="sortFilter">
+                                    <option value="newest">Latest</option>
+                                    <option value="oldest">Oldest</option>
+                                    <option value="name_asc">Name (A-Z)</option>
+                                    <option value="name_desc">Name (Z-A)</option>
+                                </select>
+                            </div>
+                            <div class="filter-actions">
+                                <button class="filter-icon-btn" id="clearAllFilters" title="Reset all filters">
+                                    <i class="fas fa-undo"></i>
+                                </button>
+                                <button class="filter-icon-btn" id="applyFilters" title="Apply filters">
+                                    <i class="fas fa-filter"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- View Container -->
+                    <div class="attachment-view-container">
+                        <!-- List View (Table) -->
+                        <div class="list-view active">
+                            <table class="attachment-table">
+                                <thead>
+                                    <tr>
+                                        <th class="select-col" title="Select file">
+                                            <input type="checkbox" id="selectAllCheckbox" title="Select all files">
+                                        </th>
+                                        <th class="view-col" title="View file">
+                                            <div class="th-content"><i class="fas fa-eye"></i></div>
+                                        </th>
+                                        <th class="filename-col">
+                                            <div class="th-content"><i class="fas fa-file-alt"></i> Name</div>
+                                        </th>
+                                        <th class="size-col">
+                                            <div class="th-content"><i class="fas fa-database"></i> Size</div>
+                                        </th>
+                                        <th class="creator-col">
+                                            <div class="th-content"><i class="fas fa-user"></i> By</div>
+                                        </th>
+                                        <th class="creation-date-col">
+                                            <div class="th-content"><i class="fas fa-calendar-plus"></i> Created</div>
+                                        </th>
+                                        <th class="modification-date-col">
+                                            <div class="th-content"><i class="fas fa-edit"></i> Modified</div>
+                                        </th>
+                                        <th class="labels-col">
+                                            <div class="th-content"><i class="fas fa-tags"></i> Labels</div>
+                                        </th>
+                                        <th class="signature-col">
+                                            <div class="th-content"><i class="fas fa-signature"></i> Signature</div>
+                                        </th>
+                                        <th class="attached-to-col">
+                                            <div class="th-content"><i class="fas fa-link"></i> Ref</div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                        <tbody id="attachmentTableBody">
+                            <!-- Empty state message -->
+                            <tr class="empty-row" id="emptyState">
+                                <td colspan="10" class="empty-message">
+                                    <div class="empty-state">
+                                        <i class="fas fa-file-upload"></i>
+                                        <p>No records to view</p>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Sample attachment rows (hidden by default) -->
+                            <tr class="attachment-row" style="display: none;">
+                                <td class="select-col">
+                                    <input type="checkbox" class="file-select-checkbox">
+                                </td>
+                                <td class="view-col">
+                                    <button class="action-btn view-btn" title="View file">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                                <td class="filename-col">
+                                    <div class="file-info-cell">
+                                        <div class="file-type-icon pdf">
+                                            <i class="fas fa-file-pdf"></i>
+                                        </div>
+                                        <span>Customer Feedback.pdf</span>
+                                    </div>
+                                </td>
+                                <td class="size-col">2 kB</td>
+                                <td class="creator-col">Amit Sundaram</td>
+                                <td class="creation-date-col">Apr 08, 2020</td>
+                                <td class="modification-date-col">2 minutes ago</td>
+                                <td class="labels-col">
+                                    <span class="label">research</span>
+                                </td>
+                                <td class="signature-col">
+                                    <button class="signature-status unsigned" title="Add signature">
+                                        <i class="fas fa-pen-alt"></i>
+                                    </button>
+                                </td>
+                                <td class="attached-to-col">
+                                    <div class="attached-reference">
+                                        <i class="fas fa-file-alt"></i> BSKY - Design - colour exploration
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="attachment-row" style="display: none;">
+                                <td class="select-col">
+                                    <input type="checkbox" class="file-select-checkbox">
+                                </td>
+                                <td class="view-col">
+                                    <button class="action-btn view-btn" title="View file">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                                <td class="filename-col">
+                                    <div class="file-info-cell">
+                                        <div class="file-type-icon excel">
+                                            <i class="fas fa-file-excel"></i>
+                                        </div>
+                                        <span>Customer Interviews.xlsx</span>
+                                    </div>
+                                </td>
+                                <td class="size-col">9 kB</td>
+                                <td class="creator-col">Jane Rotanson</td>
+                                <td class="creation-date-col">9 minutes ago</td>
+                                <td class="modification-date-col">4 minutes ago</td>
+                                <td class="labels-col">
+                                    <span class="no-labels">No labels</span>
+                                </td>
+                                <td class="signature-col">
+                                    <button class="signature-status signed" title="View signature">
+                                        <i class="fas fa-signature"></i>
+                                    </button>
+                                </td>
+                                <td class="attached-to-col">
+                                    <div class="attached-reference">
+                                        <i class="fas fa-file-alt"></i> Preliminary research
+                                    </div>
+                                </td>
+                            </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Grid View -->
+                        <div class="grid-view">
+                            <div class="grid-container" id="attachmentGridContainer">
+                                <!-- Grid items will be added here dynamically -->
+                                <div class="empty-grid-state" id="emptyGridState">
+                                    <i class="fas fa-file-upload"></i>
+                                    <p>No records to view</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="pagination-container">
+                        <div class="pagination-controls">
+                            <button class="pagination-btn first-page" title="First Page">
+                                <i class="fas fa-angle-double-left"></i>
+                            </button>
+                            <button class="pagination-btn prev-page" title="Previous Page">
+                                <i class="fas fa-angle-left"></i>
+                            </button>
+                            <span class="pagination-info">View 1-1 of 1</span>
+                            <button class="pagination-btn next-page" title="Next Page">
+                                <i class="fas fa-angle-right"></i>
+                            </button>
+                            <button class="pagination-btn last-page" title="Last Page">
+                                <i class="fas fa-angle-double-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-section">
+            <div class="accordion-header">
+                <i class="fas fa-cogs"></i>
+                <h2>Parts List</h2>
+                <i class="fas fa-chevron-down toggle-icon"></i>
+            </div>
+            <div class="accordion-content">
+                <!-- Parts list content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Modal -->
+    <div class="modal" id="uploadModal">
+        <div class="modal-content compact-modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-paperclip"></i> Attachment Upload</h3>
+                <button class="close-btn"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="file-preview-area">
+                    <div class="file-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="file-details">
+                        <span class="selected-filename">No file selected</span>
+                        <div class="file-input-wrapper">
+                            <button class="btn btn-sm btn-outline choose-file-btn">
+                                Choose File
+                            </button>
+                            <input type="file" class="file-input" id="modalFileInput" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fileDescription">Description</label>
+                        <textarea id="fileDescription" rows="3" placeholder="Enter file description..."></textarea>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fileLabels">Labels</label>
+                        <input type="text" id="fileLabels" placeholder="Add labels (comma separated)">
+                    </div>
+                </div>
+
+                <div class="label-chips">
+                    <span class="label-chip" data-label="research">research</span>
+                    <span class="label-chip" data-label="design">design</span>
+                    <span class="label-chip" data-label="documentation">docs</span>
+                    <span class="label-chip" data-label="important">important</span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fileAttachedTo">Attached To</label>
+                        <select id="fileAttachedTo" class="modern-select">
+                            <option value="">-- Select Reference --</option>
+                            <option value="BSKY">BSKY - Design - colour exploration</option>
+                            <option value="Research">Preliminary research</option>
+                            <option value="Documentation">System documentation</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row signature-requirement-row">
+                    <div class="form-group signature-checkbox-container">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="requireSignature">
+                            <span class="checkbox-text">Requires Signature</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="upload-signature-area" id="uploadSignatureArea" style="display: none;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-signature"></i> Add Signature</label>
+                            <div class="signature-preview-upload">
+                                <div class="signature-canvas-container-upload">
+                                    <canvas id="uploadSignatureCanvas" width="500" height="150"></canvas>
+                                    <div class="signature-canvas-placeholder-upload">
+                                        <p>Sign here using mouse or touch</p>
+                                    </div>
+                                </div>
+                                <div class="signature-tools-upload">
+                                    <button class="btn btn-sm btn-outline" id="clearUploadSignatureBtn">
+                                        <i class="fas fa-eraser"></i> Clear
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelUploadBtn" title="Cancel upload">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="btn upload-btn-modal" title="Upload this file" style="background-color: #e67e22; color: white;">
+                    <i class="fas fa-upload" style="color: white;"></i> Upload File
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- File Viewer Modal -->
+    <div class="modal" id="fileViewerModal">
+        <div class="modal-content file-viewer-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-eye"></i> <span id="viewerFileName">File Viewer</span></h3>
+                <button class="close-btn" id="closeViewerBtn"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body file-viewer-body">
+                <div class="file-viewer-container" id="fileViewerContainer">
+                    <!-- File content will be displayed here -->
+                    <div class="file-viewer-placeholder">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Loading file...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="downloadViewedFileBtn" title="Download this file" style="background-color: #27ae60; color: white;">
+                    <i class="fas fa-download"></i> Download
+                </button>
+                <button class="btn btn-secondary" id="closeViewerFooterBtn" title="Close viewer">
+                    <i class="fas fa-times"></i> Close
+                </button>
+                <button class="btn" id="printViewedFileBtn" title="Print this file" style="background-color: #27ae60; color: white;">
+                    <i class="fas fa-print"></i> Print
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signature Modal -->
+    <div class="modal" id="signatureModal">
+        <div class="modal-content signature-modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-signature"></i> <span id="signatureTitle">Add Signature</span></h3>
+                <button class="close-btn" id="closeSignatureBtn"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="signature-tabs">
+                    <button class="signature-tab active" data-tab="draw">
+                        <i class="fas fa-pen"></i> Draw
+                    </button>
+                    <button class="signature-tab" data-tab="type">
+                        <i class="fas fa-keyboard"></i> Type
+                    </button>
+                    <button class="signature-tab" data-tab="upload">
+                        <i class="fas fa-upload"></i> Upload
+                    </button>
+                </div>
+
+                <div class="signature-tab-content active" id="drawTab">
+                    <div class="signature-canvas-container">
+                        <canvas id="signatureCanvas" width="500" height="200"></canvas>
+                        <div class="signature-canvas-placeholder">
+                            <p>Sign here</p>
+                        </div>
+                    </div>
+                    <div class="signature-tools">
+                        <button class="btn btn-sm btn-outline" id="clearSignatureBtn">
+                            <i class="fas fa-eraser"></i> Clear
+                        </button>
+                        <div class="pen-color-selector">
+                            <span>Color:</span>
+                            <button class="color-btn active" data-color="#000000" style="background-color: #000000;"></button>
+                            <button class="color-btn" data-color="#0000FF" style="background-color: #0000FF;"></button>
+                            <button class="color-btn" data-color="#FF0000" style="background-color: #FF0000;"></button>
+                        </div>
+                        <div class="pen-size-selector">
+                            <span>Size:</span>
+                            <button class="size-btn" data-size="1">S</button>
+                            <button class="size-btn active" data-size="2">M</button>
+                            <button class="size-btn" data-size="4">L</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="signature-tab-content" id="typeTab">
+                    <div class="typed-signature-container">
+                        <input type="text" id="typedSignature" placeholder="Type your name">
+                        <div class="signature-preview" id="typedSignaturePreview"></div>
+                    </div>
+                    <div class="signature-font-selector">
+                        <span>Font:</span>
+                        <button class="font-btn active" data-font="'Dancing Script', cursive">Script</button>
+                        <button class="font-btn" data-font="'Satisfy', cursive">Cursive</button>
+                        <button class="font-btn" data-font="'Permanent Marker', cursive">Marker</button>
+                    </div>
+                </div>
+
+                <div class="signature-tab-content" id="uploadTab">
+                    <div class="signature-upload-container">
+                        <div class="upload-dropzone signature-dropzone" id="signatureDropzone">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span class="upload-text">Drag signature image here or</span>
+                            <button class="btn upload-btn simplified-btn" id="chooseSignatureBtn" style="background-color: #e67e22; color: white;">
+                                <i class="fas fa-file-upload" style="color: white;"></i> Upload
+                            </button>
+                            <input type="file" id="signatureFileInput" class="file-input" accept="image/*">
+                        </div>
+                        <div class="signature-upload-preview">
+                            <img id="uploadedSignaturePreview" src="" alt="Uploaded signature preview">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelSignatureBtn">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="btn" id="saveSignatureBtn" style="background-color: #27ae60; color: white;">
+                    <i class="fas fa-save"></i> Save Signature
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signature Preview Modal -->
+    <div class="modal" id="signaturePreviewModal">
+        <div class="modal-content signature-preview-modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-signature"></i> Signature</h3>
+                <button class="close-btn" id="closeSignaturePreviewBtn"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="signature-preview-container">
+                    <img id="signaturePreviewImage" src="" alt="Signature preview">
+                </div>
+                <div class="signature-info">
+                    <div class="signature-info-item">
+                        <span class="signature-info-label">Signed by:</span>
+                        <span class="signature-info-value" id="signatureOwner">Jane Rotanson</span>
+                    </div>
+                    <div class="signature-info-item">
+                        <span class="signature-info-label">Date:</span>
+                        <span class="signature-info-value" id="signatureDate">May 13, 2023</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="closeSignaturePreviewFooterBtn">
+                    <i class="fas fa-times"></i> Close
+                </button>
+                <button class="btn" id="downloadSignatureBtn" style="background-color: #27ae60; color: white;">
+                    <i class="fas fa-download"></i> Download
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include our JavaScript file -->
+    <script src="attachment-view.js"></script>
+</body>
+</html>

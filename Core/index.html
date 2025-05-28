@@ -1,0 +1,1833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HCL Software - Allocation Priority</title>
+
+    <!-- Material Design Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles/main.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Enhanced Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <i class="material-icons">menu</i>
+                </button>
+                <div class="logo-container">
+                    <div class="logo">HCL</div>
+                    <span class="app-title">Software - Allocation Priority</span>
+                </div>
+                <div class="system-status">
+                    <span class="status-indicator online"></span>
+                    <span class="status-text">System Online</span>
+                </div>
+            </div>
+            <div class="header-center">
+                <div class="breadcrumb" id="breadcrumb">
+                    <span class="breadcrumb-item">
+                        <i class="material-icons">home</i>
+                        Dashboard
+                    </span>
+                    <span class="breadcrumb-separator">
+                        <i class="material-icons">chevron_right</i>
+                    </span>
+                    <span class="breadcrumb-item active">Allocation Priority</span>
+                </div>
+                <div class="search-container">
+                    <i class="material-icons search-icon">search</i>
+                    <input type="text" id="globalSearch" placeholder="Search orders, types, classes..." class="search-input">
+                    <div class="search-suggestions" id="searchSuggestions">
+                        <!-- Search suggestions will be populated -->
+                    </div>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="view-switcher">
+                    <button class="view-btn active" data-view="dashboard" title="Dashboard (Alt+1)">
+                        <i class="material-icons">dashboard</i>
+                        <span class="view-label">Dashboard</span>
+                    </button>
+                    <button class="view-btn" data-view="table" title="Table View (Alt+2)">
+                        <i class="material-icons">table_chart</i>
+                        <span class="view-label">Table</span>
+                    </button>
+                    <button class="view-btn" data-view="grid" title="Grid View (Alt+3)">
+                        <i class="material-icons">grid_view</i>
+                        <span class="view-label">Grid</span>
+                    </button>
+                    <button class="view-btn" data-view="kanban" title="Kanban Board (Alt+4)">
+                        <i class="material-icons">view_kanban</i>
+                        <span class="view-label">Kanban</span>
+                    </button>
+                    <button class="view-btn" data-view="scheduling" title="Scheduling (Alt+5)">
+                        <i class="material-icons">schedule</i>
+                        <span class="view-label">Schedule</span>
+                    </button>
+                    <button class="view-btn" data-view="analytics" title="Analytics (Alt+6)">
+                        <i class="material-icons">analytics</i>
+                        <span class="view-label">Analytics</span>
+                    </button>
+                    <button class="view-btn" data-view="timeline" title="Timeline (Alt+7)">
+                        <i class="material-icons">timeline</i>
+                        <span class="view-label">Timeline</span>
+                    </button>
+                    <button class="view-btn" data-view="settings" title="Settings (Alt+8)">
+                        <i class="material-icons">settings</i>
+                        <span class="view-label">Settings</span>
+                    </button>
+                </div>
+                <div class="header-actions">
+                    <button class="header-btn" id="notificationsBtn" title="Notifications">
+                        <i class="material-icons">notifications</i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <button class="header-btn" id="helpBtn" title="Help (F1)">
+                        <i class="material-icons">help_outline</i>
+                    </button>
+                    <button class="header-btn" id="fullscreenBtn" title="Fullscreen (F11)">
+                        <i class="material-icons">fullscreen</i>
+                    </button>
+                    <button class="btn btn-icon" id="quickAccessBtn" title="Quick Access">
+                        <i class="material-icons">apps</i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar Overlay for Mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-content">
+                <!-- Enhanced Navigation Search -->
+                <div class="nav-search">
+                    <div class="search-input-container">
+                        <i class="material-icons search-icon">search</i>
+                        <input type="text" id="navSearch" placeholder="Search menus..." class="nav-search-input" autocomplete="off">
+                        <button class="search-clear" id="navSearchClear" style="display: none;">
+                            <i class="material-icons">clear</i>
+                        </button>
+                    </div>
+                    <div class="nav-search-results" id="navSearchResults" style="display: none;">
+                        <!-- Search results will be populated here -->
+                    </div>
+                </div>
+
+                <nav class="sidebar-nav">
+                    <div class="nav-section">
+                        <div class="nav-section-title">Core Modules</div>
+                        <a class="nav-link active" href="#" data-module="core">
+                            <i class="material-icons">dashboard</i>
+                            <span>CORE</span>
+                            <i class="material-icons nav-arrow">expand_more</i>
+                            <div class="nav-submenu">
+                                <div class="submenu-header">
+                                    <span>Master Data</span>
+                                </div>
+                                <div class="submenu-content">
+                                    <a href="#" class="submenu-item active">
+                                        <i class="material-icons">sort</i>
+                                        <span>Allocation Priority</span>
+                                    </a>
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">inventory</i>
+                                        <span>Item Master</span>
+                                    </a>
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">people</i>
+                                        <span>Customer Master</span>
+                                    </a>
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">business</i>
+                                        <span>Vendor Master</span>
+                                    </a>
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">location_on</i>
+                                        <span>Location Master</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </a>
+                        <a class="nav-link" href="#" data-module="helpdesk">
+                            <i class="material-icons">help_outline</i>
+                            <span>HELPDESK</span>
+                            <i class="material-icons nav-arrow">expand_more</i>
+                            <div class="nav-submenu">
+                                <div class="submenu-header">
+                                    <span>Support Services</span>
+                                </div>
+                                <div class="submenu-content">
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">confirmation_number</i>
+                                        <span>Tickets</span>
+                                    </a>
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">library_books</i>
+                                        <span>Knowledge Base</span>
+                                    </a>
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">chat</i>
+                                        <span>Support Chat</span>
+                                    </a>
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">forum</i>
+                                        <span>Community</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </a>
+                        <a class="nav-link" href="#" data-module="parts">
+                            <i class="material-icons">precision_manufacturing</i>
+                            <span>PARTS</span>
+                            <i class="material-icons nav-arrow">expand_more</i>
+                            <div class="nav-submenu">
+                                <div class="submenu-header">
+                                    <span>Parts Management</span>
+                                </div>
+                                <div class="submenu-content">
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">inventory_2</i>
+                                        <span>Inventory</span>
+                                    </a>
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">local_shipping</i>
+                                        <span>Suppliers</span>
+                                    </a>
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">shopping_cart</i>
+                                        <span>Procurement</span>
+                                    </a>
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">qr_code</i>
+                                        <span>Part Catalog</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </a>
+                        <a class="nav-link" href="#" data-module="service">
+                            <i class="material-icons">build</i>
+                            <span>SERVICE</span>
+                            <i class="material-icons nav-arrow">expand_more</i>
+                            <div class="nav-submenu">
+                                <div class="submenu-header">
+                                    <span>Service Operations</span>
+                                </div>
+                                <div class="submenu-content">
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">assignment</i>
+                                        <span>Work Orders</span>
+                                    </a>
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">engineering</i>
+                                        <span>Technicians</span>
+                                    </a>
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">build_circle</i>
+                                        <span>Maintenance</span>
+                                    </a>
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">schedule</i>
+                                        <span>Scheduling</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </a>
+                        <a class="nav-link" href="#" data-module="hana">
+                            <i class="material-icons">storage</i>
+                            <span>HANA</span>
+                            <i class="material-icons nav-arrow">expand_more</i>
+                            <div class="nav-submenu">
+                                <div class="submenu-header">
+                                    <span>Data Platform</span>
+                                </div>
+                                <div class="submenu-content">
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">database</i>
+                                        <span>Database</span>
+                                    </a>
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">analytics</i>
+                                        <span>Analytics</span>
+                                    </a>
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">assessment</i>
+                                        <span>Reports</span>
+                                    </a>
+                                    <a href="#" class="submenu-item">
+                                        <i class="material-icons">insights</i>
+                                        <span>Insights</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="nav-section">
+                        <div class="nav-section-title">Management</div>
+                        <a class="nav-link" href="#" data-module="scheduler">
+                            <i class="material-icons">schedule</i>
+                            <span>BAM SCHEDULER</span>
+                            <div class="nav-dropdown">
+                                <div class="dropdown-item">Job Queue</div>
+                                <div class="dropdown-item">Schedules</div>
+                                <div class="dropdown-item">Monitoring</div>
+                            </div>
+                        </a>
+                        <a class="nav-link" href="#" data-module="config">
+                            <i class="material-icons">tune</i>
+                            <span>CONFIG</span>
+                            <div class="nav-dropdown">
+                                <div class="dropdown-item">System Settings</div>
+                                <div class="dropdown-item">User Preferences</div>
+                                <div class="dropdown-item">Security</div>
+                            </div>
+                        </a>
+                        <a class="nav-link active" href="#" data-module="dashboard">
+                            <i class="material-icons">dashboard</i>
+                            <span>DASHBOARD</span>
+                            <div class="nav-dropdown">
+                                <div class="dropdown-item">Overview</div>
+                                <div class="dropdown-item">Analytics</div>
+                                <div class="dropdown-item">Reports</div>
+                            </div>
+                        </a>
+                        <a class="nav-link" href="#" data-module="events">
+                            <i class="material-icons">event</i>
+                            <span>JOB EVENTS</span>
+                            <div class="nav-dropdown">
+                                <div class="dropdown-item">Event Log</div>
+                                <div class="dropdown-item">Notifications</div>
+                                <div class="dropdown-item">Alerts</div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="nav-section">
+                        <div class="nav-section-title">Business</div>
+                        <a class="nav-link" href="#" data-module="contract">
+                            <i class="material-icons">business_center</i>
+                            <span>CONTRACT MGMT</span>
+                            <div class="nav-dropdown">
+                                <div class="dropdown-item">Contracts</div>
+                                <div class="dropdown-item">Renewals</div>
+                                <div class="dropdown-item">Compliance</div>
+                            </div>
+                        </a>
+                        <a class="nav-link" href="#" data-module="catalogue">
+                            <i class="material-icons">library_books</i>
+                            <span>DIGITAL CATALOGUE</span>
+                            <div class="nav-dropdown">
+                                <div class="dropdown-item">Products</div>
+                                <div class="dropdown-item">Categories</div>
+                                <div class="dropdown-item">Pricing</div>
+                            </div>
+                        </a>
+                        <a class="nav-link" href="#" data-module="tools">
+                            <i class="material-icons">construction</i>
+                            <span>SPECIAL TOOLS</span>
+                            <div class="nav-dropdown">
+                                <div class="dropdown-item">Diagnostics</div>
+                                <div class="dropdown-item">Utilities</div>
+                                <div class="dropdown-item">Calibration</div>
+                            </div>
+                        </a>
+                        <a class="nav-link" href="#" data-module="warranty">
+                            <i class="material-icons">verified_user</i>
+                            <span>WARRANTY</span>
+                            <div class="nav-dropdown">
+                                <div class="dropdown-item">Claims</div>
+                                <div class="dropdown-item">Coverage</div>
+                                <div class="dropdown-item">Extensions</div>
+                            </div>
+                        </a>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- Enhanced Profile Section at Bottom -->
+            <div class="sidebar-profile">
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <img src="https://via.placeholder.com/48x48/000000/FFFFFF?text=A" alt="Admin" class="avatar-img">
+                            <div class="status-indicator online"></div>
+                        </div>
+                        <div class="profile-info">
+                            <div class="profile-name">Administrator</div>
+                            <div class="profile-role">System Admin</div>
+                            <div class="profile-branch">Branch: 11 • HCL Software</div>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="profile-btn" id="profileMenuBtn" title="Profile Menu">
+                                <i class="material-icons">expand_less</i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <span class="stat-value">24</span>
+                            <span class="stat-label">Active Orders</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">12</span>
+                            <span class="stat-label">High Priority</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">98%</span>
+                            <span class="stat-label">Efficiency</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-menu" id="profileMenu">
+                    <div class="profile-menu-header">
+                        <h4>Account Settings</h4>
+                    </div>
+                    <a href="#" class="profile-menu-item">
+                        <i class="material-icons">person</i>
+                        <span>My Profile</span>
+                        <i class="material-icons menu-arrow">chevron_right</i>
+                    </a>
+                    <a href="#" class="profile-menu-item">
+                        <i class="material-icons">settings</i>
+                        <span>Preferences</span>
+                        <i class="material-icons menu-arrow">chevron_right</i>
+                    </a>
+                    <a href="#" class="profile-menu-item">
+                        <i class="material-icons">notifications</i>
+                        <span>Notifications</span>
+                        <div class="notification-badge">3</div>
+                    </a>
+                    <a href="#" class="profile-menu-item">
+                        <i class="material-icons">security</i>
+                        <span>Security</span>
+                        <i class="material-icons menu-arrow">chevron_right</i>
+                    </a>
+                    <a href="#" class="profile-menu-item">
+                        <i class="material-icons">help</i>
+                        <span>Help & Support</span>
+                        <i class="material-icons menu-arrow">chevron_right</i>
+                    </a>
+                    <div class="profile-menu-divider"></div>
+                    <a href="#" class="profile-menu-item logout">
+                        <i class="material-icons">logout</i>
+                        <span>Sign Out</span>
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Action Bar -->
+            <div class="action-bar">
+                <div class="action-left">
+                    <h1 class="page-title">Allocation Priority</h1>
+                    <span class="page-subtitle">Manage order allocation priorities across all business units</span>
+                </div>
+                <div class="action-right">
+                    <div class="action-group">
+                        <button class="btn btn-secondary" id="printBtn">
+                            <i class="material-icons">print</i>
+                            Print
+                        </button>
+                        <div class="btn-dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" id="importBtn">
+                                <i class="material-icons">upload</i>
+                                Import
+                                <i class="material-icons dropdown-arrow">arrow_drop_down</i>
+                            </button>
+                            <div class="dropdown-menu" id="importMenu">
+                                <div class="dropdown-item" data-import="csv">
+                                    <i class="material-icons">description</i>
+                                    Import CSV
+                                </div>
+                                <div class="dropdown-item" data-import="excel">
+                                    <i class="material-icons">table_chart</i>
+                                    Import Excel
+                                </div>
+                                <div class="dropdown-item" data-import="json">
+                                    <i class="material-icons">code</i>
+                                    Import JSON
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <div class="dropdown-item" data-import="template">
+                                    <i class="material-icons">download</i>
+                                    Download Template
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-group">
+                        <div class="btn-dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" id="exportBtn">
+                                <i class="material-icons">file_download</i>
+                                Export
+                                <i class="material-icons dropdown-arrow">arrow_drop_down</i>
+                            </button>
+                            <div class="dropdown-menu" id="exportMenu">
+                                <div class="dropdown-item" data-export="csv">
+                                    <i class="material-icons">description</i>
+                                    Export as CSV
+                                </div>
+                                <div class="dropdown-item" data-export="excel">
+                                    <i class="material-icons">table_chart</i>
+                                    Export as Excel
+                                </div>
+                                <div class="dropdown-item" data-export="pdf">
+                                    <i class="material-icons">picture_as_pdf</i>
+                                    Export as PDF
+                                </div>
+                                <div class="dropdown-item" data-export="json">
+                                    <i class="material-icons">code</i>
+                                    Export as JSON
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary" id="refreshBtn">
+                            <i class="material-icons">refresh</i>
+                            Refresh
+                        </button>
+                    </div>
+                    <button class="btn btn-primary" id="addOrderBtn">
+                        <i class="material-icons">add</i>
+                        Add Order
+                    </button>
+                </div>
+            </div>
+
+            <!-- View Container -->
+            <div class="main-container">
+                <!-- Dashboard View -->
+                <div class="view-content active" id="dashboardView">
+                    <div class="dashboard-grid">
+                        <div class="stats-card">
+                            <div class="stats-icon">
+                                <i class="material-icons">assignment</i>
+                            </div>
+                            <div class="stats-content">
+                                <h3 class="stats-number" id="totalOrders">0</h3>
+                                <p class="stats-label">Total Orders</p>
+                            </div>
+                        </div>
+                        <div class="stats-card">
+                            <div class="stats-icon">
+                                <i class="material-icons">priority_high</i>
+                            </div>
+                            <div class="stats-content">
+                                <h3 class="stats-number" id="highPriority">0</h3>
+                                <p class="stats-label">High Priority</p>
+                            </div>
+                        </div>
+                        <div class="stats-card">
+                            <div class="stats-icon">
+                                <i class="material-icons">category</i>
+                            </div>
+                            <div class="stats-content">
+                                <h3 class="stats-number" id="orderTypes">0</h3>
+                                <p class="stats-label">Order Types</p>
+                            </div>
+                        </div>
+                        <div class="stats-card">
+                            <div class="stats-icon">
+                                <i class="material-icons">trending_up</i>
+                            </div>
+                            <div class="stats-content">
+                                <h3 class="stats-number">98%</h3>
+                                <p class="stats-label">Efficiency</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Enhanced Scheduling Boxes -->
+                    <div class="dashboard-card scheduling-overview">
+                        <div class="card-header">
+                            <h3>Today's Schedule Overview</h3>
+                            <div class="schedule-date" id="todayDate">
+                                <!-- Current date will be populated -->
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <div class="schedule-boxes">
+                                <div class="schedule-box urgent">
+                                    <div class="schedule-box-header">
+                                        <i class="material-icons">priority_high</i>
+                                        <span class="schedule-box-title">Urgent Orders</span>
+                                    </div>
+                                    <div class="schedule-box-count" id="urgentCount">3</div>
+                                    <div class="schedule-box-desc">Due within 2 hours</div>
+                                </div>
+                                <div class="schedule-box pending">
+                                    <div class="schedule-box-header">
+                                        <i class="material-icons">schedule</i>
+                                        <span class="schedule-box-title">Pending</span>
+                                    </div>
+                                    <div class="schedule-box-count" id="pendingCount">7</div>
+                                    <div class="schedule-box-desc">Awaiting processing</div>
+                                </div>
+                                <div class="schedule-box progress">
+                                    <div class="schedule-box-header">
+                                        <i class="material-icons">autorenew</i>
+                                        <span class="schedule-box-title">In Progress</span>
+                                    </div>
+                                    <div class="schedule-box-count" id="progressCount">5</div>
+                                    <div class="schedule-box-desc">Currently processing</div>
+                                </div>
+                                <div class="schedule-box completed">
+                                    <div class="schedule-box-header">
+                                        <i class="material-icons">check_circle</i>
+                                        <span class="schedule-box-title">Completed</span>
+                                    </div>
+                                    <div class="schedule-box-count" id="completedCount">12</div>
+                                    <div class="schedule-box-desc">Finished today</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weekly Schedule Overview -->
+                    <div class="dashboard-card weekly-schedule">
+                        <div class="card-header">
+                            <h3>Weekly Schedule</h3>
+                            <div class="week-navigation">
+                                <button class="btn btn-sm" id="prevWeek">
+                                    <i class="material-icons">chevron_left</i>
+                                </button>
+                                <span class="week-title" id="weekTitle">Week 1, 2024</span>
+                                <button class="btn btn-sm" id="nextWeek">
+                                    <i class="material-icons">chevron_right</i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <div class="weekly-schedule-grid" id="weeklyScheduleGrid">
+                                <!-- Weekly schedule will be populated -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Schedule Actions -->
+                    <div class="dashboard-card schedule-actions-card">
+                        <div class="card-header">
+                            <h3>Quick Schedule Actions</h3>
+                            <div class="schedule-efficiency">
+                                <span class="efficiency-label">Today's Efficiency</span>
+                                <span class="efficiency-value" id="todayEfficiency">94%</span>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <div class="schedule-action-buttons">
+                                <button class="schedule-action-btn create" id="quickCreateSchedule">
+                                    <i class="material-icons">add_circle</i>
+                                    <span>Create Schedule</span>
+                                    <small>New allocation</small>
+                                </button>
+                                <button class="schedule-action-btn reschedule" id="quickReschedule">
+                                    <i class="material-icons">update</i>
+                                    <span>Reschedule</span>
+                                    <small>Modify existing</small>
+                                </button>
+                                <button class="schedule-action-btn optimize" id="quickOptimize">
+                                    <i class="material-icons">tune</i>
+                                    <span>Optimize</span>
+                                    <small>Auto-arrange</small>
+                                </button>
+                                <button class="schedule-action-btn report" id="quickScheduleReport">
+                                    <i class="material-icons">assessment</i>
+                                    <span>Report</span>
+                                    <small>Generate report</small>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scheduling Controls -->
+                    <div class="scheduling-section">
+                        <div class="scheduling-header">
+                            <h3>Business Scheduling</h3>
+                            <p>View allocation priorities by time period</p>
+                        </div>
+                        <div class="scheduling-controls">
+                            <button class="schedule-btn active" data-period="day">
+                                <i class="material-icons">today</i>
+                                <span>Today</span>
+                                <small>Current day</small>
+                            </button>
+                            <button class="schedule-btn" data-period="week">
+                                <i class="material-icons">view_week</i>
+                                <span>This Week</span>
+                                <small>7 days</small>
+                            </button>
+                            <button class="schedule-btn" data-period="month">
+                                <i class="material-icons">calendar_month</i>
+                                <span>This Month</span>
+                                <small>30 days</small>
+                            </button>
+                            <button class="schedule-btn" data-period="year">
+                                <i class="material-icons">calendar_today</i>
+                                <span>This Year</span>
+                                <small>365 days</small>
+                            </button>
+                        </div>
+                        <div class="schedule-summary" id="scheduleSummary">
+                            <div class="summary-item">
+                                <span class="summary-label">Period</span>
+                                <span class="summary-value" id="currentPeriod">Today</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Orders</span>
+                                <span class="summary-value" id="periodOrders">10</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Avg Priority</span>
+                                <span class="summary-value" id="avgPriority">2.1</span>
+                            </div>
+                        </div>
+
+                        <!-- Detailed Scheduling Calendar -->
+                        <div class="scheduling-calendar">
+                            <div class="calendar-header">
+                                <h4>Allocation Schedule</h4>
+                                <div class="calendar-controls">
+                                    <button class="btn btn-sm" id="prevPeriod">
+                                        <i class="material-icons">chevron_left</i>
+                                    </button>
+                                    <span class="calendar-title" id="calendarTitle">January 2024</span>
+                                    <button class="btn btn-sm" id="nextPeriod">
+                                        <i class="material-icons">chevron_right</i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="calendar-content" id="calendarContent">
+                                <!-- Calendar will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-charts">
+                        <div class="chart-card">
+                            <h3>Priority Distribution</h3>
+                            <div class="chart-placeholder" id="priorityChart">
+                                <div class="chart-bar" style="height: 80%"><span>Priority 1</span></div>
+                                <div class="chart-bar" style="height: 60%"><span>Priority 2</span></div>
+                                <div class="chart-bar" style="height: 40%"><span>Priority 3</span></div>
+                                <div class="chart-bar" style="height: 20%"><span>Priority 4</span></div>
+                                <div class="chart-bar" style="height: 10%"><span>Priority 5</span></div>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <h3>Order Types Overview</h3>
+                            <div class="order-types-list" id="orderTypesList">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dashboard Pagination (Type 1: Minimal Dots) -->
+                    <div class="pagination-container">
+                        <div class="pagination pagination-dots" id="dashboardPagination">
+                            <button class="pagination-btn prev" disabled>
+                                <i class="material-icons">chevron_left</i>
+                            </button>
+                            <div class="pagination-dots-container">
+                                <span class="pagination-dot active"></span>
+                                <span class="pagination-dot"></span>
+                                <span class="pagination-dot"></span>
+                            </div>
+                            <button class="pagination-btn next">
+                                <i class="material-icons">chevron_right</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table View -->
+                <div class="view-content" id="tableView">
+                    <div class="table-controls">
+                        <div class="filter-group">
+                            <select class="filter-select" id="orderTypeFilter">
+                                <option value="">All Order Types</option>
+                            </select>
+                            <select class="filter-select" id="priorityFilter">
+                                <option value="">All Priorities</option>
+                                <option value="1">Priority 1</option>
+                                <option value="2">Priority 2</option>
+                                <option value="3">Priority 3</option>
+                                <option value="4">Priority 4</option>
+                                <option value="5">Priority 5</option>
+                            </select>
+                        </div>
+                        <div class="table-actions">
+                            <button class="btn btn-icon" id="sortBtn" title="Sort">
+                                <i class="material-icons">sort</i>
+                            </button>
+                            <button class="btn btn-icon" id="filterBtn" title="Filter">
+                                <i class="material-icons">filter_list</i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th class="sortable" data-sort="orderType">
+                                        Order Type
+                                        <i class="material-icons sort-icon">unfold_more</i>
+                                    </th>
+                                    <th class="sortable" data-sort="orderClass">
+                                        Order Class
+                                        <i class="material-icons sort-icon">unfold_more</i>
+                                    </th>
+                                    <th class="sortable" data-sort="priority">
+                                        Priority
+                                        <i class="material-icons sort-icon">unfold_more</i>
+                                    </th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                <!-- Data will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Table Pagination (Type 2: Classic Numbers) -->
+                    <div class="pagination-container">
+                        <div class="pagination pagination-classic" id="tablePagination">
+                            <button class="pagination-btn first" disabled>
+                                <i class="material-icons">first_page</i>
+                            </button>
+                            <button class="pagination-btn prev" disabled>
+                                <i class="material-icons">chevron_left</i>
+                            </button>
+                            <div class="pagination-numbers">
+                                <button class="pagination-number active">1</button>
+                                <button class="pagination-number">2</button>
+                                <button class="pagination-number">3</button>
+                                <span class="pagination-ellipsis">...</span>
+                                <button class="pagination-number">10</button>
+                            </div>
+                            <button class="pagination-btn next">
+                                <i class="material-icons">chevron_right</i>
+                            </button>
+                            <button class="pagination-btn last">
+                                <i class="material-icons">last_page</i>
+                            </button>
+                            <div class="pagination-info">
+                                <span>Showing 1-25 of 250 items</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grid View -->
+                <div class="view-content" id="gridView">
+                    <div class="grid-container" id="gridContainer">
+                        <!-- Grid items will be populated by JavaScript -->
+                    </div>
+
+                    <!-- Grid Pagination (Type 3: Compact Slider) -->
+                    <div class="pagination-container">
+                        <div class="pagination pagination-slider" id="gridPagination">
+                            <button class="pagination-btn prev" disabled>
+                                <i class="material-icons">chevron_left</i>
+                            </button>
+                            <div class="pagination-slider-container">
+                                <input type="range" class="pagination-range" min="1" max="10" value="1">
+                                <div class="pagination-slider-labels">
+                                    <span class="slider-label">Page 1 of 10</span>
+                                </div>
+                            </div>
+                            <button class="pagination-btn next">
+                                <i class="material-icons">chevron_right</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kanban Board View -->
+                <div class="view-content" id="kanbanView">
+                    <div class="kanban-board">
+                        <div class="kanban-column" data-priority="1">
+                            <div class="kanban-header">
+                                <h3>Priority 1 - Critical</h3>
+                                <span class="kanban-count" id="priority1Count">0</span>
+                            </div>
+                            <div class="kanban-items" id="priority1Items"></div>
+                        </div>
+                        <div class="kanban-column" data-priority="2">
+                            <div class="kanban-header">
+                                <h3>Priority 2 - High</h3>
+                                <span class="kanban-count" id="priority2Count">0</span>
+                            </div>
+                            <div class="kanban-items" id="priority2Items"></div>
+                        </div>
+                        <div class="kanban-column" data-priority="3">
+                            <div class="kanban-header">
+                                <h3>Priority 3 - Medium</h3>
+                                <span class="kanban-count" id="priority3Count">0</span>
+                            </div>
+                            <div class="kanban-items" id="priority3Items"></div>
+                        </div>
+                        <div class="kanban-column" data-priority="4">
+                            <div class="kanban-header">
+                                <h3>Priority 4 - Low</h3>
+                                <span class="kanban-count" id="priority4Count">0</span>
+                            </div>
+                            <div class="kanban-items" id="priority4Items"></div>
+                        </div>
+                        <div class="kanban-column" data-priority="5">
+                            <div class="kanban-header">
+                                <h3>Priority 5 - Minimal</h3>
+                                <span class="kanban-count" id="priority5Count">0</span>
+                            </div>
+                            <div class="kanban-items" id="priority5Items"></div>
+                        </div>
+                    </div>
+
+                    <!-- Kanban Pagination (Type 4: Progress Steps) -->
+                    <div class="pagination-container">
+                        <div class="pagination pagination-steps" id="kanbanPagination">
+                            <div class="pagination-step active">
+                                <div class="step-number">1</div>
+                                <div class="step-label">Critical</div>
+                            </div>
+                            <div class="pagination-step">
+                                <div class="step-number">2</div>
+                                <div class="step-label">High</div>
+                            </div>
+                            <div class="pagination-step">
+                                <div class="step-number">3</div>
+                                <div class="step-label">Medium</div>
+                            </div>
+                            <div class="pagination-step">
+                                <div class="step-number">4</div>
+                                <div class="step-label">Low</div>
+                            </div>
+                            <div class="pagination-step">
+                                <div class="step-number">5</div>
+                                <div class="step-label">Minimal</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dedicated Scheduling View -->
+                <div class="view-content" id="schedulingView">
+                    <div class="scheduling-dashboard">
+                        <!-- Enhanced Scheduling Controls -->
+                        <div class="scheduling-section">
+                            <div class="scheduling-header">
+                                <h3>Advanced Business Scheduling</h3>
+                                <p>Comprehensive allocation priority scheduling with calendar integration</p>
+                            </div>
+
+                            <!-- Time Period Selection -->
+                            <div class="scheduling-controls">
+                                <button class="schedule-btn active" data-period="day">
+                                    <i class="material-icons">today</i>
+                                    <span>Today</span>
+                                    <small>Current day</small>
+                                </button>
+                                <button class="schedule-btn" data-period="week">
+                                    <i class="material-icons">view_week</i>
+                                    <span>This Week</span>
+                                    <small>7 days</small>
+                                </button>
+                                <button class="schedule-btn" data-period="month">
+                                    <i class="material-icons">calendar_month</i>
+                                    <span>This Month</span>
+                                    <small>30 days</small>
+                                </button>
+                                <button class="schedule-btn" data-period="year">
+                                    <i class="material-icons">calendar_today</i>
+                                    <span>This Year</span>
+                                    <small>365 days</small>
+                                </button>
+                            </div>
+
+                            <!-- Schedule Summary -->
+                            <div class="schedule-summary" id="scheduleSummaryMain">
+                                <div class="summary-item">
+                                    <span class="summary-label">Period</span>
+                                    <span class="summary-value" id="currentPeriodMain">Today</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-label">Orders</span>
+                                    <span class="summary-value" id="periodOrdersMain">10</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-label">Avg Priority</span>
+                                    <span class="summary-value" id="avgPriorityMain">2.1</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-label">Efficiency</span>
+                                    <span class="summary-value" id="efficiencyMain">98%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Calendar View -->
+                        <div class="scheduling-calendar-main">
+                            <div class="calendar-header">
+                                <h4>Allocation Schedule Calendar</h4>
+                                <div class="calendar-controls">
+                                    <button class="btn btn-sm" id="prevPeriodMain">
+                                        <i class="material-icons">chevron_left</i>
+                                    </button>
+                                    <span class="calendar-title" id="calendarTitleMain">January 2024</span>
+                                    <button class="btn btn-sm" id="nextPeriodMain">
+                                        <i class="material-icons">chevron_right</i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="calendar-grid" id="calendarGrid">
+                                <!-- Calendar grid will be populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Schedule Analytics -->
+                        <div class="schedule-analytics">
+                            <div class="analytics-card">
+                                <h4>Priority Distribution</h4>
+                                <div class="priority-chart" id="schedulePriorityChart">
+                                    <!-- Priority chart will be populated by JavaScript -->
+                                </div>
+                            </div>
+                            <div class="analytics-card">
+                                <h4>Workload Forecast</h4>
+                                <div class="workload-chart" id="scheduleWorkloadChart">
+                                    <!-- Workload chart will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Schedule Actions -->
+                        <div class="schedule-actions">
+                            <button class="btn btn-primary" id="createScheduleBtn">
+                                <i class="material-icons">add_circle</i>
+                                Create Schedule
+                            </button>
+                            <button class="btn btn-secondary" id="exportScheduleBtn">
+                                <i class="material-icons">file_download</i>
+                                Export Schedule
+                            </button>
+                            <button class="btn btn-secondary" id="printScheduleBtn">
+                                <i class="material-icons">print</i>
+                                Print Schedule
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics View -->
+                <div class="view-content" id="analyticsView">
+                    <div class="analytics-dashboard">
+                        <div class="analytics-header">
+                            <h2>Advanced Analytics Dashboard</h2>
+                            <div class="analytics-controls">
+                                <div class="time-range-selector">
+                                    <button class="time-btn active" data-range="7d">7 Days</button>
+                                    <button class="time-btn" data-range="30d">30 Days</button>
+                                    <button class="time-btn" data-range="90d">90 Days</button>
+                                    <button class="time-btn" data-range="1y">1 Year</button>
+                                </div>
+                                <button class="btn btn-secondary" id="exportAnalytics">
+                                    <i class="material-icons">file_download</i>
+                                    Export Report
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Performance Section -->
+                        <div class="analytics-section active" id="performanceSection">
+                            <div class="section-header">
+                                <h3>Performance Metrics</h3>
+                                <p>Real-time performance indicators and KPIs</p>
+                            </div>
+                            <div class="performance-grid">
+                                <div class="performance-card">
+                                    <div class="performance-icon">
+                                        <i class="material-icons">speed</i>
+                                    </div>
+                                    <div class="performance-content">
+                                        <h4>Processing Efficiency</h4>
+                                        <div class="performance-value">94.2%</div>
+                                        <div class="performance-change positive">+2.3% from last period</div>
+                                    </div>
+                                </div>
+                                <div class="performance-card">
+                                    <div class="performance-icon">
+                                        <i class="material-icons">timer</i>
+                                    </div>
+                                    <div class="performance-content">
+                                        <h4>Avg Processing Time</h4>
+                                        <div class="performance-value">2.3 hrs</div>
+                                        <div class="performance-change negative">-0.5 hrs from last period</div>
+                                    </div>
+                                </div>
+                                <div class="performance-card">
+                                    <div class="performance-icon">
+                                        <i class="material-icons">check_circle</i>
+                                    </div>
+                                    <div class="performance-content">
+                                        <h4>Completion Rate</h4>
+                                        <div class="performance-value">98.7%</div>
+                                        <div class="performance-change positive">+1.2% from last period</div>
+                                    </div>
+                                </div>
+                                <div class="performance-card">
+                                    <div class="performance-icon">
+                                        <i class="material-icons">trending_up</i>
+                                    </div>
+                                    <div class="performance-content">
+                                        <h4>Throughput</h4>
+                                        <div class="performance-value">156/day</div>
+                                        <div class="performance-change positive">+12 orders from last period</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Trends Section -->
+                        <div class="analytics-section" id="trendsSection">
+                            <div class="section-header">
+                                <h3>Trend Analysis</h3>
+                                <p>Historical patterns and forecasting</p>
+                            </div>
+                            <div class="trends-grid">
+                                <div class="trend-card large">
+                                    <h4>Order Volume Trends</h4>
+                                    <div class="trend-chart-large" id="volumeTrendChart"></div>
+                                </div>
+                                <div class="trend-card">
+                                    <h4>Priority Trends</h4>
+                                    <div class="priority-trend-chart" id="priorityTrendChart"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Distribution Section -->
+                        <div class="analytics-section" id="distributionSection">
+                            <div class="section-header">
+                                <h3>Distribution Analysis</h3>
+                                <p>Order distribution across different dimensions</p>
+                            </div>
+                            <div class="distribution-grid">
+                                <div class="distribution-card">
+                                    <h4>Priority Distribution</h4>
+                                    <div class="donut-chart" id="priorityDonutChart"></div>
+                                </div>
+                                <div class="distribution-card">
+                                    <h4>Order Type Distribution</h4>
+                                    <div class="horizontal-bar-chart" id="orderTypeDistribution"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Comparison Section -->
+                        <div class="analytics-section" id="comparisonSection">
+                            <div class="section-header">
+                                <h3>Comparative Analysis</h3>
+                                <p>Period-over-period and benchmark comparisons</p>
+                            </div>
+                            <div class="comparison-grid">
+                                <div class="comparison-card">
+                                    <h4>Period Comparison</h4>
+                                    <div class="comparison-chart" id="periodComparisonChart"></div>
+                                </div>
+                                <div class="comparison-card">
+                                    <h4>Benchmark Analysis</h4>
+                                    <div class="benchmark-chart" id="benchmarkChart"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Enhanced Analytics Pagination -->
+                    <div class="pagination-container">
+                        <div class="pagination pagination-cards" id="analyticsPagination">
+                            <button class="pagination-card active" data-section="performance">
+                                <i class="material-icons">speed</i>
+                                <span>Performance</span>
+                                <small>KPIs & Metrics</small>
+                            </button>
+                            <button class="pagination-card" data-section="trends">
+                                <i class="material-icons">trending_up</i>
+                                <span>Trends</span>
+                                <small>Historical Analysis</small>
+                            </button>
+                            <button class="pagination-card" data-section="distribution">
+                                <i class="material-icons">pie_chart</i>
+                                <span>Distribution</span>
+                                <small>Data Breakdown</small>
+                            </button>
+                            <button class="pagination-card" data-section="comparison">
+                                <i class="material-icons">compare</i>
+                                <span>Comparison</span>
+                                <small>Benchmarking</small>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline View -->
+                <div class="view-content" id="timelineView">
+                    <div class="timeline-container">
+                        <div class="timeline-header">
+                            <h3>Order Processing Timeline</h3>
+                            <div class="timeline-controls">
+                                <button class="btn btn-secondary" id="todayBtn">Today</button>
+                                <button class="btn btn-secondary" id="weekBtn">This Week</button>
+                                <button class="btn btn-secondary" id="monthBtn">This Month</button>
+                            </div>
+                        </div>
+                        <div class="timeline" id="timelineContent">
+                            <!-- Timeline items will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Timeline Pagination (Type 6: Timeline Navigation) -->
+                    <div class="pagination-container">
+                        <div class="pagination pagination-timeline" id="timelinePagination">
+                            <button class="pagination-btn prev">
+                                <i class="material-icons">chevron_left</i>
+                            </button>
+                            <div class="timeline-nav">
+                                <div class="timeline-period active">Today</div>
+                                <div class="timeline-separator">|</div>
+                                <div class="timeline-period">This Week</div>
+                                <div class="timeline-separator">|</div>
+                                <div class="timeline-period">This Month</div>
+                                <div class="timeline-separator">|</div>
+                                <div class="timeline-period">This Year</div>
+                            </div>
+                            <button class="pagination-btn next">
+                                <i class="material-icons">chevron_right</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings View -->
+                <div class="view-content" id="settingsView">
+                    <div class="settings-container">
+                        <div class="settings-section">
+                            <h3>Priority Configuration</h3>
+                            <div class="settings-group">
+                                <label class="settings-label">Default Priority Level</label>
+                                <select class="settings-select" id="defaultPriority">
+                                    <option value="1">Priority 1</option>
+                                    <option value="2">Priority 2</option>
+                                    <option value="3" selected>Priority 3</option>
+                                    <option value="4">Priority 4</option>
+                                    <option value="5">Priority 5</option>
+                                </select>
+                            </div>
+                            <div class="settings-group">
+                                <label class="settings-label">Auto-assign Priority</label>
+                                <label class="switch">
+                                    <input type="checkbox" id="autoAssign">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="settings-section">
+                            <h3>Display Options</h3>
+                            <div class="settings-group">
+                                <label class="settings-label">Items per Page</label>
+                                <select class="settings-select" id="itemsPerPage">
+                                    <option value="10">10</option>
+                                    <option value="25" selected>25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </div>
+                            <div class="settings-group">
+                                <label class="settings-label">Show Priority Colors</label>
+                                <label class="switch">
+                                    <input type="checkbox" id="showColors" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="settings-actions">
+                            <button class="btn btn-primary" id="saveSettings">Save Settings</button>
+                            <button class="btn btn-secondary" id="resetSettings">Reset to Default</button>
+                        </div>
+                    </div>
+
+                    <!-- Settings Pagination (Type 7: Tab Navigation) -->
+                    <div class="pagination-container">
+                        <div class="pagination pagination-tabs" id="settingsPagination">
+                            <button class="pagination-tab active">
+                                <i class="material-icons">tune</i>
+                                <span>General</span>
+                            </button>
+                            <button class="pagination-tab">
+                                <i class="material-icons">display_settings</i>
+                                <span>Display</span>
+                            </button>
+                            <button class="pagination-tab">
+                                <i class="material-icons">security</i>
+                                <span>Security</span>
+                            </button>
+                            <button class="pagination-tab">
+                                <i class="material-icons">notifications</i>
+                                <span>Notifications</span>
+                            </button>
+                            <button class="pagination-tab">
+                                <i class="material-icons">backup</i>
+                                <span>Backup</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Quick Access Panel -->
+        <div class="quick-access-panel" id="quickAccessPanel">
+            <div class="quick-access-header">
+                <h3>Quick Access</h3>
+                <button class="btn btn-icon" id="toggleQuickAccess">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div class="quick-access-content">
+                <div class="quick-action-grid">
+                    <button class="quick-action-btn" data-action="addCustomerOrder">
+                        <i class="material-icons">person_add</i>
+                        <span>Add Customer Order</span>
+                    </button>
+                    <button class="quick-action-btn" data-action="addJobCard">
+                        <i class="material-icons">assignment</i>
+                        <span>Add Job Card</span>
+                    </button>
+                    <button class="quick-action-btn" data-action="addStockTransfer">
+                        <i class="material-icons">swap_horiz</i>
+                        <span>Add Stock Transfer</span>
+                    </button>
+                    <button class="quick-action-btn" data-action="bulkImport">
+                        <i class="material-icons">upload_file</i>
+                        <span>Bulk Import</span>
+                    </button>
+                    <button class="quick-action-btn" data-action="priorityManager">
+                        <i class="material-icons">sort</i>
+                        <span>Priority Manager</span>
+                    </button>
+                    <button class="quick-action-btn" data-action="reports">
+                        <i class="material-icons">assessment</i>
+                        <span>Generate Reports</span>
+                    </button>
+                </div>
+
+                <!-- Recent Orders -->
+                <div class="recent-orders">
+                    <h4>Recent Orders</h4>
+                    <div class="recent-orders-list" id="recentOrdersList">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Priority Statistics -->
+                <div class="priority-stats">
+                    <h4>Priority Distribution</h4>
+                    <div class="priority-bars" id="priorityBars">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Modal Dialog with 7 Views -->
+        <div class="modal" id="orderModal">
+            <div class="modal-content modal-large">
+                <div class="modal-header">
+                    <div class="modal-title-section">
+                        <h2 id="modalTitle">Order Management</h2>
+                        <span class="modal-subtitle" id="modalSubtitle">Create and manage allocation priorities</span>
+                    </div>
+                    <div class="modal-view-switcher">
+                        <button class="modal-view-btn active" data-modal-view="form" title="Form View">
+                            <i class="material-icons">edit</i>
+                        </button>
+                        <button class="modal-view-btn" data-modal-view="details" title="Details View">
+                            <i class="material-icons">info</i>
+                        </button>
+                        <button class="modal-view-btn" data-modal-view="history" title="History View">
+                            <i class="material-icons">history</i>
+                        </button>
+                        <button class="modal-view-btn" data-modal-view="templates" title="Templates">
+                            <i class="material-icons">content_copy</i>
+                        </button>
+                        <button class="modal-view-btn" data-modal-view="validation" title="Validation">
+                            <i class="material-icons">check_circle</i>
+                        </button>
+                        <button class="modal-view-btn" data-modal-view="preview" title="Preview">
+                            <i class="material-icons">preview</i>
+                        </button>
+                        <button class="modal-view-btn" data-modal-view="batch" title="Batch Operations">
+                            <i class="material-icons">layers</i>
+                        </button>
+                    </div>
+                    <button class="modal-close" id="closeModal">
+                        <i class="material-icons">close</i>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <!-- Form View -->
+                    <div class="modal-view active" id="modalFormView">
+                        <div class="form-layout">
+                            <div class="form-section">
+                                <h3>Order Information</h3>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="orderType">Order Type</label>
+                                        <div class="search-dropdown-container">
+                                            <input type="text" class="form-input search-dropdown-input" id="orderType"
+                                                   placeholder="Search or select order type..." autocomplete="off" required>
+                                            <i class="material-icons search-dropdown-icon">search</i>
+                                            <div class="search-dropdown-menu" id="orderTypeDropdown">
+                                                <div class="search-dropdown-item" data-value="Customer Order">
+                                                    <i class="material-icons">person</i>
+                                                    <div class="dropdown-item-content">
+                                                        <span class="dropdown-item-title">Customer Order</span>
+                                                        <span class="dropdown-item-desc">Orders from customers</span>
+                                                    </div>
+                                                </div>
+                                                <div class="search-dropdown-item" data-value="Job Card">
+                                                    <i class="material-icons">build</i>
+                                                    <div class="dropdown-item-content">
+                                                        <span class="dropdown-item-title">Job Card</span>
+                                                        <span class="dropdown-item-desc">Service and maintenance jobs</span>
+                                                    </div>
+                                                </div>
+                                                <div class="search-dropdown-item" data-value="Stock Transfer">
+                                                    <i class="material-icons">swap_horiz</i>
+                                                    <div class="dropdown-item-content">
+                                                        <span class="dropdown-item-title">Stock Transfer</span>
+                                                        <span class="dropdown-item-desc">Internal stock movements</span>
+                                                    </div>
+                                                </div>
+                                                <div class="search-dropdown-item" data-value="Non Sales Order">
+                                                    <i class="material-icons">inventory</i>
+                                                    <div class="dropdown-item-content">
+                                                        <span class="dropdown-item-title">Non Sales Order</span>
+                                                        <span class="dropdown-item-desc">FOC, promotional, goodwill orders</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="orderClass">Order Class</label>
+                                        <input type="text" id="orderClass" class="form-input" placeholder="Enter order class">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="priority">Priority Level</label>
+                                        <div class="priority-selector">
+                                            <div class="priority-options">
+                                                <label class="priority-option">
+                                                    <input type="radio" name="priority" value="1">
+                                                    <span class="priority-visual priority-1">1</span>
+                                                    <span class="priority-label">Critical</span>
+                                                </label>
+                                                <label class="priority-option">
+                                                    <input type="radio" name="priority" value="2">
+                                                    <span class="priority-visual priority-2">2</span>
+                                                    <span class="priority-label">High</span>
+                                                </label>
+                                                <label class="priority-option">
+                                                    <input type="radio" name="priority" value="3" checked>
+                                                    <span class="priority-visual priority-3">3</span>
+                                                    <span class="priority-label">Medium</span>
+                                                </label>
+                                                <label class="priority-option">
+                                                    <input type="radio" name="priority" value="4">
+                                                    <span class="priority-visual priority-4">4</span>
+                                                    <span class="priority-label">Low</span>
+                                                </label>
+                                                <label class="priority-option">
+                                                    <input type="radio" name="priority" value="5">
+                                                    <span class="priority-visual priority-5">5</span>
+                                                    <span class="priority-label">Minimal</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="description">Description (Optional)</label>
+                                        <textarea id="description" class="form-textarea" rows="3" placeholder="Enter order description"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Details View -->
+                    <div class="modal-view" id="modalDetailsView">
+                        <div class="details-layout">
+                            <div class="details-card">
+                                <h3>Order Details</h3>
+                                <div class="details-grid" id="orderDetailsGrid">
+                                    <!-- Populated by JavaScript -->
+                                </div>
+                            </div>
+                            <div class="details-card">
+                                <h3>System Information</h3>
+                                <div class="details-grid" id="systemDetailsGrid">
+                                    <!-- Populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- History View -->
+                    <div class="modal-view" id="modalHistoryView">
+                        <div class="history-layout">
+                            <h3>Order History</h3>
+                            <div class="history-timeline" id="orderHistoryTimeline">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Templates View -->
+                    <div class="modal-view" id="modalTemplatesView">
+                        <div class="templates-layout">
+                            <h3>Order Templates</h3>
+                            <div class="templates-grid" id="orderTemplatesGrid">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Validation View -->
+                    <div class="modal-view" id="modalValidationView">
+                        <div class="validation-layout">
+                            <h3>Validation Results</h3>
+                            <div class="validation-results" id="validationResults">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Preview View -->
+                    <div class="modal-view" id="modalPreviewView">
+                        <div class="preview-layout">
+                            <h3>Order Preview</h3>
+                            <div class="preview-card" id="orderPreviewCard">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Batch Operations View -->
+                    <div class="modal-view" id="modalBatchView">
+                        <div class="batch-layout">
+                            <h3>Batch Operations</h3>
+                            <div class="batch-actions">
+                                <button class="btn btn-secondary" id="batchUpdatePriority">
+                                    <i class="material-icons">update</i>
+                                    Update Priority
+                                </button>
+                                <button class="btn btn-secondary" id="batchDelete">
+                                    <i class="material-icons">delete</i>
+                                    Delete Selected
+                                </button>
+                                <button class="btn btn-secondary" id="batchExport">
+                                    <i class="material-icons">file_download</i>
+                                    Export Selected
+                                </button>
+                            </div>
+                            <div class="batch-selection" id="batchSelectionList">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="modal-footer-left">
+                        <button class="btn btn-secondary" id="saveAsTemplate">
+                            <i class="material-icons">save</i>
+                            Save as Template
+                        </button>
+                    </div>
+                    <div class="modal-footer-right">
+                        <button class="btn btn-secondary" id="cancelOrder">Cancel</button>
+                        <button class="btn btn-primary" id="saveOrder">
+                            <i class="material-icons">save</i>
+                            Save Order
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Priority Manager Modal -->
+        <div class="modal" id="priorityManagerModal">
+            <div class="modal-content modal-xlarge">
+                <div class="modal-header">
+                    <div class="modal-title-section">
+                        <h2>Advanced Priority Manager</h2>
+                        <span class="modal-subtitle">Drag & drop orders to assign priorities based on order class</span>
+                    </div>
+                    <div class="priority-mode-switcher">
+                        <button class="mode-btn active" data-mode="priority" title="Priority Mode">
+                            <i class="material-icons">sort</i>
+                        </button>
+                        <button class="mode-btn" data-mode="class" title="Order Class Mode">
+                            <i class="material-icons">category</i>
+                        </button>
+                        <button class="mode-btn" data-mode="smart" title="Smart Assignment">
+                            <i class="material-icons">auto_awesome</i>
+                        </button>
+                    </div>
+                    <button class="modal-close" id="closePriorityManager">
+                        <i class="material-icons">close</i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Priority Mode -->
+                    <div class="priority-mode active" id="priorityMode">
+                        <div class="priority-instructions">
+                            <h3>Priority-Based Assignment</h3>
+                            <p>Drag orders between priority levels. Each column represents a different priority level from Critical (1) to Minimal (5).</p>
+                        </div>
+                        <div class="priority-columns" id="priorityDragColumns">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Order Class Mode -->
+                    <div class="priority-mode" id="classMode">
+                        <div class="priority-instructions">
+                            <h3>Order Class-Based Assignment</h3>
+                            <p>Drag orders to appropriate class zones. Each zone automatically assigns the recommended priority for that order class.</p>
+                        </div>
+                        <div class="class-zones" id="classZones">
+                            <div class="class-zone critical-zone" data-priority="1">
+                                <div class="zone-header">
+                                    <h4>Critical Orders</h4>
+                                    <span class="zone-priority">Priority 1</span>
+                                </div>
+                                <div class="zone-description">Emergency orders, urgent repairs, critical customer issues</div>
+                                <div class="zone-items" id="criticalZoneItems"></div>
+                                <div class="zone-classes">
+                                    <span class="class-tag">Emergency Order</span>
+                                    <span class="class-tag">Critical Service</span>
+                                    <span class="class-tag">VIP Customer</span>
+                                </div>
+                            </div>
+
+                            <div class="class-zone high-zone" data-priority="2">
+                                <div class="zone-header">
+                                    <h4>High Priority Orders</h4>
+                                    <span class="zone-priority">Priority 2</span>
+                                </div>
+                                <div class="zone-description">Important orders, scheduled maintenance, key customer requests</div>
+                                <div class="zone-items" id="highZoneItems"></div>
+                                <div class="zone-classes">
+                                    <span class="class-tag">Job Card</span>
+                                    <span class="class-tag">Scheduled Service</span>
+                                    <span class="class-tag">Parts Return</span>
+                                </div>
+                            </div>
+
+                            <div class="class-zone medium-zone" data-priority="3">
+                                <div class="zone-header">
+                                    <h4>Standard Orders</h4>
+                                    <span class="zone-priority">Priority 3</span>
+                                </div>
+                                <div class="zone-description">Regular customer orders, standard parts sales, routine operations</div>
+                                <div class="zone-items" id="mediumZoneItems"></div>
+                                <div class="zone-classes">
+                                    <span class="class-tag">Customer Order</span>
+                                    <span class="class-tag">Parts Sales</span>
+                                    <span class="class-tag">Counter Sales</span>
+                                </div>
+                            </div>
+
+                            <div class="class-zone low-zone" data-priority="4">
+                                <div class="zone-header">
+                                    <h4>Low Priority Orders</h4>
+                                    <span class="zone-priority">Priority 4</span>
+                                </div>
+                                <div class="zone-description">Non-urgent orders, promotional items, bulk transfers</div>
+                                <div class="zone-items" id="lowZoneItems"></div>
+                                <div class="zone-classes">
+                                    <span class="class-tag">Promotional</span>
+                                    <span class="class-tag">Campaign</span>
+                                    <span class="class-tag">Good will</span>
+                                </div>
+                            </div>
+
+                            <div class="class-zone minimal-zone" data-priority="5">
+                                <div class="zone-header">
+                                    <h4>Minimal Priority Orders</h4>
+                                    <span class="zone-priority">Priority 5</span>
+                                </div>
+                                <div class="zone-description">Stock transfers, internal orders, administrative tasks</div>
+                                <div class="zone-items" id="minimalZoneItems"></div>
+                                <div class="zone-classes">
+                                    <span class="class-tag">Stock Transfer</span>
+                                    <span class="class-tag">Internal Order</span>
+                                    <span class="class-tag">FOC</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Smart Assignment Mode -->
+                    <div class="priority-mode" id="smartMode">
+                        <div class="priority-instructions">
+                            <h3>Smart Priority Assignment</h3>
+                            <p>AI-powered priority assignment based on order patterns, customer importance, and business rules.</p>
+                        </div>
+                        <div class="smart-assignment">
+                            <div class="smart-rules">
+                                <h4>Assignment Rules</h4>
+                                <div class="rule-item">
+                                    <label class="rule-checkbox">
+                                        <input type="checkbox" checked>
+                                        <span class="checkmark"></span>
+                                        Auto-assign based on order class
+                                    </label>
+                                </div>
+                                <div class="rule-item">
+                                    <label class="rule-checkbox">
+                                        <input type="checkbox" checked>
+                                        <span class="checkmark"></span>
+                                        Consider customer tier
+                                    </label>
+                                </div>
+                                <div class="rule-item">
+                                    <label class="rule-checkbox">
+                                        <input type="checkbox">
+                                        <span class="checkmark"></span>
+                                        Factor in order value
+                                    </label>
+                                </div>
+                                <div class="rule-item">
+                                    <label class="rule-checkbox">
+                                        <input type="checkbox" checked>
+                                        <span class="checkmark"></span>
+                                        Apply urgency keywords
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="smart-preview">
+                                <h4>Preview Changes</h4>
+                                <div class="preview-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-number">12</span>
+                                        <span class="stat-label">Orders to Update</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-number">3</span>
+                                        <span class="stat-label">Priority Increases</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-number">2</span>
+                                        <span class="stat-label">Priority Decreases</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" id="applySmartAssignment">
+                                    <i class="material-icons">auto_fix_high</i>
+                                    Apply Smart Assignment
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="modal-footer-left">
+                        <button class="btn btn-secondary" id="resetPriorities">
+                            <i class="material-icons">restore</i>
+                            Reset All
+                        </button>
+                        <button class="btn btn-secondary" id="bulkAssign">
+                            <i class="material-icons">select_all</i>
+                            Bulk Assign
+                        </button>
+                    </div>
+                    <div class="modal-footer-right">
+                        <button class="btn btn-secondary" id="previewChanges">Preview Changes</button>
+                        <button class="btn btn-primary" id="savePriorities">
+                            <i class="material-icons">save</i>
+                            Save Changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Import Modal -->
+        <div class="modal" id="importModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Import Orders</h2>
+                    <button class="modal-close" id="closeImportModal">
+                        <i class="material-icons">close</i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="import-layout">
+                        <div class="import-zone" id="importZone">
+                            <div class="import-icon">
+                                <i class="material-icons">cloud_upload</i>
+                            </div>
+                            <h3>Drop files here or click to browse</h3>
+                            <p>Supported formats: CSV, Excel (.xlsx), JSON</p>
+                            <input type="file" id="fileInput" accept=".csv,.xlsx,.json" style="display: none;">
+                            <button class="btn btn-primary" id="browseFiles">Browse Files</button>
+                        </div>
+                        <div class="import-preview" id="importPreview" style="display: none;">
+                            <h4>Import Preview</h4>
+                            <div class="preview-table" id="previewTable"></div>
+                            <div class="import-options">
+                                <label class="import-option">
+                                    <input type="checkbox" checked>
+                                    Skip duplicate orders
+                                </label>
+                                <label class="import-option">
+                                    <input type="checkbox">
+                                    Update existing orders
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="cancelImport">Cancel</button>
+                    <button class="btn btn-primary" id="confirmImport" disabled>Import Orders</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="scripts/app.js"></script>
+</body>
+</html>

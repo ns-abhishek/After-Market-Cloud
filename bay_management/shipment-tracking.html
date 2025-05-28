@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shipment Tracking - Bay Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-warehouse"></i> Bay Management</h2>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="bay-management.html" class="nav-link">
+                        <i class="fas fa-boxes"></i>
+                        <span>Bay Management</span>
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a href="shipment-tracking.html" class="nav-link">
+                        <i class="fas fa-shipping-fast"></i>
+                        <span>Shipment Tracking</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="scheduling.html" class="nav-link">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Scheduling</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="customer-management.html" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        <span>Customer Management</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1>Shipment Tracking</h1>
+                    <p>Monitor and manage all shipments</p>
+                </div>
+                <div class="header-right">
+                    <button class="btn-primary" onclick="openModal('addShipmentModal')">
+                        <i class="fas fa-plus"></i>
+                        Add Shipment
+                    </button>
+                </div>
+            </header>
+
+            <!-- Filters and Search -->
+            <section class="filters-section">
+                <div class="filters-container">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search shipments..." onkeyup="filterShipments()">
+                    </div>
+                    <div class="filter-group">
+                        <select id="statusFilter" onchange="filterShipments()">
+                            <option value="">All Status</option>
+                            <option value="delivered">Delivered</option>
+                            <option value="transit">In Transit</option>
+                            <option value="pending">Pending</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <select id="courierFilter" onchange="filterShipments()">
+                            <option value="">All Couriers</option>
+                            <option value="Fedex">Fedex</option>
+                            <option value="Amazon">Amazon</option>
+                            <option value="Shopify">Shopify</option>
+                            <option value="bewakoof">bewakoof</option>
+                        </select>
+                    </div>
+                    <button class="btn-secondary" onclick="resetFilters()">
+                        <i class="fas fa-undo"></i>
+                        Reset
+                    </button>
+                </div>
+            </section>
+
+            <!-- Shipment List -->
+            <section class="shipment-list-section">
+                <div class="section-header">
+                    <h2>Shipment List</h2>
+                    <div class="view-options">
+                        <button class="btn-secondary" onclick="exportShipments()">
+                            <i class="fas fa-download"></i>
+                            Export
+                        </button>
+                        <button class="btn-secondary" onclick="refreshShipments()">
+                            <i class="fas fa-sync-alt"></i>
+                            Refresh
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th onclick="sortShipments('customer')">
+                                    Customer <i class="fas fa-sort"></i>
+                                </th>
+                                <th onclick="sortShipments('order')">
+                                    Order <i class="fas fa-sort"></i>
+                                </th>
+                                <th onclick="sortShipments('courier')">
+                                    Courier <i class="fas fa-sort"></i>
+                                </th>
+                                <th>Confirmation</th>
+                                <th onclick="sortShipments('status')">
+                                    Status <i class="fas fa-sort"></i>
+                                </th>
+                                <th>TAT</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="shipmentTableBody">
+                            <!-- Shipment rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Shipment Statistics -->
+            <section class="shipment-stats-section">
+                <div class="section-header">
+                    <h2>Shipment Statistics</h2>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon delivered">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="deliveredCount">0</h3>
+                            <p>Delivered</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon pending">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="pendingCount">0</h3>
+                            <p>Pending</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="transitCount">0</h3>
+                            <p>In Transit</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon occupied">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="rejectedCount">0</h3>
+                            <p>Rejected</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add Shipment Modal -->
+    <div id="addShipmentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Shipment</h3>
+                <span class="close" onclick="closeModal('addShipmentModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="shipmentForm">
+                    <div class="form-group">
+                        <label for="customerName">Customer Name</label>
+                        <input type="text" id="customerName" name="customerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customerPhone">Customer Phone</label>
+                        <input type="tel" id="customerPhone" name="customerPhone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="orderNumber">Order Number</label>
+                        <input type="text" id="orderNumber" name="orderNumber" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="courier">Courier</label>
+                        <select id="courier" name="courier" required>
+                            <option value="">Select Courier</option>
+                            <option value="Fedex">Fedex</option>
+                            <option value="Amazon">Amazon</option>
+                            <option value="Shopify">Shopify</option>
+                            <option value="bewakoof">bewakoof</option>
+                            <option value="DHL">DHL</option>
+                            <option value="Blue Dart">Blue Dart</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="bayNumber">Bay Number</label>
+                        <select id="bayNumber" name="bayNumber" required>
+                            <option value="">Select Bay</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="customerAddress">Customer Address</label>
+                        <textarea id="customerAddress" name="customerAddress" rows="3" required></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="closeModal('addShipmentModal')">Cancel</button>
+                        <button type="submit" class="btn-primary">Add Shipment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shipment Details Modal -->
+    <div id="shipmentDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Shipment Details</h3>
+                <span class="close" onclick="closeModal('shipmentDetailsModal')">&times;</span>
+            </div>
+            <div class="modal-body" id="shipmentDetailsContent">
+                <!-- Shipment details will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script src="shipment-tracking.js"></script>
+</body>
+</html>

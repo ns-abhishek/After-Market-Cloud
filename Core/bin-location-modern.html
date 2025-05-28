@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HCL Technologies - Modern Bin Location Management</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/bin-location-modern.css">
+</head>
+<body>
+    <!-- Modern Bin Location App -->
+    <div class="bin-location-app">
+        <!-- Advanced Top Navigation -->
+        <nav class="top-nav">
+            <div class="nav-brand">
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i class="material-icons">menu</i>
+                </button>
+                <img src="https://via.placeholder.com/32x32/000000/FFFFFF?text=HCL" alt="HCL" class="brand-logo">
+                <span class="brand-text">HCL Technologies</span>
+            </div>
+            <div class="nav-center">
+                <div class="search-container">
+                    <i class="material-icons">search</i>
+                    <input type="text" placeholder="Search bins, locations, items..." class="global-search" id="globalSearch">
+                    <div class="search-suggestions" id="searchSuggestions"></div>
+                    <div class="search-filters">
+                        <button class="search-filter-btn" data-filter="bins">Bins</button>
+                        <button class="search-filter-btn" data-filter="items">Items</button>
+                        <button class="search-filter-btn" data-filter="zones">Zones</button>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-actions">
+                <button class="nav-btn" id="quickActionsBtn" title="Quick Actions">
+                    <i class="material-icons">flash_on</i>
+                </button>
+                <button class="nav-btn" id="scanBtn" title="Scan Barcode">
+                    <i class="material-icons">qr_code_scanner</i>
+                </button>
+                <button class="nav-btn" id="scheduleBtn" title="Schedule Tasks">
+                    <i class="material-icons">schedule</i>
+                </button>
+                <button class="nav-btn" id="notificationsBtn" title="Notifications">
+                    <i class="material-icons">notifications</i>
+                    <span class="badge">5</span>
+                </button>
+                <button class="nav-btn" id="helpBtn" title="Help & Support">
+                    <i class="material-icons">help</i>
+                </button>
+                <div class="user-menu" id="userMenu">
+                    <img src="https://via.placeholder.com/32x32/1a1a1a/FFFFFF?text=W" alt="Warehouse" class="user-avatar">
+                    <span class="user-name">Warehouse Manager</span>
+                    <i class="material-icons">arrow_drop_down</i>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="dropdown-item" data-action="profile">
+                            <i class="material-icons">person</i>
+                            <span>Profile Settings</span>
+                        </div>
+                        <div class="dropdown-item" data-action="preferences">
+                            <i class="material-icons">settings</i>
+                            <span>Preferences</span>
+                        </div>
+                        <div class="dropdown-item" data-action="reports">
+                            <i class="material-icons">assessment</i>
+                            <span>My Reports</span>
+                        </div>
+                        <div class="dropdown-item" data-action="logout">
+                            <i class="material-icons">logout</i>
+                            <span>Logout</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Advanced Sidebar Navigation -->
+        <aside class="advanced-sidebar" id="advancedSidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-brand">
+                    <img src="https://via.placeholder.com/24x24/000000/FFFFFF?text=HCL" alt="HCL" class="sidebar-logo">
+                    <span class="sidebar-title">Warehouse Management</span>
+                </div>
+                <button class="sidebar-close" id="sidebarClose">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+
+            <div class="sidebar-search">
+                <div class="search-input-container">
+                    <i class="material-icons">search</i>
+                    <input type="text" placeholder="Search navigation..." id="navSearch">
+                </div>
+            </div>
+
+            <div class="sidebar-content">
+                <!-- Quick Actions Section -->
+                <div class="nav-section">
+                    <div class="section-header">
+                        <h4>Quick Actions</h4>
+                        <button class="section-toggle" data-section="quick-actions">
+                            <i class="material-icons">expand_less</i>
+                        </button>
+                    </div>
+                    <div class="section-content" id="quickActionsSection">
+                        <div class="quick-action-grid">
+                            <button class="quick-action-btn" id="navAddBinBtn" data-action="add-bin">
+                                <i class="material-icons">add_box</i>
+                                <span>Add Bin</span>
+                            </button>
+                            <button class="quick-action-btn" id="navScanBtn" data-action="scan">
+                                <i class="material-icons">qr_code_scanner</i>
+                                <span>Scan</span>
+                            </button>
+                            <button class="quick-action-btn" id="navImportBtn" data-action="import">
+                                <i class="material-icons">upload</i>
+                                <span>Import</span>
+                            </button>
+                            <button class="quick-action-btn" id="navExportBtn" data-action="export">
+                                <i class="material-icons">download</i>
+                                <span>Export</span>
+                            </button>
+                            <button class="quick-action-btn" id="navReportsBtn" data-action="reports">
+                                <i class="material-icons">assessment</i>
+                                <span>Reports</span>
+                            </button>
+                            <button class="quick-action-btn" id="navScheduleBtn" data-action="schedule">
+                                <i class="material-icons">schedule</i>
+                                <span>Schedule</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Core Modules Section -->
+                <div class="nav-section">
+                    <div class="section-header">
+                        <h4>Core Modules</h4>
+                        <button class="section-toggle" data-section="core-modules">
+                            <i class="material-icons">expand_less</i>
+                        </button>
+                    </div>
+                    <div class="section-content" id="coreModulesSection">
+                        <div class="nav-item active" data-module="bin-location">
+                            <div class="nav-link">
+                                <i class="material-icons">inventory_2</i>
+                                <span>Bin Location Management</span>
+                                <i class="material-icons expand-icon">expand_more</i>
+                            </div>
+                            <div class="nav-submenu">
+                                <div class="submenu-item active" data-submenu="overview">
+                                    <i class="material-icons">dashboard</i>
+                                    <span>Overview Dashboard</span>
+                                </div>
+                                <div class="submenu-item" data-submenu="grid-view">
+                                    <i class="material-icons">view_module</i>
+                                    <span>Grid View</span>
+                                </div>
+                                <div class="submenu-item" data-submenu="list-view">
+                                    <i class="material-icons">view_list</i>
+                                    <span>List View</span>
+                                </div>
+                                <div class="submenu-item" data-submenu="map-view">
+                                    <i class="material-icons">map</i>
+                                    <span>Warehouse Map</span>
+                                </div>
+                                <div class="submenu-item" data-submenu="analytics">
+                                    <i class="material-icons">analytics</i>
+                                    <span>Analytics</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="nav-item" data-module="inventory">
+                            <div class="nav-link">
+                                <i class="material-icons">inventory</i>
+                                <span>Inventory Management</span>
+                                <i class="material-icons expand-icon">expand_more</i>
+                            </div>
+                            <div class="nav-submenu">
+                                <div class="submenu-item" data-submenu="stock-levels">
+                                    <i class="material-icons">trending_up</i>
+                                    <span>Stock Levels</span>
+                                </div>
+                                <div class="submenu-item" data-submenu="movements">
+                                    <i class="material-icons">swap_horiz</i>
+                                    <span>Stock Movements</span>
+                                </div>
+                                <div class="submenu-item" data-submenu="adjustments">
+                                    <i class="material-icons">tune</i>
+                                    <span>Adjustments</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="nav-item" data-module="warehouse">
+                            <div class="nav-link">
+                                <i class="material-icons">warehouse</i>
+                                <span>Warehouse Operations</span>
+                                <i class="material-icons expand-icon">expand_more</i>
+                            </div>
+                            <div class="nav-submenu">
+                                <div class="submenu-item" data-submenu="receiving">
+                                    <i class="material-icons">input</i>
+                                    <span>Receiving</span>
+                                </div>
+                                <div class="submenu-item" data-submenu="picking">
+                                    <i class="material-icons">shopping_cart</i>
+                                    <span>Picking</span>
+                                </div>
+                                <div class="submenu-item" data-submenu="shipping">
+                                    <i class="material-icons">local_shipping</i>
+                                    <span>Shipping</span>
+                                </div>
+                                <div class="submenu-item" data-submenu="transfers">
+                                    <i class="material-icons">compare_arrows</i>
+                                    <span>Transfers</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scheduling Section -->
+                <div class="nav-section">
+                    <div class="section-header">
+                        <h4>Scheduling & Tasks</h4>
+                        <button class="section-toggle" data-section="scheduling">
+                            <i class="material-icons">expand_less</i>
+                        </button>
+                    </div>
+                    <div class="section-content" id="schedulingSection">
+                        <div class="nav-item" data-module="schedule">
+                            <div class="nav-link">
+                                <i class="material-icons">schedule</i>
+                                <span>Task Scheduler</span>
+                            </div>
+                        </div>
+                        <div class="nav-item" data-module="calendar">
+                            <div class="nav-link">
+                                <i class="material-icons">event</i>
+                                <span>Calendar View</span>
+                            </div>
+                        </div>
+                        <div class="nav-item" data-module="maintenance">
+                            <div class="nav-link">
+                                <i class="material-icons">build</i>
+                                <span>Maintenance Schedule</span>
+                            </div>
+                        </div>
+                        <div class="nav-item" data-module="alerts">
+                            <div class="nav-link">
+                                <i class="material-icons">notification_important</i>
+                                <span>Alert Management</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics & Reports Section -->
+                <div class="nav-section">
+                    <div class="section-header">
+                        <h4>Analytics & Reports</h4>
+                        <button class="section-toggle" data-section="analytics">
+                            <i class="material-icons">expand_less</i>
+                        </button>
+                    </div>
+                    <div class="section-content" id="analyticsSection">
+                        <div class="nav-item" data-module="dashboard">
+                            <div class="nav-link">
+                                <i class="material-icons">dashboard</i>
+                                <span>Executive Dashboard</span>
+                            </div>
+                        </div>
+                        <div class="nav-item" data-module="performance">
+                            <div class="nav-link">
+                                <i class="material-icons">speed</i>
+                                <span>Performance Metrics</span>
+                            </div>
+                        </div>
+                        <div class="nav-item" data-module="utilization">
+                            <div class="nav-link">
+                                <i class="material-icons">pie_chart</i>
+                                <span>Space Utilization</span>
+                            </div>
+                        </div>
+                        <div class="nav-item" data-module="trends">
+                            <div class="nav-link">
+                                <i class="material-icons">trending_up</i>
+                                <span>Trend Analysis</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Section at Bottom -->
+            <div class="sidebar-profile">
+                <div class="profile-card">
+                    <img src="https://via.placeholder.com/40x40/1a1a1a/FFFFFF?text=W" alt="Profile" class="profile-avatar">
+                    <div class="profile-info">
+                        <div class="profile-name">Warehouse Manager</div>
+                        <div class="profile-role">Administrator</div>
+                        <div class="profile-status online">
+                            <i class="material-icons">circle</i>
+                            <span>Online</span>
+                        </div>
+                    </div>
+                    <button class="profile-menu-btn" id="profileMenuBtn">
+                        <i class="material-icons">more_vert</i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-container">
+            <!-- Advanced Page Header -->
+            <header class="page-header">
+                <div class="header-content">
+                    <div class="breadcrumb-nav">
+                        <span class="breadcrumb-item">Warehouse</span>
+                        <i class="material-icons">chevron_right</i>
+                        <span class="breadcrumb-item">Bin Management</span>
+                        <i class="material-icons">chevron_right</i>
+                        <span class="breadcrumb-item active">Location Overview</span>
+                    </div>
+                    <h1 class="page-title">Advanced Bin Location Management</h1>
+                    <p class="page-description">Comprehensive warehouse bin tracking, inventory optimization, and intelligent space management</p>
+                    <div class="page-meta">
+                        <div class="meta-item">
+                            <i class="material-icons">update</i>
+                            <span>Last updated: 2 minutes ago</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="material-icons">sync</i>
+                            <span>Auto-sync: Enabled</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="material-icons">verified</i>
+                            <span>Data accuracy: 99.8%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <div class="action-group">
+                        <button class="btn btn-icon" id="refreshDataBtn" title="Refresh Data">
+                            <i class="material-icons">refresh</i>
+                        </button>
+                        <button class="btn btn-icon" id="fullscreenBtn" title="Fullscreen Mode">
+                            <i class="material-icons">fullscreen</i>
+                        </button>
+                        <button class="btn btn-icon" id="settingsBtn" title="View Settings">
+                            <i class="material-icons">settings</i>
+                        </button>
+                    </div>
+                    <div class="action-group">
+                        <button class="btn btn-secondary" id="bulkActionsBtn">
+                            <i class="material-icons">checklist</i>
+                            Bulk Actions
+                        </button>
+                        <button class="btn btn-secondary" id="importBinsBtn">
+                            <i class="material-icons">upload</i>
+                            Import Bins
+                        </button>
+                        <button class="btn btn-secondary" id="exportBinsBtn">
+                            <i class="material-icons">download</i>
+                            Export Data
+                        </button>
+                        <button class="btn btn-primary" id="addBinBtn">
+                            <i class="material-icons">add_box</i>
+                            Add Bin Location
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Advanced Dashboard Widgets -->
+            <section class="dashboard-widgets">
+                <div class="widget-row">
+                    <div class="widget-card real-time">
+                        <div class="widget-header">
+                            <h3>Real-Time Activity</h3>
+                            <div class="widget-controls">
+                                <button class="widget-btn" title="Refresh">
+                                    <i class="material-icons">refresh</i>
+                                </button>
+                                <button class="widget-btn" title="Settings">
+                                    <i class="material-icons">settings</i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="widget-content">
+                            <div class="activity-feed" id="realTimeActivity">
+                                <div class="activity-item">
+                                    <div class="activity-icon receiving">
+                                        <i class="material-icons">input</i>
+                                    </div>
+                                    <div class="activity-details">
+                                        <div class="activity-title">Bin A01-R01-L03 allocated</div>
+                                        <div class="activity-time">2 minutes ago</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon picking">
+                                        <i class="material-icons">shopping_cart</i>
+                                    </div>
+                                    <div class="activity-details">
+                                        <div class="activity-title">Pick completed from C02-R05-L01</div>
+                                        <div class="activity-time">5 minutes ago</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon transfer">
+                                        <i class="material-icons">compare_arrows</i>
+                                    </div>
+                                    <div class="activity-details">
+                                        <div class="activity-title">Transfer initiated B03-R02-L02</div>
+                                        <div class="activity-time">8 minutes ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="widget-card alerts">
+                        <div class="widget-header">
+                            <h3>Smart Alerts</h3>
+                            <div class="alert-count">3</div>
+                        </div>
+                        <div class="widget-content">
+                            <div class="alert-list" id="smartAlerts">
+                                <div class="alert-item critical">
+                                    <div class="alert-icon">
+                                        <i class="material-icons">warning</i>
+                                    </div>
+                                    <div class="alert-content">
+                                        <div class="alert-title">Zone A capacity critical</div>
+                                        <div class="alert-description">95% utilization reached</div>
+                                    </div>
+                                    <button class="alert-action">
+                                        <i class="material-icons">arrow_forward</i>
+                                    </button>
+                                </div>
+                                <div class="alert-item warning">
+                                    <div class="alert-icon">
+                                        <i class="material-icons">info</i>
+                                    </div>
+                                    <div class="alert-content">
+                                        <div class="alert-title">Maintenance due</div>
+                                        <div class="alert-description">5 bins require inspection</div>
+                                    </div>
+                                    <button class="alert-action">
+                                        <i class="material-icons">arrow_forward</i>
+                                    </button>
+                                </div>
+                                <div class="alert-item info">
+                                    <div class="alert-icon">
+                                        <i class="material-icons">lightbulb</i>
+                                    </div>
+                                    <div class="alert-content">
+                                        <div class="alert-title">Optimization suggestion</div>
+                                        <div class="alert-description">Relocate slow-moving items</div>
+                                    </div>
+                                    <button class="alert-action">
+                                        <i class="material-icons">arrow_forward</i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="widget-card schedule">
+                        <div class="widget-header">
+                            <h3>Today's Schedule</h3>
+                            <button class="widget-btn" id="viewFullSchedule">
+                                <i class="material-icons">event</i>
+                            </button>
+                        </div>
+                        <div class="widget-content">
+                            <div class="schedule-list" id="todaySchedule">
+                                <div class="schedule-item">
+                                    <div class="schedule-time">09:00</div>
+                                    <div class="schedule-content">
+                                        <div class="schedule-title">Zone A inventory count</div>
+                                        <div class="schedule-status in-progress">In Progress</div>
+                                    </div>
+                                </div>
+                                <div class="schedule-item">
+                                    <div class="schedule-time">11:30</div>
+                                    <div class="schedule-content">
+                                        <div class="schedule-title">Bin maintenance - Rack R05</div>
+                                        <div class="schedule-status pending">Pending</div>
+                                    </div>
+                                </div>
+                                <div class="schedule-item">
+                                    <div class="schedule-time">14:00</div>
+                                    <div class="schedule-content">
+                                        <div class="schedule-title">New bin setup - Zone D</div>
+                                        <div class="schedule-status scheduled">Scheduled</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Warehouse Overview Stats -->
+            <section class="warehouse-stats">
+                <div class="stats-grid">
+                    <div class="stat-card total-bins">
+                        <div class="stat-icon">
+                            <i class="material-icons">inventory_2</i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-number" id="totalBins">0</h3>
+                            <p class="stat-label">Total Bin Locations</p>
+                            <span class="stat-change positive">+12 this week</span>
+                        </div>
+                    </div>
+                    <div class="stat-card occupied-bins">
+                        <div class="stat-icon">
+                            <i class="material-icons">inventory</i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-number" id="occupiedBins">0</h3>
+                            <p class="stat-label">Occupied Bins</p>
+                            <span class="stat-change neutral">85% capacity</span>
+                        </div>
+                    </div>
+                    <div class="stat-card empty-bins">
+                        <div class="stat-icon">
+                            <i class="material-icons">inbox</i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-number" id="emptyBins">0</h3>
+                            <p class="stat-label">Empty Bins</p>
+                            <span class="stat-change positive">15% available</span>
+                        </div>
+                    </div>
+                    <div class="stat-card zones">
+                        <div class="stat-icon">
+                            <i class="material-icons">map</i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-number" id="totalZones">0</h3>
+                            <p class="stat-label">Storage Zones</p>
+                            <span class="stat-change neutral">4 active zones</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Advanced Filter and View Controls -->
+            <section class="controls-section">
+                <div class="controls-header">
+                    <div class="controls-left">
+                        <h3>Filter & View Options</h3>
+                        <div class="active-filters" id="activeFilters">
+                            <!-- Active filter tags will appear here -->
+                        </div>
+                    </div>
+                    <div class="controls-right">
+                        <button class="btn btn-outline" id="saveViewBtn">
+                            <i class="material-icons">bookmark</i>
+                            Save View
+                        </button>
+                        <button class="btn btn-outline" id="resetFiltersBtn">
+                            <i class="material-icons">clear_all</i>
+                            Reset All
+                        </button>
+                    </div>
+                </div>
+
+                <div class="filter-controls">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label>Warehouse Zone</label>
+                            <select class="filter-select" id="zoneFilter" multiple>
+                                <option value="A">Zone A - Receiving</option>
+                                <option value="B">Zone B - Storage</option>
+                                <option value="C">Zone C - Picking</option>
+                                <option value="D">Zone D - Shipping</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Bin Status</label>
+                            <select class="filter-select" id="statusFilter" multiple>
+                                <option value="empty">Empty</option>
+                                <option value="occupied">Occupied</option>
+                                <option value="reserved">Reserved</option>
+                                <option value="blocked">Blocked</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Bin Type</label>
+                            <select class="filter-select" id="typeFilter" multiple>
+                                <option value="standard">Standard</option>
+                                <option value="bulk">Bulk Storage</option>
+                                <option value="picking">Picking Bin</option>
+                                <option value="quarantine">Quarantine</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Capacity Range</label>
+                            <div class="range-slider">
+                                <input type="range" id="capacityMin" min="0" max="1000" value="0" class="range-input">
+                                <input type="range" id="capacityMax" min="0" max="1000" value="1000" class="range-input">
+                                <div class="range-values">
+                                    <span id="capacityMinValue">0</span> - <span id="capacityMaxValue">1000</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label>Utilization %</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" value="0-25" name="utilization">
+                                    <span>0-25%</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" value="26-50" name="utilization">
+                                    <span>26-50%</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" value="51-75" name="utilization">
+                                    <span>51-75%</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" value="76-100" name="utilization">
+                                    <span>76-100%</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="filter-group">
+                            <label>Date Range</label>
+                            <div class="date-range">
+                                <input type="date" id="dateFrom" class="date-input">
+                                <span>to</span>
+                                <input type="date" id="dateTo" class="date-input">
+                            </div>
+                        </div>
+                        <div class="filter-group">
+                            <label>Quick Filters</label>
+                            <div class="quick-filters">
+                                <button class="quick-filter-btn" data-filter="critical">Critical</button>
+                                <button class="quick-filter-btn" data-filter="maintenance">Maintenance Due</button>
+                                <button class="quick-filter-btn" data-filter="empty">Available</button>
+                                <button class="quick-filter-btn" data-filter="full">Full Capacity</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="view-controls">
+                    <div class="view-options">
+                        <div class="view-switcher">
+                            <button class="view-btn active" data-view="grid" title="Grid View">
+                                <i class="material-icons">view_module</i>
+                                <span>Grid</span>
+                            </button>
+                            <button class="view-btn" data-view="list" title="List View">
+                                <i class="material-icons">view_list</i>
+                                <span>List</span>
+                            </button>
+                            <button class="view-btn" data-view="map" title="Warehouse Map">
+                                <i class="material-icons">map</i>
+                                <span>Map</span>
+                            </button>
+                            <button class="view-btn" data-view="kanban" title="Kanban Board">
+                                <i class="material-icons">view_kanban</i>
+                                <span>Kanban</span>
+                            </button>
+                        </div>
+
+                        <div class="display-options">
+                            <div class="option-group">
+                                <label>Sort by</label>
+                                <select class="sort-select" id="sortBy">
+                                    <option value="binCode">Bin Code</option>
+                                    <option value="zone">Zone</option>
+                                    <option value="status">Status</option>
+                                    <option value="capacity">Capacity</option>
+                                    <option value="utilization">Utilization</option>
+                                    <option value="lastUpdated">Last Updated</option>
+                                </select>
+                            </div>
+                            <div class="option-group">
+                                <label>Order</label>
+                                <div class="sort-order">
+                                    <button class="sort-btn active" data-order="asc">
+                                        <i class="material-icons">arrow_upward</i>
+                                    </button>
+                                    <button class="sort-btn" data-order="desc">
+                                        <i class="material-icons">arrow_downward</i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="option-group">
+                                <label>Items per page</label>
+                                <select class="items-select" id="itemsPerPage">
+                                    <option value="12">12</option>
+                                    <option value="24" selected>24</option>
+                                    <option value="48">48</option>
+                                    <option value="96">96</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bin Location Grid View -->
+            <section class="content-section">
+                <div class="bin-grid" id="binGrid">
+                    <!-- Bin location cards will be dynamically generated -->
+                </div>
+            </section>
+
+            <!-- List View (Hidden by default) -->
+            <section class="content-section" id="listView" style="display: none;">
+                <div class="table-container">
+                    <table class="bin-table">
+                        <thead>
+                            <tr>
+                                <th>Bin Code</th>
+                                <th>Zone</th>
+                                <th>Aisle</th>
+                                <th>Rack</th>
+                                <th>Level</th>
+                                <th>Status</th>
+                                <th>Item Code</th>
+                                <th>Quantity</th>
+                                <th>Capacity</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="binTableBody">
+                            <!-- Table rows will be dynamically generated -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Warehouse Map View (Hidden by default) -->
+            <section class="content-section" id="mapView" style="display: none;">
+                <div class="warehouse-map">
+                    <div class="map-controls">
+                        <button class="map-btn" id="zoomIn">
+                            <i class="material-icons">zoom_in</i>
+                        </button>
+                        <button class="map-btn" id="zoomOut">
+                            <i class="material-icons">zoom_out</i>
+                        </button>
+                        <button class="map-btn" id="resetView">
+                            <i class="material-icons">center_focus_strong</i>
+                        </button>
+                        <button class="map-btn" id="toggleHeatmap">
+                            <i class="material-icons">thermostat</i>
+                        </button>
+                    </div>
+                    <div class="map-container" id="warehouseMapContainer">
+                        <!-- Warehouse map will be rendered here -->
+                    </div>
+                    <div class="map-legend">
+                        <div class="legend-item">
+                            <div class="legend-color empty"></div>
+                            <span>Empty</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color occupied"></div>
+                            <span>Occupied</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color reserved"></div>
+                            <span>Reserved</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color blocked"></div>
+                            <span>Blocked</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Kanban Board View (Hidden by default) -->
+            <section class="content-section" id="kanbanView" style="display: none;">
+                <div class="kanban-board">
+                    <div class="kanban-header">
+                        <h3>Bin Status Management</h3>
+                        <div class="kanban-controls">
+                            <button class="kanban-btn" id="autoArrangeBtn">
+                                <i class="material-icons">auto_fix_high</i>
+                                Auto Arrange
+                            </button>
+                            <button class="kanban-btn" id="bulkMoveBtn">
+                                <i class="material-icons">move_up</i>
+                                Bulk Move
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="kanban-columns">
+                        <div class="kanban-column" data-status="empty" id="emptyColumn">
+                            <div class="column-header empty">
+                                <div class="column-title">
+                                    <i class="material-icons">inbox</i>
+                                    <span>Empty Bins</span>
+                                </div>
+                                <div class="column-count" id="emptyColumnCount">0</div>
+                            </div>
+                            <div class="column-content" id="emptyColumnContent">
+                                <!-- Empty bins will be rendered here -->
+                            </div>
+                            <div class="column-footer">
+                                <button class="add-bin-btn" data-status="empty">
+                                    <i class="material-icons">add</i>
+                                    Add Empty Bin
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="kanban-column" data-status="occupied" id="occupiedColumn">
+                            <div class="column-header occupied">
+                                <div class="column-title">
+                                    <i class="material-icons">inventory</i>
+                                    <span>Occupied Bins</span>
+                                </div>
+                                <div class="column-count" id="occupiedColumnCount">0</div>
+                            </div>
+                            <div class="column-content" id="occupiedColumnContent">
+                                <!-- Occupied bins will be rendered here -->
+                            </div>
+                            <div class="column-footer">
+                                <button class="add-bin-btn" data-status="occupied">
+                                    <i class="material-icons">add</i>
+                                    Add Occupied Bin
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="kanban-column" data-status="reserved" id="reservedColumn">
+                            <div class="column-header reserved">
+                                <div class="column-title">
+                                    <i class="material-icons">bookmark</i>
+                                    <span>Reserved Bins</span>
+                                </div>
+                                <div class="column-count" id="reservedColumnCount">0</div>
+                            </div>
+                            <div class="column-content" id="reservedColumnContent">
+                                <!-- Reserved bins will be rendered here -->
+                            </div>
+                            <div class="column-footer">
+                                <button class="add-bin-btn" data-status="reserved">
+                                    <i class="material-icons">add</i>
+                                    Add Reserved Bin
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="kanban-column" data-status="blocked" id="blockedColumn">
+                            <div class="column-header blocked">
+                                <div class="column-title">
+                                    <i class="material-icons">block</i>
+                                    <span>Blocked Bins</span>
+                                </div>
+                                <div class="column-count" id="blockedColumnCount">0</div>
+                            </div>
+                            <div class="column-content" id="blockedColumnContent">
+                                <!-- Blocked bins will be rendered here -->
+                            </div>
+                            <div class="column-footer">
+                                <button class="add-bin-btn" data-status="blocked">
+                                    <i class="material-icons">add</i>
+                                    Add Blocked Bin
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add Bin Location Modal -->
+    <div class="modal" id="addBinModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Bin Location</h2>
+                <button class="modal-close">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="binForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="binCode">Bin Code</label>
+                            <input type="text" id="binCode" placeholder="e.g., A01-R01-L01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="binType">Bin Type</label>
+                            <select id="binType" required>
+                                <option value="">Select Type</option>
+                                <option value="standard">Standard</option>
+                                <option value="bulk">Bulk Storage</option>
+                                <option value="picking">Picking Bin</option>
+                                <option value="quarantine">Quarantine</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="zone">Zone</label>
+                            <select id="zone" required>
+                                <option value="">Select Zone</option>
+                                <option value="A">Zone A - Receiving</option>
+                                <option value="B">Zone B - Storage</option>
+                                <option value="C">Zone C - Picking</option>
+                                <option value="D">Zone D - Shipping</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="aisle">Aisle</label>
+                            <input type="text" id="aisle" placeholder="e.g., 01" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="rack">Rack</label>
+                            <input type="text" id="rack" placeholder="e.g., R01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="level">Level</label>
+                            <input type="text" id="level" placeholder="e.g., L01" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="capacity">Capacity</label>
+                            <input type="number" id="capacity" placeholder="Maximum quantity" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dimensions">Dimensions (LxWxH)</label>
+                            <input type="text" id="dimensions" placeholder="e.g., 100x50x30 cm">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="description">Description</label>
+                            <textarea id="description" placeholder="Additional notes about this bin location" rows="3"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="saveBinBtn">Save Bin Location</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barcode Scanner Modal -->
+    <div class="modal" id="scannerModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content scanner-modal">
+            <div class="modal-header">
+                <h2>Scan Bin Location</h2>
+                <button class="modal-close" id="closeScannerModal">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="scanner-container">
+                    <div class="scanner-viewfinder">
+                        <div class="scanner-line"></div>
+                        <div class="scanner-corners">
+                            <div class="corner top-left"></div>
+                            <div class="corner top-right"></div>
+                            <div class="corner bottom-left"></div>
+                            <div class="corner bottom-right"></div>
+                        </div>
+                    </div>
+                    <p class="scanner-instruction">Position the barcode within the frame</p>
+                    <div class="scanner-result" id="scannerResult" style="display: none;">
+                        <i class="material-icons">check_circle</i>
+                        <span id="scannedCode"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="manualEntryBtn">Manual Entry</button>
+                <button type="button" class="btn btn-primary" id="searchScannedBtn" style="display: none;">Search Location</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scheduling Modal -->
+    <div class="modal" id="scheduleModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2>Task Scheduler</h2>
+                <button class="modal-close">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="schedule-tabs">
+                    <button class="tab-btn active" data-tab="create">Create Task</button>
+                    <button class="tab-btn" data-tab="calendar">Calendar View</button>
+                    <button class="tab-btn" data-tab="recurring">Recurring Tasks</button>
+                </div>
+
+                <div class="tab-content" id="createTab">
+                    <form id="scheduleForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="taskType">Task Type</label>
+                                <select id="taskType" required>
+                                    <option value="">Select Task Type</option>
+                                    <option value="inventory-count">Inventory Count</option>
+                                    <option value="maintenance">Bin Maintenance</option>
+                                    <option value="reorganization">Zone Reorganization</option>
+                                    <option value="cleaning">Cleaning Schedule</option>
+                                    <option value="audit">Audit Task</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="taskPriority">Priority</label>
+                                <select id="taskPriority" required>
+                                    <option value="low">Low</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="high">High</option>
+                                    <option value="critical">Critical</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="taskTitle">Task Title</label>
+                                <input type="text" id="taskTitle" placeholder="Enter task title" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="assignedTo">Assigned To</label>
+                                <select id="assignedTo" required>
+                                    <option value="">Select Assignee</option>
+                                    <option value="warehouse-manager">Warehouse Manager</option>
+                                    <option value="supervisor">Supervisor</option>
+                                    <option value="operator">Operator</option>
+                                    <option value="maintenance">Maintenance Team</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="scheduleDate">Schedule Date</label>
+                                <input type="date" id="scheduleDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="scheduleTime">Schedule Time</label>
+                                <input type="time" id="scheduleTime" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="taskDescription">Description</label>
+                                <textarea id="taskDescription" placeholder="Enter task description" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Recurrence</label>
+                                <div class="checkbox-group">
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" id="isRecurring">
+                                        <span>Recurring Task</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group" id="recurrenceOptions" style="display: none;">
+                                <label for="recurrencePattern">Repeat Every</label>
+                                <select id="recurrencePattern">
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="quarterly">Quarterly</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="tab-content" id="calendarTab" style="display: none;">
+                    <div class="calendar-view">
+                        <div class="calendar-header">
+                            <button class="calendar-nav" id="prevMonth">
+                                <i class="material-icons">chevron_left</i>
+                            </button>
+                            <h3 id="currentMonth">December 2024</h3>
+                            <button class="calendar-nav" id="nextMonth">
+                                <i class="material-icons">chevron_right</i>
+                            </button>
+                        </div>
+                        <div class="calendar-grid" id="calendarGrid">
+                            <!-- Calendar will be generated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="recurringTab" style="display: none;">
+                    <div class="recurring-tasks">
+                        <div class="recurring-task-item">
+                            <div class="task-info">
+                                <h4>Weekly Inventory Count - Zone A</h4>
+                                <p>Every Monday at 09:00</p>
+                            </div>
+                            <div class="task-actions">
+                                <button class="btn btn-sm">Edit</button>
+                                <button class="btn btn-sm btn-danger">Delete</button>
+                            </div>
+                        </div>
+                        <div class="recurring-task-item">
+                            <div class="task-info">
+                                <h4>Monthly Bin Maintenance</h4>
+                                <p>First Friday of every month at 14:00</p>
+                            </div>
+                            <div class="task-actions">
+                                <button class="btn btn-sm">Edit</button>
+                                <button class="btn btn-sm btn-danger">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelSchedule">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="saveSchedule">Save Task</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions Modal -->
+    <div class="modal" id="quickActionsModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Quick Actions</h2>
+                <button class="modal-close">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="quick-actions-grid">
+                    <button class="quick-action-card" data-action="bulk-status-update">
+                        <i class="material-icons">update</i>
+                        <h3>Bulk Status Update</h3>
+                        <p>Update status for multiple bins</p>
+                    </button>
+                    <button class="quick-action-card" data-action="zone-optimization">
+                        <i class="material-icons">auto_fix_high</i>
+                        <h3>Zone Optimization</h3>
+                        <p>Optimize bin allocation</p>
+                    </button>
+                    <button class="quick-action-card" data-action="capacity-analysis">
+                        <i class="material-icons">analytics</i>
+                        <h3>Capacity Analysis</h3>
+                        <p>Analyze warehouse capacity</p>
+                    </button>
+                    <button class="quick-action-card" data-action="maintenance-check">
+                        <i class="material-icons">build</i>
+                        <h3>Maintenance Check</h3>
+                        <p>Schedule maintenance tasks</p>
+                    </button>
+                    <button class="quick-action-card" data-action="inventory-sync">
+                        <i class="material-icons">sync</i>
+                        <h3>Inventory Sync</h3>
+                        <p>Synchronize inventory data</p>
+                    </button>
+                    <button class="quick-action-card" data-action="generate-report">
+                        <i class="material-icons">assessment</i>
+                        <h3>Generate Report</h3>
+                        <p>Create custom reports</p>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Actions Modal -->
+    <div class="modal" id="bulkActionsModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Bulk Actions</h2>
+                <button class="modal-close">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="bulk-selection-info">
+                    <p><span id="selectedCount">0</span> bins selected</p>
+                    <button class="btn btn-sm" id="selectAllBins">Select All</button>
+                    <button class="btn btn-sm" id="clearSelection">Clear Selection</button>
+                </div>
+
+                <div class="bulk-actions-list">
+                    <div class="bulk-action-item">
+                        <h4>Update Status</h4>
+                        <div class="action-controls">
+                            <select id="bulkStatusSelect">
+                                <option value="empty">Empty</option>
+                                <option value="occupied">Occupied</option>
+                                <option value="reserved">Reserved</option>
+                                <option value="blocked">Blocked</option>
+                            </select>
+                            <button class="btn btn-primary" id="applyBulkStatus">Apply</button>
+                        </div>
+                    </div>
+
+                    <div class="bulk-action-item">
+                        <h4>Move to Zone</h4>
+                        <div class="action-controls">
+                            <select id="bulkZoneSelect">
+                                <option value="A">Zone A - Receiving</option>
+                                <option value="B">Zone B - Storage</option>
+                                <option value="C">Zone C - Picking</option>
+                                <option value="D">Zone D - Shipping</option>
+                            </select>
+                            <button class="btn btn-primary" id="applyBulkZone">Move</button>
+                        </div>
+                    </div>
+
+                    <div class="bulk-action-item">
+                        <h4>Schedule Maintenance</h4>
+                        <div class="action-controls">
+                            <input type="date" id="bulkMaintenanceDate">
+                            <button class="btn btn-primary" id="scheduleBulkMaintenance">Schedule</button>
+                        </div>
+                    </div>
+
+                    <div class="bulk-action-item danger">
+                        <h4>Delete Bins</h4>
+                        <div class="action-controls">
+                            <button class="btn btn-danger" id="deleteBulkBins">Delete Selected</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Drag and Drop Overlay -->
+    <div class="drag-overlay" id="dragOverlay" style="display: none;">
+        <div class="drag-content">
+            <i class="material-icons">drag_indicator</i>
+            <h3>Drop to move bin</h3>
+            <p>Release to change bin status</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script src="scripts/bin-location-modern.js"></script>
+</body>
+</html>

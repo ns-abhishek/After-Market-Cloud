@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header & Footer Dashboard</title>
+
+    <!-- Material Design Components -->
+    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS with Black and White Theme -->
+    <link rel="stylesheet" href="material-styles.css">
+</head>
+<body class="mdc-typography">
+    <div class="container">
+        <header class="custom-app-bar">
+            <div class="custom-app-bar__row">
+                <section class="custom-app-bar__section">
+                    <span class="custom-app-bar__title">Header & Footer Dashboard</span>
+                </section>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Summary Cards Section -->
+            <!-- <section class="summary-cards">
+                <div class="mdc-card card clickable" data-filter="all">
+                    <div class="mdc-card__content">
+                        <h3 class="mdc-typography--headline6">Total Companies</h3>
+                        <p id="total-count" class="mdc-typography--headline3">120</p>
+                    </div>
+                </div>
+                <div class="mdc-card card clickable" data-filter="set">
+                    <div class="mdc-card__content">
+                        <h3 class="mdc-typography--headline6">Set</h3>
+                        <p id="set-count" class="mdc-typography--headline3">85</p>
+                    </div>
+                </div>
+                <div class="mdc-card card clickable" data-filter="not-set">
+                    <div class="mdc-card__content">
+                        <h3 class="mdc-typography--headline6">Not Set</h3>
+                        <p id="not-set-count" class="mdc-typography--headline3">35</p>
+                    </div>
+                </div>
+                <div class="mdc-card card clickable" data-filter="active">
+                    <div class="mdc-card__content">
+                        <h3 class="mdc-typography--headline6">Active (Yes)</h3>
+                        <p id="active-count" class="mdc-typography--headline3">98</p>
+                    </div>
+                </div>
+                <div class="mdc-card card clickable" data-filter="inactive">
+                    <div class="mdc-card__content">
+                        <h3 class="mdc-typography--headline6">Inactive (No)</h3>
+                        <p id="inactive-count" class="mdc-typography--headline3">22</p>
+                    </div>
+                </div>
+                <div class="tooltip-container">
+                    <i class="material-icons filter-tooltip-icon">info</i>
+                    <div class="mdc-tooltip" role="tooltip" aria-hidden="true">
+                        <div class="mdc-tooltip__surface">
+                            Hold Ctrl (or Cmd on Mac) while clicking to select multiple filters
+                        </div>
+                    </div>
+                </div>
+            </section> -->
+
+
+            <!-- Filter Section -->
+
+            <section class="mdc-card filter-section">
+                <div class="smart-search-container">
+                    <div class="mdc-text-field mdc-text-field--outlined smart-search-box">
+                        <input type="text" id="smart-search" class="mdc-text-field__input" placeholder="Smart Search - Try 'active reports in North region' or 'set status in Finance'">
+                        <i class="material-icons mdc-text-field__icon smart-search-icon">search</i>
+                        <i class="material-icons mdc-text-field__icon smart-search-voice">mic</i>
+                        <div class="mdc-notched-outline">
+                            <div class="mdc-notched-outline__leading"></div>
+                            <div class="mdc-notched-outline__notch"></div>
+                            <div class="mdc-notched-outline__trailing"></div>
+                        </div>
+                    </div>
+                    <div id="search-suggestions" class="search-suggestions">
+                        <!-- Populated by JavaScript -->
+                    </div>
+
+                    <!-- Quick Filter Presets -->
+                    <div class="quick-filter-presets">
+                        <div class="preset-label">Quick Filters:</div>
+                        <div class="preset-buttons">
+                            <button class="preset-button" data-preset="active">Active</button>
+                            <button class="preset-button" data-preset="inactive">Inactive</button>
+                            <button class="preset-button" data-preset="set">Set</button>
+                            <button class="preset-button" data-preset="not-set">Not Set</button>
+                            <button class="preset-button" data-preset="recent">Recent</button>
+                            <button class="preset-button" data-preset="custom" id="custom-filter-button">
+                                <i class="material-icons">add</i> Custom
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Filter Assistant Button -->
+                    <button id="filter-assistant-button" class="mdc-button filter-assistant-button">
+                        <i class="material-icons mdc-button__icon">assistant</i>
+                        <span class="mdc-button__label">Filter Assistant</span>
+                    </button>
+                </div>
+
+                <div class="filter-tabs">
+                    <div class="mdc-tab-bar" role="tablist">
+                        <div class="mdc-tab-scroller">
+                            <div class="mdc-tab-scroller__scroll-area">
+                                <div class="mdc-tab-scroller__scroll-content">
+                                    <button class="mdc-tab mdc-tab--active" role="tab" aria-selected="true" tabindex="0" id="standard-filters-tab">
+                                        <span class="mdc-tab__content">
+                                            <span class="mdc-tab__text-label">Standard Filters</span>
+                                        </span>
+                                        <span class="mdc-tab-indicator mdc-tab-indicator--active">
+                                            <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                                        </span>
+                                        <span class="mdc-tab__ripple"></span>
+                                    </button>
+                                    <button class="mdc-tab" role="tab" aria-selected="false" tabindex="-1" id="visual-builder-tab">
+                                        <span class="mdc-tab__content">
+                                            <span class="mdc-tab__text-label">Visual Filter Builder</span>
+                                        </span>
+                                        <span class="mdc-tab-indicator">
+                                            <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                                        </span>
+                                        <span class="mdc-tab__ripple"></span>
+                                    </button>
+                                    <button class="mdc-tab" role="tab" aria-selected="false" tabindex="-1" id="saved-filters-tab">
+                                        <span class="mdc-tab__content">
+                                            <span class="mdc-tab__text-label">Saved Filters</span>
+                                        </span>
+                                        <span class="mdc-tab-indicator">
+                                            <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                                        </span>
+                                        <span class="mdc-tab__ripple"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-content">
+                    <!-- Standard Filters Panel -->
+                    <div class="filter-panel active" id="standard-filters-panel">
+                        <div class="filters">
+                            <div class="filter-group">
+                                <label class="mdc-typography--subtitle1">Region</label>
+                                <div class="mdc-text-field mdc-text-field--outlined search-box">
+                                    <input type="text" id="region-search" class="mdc-text-field__input" placeholder="Search regions...">
+                                    <i class="material-icons mdc-text-field__icon">search</i>
+                                    <div class="mdc-notched-outline">
+                                        <div class="mdc-notched-outline__leading"></div>
+                                        <div class="mdc-notched-outline__notch"></div>
+                                        <div class="mdc-notched-outline__trailing"></div>
+                                    </div>
+                                </div>
+                                <div class="checkbox-list" id="region-list">
+                                    <!-- Populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <div class="filter-group">
+                                <label class="mdc-typography--subtitle1">Company</label>
+                                <div class="mdc-text-field mdc-text-field--outlined search-box">
+                                    <input type="text" id="company-search" class="mdc-text-field__input" placeholder="Search companies...">
+                                    <i class="material-icons mdc-text-field__icon">search</i>
+                                    <div class="mdc-notched-outline">
+                                        <div class="mdc-notched-outline__leading"></div>
+                                        <div class="mdc-notched-outline__notch"></div>
+                                        <div class="mdc-notched-outline__trailing"></div>
+                                    </div>
+                                </div>
+                                <div class="checkbox-list" id="company-list">
+                                    <!-- Populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <div class="filter-group">
+                                <label class="mdc-typography--subtitle1">Branch</label>
+                                <div class="mdc-text-field mdc-text-field--outlined search-box">
+                                    <input type="text" id="branch-search" class="mdc-text-field__input" placeholder="Search branches...">
+                                    <i class="material-icons mdc-text-field__icon">search</i>
+                                    <div class="mdc-notched-outline">
+                                        <div class="mdc-notched-outline__leading"></div>
+                                        <div class="mdc-notched-outline__notch"></div>
+                                        <div class="mdc-notched-outline__trailing"></div>
+                                    </div>
+                                </div>
+                                <div class="checkbox-list" id="branch-list">
+                                    <!-- Populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <div class="filter-group">
+                                <label class="mdc-typography--subtitle1">Sub-Branch</label>
+                                <div class="mdc-text-field mdc-text-field--outlined search-box">
+                                    <input type="text" id="subbranch-search" class="mdc-text-field__input" placeholder="Search sub-branches...">
+                                    <i class="material-icons mdc-text-field__icon">search</i>
+                                    <div class="mdc-notched-outline">
+                                        <div class="mdc-notched-outline__leading"></div>
+                                        <div class="mdc-notched-outline__notch"></div>
+                                        <div class="mdc-notched-outline__trailing"></div>
+                                    </div>
+                                </div>
+                                <div class="checkbox-list" id="subbranch-list">
+                                    <!-- Populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visual Filter Builder Panel -->
+                    <div class="filter-panel" id="visual-builder-panel">
+                        <div class="visual-builder-container">
+                            <div class="visual-builder-canvas" id="visual-builder-canvas">
+                                <div class="visual-builder-instructions">
+                                    <i class="material-icons">touch_app</i>
+                                    <p>Drag and drop filter elements to create complex filter combinations</p>
+                                </div>
+                                <!-- Visual builder elements will be added here -->
+                            </div>
+                            <div class="visual-builder-palette">
+                                <div class="palette-section">
+                                    <h3>Filter Types</h3>
+                                    <div class="palette-item" draggable="true" data-type="category">
+                                        <i class="material-icons">category</i>
+                                        <span>Category Filter</span>
+                                    </div>
+                                    <div class="palette-item" draggable="true" data-type="date">
+                                        <i class="material-icons">date_range</i>
+                                        <span>Date Filter</span>
+                                    </div>
+                                    <div class="palette-item" draggable="true" data-type="text">
+                                        <i class="material-icons">text_fields</i>
+                                        <span>Text Filter</span>
+                                    </div>
+                                </div>
+                           
+                            </div>
+                        </div>
+                        <div class="visual-builder-actions">
+                            <button id="clear-visual-builder" class="mdc-button mdc-button--outlined">
+                                <i class="material-icons mdc-button__icon">refresh</i>
+                                <span class="mdc-button__label">Clear</span>
+                            </button>
+                            <button id="apply-visual-builder" class="mdc-button mdc-button--raised">
+                                <span class="mdc-button__label">Apply Filters</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Saved Filters Panel -->
+                    <div class="filter-panel" id="saved-filters-panel">
+                        <div class="saved-filters-list" id="saved-filters-list">
+                            <!-- Will be populated by JavaScript -->
+                            <div class="empty-saved-filters">
+                                <i class="material-icons">bookmark_border</i>
+                                <p>No saved filters yet. Create and save filters to access them quickly later.</p>
+                            </div>
+                        </div>
+                        <div class="saved-filters-actions">
+                            <button id="save-current-filter" class="mdc-button mdc-button--outlined">
+                                <i class="material-icons mdc-button__icon">save</i>
+                                <span class="mdc-button__label">Save Current Filter</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-visualization">
+                    <div class="filter-chips" id="active-filter-chips">
+                        <!-- Active filters will appear here as chips -->
+                    </div>
+
+                    <!-- Filter Preview Panel -->
+                   
+                </div>
+
+                <div class="filter-actions">
+                    <div class="filter-keyboard-shortcuts" id="keyboard-shortcuts-toggle">
+                        <i class="material-icons">keyboard</i>
+                        <span>Shortcuts</span>
+                    </div>
+
+                    <div class="filter-history-toggle" id="filter-history-toggle">
+                        <i class="material-icons">history</i>
+                        <span>History</span>
+                    </div>
+
+                    <button id="clear-filters" class="mdc-button mdc-button--outlined">
+                        <i class="material-icons mdc-button__icon">refresh</i>
+                        <span class="mdc-button__label">Clear Filters</span>
+                    </button>
+                </div>
+
+                <!-- Filter History Timeline -->
+                <div class="filter-history-timeline" id="filter-history-timeline">
+                    <div class="timeline-header">
+                        <h3>Filter History</h3>
+                        <button class="close-timeline" id="close-timeline">
+                            <i class="material-icons">close</i>
+                        </button>
+                    </div>
+                    <div class="timeline-content" id="timeline-content">
+                        <!-- Timeline content will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Keyboard Shortcuts Panel -->
+                <div class="keyboard-shortcuts-panel" id="keyboard-shortcuts-panel">
+                    <div class="shortcuts-header">
+                        <h3>Keyboard Shortcuts</h3>
+                        <button class="close-shortcuts" id="close-shortcuts">
+                            <i class="material-icons">close</i>
+                        </button>
+                    </div>
+                    <div class="shortcuts-content">
+                        <div class="shortcut-group">
+                            <h4>Navigation</h4>
+                            <div class="shortcut-item">
+                                <span class="key">Tab</span>
+                                <span class="description">Move between filter fields</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <span class="key">Alt + 1-3</span>
+                                <span class="description">Switch between filter tabs</span>
+                            </div>
+                        </div>
+                        <div class="shortcut-group">
+                            <h4>Actions</h4>
+                            <div class="shortcut-item">
+                                <span class="key">Ctrl + /</span>
+                                <span class="description">Focus smart search</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <span class="key">Ctrl + Enter</span>
+                                <span class="description">Apply current filters</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <span class="key">Esc</span>
+                                <span class="description">Clear filters</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <span class="key">Ctrl + S</span>
+                                <span class="description">Save current filter</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Filtered Results Section -->
+            <section class="mdc-card filtered-results">
+                <div class="filtered-header">
+                    <h2 class="mdc-typography--headline5">Filtered Results</h2>
+                    <div class="select-all-checkbox">
+                        <div class="mdc-checkbox">
+                            <input type="checkbox" id="select-all-cards" class="mdc-checkbox__native-control" checked>
+                            <div class="mdc-checkbox__background">
+                                <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                                    <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"></path>
+                                </svg>
+                                <div class="mdc-checkbox__mixedmark"></div>
+                            </div>
+                        </div>
+                        <label for="select-all-cards">Select All</label>
+                    </div>
+                </div>
+
+                <div class="summary-cards">
+                    <div class="mdc-card card clickable" data-filter="all">
+                        <div class="mdc-card__content">
+                            <h3 class="mdc-typography--headline6">Companies</h3>
+                            <p id="filtered-total-count" class="mdc-typography--headline3">0</p>
+                        </div>
+                    </div>
+                    <div class="mdc-card card clickable" data-filter="set">
+                        <div class="mdc-card__content">
+                            <h3 class="mdc-typography--headline6">Set</h3>
+                            <p id="filtered-set-count" class="mdc-typography--headline3">0</p>
+                        </div>
+                    </div>
+                    <div class="mdc-card card clickable" data-filter="not-set">
+                        <div class="mdc-card__content">
+                            <h3 class="mdc-typography--headline6">Not Set</h3>
+                            <p id="filtered-not-set-count"mdc-top-app-bar__row class="mdc-typography--headline3">0</p>
+                        </div>
+                    </div>
+                    <div class="mdc-card card clickable" data-filter="active">
+                        <div class="mdc-card__content">
+                            <h3 class="mdc-typography--headline6">Active (Yes)</h3>
+                            <p id="filtered-active-count" class="mdc-typography--headline3">0</p>
+                        </div>
+                    </div>
+                    <div class="mdc-card card clickable" data-filter="inactive">
+                        <div class="mdc-card__content">
+                            <h3 class="mdc-typography--headline6">Inactive (No)</h3>
+                            <p id="filtered-inactive-count" class="mdc-typography--headline3">0</p>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Grid Section -->
+            <section class="mdc-card grid-section">
+                <div class="grid-header">
+                    <div class="grid-title">
+                        <h2 class="mdc-typography--headline5">Reports</h2>
+                        <div class="grid-actions">
+                            <div class="export-container">
+                                <button id="export-button" class="mdc-button mdc-button--outlined">
+                                    <i class="material-icons mdc-button__icon">file_download</i>
+                                    <span class="mdc-button__label">Export</span>
+                                </button>
+                                <div class="export-menu">
+                                    <div class="export-option" data-format="excel">
+                                        <i class="material-icons">table_chart</i> Excel
+                                    </div>
+                                    <div class="export-option" data-format="pdf">
+                                        <i class="material-icons">picture_as_pdf</i> PDF
+                                    </div>
+                                    <div class="export-option" data-format="csv">
+                                        <i class="material-icons">insert_drive_file</i> CSV
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="grid-filter">
+                                <button id="grid-filter-button" class="mdc-button mdc-button--outlined">
+                                    <i class="material-icons mdc-button__icon">filter_list</i>
+                                    <span class="mdc-button__label">Filter</span>
+                                </button>
+                                <div class="advanced-filter-dialog" id="advanced-filter-dialog">
+                                    <div class="advanced-filter-header">
+                                        <h3>Advanced Filter</h3>
+                                        <button class="close-dialog" id="close-filter-dialog">
+                                            <i class="material-icons">close</i>
+                                        </button>
+                                    </div>
+                                    <div class="advanced-filter-content">
+                                        <div class="filter-field">
+                                            <label>Report Name</label>
+                                            <input type="text" id="filter-report-name" placeholder="Search report name...">
+                                        </div>
+                                        <div class="filter-field">
+                                            <label>Status</label>
+                                            <select id="filter-status">
+                                                <option value="">All</option>
+                                                <option value="Set">Set</option>
+                                                <option value="Not Set">Not Set</option>
+                                            </select>
+                                        </div>
+                                        <div class="filter-field">
+                                            <label>Active</label>
+                                            <select id="filter-active">
+                                                <option value="">All</option>
+                                                <option value="Yes">Yes</option>
+                                                <option value="No">No</option>
+                                            </select>
+                                        </div>
+                                        <div class="filter-field">
+                                            <label>Date Range</label>
+                                            <div class="date-range">
+                                                <input type="date" id="filter-start-date" placeholder="From">
+                                                <input type="date" id="filter-end-date" placeholder="To">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="advanced-filter-actions">
+                                        <button class="mdc-button mdc-button--outlined" id="reset-advanced-filter">
+                                            <i class="material-icons mdc-button__icon">refresh</i>
+                                            <span class="mdc-button__label">Reset</span>
+                                        </button>
+                                        <button class="mdc-button mdc-button--raised" id="apply-advanced-filter">
+                                            <span class="mdc-button__label">Apply</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <button id="add-record" class="mdc-button mdc-button--raised">
+                                <i class="material-icons mdc-button__icon">add</i>
+                                <span class="mdc-button__label">Add New</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-container">
+                    <table class="mdc-data-table__table" id="reports-grid">
+                        <thead>
+                            <tr class="mdc-data-table__header-row">
+                                <th class="mdc-data-table__header-cell">View</th>
+                                <th class="mdc-data-table__header-cell">Report Name</th>
+                                <th class="mdc-data-table__header-cell">Header</th>
+                                <th class="mdc-data-table__header-cell">Footer</th>
+                                <th class="mdc-data-table__header-cell">Start Date</th>
+                                <th class="mdc-data-table__header-cell">End Date</th>
+                                <th class="mdc-data-table__header-cell">Status</th>
+                                <th class="mdc-data-table__header-cell">Active</th>
+                            </tr>
+                        </thead>
+                        <tbody class="mdc-data-table__content">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Filter Wizard Dialog -->
+    <div class="filter-wizard-dialog mdc-dialog" id="filter-wizard-dialog">
+        <div class="mdc-dialog__container">
+            <div class="mdc-dialog__surface">
+                <h2 class="mdc-dialog__title">Filter Assistant</h2>
+                <div class="mdc-dialog__content">
+                    <div class="wizard-steps">
+                        <div class="wizard-step active" id="wizard-step-1">
+                            <h3>What are you looking for?</h3>
+                            <div class="wizard-options">
+                                <div class="wizard-option" data-value="reports">
+                                    <i class="material-icons">description</i>
+                                    <span>Reports</span>
+                                </div>
+                                <div class="wizard-option" data-value="companies">
+                                    <i class="material-icons">business</i>
+                                    <span>Companies</span>
+                                </div>
+                                <div class="wizard-option" data-value="regions">
+                                    <i class="material-icons">public</i>
+                                    <span>Regions</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="wizard-step" id="wizard-step-2">
+                            <h3>Select status</h3>
+                            <div class="wizard-options">
+                                <div class="wizard-option" data-value="all">
+                                    <i class="material-icons">all_inclusive</i>
+                                    <span>All</span>
+                                </div>
+                                <div class="wizard-option" data-value="active">
+                                    <i class="material-icons">check_circle</i>
+                                    <span>Active</span>
+                                </div>
+                                <div class="wizard-option" data-value="inactive">
+                                    <i class="material-icons">cancel</i>
+                                    <span>Inactive</span>
+                                </div>
+                                <div class="wizard-option" data-value="set">
+                                    <i class="material-icons">done_all</i>
+                                    <span>Set</span>
+                                </div>
+                                <div class="wizard-option" data-value="not-set">
+                                    <i class="material-icons">remove_done</i>
+                                    <span>Not Set</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="wizard-step" id="wizard-step-3">
+                            <h3>Select time period</h3>
+                            <div class="wizard-options">
+                                <div class="wizard-option" data-value="all-time">
+                                    <i class="material-icons">all_inclusive</i>
+                                    <span>All Time</span>
+                                </div>
+                                <div class="wizard-option" data-value="this-month">
+                                    <i class="material-icons">date_range</i>
+                                    <span>This Month</span>
+                                </div>
+                                <div class="wizard-option" data-value="last-month">
+                                    <i class="material-icons">event_note</i>
+                                    <span>Last Month</span>
+                                </div>
+                                <div class="wizard-option" data-value="this-year">
+                                    <i class="material-icons">event</i>
+                                    <span>This Year</span>
+                                </div>
+                                <div class="wizard-option" data-value="custom">
+                                    <i class="material-icons">date_range</i>
+                                    <span>Custom Range</span>
+                                </div>
+                            </div>
+
+                            <div class="custom-date-range" id="custom-date-range" style="display: none;">
+                                <div class="date-field">
+                                    <label>From</label>
+                                    <input type="date" id="wizard-start-date">
+                                </div>
+                                <div class="date-field">
+                                    <label>To</label>
+                                    <input type="date" id="wizard-end-date">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="wizard-step" id="wizard-step-4">
+                            <h3>Summary</h3>
+                            <div class="wizard-summary" id="wizard-summary">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+
+                            <div class="wizard-preview">
+                                <h4>Preview Results</h4>
+                                <div class="wizard-preview-count" id="wizard-preview-count">0 results</div>
+                                <div class="wizard-preview-list" id="wizard-preview-list">
+                                    <!-- Will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mdc-dialog__actions">
+                    <button type="button" class="mdc-button mdc-dialog__button" id="wizard-back-button" disabled>
+                        <span class="mdc-button__label">Back</span>
+                    </button>
+                    <button type="button" class="mdc-button mdc-dialog__button" id="wizard-cancel-button">
+                        <span class="mdc-button__label">Cancel</span>
+                    </button>
+                    <button type="button" class="mdc-button mdc-button--raised mdc-dialog__button" id="wizard-next-button">
+                        <span class="mdc-button__label">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="mdc-dialog__scrim"></div>
+    </div>
+
+    <!-- Smart Filter Recommendations Dialog -->
+    <div class="smart-recommendations-dialog mdc-dialog" id="smart-recommendations-dialog">
+        <div class="mdc-dialog__container">
+            <div class="mdc-dialog__surface">
+                <h2 class="mdc-dialog__title">Smart Filter Recommendations</h2>
+                <div class="mdc-dialog__content">
+                    <div class="recommendations-intro">
+                        <p>Based on your data and previous filters, we recommend:</p>
+                    </div>
+                    <div class="recommendations-list" id="recommendations-list">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="mdc-dialog__actions">
+                    <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="close">
+                        <span class="mdc-button__label">Close</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="mdc-dialog__scrim"></div>
+    </div>
+
+    <!-- Material Design JavaScript -->
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="smart-search.js"></script>
+    <script src="enhanced-filters.js"></script>
+    <script src="material-script.js"></script>
+
+    <!-- Web Speech API for voice search (optional) -->
+    <script>
+        // Check if browser supports speech recognition
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            console.log('Speech recognition is supported in this browser');
+        } else {
+            console.log('Speech recognition is not supported in this browser');
+        }
+    </script>
+</body>
+</html>

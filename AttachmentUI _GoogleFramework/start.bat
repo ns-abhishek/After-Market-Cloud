@@ -1,0 +1,3 @@
+@echo off
+echo Starting Attachment UI with Google Framework...
+node server.js

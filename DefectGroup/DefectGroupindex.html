@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Defect Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="DefectGroupstyles.css">
+</head>
+<body class="font-inter bg-gray-50" id="app">
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <!-- Logo and Title -->
+                <div class="header-left">
+                    <div class="logo">
+                        <span>DM</span>
+                    </div>
+                    <div class="header-text">
+                        <h1>Defect Management</h1>
+                        <p>Manage and track defect groups efficiently</p>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="header-actions">
+
+
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <button id="darkModeToggle" class="icon-btn" title="Toggle dark mode">
+                            <svg class="sun-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                            </svg>
+                            <svg class="moon-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                            </svg>
+                        </button>
+
+                        <!-- <button class="icon-btn" title="Export data">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                        </button> -->
+
+                        <a href="Defectmain.html" class="icon-btn" title="Back to Main">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                            </svg>
+                        </a>
+
+                        <button class="icon-btn" title="Settings">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                        </button>
+
+                        <!-- <button id="addDefectBtn" class="primary-btn">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            Add Defect
+                        </button> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Selection Bar (Hidden by default, shown when items are selected) -->
+        <div id="selectionBar" class="selection-bar hidden">
+            <div class="selection-bar-content">
+                <div class="selection-actions">
+                    <button id="activateBtn" class="selection-action-btn activate-btn">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="14" height="14">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Activate
+                    </button>
+                    <button id="deactivateBtn" class="selection-action-btn deactivate-btn">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="14" height="14">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364L18.364 5.636"></path>
+                        </svg>
+                        Deactivate
+                    </button>
+                    <button id="deleteSelectedBtn" class="selection-action-btn delete-btn">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="14" height="14">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        Delete
+                    </button>
+                    <button id="cancelSelectionBtn" class="selection-action-btn cancel-btn">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="action-bar">
+            <!-- <div class="action-bar-content">
+                <div class="action-bar-left">
+                       <button id="addDefectBtn" class="primary-btn">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            Add Defect Group
+                        </button>
+                </div>
+                <div class="action-bar-right">
+                    <div class="search-container">
+                        <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <input type="text" id="categorySearchInput" placeholder="Search categories..." class="search-input">
+                    </div>
+                </div>
+            </div> -->
+        </div>
+
+        <div class="container">
+                 <div class="action-bar-content">
+                <div class="action-bar-left">
+                       <button id="addDefectBtn" class="primary-btn">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            Add Defect Group
+                        </button>
+                </div>
+                <div class="action-bar-right">
+                    <div class="search-container">
+                        <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <input type="text" id="categorySearchInput" placeholder="Search categories..." class="search-input">
+                    </div>
+                    <button id="refreshCategoriesBtn" class="icon-btn refresh-btn" title="Refresh Categories">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <!-- Modern Category Selector -->
+            <div class="category-selector-section">
+
+
+                <div class="category-grid" id="categoryGrid">
+                     <div class="category-card all-categories active" data-category="ALL">
+                        <div class="category-card-header">
+                            <div class="category-icon all">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                                </svg>
+                            </div>
+                            <div class="category-badge">
+                                <span class="badge-text">All Categories</span>
+                            </div>
+                        </div>
+                        <div class="category-content">
+                            <h3 class="category-name">All Categories</h3>
+                            <p class="category-description">View all defect groups across all categories</p>
+                            <div class="category-stats">
+                                <div class="stat-item">
+                                    <span class="stat-number" id="allCategoriesTotal">114</span>
+                                    <span class="stat-label">Records</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number" id="allCategoriesActive">95</span>
+                                    <span class="stat-label">Active</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="category-card" data-category="Assembly Faults">
+                        <div class="category-card-header">
+                            <div class="category-icon assembly">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                                </svg>
+                            </div>
+                            <div class="category-badge">
+                                <span class="badge-text">Primary</span>
+                            </div>
+                        </div>
+                        <div class="category-content">
+                            <h3 class="category-name">Assembly Faults</h3>
+                            <p class="category-description">Manufacturing and assembly related defects</p>
+                            <div class="category-stats">
+                                <div class="stat-item">
+                                    <span class="stat-number">24</span>
+                                    <span class="stat-label">Records</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number">18</span>
+                                    <span class="stat-label">Active</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="category-card" data-category="Electrical Faults">
+                        <div class="category-card-header">
+                            <div class="category-icon electrical">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                            </div>
+                            <div class="category-badge">
+                                <span class="badge-text">Critical</span>
+                            </div>
+                        </div>
+                        <div class="category-content">
+                            <h3 class="category-name">Electrical Faults</h3>
+                            <p class="category-description">Electrical system and component failures</p>
+                            <div class="category-stats">
+                                <div class="stat-item">
+                                    <span class="stat-number">16</span>
+                                    <span class="stat-label">Records</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number">12</span>
+                                    <span class="stat-label">Active</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="category-card" data-category="Mechanical Faults">
+                        <div class="category-card-header">
+                            <div class="category-icon mechanical">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                            </div>
+                            <div class="category-badge">
+                                <span class="badge-text">Standard</span>
+                            </div>
+                        </div>
+                        <div class="category-content">
+                            <h3 class="category-name">Mechanical Faults</h3>
+                            <p class="category-description">Mechanical component and system issues</p>
+                            <div class="category-stats">
+                                <div class="stat-item">
+                                    <span class="stat-number">32</span>
+                                    <span class="stat-label">Records</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number">28</span>
+                                    <span class="stat-label">Active</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="category-card" data-category="Hydraulic Faults">
+                        <div class="category-card-header">
+                            <div class="category-icon hydraulic">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                                </svg>
+                            </div>
+                            <div class="category-badge">
+                                <span class="badge-text">Standard</span>
+                            </div>
+                        </div>
+                        <div class="category-content">
+                            <h3 class="category-name">Hydraulic Faults</h3>
+                            <p class="category-description">Hydraulic system and fluid-related defects</p>
+                            <div class="category-stats">
+                                <div class="stat-item">
+                                    <span class="stat-number">14</span>
+                                    <span class="stat-label">Records</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number">11</span>
+                                    <span class="stat-label">Active</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid hidden" id="statsCards">
+                <!-- Stats cards will be populated by JavaScript -->
+            </div>
+
+
+
+
+        </div>
+    </main>
+
+    <!-- Add Defect Modal -->
+    <div id="addDefectModal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h3>Add New Defect Group</h3>
+                    <p>Create a new defect group to organize and track issues</p>
+                </div>
+                <button id="closeModal" class="close-btn">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <form id="addDefectForm" class="modal-form">
+                <div class="form-group">
+                    <label for="category">Category *</label>
+                    <div class="custom-dropdown" id="categoryDropdown">
+                        <div class="dropdown-trigger" tabindex="0">
+                            <span class="dropdown-value placeholder" id="categoryValue">Select a category</span>
+                            <svg class="dropdown-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </div>
+                        <div class="dropdown-menu" id="categoryMenu">
+                            <div class="dropdown-search">
+                                <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                                <input type="text" id="categorySearch" placeholder="Type to search categories..." autocomplete="off">
+
+                            </div>
+
+                            <!-- Popular Categories Section -->
+                            <div class="dropdown-section">
+                                <div class="section-header">
+                                    <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                                    </svg>
+                                    Popular Categories
+                                </div>
+                                <div class="popular-categories">
+                                    <div class="category-chip" data-value="Assembly Faults">
+                                        <span class="chip-icon">🔧</span>
+                                        Assembly Faults
+                                    </div>
+                                    <div class="category-chip" data-value="Electrical Faults">
+                                        <span class="chip-icon">⚡</span>
+                                        Electrical Faults
+                                    </div>
+                                    <div class="category-chip" data-value="Mechanical Faults">
+                                        <span class="chip-icon">⚙️</span>
+                                        Mechanical Faults
+                                    </div>
+                                    <div class="category-chip" data-value="Safety Issues">
+                                        <span class="chip-icon">🛡️</span>
+                                        Safety Issues
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- All Categories Section -->
+                            <div class="dropdown-section">
+                                <div class="section-header">
+                                    <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                                    </svg>
+                                    All Categories
+                                </div>
+                                <div class="dropdown-options" id="categoryOptions">
+                                    <div class="dropdown-option" data-value="Assembly Faults" data-category="manufacturing">
+                                        <div class="option-content">
+                                            <div class="option-icon">🔧</div>
+                                            <div class="option-text">
+                                                <div class="option-title">Assembly Faults</div>
+                                                <div class="option-description">Manufacturing and assembly related defects</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-option" data-value="Electrical Faults" data-category="electrical">
+                                        <div class="option-content">
+                                            <div class="option-icon">⚡</div>
+                                            <div class="option-text">
+                                                <div class="option-title">Electrical Faults</div>
+                                                <div class="option-description">Electrical system and component failures</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-option" data-value="Mechanical Faults" data-category="mechanical">
+                                        <div class="option-content">
+                                            <div class="option-icon">⚙️</div>
+                                            <div class="option-text">
+                                                <div class="option-title">Mechanical Faults</div>
+                                                <div class="option-description">Mechanical component and system issues</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-option" data-value="Hydraulic Faults" data-category="hydraulic">
+                                        <div class="option-content">
+                                            <div class="option-icon">💧</div>
+                                            <div class="option-text">
+                                                <div class="option-title">Hydraulic Faults</div>
+                                                <div class="option-description">Hydraulic system and fluid-related defects</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-option" data-value="Safety Issues" data-category="safety">
+                                        <div class="option-content">
+                                            <div class="option-icon">🛡️</div>
+                                            <div class="option-text">
+                                                <div class="option-title">Safety Issues</div>
+                                                <div class="option-description">Safety-related defects and compliance issues</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-option" data-value="Control System" data-category="control">
+                                        <div class="option-content">
+                                            <div class="option-icon">🎮</div>
+                                            <div class="option-text">
+                                                <div class="option-title">Control System</div>
+                                                <div class="option-description">Control system and automation defects</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-option" data-value="Engine Performance" data-category="engine">
+                                        <div class="option-content">
+                                            <div class="option-icon">🚗</div>
+                                            <div class="option-text">
+                                                <div class="option-title">Engine Performance</div>
+                                                <div class="option-description">Engine performance and combustion issues</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-option" data-value="Transmission" data-category="mechanical">
+                                        <div class="option-content">
+                                            <div class="option-icon">⚙️</div>
+                                            <div class="option-text">
+                                                <div class="option-title">Transmission</div>
+                                                <div class="option-description">Transmission and gear system defects</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-option" data-value="Braking System" data-category="safety">
+                                        <div class="option-content">
+                                            <div class="option-icon">🛑</div>
+                                            <div class="option-text">
+                                                <div class="option-title">Braking System</div>
+                                                <div class="option-description">Brake system and stopping mechanism issues</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-option" data-value="Suspension" data-category="mechanical">
+                                        <div class="option-content">
+                                            <div class="option-icon">🔩</div>
+                                            <div class="option-text">
+                                                <div class="option-title">Suspension</div>
+                                                <div class="option-description">Suspension system and shock absorber defects</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-option" data-value="Fuel System" data-category="engine">
+                                        <div class="option-content">
+                                            <div class="option-icon">⛽</div>
+                                            <div class="option-text">
+                                                <div class="option-title">Fuel System</div>
+                                                <div class="option-description">Fuel delivery and injection system issues</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-option" data-value="Cooling System" data-category="engine">
+                                        <div class="option-content">
+                                            <div class="option-icon">❄️</div>
+                                            <div class="option-text">
+                                                <div class="option-title">Cooling System</div>
+                                                <div class="option-description">Engine cooling and thermal management defects</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-option" data-value="Exhaust System" data-category="environmental">
+                                        <div class="option-content">
+                                            <div class="option-icon">💨</div>
+                                            <div class="option-text">
+                                                <div class="option-title">Exhaust System</div>
+                                                <div class="option-description">Exhaust and emission system defects</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-option" data-value="Interior Components" data-category="comfort">
+                                        <div class="option-content">
+                                            <div class="option-icon">🪑</div>
+                                            <div class="option-text">
+                                                <div class="option-title">Interior Components</div>
+                                                <div class="option-description">Interior parts and comfort system issues</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-option" data-value="Exterior Components" data-category="body">
+                                        <div class="option-content">
+                                            <div class="option-icon">🚪</div>
+                                            <div class="option-text">
+                                                <div class="option-title">Exterior Components</div>
+                                                <div class="option-description">Body panels and exterior component defects</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="category" name="category" required>
+                    <div class="error-message" id="categoryError"></div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="code">Code *</label>
+                        <input type="text" id="code" name="code" placeholder="e.g., ELC001" required>
+                        <div class="error-message" id="codeError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="defectGroup">Defect Group *</label>
+                        <input type="text" id="defectGroup" name="defectGroup" placeholder="e.g., Electrical" required>
+                        <div class="error-message" id="defectGroupError"></div>
+                    </div>
+
+                 <div class="form-group checkbox-group">
+  <label class="checkbox-label">
+    <input type="checkbox" id="isActive" name="isActive" checked>
+    Is Active?
+  </label>
+</div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" id="cancelBtn" class="secondary-btn">Cancel</button>
+                    <button type="submit" id="submitBtn" class="primary-btn">
+                        <svg class="submit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
+                        </svg>
+                        <span class="submit-text">Create Defect Group</span>
+                        <div class="loading-spinner hidden"></div>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Category Data Popup Modal -->
+    <div id="categoryDataModal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content category-modal">
+            <div class="modal-header">
+                <div class="category-modal-title">
+                    <div class="category-modal-icon" id="categoryModalIcon">
+                        <!-- Icon will be set by JavaScript -->
+                    </div>
+                    <div>
+                        <h3 id="categoryModalTitle">Category Name</h3>
+                        <p id="categoryModalSubtitle">Manage defect groups for this category</p>
+                    </div>
+                </div>
+
+                <!-- Stats Cards in Modal Header -->
+                <div class="modal-header-stats" id="modalStatsCards">
+                    <!-- Stats cards will be populated by JavaScript -->
+                </div>
+
+                <button id="closeCategoryModal" class="close-btn">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Table Section in Modal -->
+            <div class="modal-table-section">
+                <!-- Table Header -->
+                <div class="table-header">
+                    <div class="table-header-left">
+                        <h4 id="modalTableTitle">Defect Groups (0)</h4>
+                        <!-- Search -->
+                        <div class="search-container">
+                            <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                            <input type="text" id="modalSearchInput" placeholder="Search defect groups..." class="search-input">
+                        </div>
+                        <!-- Filter Toggle Button -->
+                        <button id="toggleFiltersBtn" class="filter-toggle-btn" title="Toggle Filters">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.414A1 1 0 013 6.707V4z"></path>
+                            </svg>
+                            Filters
+                        </button>
+                        <div id="modalBulkActions" class="bulk-actions hidden" style="display: flex; gap: 0.75rem; align-items: center;">
+                            <span id="modalSelectedCount" class="selected-count">0 selected</span>
+                            <button id="modalActivateBtn" class="selection-action-btn activate-btn">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                Activate
+                            </button>
+                            <button id="modalDeactivateBtn" class="selection-action-btn deactivate-btn">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                Deactivate
+                            </button>
+                            <button id="modalBulkDeleteBtn" class="selection-action-btn delete-btn">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                Delete
+                            </button>
+                            <button id="modalCancelSelectionBtn" class="selection-action-btn cancel-btn">Cancel</button>
+                        </div>
+                    </div>
+                    <div class="table-header-actions">
+                        <button id="refreshModalTableBtn" class="icon-btn refresh-btn" title="Refresh Table">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                            </svg>
+                        </button>
+                        <button class="icon-btn" title="Export">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                        </button>
+                        <button id="modalAddDefectBtn" class="primary-btn">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            Add Defect Group
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filter Panel -->
+                <div id="filterPanel" class="filter-panel hidden">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label for="codeFilter">Code</label>
+                            <input type="text" id="codeFilter" placeholder="Filter by code..." class="filter-input">
+                        </div>
+                        <div class="filter-group">
+                            <label for="defectGroupFilter">Defect Group</label>
+                            <input type="text" id="defectGroupFilter" placeholder="Filter by defect group..." class="filter-input">
+                        </div>
+                        <div class="filter-group" id="categoryFilterGroup" style="display: none;">
+                            <label for="categoryFilter">Category</label>
+                            <select id="categoryFilter" class="filter-select">
+                                <option value="">All Categories</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="statusFilter">Status</label>
+                            <select id="statusFilter" class="filter-select">
+                                <option value="">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="filter-actions">
+                            <button id="applyFiltersBtn" class="apply-filters-btn">Apply</button>
+                            <button id="clearFiltersBtn" class="clear-filters-btn">Clear</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div id="modalLoadingState" class="loading-state hidden">
+                    <div class="loading-spinner"></div>
+                    <p>Loading defect groups...</p>
+                </div>
+
+                <!-- Table Container -->
+                <div id="modalTableContainer" class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th class="checkbox-col">
+                                    <input type="checkbox" id="modalSelectAll" class="checkbox">
+                                </th>
+                                <th class="sortable" data-sort="code">
+                                    <div class="sort-header">
+                                        Code
+                                        <span class="sort-icon"></span>
+                                    </div>
+                                </th>
+                                <th class="sortable" data-sort="defectGroup">
+                                    <div class="sort-header">
+                                        Defect Group
+                                        <span class="sort-icon"></span>
+                                    </div>
+                                </th>
+                                <th class="category-column hidden" data-sort="category">
+                                    <div class="sort-header">
+                                        Category
+                                        <span class="sort-icon"></span>
+                                    </div>
+                                </th>
+                                <th>Is Active?</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modalTableBody">
+                            <!-- Table rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Empty State -->
+                <div id="modalEmptyState" class="empty-state hidden">
+                    <div class="empty-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <h3>No defect groups found</h3>
+                    <p>Try adjusting your search criteria</p>
+                </div>
+
+                <!-- Pagination -->
+                <div id="modalPagination" class="pagination">
+                    <div class="pagination-info">
+                        <span id="modalPaginationText">Showing 1 to 10 of 100 results</span>
+                        <select id="modalItemsPerPage" class="items-per-page">
+                            <option value="5">5 per page</option>
+                            <option value="10" selected>10 per page</option>
+                            <option value="25">25 per page</option>
+                            <option value="50">50 per page</option>
+                        </select>
+                    </div>
+                    <div class="pagination-controls">
+                        <button id="modalPrevPage" class="pagination-btn" disabled>
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                        </button>
+                        <div id="modalPageNumbers" class="page-numbers">
+                            <!-- Page numbers will be populated by JavaScript -->
+                        </div>
+                        <button id="modalNextPage" class="pagination-btn">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Action Dropdown Template -->
+    <div id="actionDropdownTemplate" class="action-dropdown hidden">
+        <div class="dropdown-content">
+            <button class="dropdown-item view-btn">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                </svg>
+                View Details
+            </button>
+            <button class="dropdown-item edit-btn">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+                Edit
+            </button>
+            <button class="dropdown-item toggle-btn">
+                <svg class="power-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364L18.364 5.636"></path>
+                </svg>
+                <span class="toggle-text">Toggle Status</span>
+            </button>
+            <button class="dropdown-item delete-btn">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+                Delete
+            </button>
+        </div>
+    </div>
+
+    <script src="DefectGroupscript.js"></script>
+</body>
+</html>

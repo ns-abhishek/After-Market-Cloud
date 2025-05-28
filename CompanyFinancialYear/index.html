@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Financial Year Application</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-100 p-4 sm:p-6 lg:p-8">
+
+    <div id="loginSection" class="flex items-center justify-center min-h-screen" style="display: flex;">
+        <div class="card p-8 w-full max-w-md">
+            <h2 class="text-3xl font-bold text-gray-800 text-center mb-6">Login to Financial App</h2>
+            <form id="loginForm">
+                <div class="mb-4">
+                    <label for="username" class="block text-gray-700 text-sm font-medium mb-2">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required class="w-full py-3 px-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                <div class="mb-6">
+                    <label for="password" class="block text-gray-700 text-sm font-medium mb-2">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required class="w-full py-3 px-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                <button type="submit" class="btn-primary w-full">Login</button>
+                <p id="loginError" class="text-red-500 text-center mt-4 hidden">Invalid username or password.</p>
+            </form>
+        </div>
+    </div>
+
+    <div id="mainAppSection" class="container mx-auto flex" style="display: none;">
+        <aside id="sidebar" class="w-64 bg-white dark:bg-gray-800 shadow-lg rounded-xl p-4 mr-8 flex flex-col transition-all duration-300 ease-in-out">
+            <div class="flex justify-end mb-4">
+                <button id="sidebarToggle" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-500 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevrons-left">
+                        <path d="m11 17-5-5 5-5"/><path d="m18 17-5-5 5-5"/>
+                    </svg>
+                </button>
+            </div>
+            <nav class="flex-grow">
+                <ul>
+                    <li class="mb-2">
+                        <a href="#" id="navDashboard" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-700 hover:text-blue-700 dark:hover:text-blue-400 transition-colors duration-200" data-section="dashboardSection" data-tooltip="Dashboard">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-dashboard mr-3">
+                                <rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>
+                            </svg>
+                            <span class="sidebar-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" id="navDataEntry" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-700 hover:text-blue-700 dark:hover:text-blue-400 transition-colors duration-200" data-section="financialYearManagementSection" data-tooltip="Data Entry">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-edit mr-3">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                            </svg>
+                            <span class="sidebar-text">Data Entry</span>
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" id="navConfiguration" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-700 hover:text-blue-700 dark:hover:text-blue-400 transition-colors duration-200" data-section="configurationSection" data-tooltip="Configuration">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings mr-3">
+                                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V22a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V2a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <span class="sidebar-text">Configuration</span>
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" id="navReporting" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-700 hover:text-blue-700 dark:hover:text-blue-400 transition-colors duration-200" data-section="reportingAnalyticsSection" data-tooltip="Reporting & Analytics">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bar-chart-2 mr-3">
+                                <line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/>
+                            </svg>
+                            <span class="sidebar-text">Reporting & Analytics</span>
+                        </a>
+                    </li>
+                    <li class="mb-2" id="userManagementSidebarItem">
+                        <a href="#" id="navUserManagement" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-700 hover:text-blue-700 dark:hover:text-blue-400 transition-colors duration-200" data-section="userManagementSection" data-tooltip="User Management">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users mr-3">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                            <span class="sidebar-text">User Management</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="flex-1">
+            <header class="flex items-center justify-between bg-white p-4 rounded-xl shadow-md mb-8 dark:bg-gray-800">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-200">HCL Software</h1>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" value="" id="darkModeToggle" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                        <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">Dark Mode</span>
+                    </label>
+
+                    <span id="loggedInUsername" class="text-gray-700 font-medium dark:text-gray-300"></span>
+
+                    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+
+                    <div class="relative">
+                        <button id="settingsButton" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-blue-500 focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V22a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V2a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                        <div id="settingsDropdown" class="settings-dropdown hidden">
+                            <button id="logoutButton" class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md">Logout</button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div id="dashboardSection" class="content-section hidden">
+                <div id="companyDashboard" class="card p-6 mb-8 hidden">
+                    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-6">Company Dashboard</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-blue-50 p-4 rounded-lg shadow-sm dark:bg-blue-900">
+                            <h3 class="text-lg font-medium text-gray-700 dark:text-gray-300">Total Revenue</h3>
+                            <p id="totalRevenue" class="text-3xl font-bold text-blue-600 dark:text-blue-400">$0</p>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg shadow-sm dark:bg-green-900">
+                            <h3 class="text-lg font-medium text-gray-700 dark:text-gray-300">Net Profit</h3>
+                            <p id="netProfit" class="text-3xl font-bold text-green-600 dark:text-green-400">$0</p>
+                        </div>
+                        <div class="bg-yellow-50 p-4 rounded-lg shadow-sm dark:bg-yellow-900">
+                            <h3 class="text-lg font-medium text-gray-700 dark:text-gray-300">Cash Flow</h3>
+                            <p id="cashFlow" class="text-3xl font-bold text-yellow-600 dark:text-yellow-400">$0</p>
+                        </div>
+                        <div class="bg-red-50 p-4 rounded-lg shadow-sm dark:bg-red-900">
+                            <h3 class="text-lg font-medium text-gray-700 dark:text-gray-300">Budget Variance</h3>
+                            <p id="budgetVariance" class="text-3xl font-bold text-red-600 dark:text-red-400">$0</p>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-lg shadow-sm dark:bg-purple-900">
+                            <h3 class="text-lg font-medium text-gray-700 dark:text-gray-300">Outstanding Receivables</h3>
+                            <p id="outstandingReceivables" class="text-3xl font-bold text-purple-600 dark:text-purple-400">$0</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="card p-4">
+                            <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">Income vs Expense (Dummy Chart)</h3>
+                            <div class="bg-gray-100 dark:bg-gray-700 h-48 flex items-center justify-center rounded-lg text-gray-500 dark:text-gray-400">
+                                Placeholder for Chart
+                            </div>
+                        </div>
+                        <div class="card p-4">
+                            <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">Recent Activity Feed (Dummy)</h3>
+                            <ul class="space-y-2 text-gray-700 dark:text-gray-300">
+                                <li class="p-2 bg-gray-50 dark:bg-gray-700 rounded-md">Financial Year FY2024-2025 added.</li>
+                                <li class="p-2 bg-gray-50 dark:bg-gray-700 rounded-md">Budget updated for FY2023-2024.</li>
+                                <li class="p-2 bg-gray-50 dark:bg-gray-700 rounded-md">New expense recorded for Q1.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="adminDashboard" class="card p-6 mb-8 hidden">
+                    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-6">Admin Dashboard</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="bg-blue-50 p-4 rounded-lg shadow-sm dark:bg-blue-900">
+                            <h3 class="text-lg font-medium text-gray-700 dark:text-gray-300">Total Financial Years</h3>
+                            <p id="totalYears" class="text-3xl font-bold text-blue-600 dark:text-blue-400">0</p>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg shadow-sm dark:bg-green-900">
+                            <h3 class="text-lg font-medium text-gray-700 dark:text-gray-300">Active Years</h3>
+                            <p id="activeYears" class="text-3xl font-bold text-green-600 dark:text-green-400">0</p>
+                        </div>
+                        <div class="bg-red-50 p-4 rounded-lg shadow-sm dark:bg-red-900">
+                            <h3 class="text-lg font-medium text-gray-700 dark:text-gray-300">Closed Years</h3>
+                            <p id="closedYears" class="text-3xl font-bold text-red-600 dark:text-red-400">0</p>
+                        </div>
+                        <div class="bg-yellow-50 p-4 rounded-lg shadow-sm dark:bg-yellow-900">
+                            <h3 class="text-lg font-medium text-gray-700 dark:text-gray-300">Pending Years</h3>
+                            <p id="pendingYears" class="text-3xl font-bold text-yellow-600 dark:text-yellow-400">0</p>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-lg shadow-sm dark:bg-purple-900">
+                            <h3 class="text-lg font-medium text-gray-700 dark:text-gray-300">Current Year</h3>
+                            <p id="currentYear" class="text-3xl font-bold text-purple-600 dark:text-purple-400">N/A</p>
+                        </div>
+                        <div class="bg-indigo-50 p-4 rounded-lg shadow-sm dark:bg-indigo-900">
+                            <h3 class="text-lg font-medium text-gray-700 dark:text-gray-300">Future Years</h3>
+                            <p id="futureYears" class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">0</p>
+                        </div>
+                        <div class="bg-pink-50 p-4 rounded-lg shadow-sm dark:bg-pink-900">
+                            <h3 class="text-lg font-medium text-gray-700 dark:text-gray-300">Past Years</h3>
+                            <p id="pastYears" class="text-3xl font-bold text-pink-600 dark:text-pink-400">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="financialYearManagementSection" class="content-section hidden">
+                <div class="card p-6">
+                    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-6">Financial Years List</h2>
+                    
+                    <div class="flex flex-wrap gap-4 mb-6">
+                        <button id="addBtn" class="btn-primary flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus mr-2"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                            Add
+                        </button>
+                        <button id="deleteBtn" class="btn-primary bg-red-600 hover:bg-red-700 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2 mr-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                            Delete
+                        </button>
+                        <button id="refreshBtn" class="btn-primary bg-gray-600 hover:bg-gray-700 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw mr-2"><path d="M21 12a9 9 0 0 0-9-9c-7.27 0-9 7.37-9 9s1.73 9 9 9 9-7.37 9-9"/><path d="M17 12h-7v7"/></svg>
+                            Refresh
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto rounded-lg shadow-sm">
+                        <table class="min-w-full bg-white dark:bg-gray-800">
+                            <thead class="table-header">
+                                <tr>
+                                    <th class="py-3 px-4 text-left w-12 relative">
+                                        <input type="checkbox" id="selectAllCheckbox" class="form-checkbox rounded text-blue-500">
+                                    </th>
+                                    <th class="py-3 px-4 text-left cursor-pointer sortable relative" data-sort-by="entity">
+                                        <div class="flex items-center justify-between">
+                                            <span>Entity</span>
+                                            <div class="flex items-center space-x-1">
+                                                <span class="sort-icon"></span>
+                                                <button class="filter-icon-btn text-gray-400 hover:text-gray-700 dark:hover:text-gray-200" data-filter-target="filter-entity">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-filter"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <input type="text" id="filter-entity" data-filter-by="entity" placeholder="Filter Entity" class="filter-input-header hidden w-full mt-1 p-1 border rounded-md text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+                                    </th>
+                                    <th class="py-3 px-4 text-left cursor-pointer sortable relative" data-sort-by="name">
+                                        <div class="flex items-center justify-between">
+                                            <span>Financial Year</span>
+                                            <div class="flex items-center space-x-1">
+                                                <span class="sort-icon"></span>
+                                                <button class="filter-icon-btn text-gray-400 hover:text-gray-700 dark:hover:text-gray-200" data-filter-target="filter-name">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-filter"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <input type="text" id="filter-name" data-filter-by="name" placeholder="Filter Year Name" class="filter-input-header hidden w-full mt-1 p-1 border rounded-md text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+                                    </th>
+                                    <th class="py-3 px-4 text-left cursor-pointer sortable relative" data-sort-by="startDate">
+                                        <div class="flex items-center justify-between">
+                                            <span>From Date</span>
+                                            <div class="flex items-center space-x-1">
+                                                <span class="sort-icon"></span>
+                                                <button class="filter-icon-btn text-gray-400 hover:text-gray-700 dark:hover:text-gray-200" data-filter-target="filter-startDate">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-filter"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <input type="date" id="filter-startDate" data-filter-by="startDate" class="filter-input-header hidden w-full mt-1 p-1 border rounded-md text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+                                    </th>
+                                    <th class="py-3 px-4 text-left cursor-pointer sortable relative" data-sort-by="endDate">
+                                        <div class="flex items-center justify-between">
+                                            <span>To Date</span>
+                                            <div class="flex items-center space-x-1">
+                                                <span class="sort-icon"></span>
+                                                <button class="filter-icon-btn text-gray-400 hover:text-gray-700 dark:hover:text-gray-200" data-filter-target="filter-endDate">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-filter"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <input type="date" id="filter-endDate" data-filter-by="endDate" class="filter-input-header hidden w-full mt-1 p-1 border rounded-md text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+                                    </th>
+                                    <th class="py-3 px-4 text-left cursor-pointer sortable relative" data-sort-by="status">
+                                        <div class="flex items-center justify-between">
+                                            <span>Status</span>
+                                            <div class="flex items-center space-x-1">
+                                                <span class="sort-icon"></span>
+                                                <button class="filter-icon-btn text-gray-400 hover:text-gray-700 dark:hover:text-gray-200" data-filter-target="filter-status">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-filter"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <select id="filter-status" data-filter-by="status" class="filter-input-header hidden w-full mt-1 p-1 border rounded-md text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+                                            <option value="">All</option>
+                                            <option value="Active">Active</option>
+                                            <option value="Inactive">Inactive</option>
+                                        </select>
+                                    </th>
+                                    <th class="py-3 px-4 text-left cursor-pointer sortable relative" data-sort-by="currentStatus">
+                                        <div class="flex items-center justify-between">
+                                            <span>Current Status</span>
+                                            <div class="flex items-center space-x-1">
+                                                <span class="sort-icon"></span>
+                                                <button class="filter-icon-btn text-gray-400 hover:text-gray-700 dark:hover:text-gray-200" data-filter-target="filter-currentStatus">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-filter"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <select id="filter-currentStatus" data-filter-by="currentStatus" class="filter-input-header hidden w-full mt-1 p-1 border rounded-md text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+                                            <option value="">All</option>
+                                            <option value="Past">Past</option>
+                                            <option value="Current">Current</option>
+                                            <option value="Future">Future</option>
+                                        </select>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="financialYearsTableBody" class="table-body">
+                                </tbody>
+                        </table>
+                    </div>
+                    <p id="noDataMessage" class="text-center text-gray-500 dark:text-gray-400 mt-4 hidden">No financial years added yet.</p>
+
+                    <div class="flex flex-wrap items-center justify-between mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg shadow-sm">
+                        <div class="flex items-center space-x-2 text-gray-700 dark:text-gray-300">
+                            <span>Records per page:</span>
+                            <select id="recordsPerPage" class="p-2 border rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                                <option value="20">20</option>
+                                <option value="25">25</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button id="firstPageBtn" class="btn-pagination" title="First Page">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevrons-left"><path d="m11 17-5-5 5-5"/><path d="m18 17-5-5 5-5"/></svg>
+                            </button>
+                            <button id="prevPageBtn" class="btn-pagination" title="Previous Page">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg>
+                            </button>
+                            <span id="pageInfo" class="text-gray-700 dark:text-gray-300">Page 1 of 1</span>
+                            <button id="nextPageBtn" class="btn-pagination" title="Next Page">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg>
+                            </button>
+                            <button id="lastPageBtn" class="btn-pagination" title="Last Page">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevrons-right"><path d="m6 17 5-5-5-5"/><path d="m13 17 5-5-5-5"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="reportingAnalyticsSection" class="content-section hidden">
+                <div class="card p-6 mb-8">
+                    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-6">Reporting & Analytics</h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label for="reportType" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">Select Report Type</label>
+                            <select id="reportType" class="w-full py-3 px-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                <option value="">-- Select --</option>
+                                <option value="profitLoss">Profit & Loss</option>
+                                <option value="balanceSheet">Balance Sheet</option>
+                                <option value="cashFlow">Cash Flow</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="reportFinancialYear" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">Select Financial Year</label>
+                            <select id="reportFinancialYear" class="w-full py-3 px-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                <option value="">-- Select --</option>
+                                </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-3">Comparison Across Financial Years</h3>
+                        <label class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">Compare With (Select multiple)</label>
+                        <div class="custom-multi-select-container w-full">
+                            <div class="selected-items-display p-3 border rounded-lg cursor-pointer flex flex-wrap items-center gap-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white" id="selectedCompareYearsDisplay">
+                                <span class="placeholder-text text-gray-500 dark:text-gray-400">Select years...</span>
+                            </div>
+                            <div class="multi-select-dropdown-list hidden absolute w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg mt-1 max-h-48 overflow-y-auto z-10" id="compareYearsDropdownList">
+                                </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-3">Customizable Periods</h3>
+                            <label for="customPeriodStart" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">Custom Start Date</label>
+                            <input type="date" id="customPeriodStart" class="w-full py-3 px-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        </div>
+                        <div>
+                            <label for="customPeriodEnd" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">Custom End Date</label>
+                            <input type="date" id="customPeriodEnd" class="w-full py-3 px-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end mb-6">
+                        <button id="generateReportBtn" class="btn-primary">Generate Report</button>
+                    </div>
+
+                    <div id="reportOutput" class="card p-4 bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 min-h-[150px] flex items-center justify-center">
+                        Report output will appear here.
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+                        <div class="card p-4 h-64">
+                            <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">Income vs Expense Chart</h3>
+                            <div id="incomeExpenseChart" class="w-full h-full bg-gray-100 dark:bg-gray-700 rounded-lg text-gray-500 dark:text-gray-400 flex items-center justify-center"></div>
+                        </div>
+                        <div class="card p-4 h-64">
+                            <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">Cash Flow Trend</h3>
+                            <div id="cashFlowChart" class="w-full h-full bg-gray-100 dark:bg-gray-700 rounded-lg text-gray-500 dark:text-gray-400 flex items-center justify-center"></div>
+                        </div>
+                        <div class="card p-4 h-64">
+                            <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">Asset Distribution</h3>
+                            <div id="assetDistributionChart" class="w-full h-full bg-gray-100 dark:bg-gray-700 rounded-lg text-gray-500 dark:text-gray-400 flex items-center justify-center"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-6">
+                    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-6">Audit Trails</h2>
+                    <div id="auditTrailLog" class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg min-h-[100px] max-h-60 overflow-y-auto text-gray-700 dark:text-gray-300 text-sm">
+                        <p class="text-gray-500 dark:text-gray-400">No audit entries yet.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="configurationSection" class="content-section hidden">
+                <div class="card p-6 mb-8">
+                    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-6">Financial Year Definition</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="configStartMonth" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">Start Month</label>
+                            <select id="configStartMonth" class="w-full py-3 px-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                <option value="0">January</option>
+                                <option value="1">February</option>
+                                <option value="2">March</option>
+                                <option value="3" selected>April</option>
+                                <option value="4">May</option>
+                                <option value="5">June</option>
+                                <option value="6">July</option>
+                                <option value="7">August</option>
+                                <option value="8">September</option>
+                                <option value="9">October</option>
+                                <option value="10">November</option>
+                                <option value="11">December</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="configStartDay" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">Start Day</label>
+                            <input type="number" id="configStartDay" value="1" min="1" max="31" class="w-full py-3 px-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="configYearDesignation" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">Year Designation Format</label>
+                            <select id="configYearDesignation" class="w-full py-3 px-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                <option value="YYYY">YYYY (e.g., 2025)</option>
+                                <option value="FY_YY">FYYY (e.g., FY25)</option>
+                                <option value="YYYY-YYYY">YYYY-YYYY (e.g., 2025-2026)</option>
+                                <option value="FY_YYYY-YY">FYYYYY-YY (e.g., FY2025-26)</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="defaultFinancialYear" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">Default Financial Year</label>
+                            <select id="defaultFinancialYear" class="w-full py-3 px-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                <option value="">-- Select Default --</option>
+                                </select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">Financial Year Status Management</label>
+                            <div class="flex items-center space-x-4">
+                                <select id="fyStatusYearSelect" class="py-2 px-3 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white flex-1">
+                                    <option value="">Select Year</option>
+                                    </select>
+                                <select id="fyStatusSelect" class="py-2 px-3 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white flex-1">
+                                    <option value="">Set Status</option>
+                                    <option value="Open">Open</option>
+                                    <option value="Closed">Closed</option>
+                                    <option value="Current">Current</option>
+                                    <option value="Future">Future</option>
+                                </select>
+                                <button id="applyFyStatusBtn" class="btn-primary py-2 px-4">Apply Status</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-end mt-6">
+                        <button id="saveFyDefinitionBtn" class="btn-primary">Save FY Definition</button>
+                    </div>
+                </div>
+
+                <div class="card p-6 mb-8">
+                    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-6">Period Definition</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="periodType" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">Period Type</label>
+                            <select id="periodType" class="w-full py-3 px-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                <option value="monthly">Monthly</option>
+                                <option value="quarterly">Quarterly</option>
+                                <option value="custom">Custom (e.g., 13 periods)</option>
+                            </select>
+                        </div>
+                        <div id="customPeriodCountDiv" class="hidden">
+                            <label for="customPeriodCount" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">Number of Custom Periods</label>
+                            <input type="number" id="customPeriodCount" min="1" value="13" class="w-full py-3 px-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="periodNamingConvention" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">Period Naming Convention</label>
+                            <input type="text" id="periodNamingConvention" placeholder="e.g., P{num} {year}" class="w-full py-3 px-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">Period Locking/Closing</label>
+                            <div class="flex items-center space-x-4">
+                                <select id="periodLockYearSelect" class="py-2 px-3 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white flex-1">
+                                    <option value="">Select Year</option>
+                                    </select>
+                                <select id="periodLockPeriodSelect" class="py-2 px-3 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white flex-1">
+                                    <option value="">Select Period</option>
+                                    </select>
+                                <select id="periodLockStatusSelect" class="py-2 px-3 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white flex-1">
+                                    <option value="Open">Open</option>
+                                    <option value="Locked">Locked</option>
+                                    <option value="Closed">Closed</option>
+                                </select>
+                                <button id="applyPeriodLockBtn" class="btn-primary py-2 px-4">Apply Lock</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-end mt-6">
+                        <button id="savePeriodDefinitionBtn" class="btn-primary">Save Period Definition</button>
+                    </div>
+                </div>
+
+                <div id="financialYearAssociationSection" class="card p-6">
+                    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-6">Financial Year Association</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="associateEntitySelect" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">Select Entity</label>
+                            <select id="associateEntitySelect" class="w-full py-3 px-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                <option value="">-- Select Entity --</option>
+                                </select>
+                        </div>
+                        <div>
+                            <label for="associateFinancialYearSelect" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">Associate Financial Year</label>
+                            <select id="associateFinancialYearSelect" class="w-full py-3 px-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                <option value="">-- Select Financial Year --</option>
+                                </select>
+                        </div>
+                    </div>
+                    <div class="flex justify-end mt-6">
+                        <button id="saveAssociationBtn" class="btn-primary">Save Association</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="systemIntegrationSection" class="content-section hidden">
+                <div class="card p-6 mb-8">
+                    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-6">API Support for Financial Year</h2>
+                    <p class="text-gray-700 dark:text-gray-300 mb-4">
+                        This section outlines the API endpoints available for other systems to understand and interact with the financial year configurations.
+                    </p>
+                    <ul class="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2">
+                        <li><strong class="font-semibold">GET /api/financial-years:</strong> Retrieve all financial year definitions.</li>
+                        <li><strong class="font-semibold">GET /api/financial-years/{id}:</strong> Retrieve a specific financial year definition by ID.</li>
+                        <li><strong class="font-semibold">POST /api/financial-years:</strong> Create a new financial year definition.</li>
+                        <li><strong class="font-semibold">PUT /api/financial-years/{id}:</strong> Update an existing financial year definition.</li>
+                        <li><strong class="font-semibold">GET /api/periods/{financialYearId}:</strong> Retrieve accounting periods for a given financial year.</li>
+                        <li><strong class="font-semibold">POST /api/data-migration/import:</strong> Endpoint for importing financial data.</li>
+                    </ul>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-4">
+                        (Note: These are conceptual API endpoints for demonstration purposes.)
+                    </p>
+                </div>
+
+                <div class="card p-6 mb-8">
+                    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-6">Data Migration Tools</h2>
+                    <p class="text-gray-700 dark:text-gray-300 mb-4">
+                        Tools to facilitate the migration of historical financial data to the new financial year structure during implementation.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <button class="btn-primary bg-purple-600 hover:bg-purple-700">Import Data (CSV/Excel)</button>
+                        <button class="btn-primary bg-purple-600 hover:bg-purple-700">Export Data</button>
+                        <button class="btn-primary bg-purple-600 hover:bg-purple-700">Map Legacy Data</button>
+                    </div>
+                </div>
+
+                <div class="card p-6 mb-8">
+                    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-6">Audit Logging</h2>
+                    <p class="text-gray-700 dark:text-gray-300">
+                        A comprehensive audit log of all financial year configurations, changes, and period closures is maintained. This ensures traceability and compliance. (Refer to the Audit Trails section under Reporting & Analytics for the log display.)
+                    </p>
+                </div>
+
+                <div class="card p-6 mb-8">
+                    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-6">User Role and Permission Management</h2>
+                    <p class="text-gray-700 dark:text-gray-300">
+                        Access to financial year configuration and period management functionalities is controlled through user roles and permissions. (Refer to the User Management tab for role assignment.)
+                    </p>
+                </div>
+
+                <div class="card p-6">
+                    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-6">System Date Independence</h2>
+                    <p class="text-gray-700 dark:text-gray-300">
+                        The system is designed to be independent of the underlying server's calendar year settings. All financial year logic, including period calculations and status determinations, is driven solely by the configured definitions within the application. This ensures consistency across different geographical deployments and server environments, regardless of local system date settings.
+                    </p>
+                </div>
+            </div>
+
+            <div id="userManagementSection" class="content-section hidden">
+                <div class="card p-6 mb-8">
+                    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-6">User Role and Permission Management</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="selectUser" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">Select User</label>
+                            <select id="selectUser" class="w-full py-3 px-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                <option value="">-- Select User --</option>
+                                </select>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">Assign Role</label>
+                            <div class="flex items-center space-x-4 h-full">
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="assignRole" value="admin" class="form-radio text-blue-600 dark:text-blue-400">
+                                    <span class="ml-2 text-gray-700 dark:text-gray-300">Admin</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="assignRole" value="company" class="form-radio text-blue-600 dark:text-blue-400">
+                                    <span class="ml-2 text-gray-700 dark:text-gray-300">Company</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="assignRole" value="auditor" class="form-radio text-blue-600 dark:text-blue-400">
+                                    <span class="ml-2 text-gray-700 dark:text-gray-300">Auditor</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-end mt-6">
+                        <button id="saveUserRoleBtn" class="btn-primary">Save User Role</button>
+                    </div>
+                </div>
+
+                <div class="card p-6">
+                    <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-6">Current User Roles</h2>
+                    <div id="currentUserRoles" class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg min-h-[100px] max-h-60 overflow-y-auto text-gray-700 dark:text-gray-300 text-sm">
+                        <p class="text-gray-500 dark:text-gray-400">No user roles defined yet.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="addFinancialYearModal" class="modal-overlay hidden">
+        <div class="modal-content card p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Add New Financial Year</h2>
+                <button id="closeModalBtn" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
+            <form id="modalFinancialYearForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="modalFinancialYearName" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">Financial Year Name</label>
+                    <input type="text" id="modalFinancialYearName" name="financialYearName" readonly class="w-full py-3 px-4 rounded-lg border border-gray-300 bg-gray-100 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-not-allowed">
+                </div>
+
+                <div>
+                    <label for="financialYearFormat" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">Format</label>
+                    <select id="financialYearFormat" class="w-full py-3 px-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <option value="YYYY-YY">YYYY-YY (e.g., 2025-26)</option>
+                        <option value="FY_YYYY-YY">FYYYYY-YY (e.g., FY2025-26)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="modalStartDate" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">From Date</label>
+                    <input type="date" id="modalStartDate" name="startDate" required class="w-full py-3 px-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                </div>
+
+                <div>
+                    <label for="modalEndDate" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">To Date</label>
+                    <input type="date" id="modalEndDate" name="endDate" readonly class="w-full py-3 px-4 rounded-lg border border-gray-300 bg-gray-100 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-not-allowed">
+                </div>
+
+                <div>
+                    <label class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">Status</label>
+                    <div class="flex items-center space-x-4">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="modalStatus" id="modalStatusActiveRadio" value="Active" class="form-radio text-blue-600 dark:text-blue-400" checked>
+                            <span class="ml-2 text-gray-700 dark:text-gray-300">Active</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="modalStatus" id="modalStatusInactiveRadio" value="Inactive" class="form-radio text-blue-600 dark:text-blue-400">
+                            <span class="ml-2 text-gray-700 dark:text-gray-300">Inactive</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="entitySelectionContainer" class="hidden md:col-span-2">
+                    <label class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">Select Entities</label>
+                    <div class="custom-multi-select-container w-full">
+                        <div class="selected-items-display p-3 border rounded-lg cursor-pointer flex flex-wrap items-center gap-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white" id="selectedModalEntitiesDisplay">
+                            <span class="placeholder-text text-gray-500 dark:text-gray-400">Select entities...</span>
+                        </div>
+                        <div class="multi-select-dropdown-list hidden absolute w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg mt-1 max-h-48 overflow-y-auto z-10" id="modalEntitiesDropdownList">
+                            </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-2 flex justify-end">
+                    <button type="submit" class="btn-primary">Add Financial Year</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="messageBox" class="message-box"></div>
+
+    <script src="CFYscript.js"></script>
+</body>
+</html>

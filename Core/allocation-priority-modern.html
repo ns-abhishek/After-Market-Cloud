@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HCL Technologies - Modern Allocation Priority</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/modern-allocation.css">
+</head>
+<body>
+    <!-- Modern App Container -->
+    <div class="modern-app">
+        <!-- Top Navigation Bar -->
+        <nav class="top-nav">
+            <div class="nav-brand">
+                <img src="https://via.placeholder.com/32x32/000000/FFFFFF?text=HCL" alt="HCL" class="brand-logo">
+                <span class="brand-text">HCL Technologies</span>
+            </div>
+            <div class="nav-center">
+                <div class="search-container">
+                    <i class="material-icons">search</i>
+                    <input type="text" placeholder="Search priorities, orders, customers..." class="global-search">
+                </div>
+            </div>
+            <div class="nav-actions">
+                <button class="nav-btn" title="Notifications">
+                    <i class="material-icons">notifications</i>
+                    <span class="badge">3</span>
+                </button>
+                <button class="nav-btn" title="Settings">
+                    <i class="material-icons">settings</i>
+                </button>
+                <div class="user-menu">
+                    <img src="https://via.placeholder.com/32x32/1a1a1a/FFFFFF?text=A" alt="Admin" class="user-avatar">
+                    <span class="user-name">Administrator</span>
+                    <i class="material-icons">arrow_drop_down</i>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-container">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="header-content">
+                    <h1 class="page-title">Allocation Priority Management</h1>
+                    <p class="page-description">Manage and optimize order allocation priorities across all business units</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" id="importBtn">
+                        <i class="material-icons">upload</i>
+                        Import
+                    </button>
+                    <button class="btn btn-secondary" id="exportBtn">
+                        <i class="material-icons">download</i>
+                        Export
+                    </button>
+                    <button class="btn btn-primary" id="addNewBtn">
+                        <i class="material-icons">add</i>
+                        Add Priority
+                    </button>
+                </div>
+            </header>
+
+            <!-- Stats Cards -->
+            <section class="stats-section">
+                <div class="stats-grid">
+                    <div class="stat-card critical">
+                        <div class="stat-icon">
+                            <i class="material-icons">priority_high</i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-number">24</h3>
+                            <p class="stat-label">Critical Priority</p>
+                            <span class="stat-change positive">+12%</span>
+                        </div>
+                    </div>
+                    <div class="stat-card high">
+                        <div class="stat-icon">
+                            <i class="material-icons">trending_up</i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-number">156</h3>
+                            <p class="stat-label">High Priority</p>
+                            <span class="stat-change positive">+8%</span>
+                        </div>
+                    </div>
+                    <div class="stat-card medium">
+                        <div class="stat-icon">
+                            <i class="material-icons">trending_flat</i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-number">342</h3>
+                            <p class="stat-label">Medium Priority</p>
+                            <span class="stat-change neutral">0%</span>
+                        </div>
+                    </div>
+                    <div class="stat-card low">
+                        <div class="stat-icon">
+                            <i class="material-icons">trending_down</i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-number">89</h3>
+                            <p class="stat-label">Low Priority</p>
+                            <span class="stat-change negative">-5%</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Filter and View Controls -->
+            <section class="controls-section">
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <label>Order Type</label>
+                        <select class="filter-select" id="orderTypeFilter">
+                            <option value="">All Types</option>
+                            <option value="customer">Customer Order</option>
+                            <option value="job">Job Card</option>
+                            <option value="stock">Stock Transfer</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Priority Level</label>
+                        <select class="filter-select" id="priorityFilter">
+                            <option value="">All Priorities</option>
+                            <option value="1">Critical (1)</option>
+                            <option value="2">High (2)</option>
+                            <option value="3">Medium (3)</option>
+                            <option value="4">Low (4)</option>
+                            <option value="5">Minimal (5)</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Status</label>
+                        <select class="filter-select" id="statusFilter">
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="pending">Pending</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="view-controls">
+                    <div class="view-switcher">
+                        <button class="view-btn active" data-view="cards">
+                            <i class="material-icons">view_module</i>
+                        </button>
+                        <button class="view-btn" data-view="table">
+                            <i class="material-icons">table_rows</i>
+                        </button>
+                        <button class="view-btn" data-view="kanban">
+                            <i class="material-icons">view_kanban</i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Priority Cards View -->
+            <section class="content-section">
+                <div class="priority-cards" id="priorityCards">
+                    <!-- Priority cards will be dynamically generated -->
+                </div>
+            </section>
+
+            <!-- Table View (Hidden by default) -->
+            <section class="content-section" id="tableView" style="display: none;">
+                <div class="table-container">
+                    <table class="priority-table">
+                        <thead>
+                            <tr>
+                                <th>Order Type</th>
+                                <th>Order Class</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Created Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Table rows will be dynamically generated -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Kanban View (Hidden by default) -->
+            <section class="content-section" id="kanbanView" style="display: none;">
+                <div class="kanban-board">
+                    <div class="kanban-column" data-priority="1">
+                        <div class="column-header critical">
+                            <h3>Critical Priority</h3>
+                            <span class="item-count">0</span>
+                        </div>
+                        <div class="column-content" id="priority1Items"></div>
+                    </div>
+                    <div class="kanban-column" data-priority="2">
+                        <div class="column-header high">
+                            <h3>High Priority</h3>
+                            <span class="item-count">0</span>
+                        </div>
+                        <div class="column-content" id="priority2Items"></div>
+                    </div>
+                    <div class="kanban-column" data-priority="3">
+                        <div class="column-header medium">
+                            <h3>Medium Priority</h3>
+                            <span class="item-count">0</span>
+                        </div>
+                        <div class="column-content" id="priority3Items"></div>
+                    </div>
+                    <div class="kanban-column" data-priority="4">
+                        <div class="column-header low">
+                            <h3>Low Priority</h3>
+                            <span class="item-count">0</span>
+                        </div>
+                        <div class="column-content" id="priority4Items"></div>
+                    </div>
+                    <div class="kanban-column" data-priority="5">
+                        <div class="column-header minimal">
+                            <h3>Minimal Priority</h3>
+                            <span class="item-count">0</span>
+                        </div>
+                        <div class="column-content" id="priority5Items"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add Priority Modal -->
+    <div class="modal" id="addPriorityModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Priority</h2>
+                <button class="modal-close">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="priorityForm">
+                    <div class="form-group">
+                        <label for="orderType">Order Type</label>
+                        <select id="orderType" required>
+                            <option value="">Select Order Type</option>
+                            <option value="Customer Order">Customer Order</option>
+                            <option value="Job Card">Job Card</option>
+                            <option value="Stock Transfer">Stock Transfer</option>
+                            <option value="Non Sales Order">Non Sales Order</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="orderClass">Order Class</label>
+                        <input type="text" id="orderClass" placeholder="Enter order class" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Priority Level</label>
+                        <div class="priority-selector">
+                            <label class="priority-option">
+                                <input type="radio" name="priority" value="1">
+                                <span class="priority-badge critical">1 - Critical</span>
+                            </label>
+                            <label class="priority-option">
+                                <input type="radio" name="priority" value="2">
+                                <span class="priority-badge high">2 - High</span>
+                            </label>
+                            <label class="priority-option">
+                                <input type="radio" name="priority" value="3" checked>
+                                <span class="priority-badge medium">3 - Medium</span>
+                            </label>
+                            <label class="priority-option">
+                                <input type="radio" name="priority" value="4">
+                                <span class="priority-badge low">4 - Low</span>
+                            </label>
+                            <label class="priority-option">
+                                <input type="radio" name="priority" value="5">
+                                <span class="priority-badge minimal">5 - Minimal</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" placeholder="Enter description (optional)" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="saveBtn">Save Priority</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="scripts/modern-allocation.js"></script>
+</body>
+</html>

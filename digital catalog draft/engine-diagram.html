@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engine Diagram - Digital Parts Catalog</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .engine-diagram-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .engine-diagram {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .engine-spot {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: rgba(52, 152, 219, 0.6);
+            border: 2px solid #2980b9;
+            cursor: pointer;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .engine-spot:hover {
+            background-color: rgba(52, 152, 219, 0.9);
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+        
+        .engine-spot::after {
+            content: attr(data-number);
+        }
+        
+        .engine-diagram-legend {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .legend-item:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .legend-number {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background-color: #3498db;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .back-to-catalog {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 10px 15px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .back-to-catalog:hover {
+            background-color: #2980b9;
+        }
+        
+        /* Engine placeholder styles */
+        .engine-placeholder {
+            width: 100%;
+            height: 500px;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .engine-placeholder-text {
+            font-size: 24px;
+            color: #777;
+            text-align: center;
+            position: absolute;
+            z-index: 1;
+        }
+        
+        .engine-outline {
+            width: 80%;
+            height: 70%;
+            border: 3px solid #777;
+            border-radius: 20px;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header Section -->
+        <header>
+            <div class="logo">
+                <h1>Engine Diagram</h1>
+            </div>
+            <div class="nav-bar">
+                <a href="index.html" class="nav-item"><i class="fas fa-home"></i> Home</a>
+                <a href="#" class="nav-item active"><i class="fas fa-cogs"></i> Engine</a>
+                <a href="#" class="nav-item"><i class="fas fa-question-circle"></i> Help</a>
+                <button class="interactive-view-btn"><i class="fas fa-cube"></i> Interactive View</button>
+            </div>
+            <div class="view-options">
+                <a href="index.html" class="back-to-catalog"><i class="fas fa-arrow-left"></i> Back to Catalog</a>
+            </div>
+        </header>
+
+        <!-- Main Content Section -->
+        <main>
+            <div class="sidebar">
+                <h3>Categories</h3>
+                <ul id="category-list">
+                    <li>
+                        <div class="category-folder">
+                            <span><i class="fas fa-folder folder-icon"></i>OIDL-CBB-36</span>
+                            <i class="fas fa-chevron-right expand-icon"></i>
+                        </div>
+                        <ul class="subcategory-items">
+                            <li class="subcategory-item">Bus service manual</li>
+                            <li class="subcategory-item">SRT-CV-StandardRepairTime</li>
+                            <li class="subcategory-item">WPP-CV-BusWarrantyPolicy</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="category-folder">
+                            <span><i class="fas fa-folder folder-icon"></i>DOORS & LIDS - 2615/2520/1805/847</span>
+                            <i class="fas fa-chevron-right expand-icon"></i>
+                        </div>
+                        <ul class="subcategory-items">
+                            <li class="subcategory-item">CBDTOOL TOOL SET</li>
+                            <li class="subcategory-item">CBDLFDOOR FRONT DOOR ASSEMBLY</li>
+                            <li class="subcategory-item">CBDLRLID-1 REAR LID</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="category-folder">
+                            <span><i class="fas fa-folder folder-icon"></i>INTERIOR TRIMMING BLUE - 2615/2521/1896/847</span>
+                            <i class="fas fa-chevron-right expand-icon"></i>
+                        </div>
+                        <ul class="subcategory-items">
+                            <li class="subcategory-item">CBITTOOL TOOL SET</li>
+                            <li class="subcategory-item">CBITSVV SUN VISOR</li>
+                            <li class="subcategory-item">CBITFHL FRONT HEADLINER</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="category-folder">
+                            <span><i class="fas fa-folder folder-icon"></i>SOFTWARE UPDATES EN - 2625/2539/1815/851</span>
+                            <i class="fas fa-chevron-right expand-icon"></i>
+                        </div>
+                        <ul class="subcategory-items">
+                            <li class="subcategory-item">ENSU 1 (2020-2021)</li>
+                            <li class="subcategory-item">ENSU 2 (2021-2022)</li>
+                            <li class="subcategory-item">ENSU 3 (2022-2023)</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="category-folder active">
+                            <span><i class="fas fa-folder folder-icon"></i>ENGINE - 2608/2514/1801/845</span>
+                            <i class="fas fa-chevron-down expand-icon"></i>
+                        </div>
+                        <ul class="subcategory-items active">
+                            <li class="subcategory-item">Operator Manual-Engine</li>
+                            <li class="subcategory-item">Standard Repair Time</li>
+                            <li class="subcategory-item">EGSASSY00A1 ENGINE AND GENERATOR</li>
+                            <li class="subcategory-item">EGLASSY00A1 ENGINE ASSEMBLY - LEFT</li>
+                            <li class="subcategory-item">ERSASSY00A1 ENGINE ASSEMBLY - RIGHT</li>
+                            <li class="subcategory-item">EHTASSY00A1 HOTSTART ASSEMBLY</li>
+                            <li class="subcategory-item">EMASSY00A1 ENGINE MOUNT ASSEMBLY</li>
+                            <li class="subcategory-item">UDCB00A1 UNIT DECALS - CONTROL BOX</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="category-folder">
+                            <span><i class="fas fa-folder folder-icon"></i>SOFTWARE UPDATES EN - 2625/2539/1816/851</span>
+                            <i class="fas fa-chevron-right expand-icon"></i>
+                        </div>
+                        <ul class="subcategory-items">
+                            <li class="subcategory-item">SOFTWARE UPDATE PACKAGE</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="category-folder">
+                            <span><i class="fas fa-folder folder-icon"></i>GEARBOX_GB01 - 2609/2515/1802/845</span>
+                            <i class="fas fa-chevron-right expand-icon"></i>
+                        </div>
+                        <ul class="subcategory-items">
+                            <li class="subcategory-item">Technical Service Bulletin</li>
+                            <li class="subcategory-item">Safety Recall</li>
+                            <li class="subcategory-item">Transmission-Operator Manual</li>
+                            <li class="subcategory-item">Transmission-Service Manual</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="content" style="width: 100%;">
+                <div class="engine-diagram-container">
+                    <!-- Engine Diagram Placeholder -->
+                    <div class="engine-placeholder">
+                        <div class="engine-placeholder-text">Engine Diagram</div>
+                        <div class="engine-outline">
+                            <!-- Engine Spots -->
+                            <div class="engine-spot" style="top: 25%; left: 20%;" data-number="1" data-part-id="egsassy00a1"></div>
+                            <div class="engine-spot" style="top: 30%; left: 40%;" data-number="2" data-part-id="eglassy00a1"></div>
+                            <div class="engine-spot" style="top: 35%; left: 60%;" data-number="3" data-part-id="ersassy00a1"></div>
+                            <div class="engine-spot" style="top: 60%; left: 25%;" data-number="4" data-part-id="ehtassy00a1"></div>
+                            <div class="engine-spot" style="top: 70%; left: 50%;" data-number="5" data-part-id="emassy00a1"></div>
+                            <div class="engine-spot" style="top: 75%; left: 75%;" data-number="6" data-part-id="udcb00a1"></div>
+                        </div>
+                    </div>
+                
+                    <div class="engine-diagram-legend">
+                        <h3>Engine Components</h3>
+                        <div class="legend-item" data-part-id="egsassy00a1">
+                            <div class="legend-number">1</div>
+                            <div>ENGINE AND GENERATOR TO SKID ASSEMBLY</div>
+                        </div>
+                        <div class="legend-item" data-part-id="eglassy00a1">
+                            <div class="legend-number">2</div>
+                            <div>ENGINE ASSEMBLY - LEFT SIDE</div>
+                        </div>
+                        <div class="legend-item" data-part-id="ersassy00a1">
+                            <div class="legend-number">3</div>
+                            <div>ENGINE ASSEMBLY - RIGHT SIDE</div>
+                        </div>
+                        <div class="legend-item" data-part-id="ehtassy00a1">
+                            <div class="legend-number">4</div>
+                            <div>HOTSTART ASSEMBLY</div>
+                        </div>
+                        <div class="legend-item" data-part-id="emassy00a1">
+                            <div class="legend-number">5</div>
+                            <div>ENGINE MOUNT ASSEMBLY</div>
+                        </div>
+                        <div class="legend-item" data-part-id="udcb00a1">
+                            <div class="legend-number">6</div>
+                            <div>UNIT DECALS - CONTROL BOX</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Item Detail Modal -->
+        <div id="item-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <div id="modal-content">
+                    <!-- Modal content will be loaded dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('item-modal');
+            const modalContent = document.getElementById('modal-content');
+            const closeModal = document.querySelector('.close-modal');
+
+            // Setup engine spots
+            const engineSpots = document.querySelectorAll('.engine-spot');
+            engineSpots.forEach(spot => {
+                spot.addEventListener('click', () => {
+                    const partId = spot.dataset.partId;
+                    const part = findItemById(partId);
+                    if (part) {
+                        showItemDetail(part);
+                    }
+                });
+            });
+
+            // Setup legend items
+            const legendItems = document.querySelectorAll('.legend-item');
+            legendItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const partId = item.dataset.partId;
+                    const part = findItemById(partId);
+                    if (part) {
+                        showItemDetail(part);
+                    }
+                });
+            });
+
+            // Close modal
+            closeModal.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+
+            // Close modal when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+
+            // Toggle category submenus
+            const categoryFolders = document.querySelectorAll('.category-folder');
+            categoryFolders.forEach(folder => {
+                folder.addEventListener('click', () => {
+                    const submenu = folder.nextElementSibling;
+                    const expandIcon = folder.querySelector('.expand-icon');
+
+                    if (submenu.classList.contains('active')) {
+                        submenu.classList.remove('active');
+                        expandIcon.classList.remove('fa-chevron-down');
+                        expandIcon.classList.add('fa-chevron-right');
+                    } else {
+                        submenu.classList.add('active');
+                        expandIcon.classList.remove('fa-chevron-right');
+                        expandIcon.classList.add('fa-chevron-down');
+                    }
+                });
+            });
+
+            // Setup interactive view button
+            const interactiveViewBtn = document.querySelector('.interactive-view-btn');
+            interactiveViewBtn.addEventListener('click', () => {
+                alert('Interactive 3D view is coming soon!');
+            });
+
+            // Helper function to find a part by ID across all categories
+            function findItemById(itemId) {
+                for (const category of catalogData.categories) {
+                    if (category.items) {
+                        const item = category.items.find(item => item.id === itemId);
+                        if (item) return item;
+                    }
+                }
+                return null;
+            }
+
+            // Show Item Detail in Modal
+            function showItemDetail(item) {
+                let iconClass = 'fa-file-alt';
+                if (item.type === 'folder') {
+                    iconClass = 'fa-folder';
+                } else if (item.type === 'part') {
+                    iconClass = 'fa-cogs';
+                } else if (item.type === 'software') {
+                    iconClass = 'fa-download';
+                } else if (item.icon) {
+                    iconClass = item.icon;
+                }
+
+                let specsHTML = '';
+                if (item.specs) {
+                    specsHTML = `
+                        <div class="item-detail-specs">
+                            <h3>Specifications</h3>
+                            <table class="specs-table">
+                                ${Object.entries(item.specs).map(([key, value]) => `
+                                    <tr>
+                                        <td>${key}</td>
+                                        <td>${value}</td>
+                                    </tr>
+                                `).join('')}
+                            </table>
+                        </div>
+                    `;
+                }
+
+                modalContent.innerHTML = `
+                    <div class="item-detail">
+                        <div class="item-detail-image">
+                            <i class="fas ${iconClass} fa-5x"></i>
+                        </div>
+                        <div class="item-detail-info">
+                            <h2 class="item-detail-title">${item.name}</h2>
+                            <div class="item-detail-id">ID: ${item.id}</div>
+                            <div class="item-detail-type">Type: ${item.type.charAt(0).toUpperCase() + item.type.slice(1)}</div>
+                            ${item.description ? `<div class="item-detail-description">${item.description}</div>` : ''}
+                            ${specsHTML}
+                        </div>
+                    </div>
+                `;
+
+                modal.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
+
