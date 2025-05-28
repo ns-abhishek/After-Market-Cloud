@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Network Commerce Customizer Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .section {
+            margin: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: 1px solid #ddd; /* Add a subtle border for better visual separation */
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
+        /* Theme Toggler */
+        #theme-toggler {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            z-index: 10000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+        }
+
+        /* Customizer Panel */
+        #customizer {
+            position: fixed;
+            right: -320px;
+            top: 0;
+            width: 320px; /* Slightly wider for more options */
+            height: 100vh;
+            background: #f9f9f9;
+            color: #333; /* Darker default text */
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            padding-bottom: 80px; /* More space for the save button */
+            overflow-y: auto;
+            transition: right 0.3s ease;
+            z-index: 9999;
+            box-sizing: border-box;
+            border-radius: 10px;
+        }
+
+        #customizer.open {
+            right: 0;
+        }
+
+        #customizer h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee; /* Add a separator */
+            padding-bottom: 10px;
+        }
+
+        #customizer label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        #customizer input[type="color"],
+        #customizer select {
+            width: calc(100% - 12px); /* Adjust for padding */
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .theme-button {
+            width: calc(50% - 10px); /* Two buttons per row */
+            margin-top: 10px;
+            margin-right: 5px;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            background-color: #e0e0e0;
+            transition: background-color 0.3s ease;
+            display: inline-block;
+            box-sizing: border-box;
+        }
+
+        .theme-button:last-child {
+            margin-right: 0;
+        }
+
+        #customizer .btn { /* Style the save button */
+            width: 100%;
+            margin-top: 25px;
+            padding: 12px;
+            border: none;
+            cursor: pointer;
+            border-radius: 6px;
+            background-color: #28a745; /* Success color */
+            color: white;
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+        }
+
+        #customizer .btn:hover {
+            background-color: #218838;
+        }
+
+        .layout-options label {
+            font-weight: normal;
+            margin-left: 10px;
+        }
+
+        .layout-options input[type="radio"] {
+            margin-right: 5px;
+        }
+
+        .separator {
+            border-bottom: 1px solid #eee;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="section" data-section="header" id="header">
+        <h1>🏬 Header Section</h1>
+        <button class="btn">Login</button>
+        <p>Customize the header text and background.</p>
+    </div>
+
+    <div class="section" data-section="products" id="products">
+        <h2>📦 Products</h2>
+        <p>Product list here...</p>
+        <button class="btn">View Details</button>
+        <button class="btn">Add to Cart</button>
+        <p>Adjust the product section's appearance.</p>
+    </div>
+
+    <div class="section" data-section="cart" id="cart">
+        <h2>🛒 Cart</h2>
+        <p>Your cart is empty</p>
+        <button class="btn">Checkout</button>
+        <p>Style your shopping cart area.</p>
+    </div>
+
+    <div class="section" data-section="footer" id="footer">
+        <h4>🔗 Footer</h4>
+        <p>&copy; 2025 Network Commerce</p>
+        <button class="btn">Contact Us</button>
+        <button class="btn">Privacy Policy</button>
+        <p>Customize the footer links and text.</p>
+    </div>
+
+    <button id="theme-toggler" title="Customize Theme">🎨</button>
+
+    <div id="customizer">
+        <h3>🎨 Theme Customizer Pro</h3>
+
+        <label for="target-section">Target Section</label>
+        <select id="target-section">
+            <option value="all">All Sections</option>
+            <option value="header">Header</option>
+            <option value="products">Products</option>
+            <option value="cart">Cart</option>
+            <option value="footer">Footer</option>
+        </select>
+
+        <div class="separator"></div>
+        <h4>🎨 Color & Background</h4>
+        <label for="section-bg">Section Background</label>
+        <input type="color" id="section-bg">
+
+        <label for="text-color">Text Color</label>
+        <input type="color" id="text-color">
+
+        <label for="btn-bg">Button Background</label>
+        <input type="color" id="btn-bg">
+
+        <label for="btn-text">Button Text Color</label>
+        <input type="color" id="btn-text">
+
+        <div class="separator"></div>
+        <h4>✒️ Typography</h4>
+        <label for="font-family">Font Family</label>
+        <select id="font-family">
+            <option value="'Segoe UI', sans-serif">Segoe UI</option>
+            <option value="'Arial', sans-serif">Arial</option>
+            <option value="'Roboto', sans-serif">Roboto</option>
+            <option value="'Montserrat', sans-serif">Montserrat</option>
+            <option value="'Courier New', monospace">Courier</option>
+        </select>
+
+        <label for="font-size">Font Size</label>
+        <select id="font-size">
+            <option value="0.8rem">Small</option>
+            <option value="1rem" selected>Medium</option>
+            <option value="1.2rem">Large</option>
+            <option value="1.4rem">Extra Large</option>
+        </select>
+
+        <div class="separator"></div>
+        <h4>🔘 Buttons</h4>
+        <label for="btn-radius">Button Radius</label>
+        <select id="btn-radius">
+            <option value="0px">None</option>
+            <option value="4px">Slightly Rounded</option>
+            <option value="8px" selected>Rounded</option>
+            <option value="20px">Pill</option>
+        </select>
+
+        <label for="btn-size">Button Font Size</label>
+        <select id="btn-size">
+            <option value="0.8rem">Small</option>
+            <option value="1rem" selected>Medium</option>
+            <option value="1.2rem">Large</option>
+        </select>
+
+        <div class="separator"></div>
+        <h4>✨ Quick Themes</h4>
+        <div>
+            <button class="theme-button" onclick="applyTheme('light')">🌞 Light</button>
+            <button class="theme-button" onclick="applyTheme('dark')">🌙 Dark</button>
+            <button class="theme-button" onclick="applyTheme('blue')">🔵 Blue</button>
+            <button class="theme-button" onclick="applyTheme('red')">🔴 Red</button>
+            <button class="theme-button" onclick="applyTheme('green')">🟢 Green</button>
+            <button class="theme-button" onclick="applyTheme('purple')">🟣 Purple</button>
+        </div>
+
+        <button class="btn" onclick="savePreferences()">💾 Save Preferences</button>
+    </div>
+
+    <script>
+        const toggler = document.getElementById("theme-toggler");
+        const customizer = document.getElementById("customizer");
+        const sectionSelector = document.getElementById("target-section");
+
+        toggler.onclick = () => customizer.classList.toggle("open");
+
+        const inputs = {
+            "section-bg": "backgroundColor",
+            "text-color": "color",
+            "font-family": "fontFamily",
+            "font-size": "fontSize",
+            "btn-bg": "backgroundColor",
+            "btn-text": "color",
+            "btn-radius": "borderRadius",
+            "btn-size": "fontSize"
+        };
+
+        function getSections() {
+            const value = sectionSelector.value;
+            if (value === "all") return document.querySelectorAll(".section");
+            return [document.getElementById(value)];
+        }
+
+        function updateStyles() {
+            const sections = getSections();
+
+            sections.forEach(section => {
+                // Section styles
+                section.style.backgroundColor = document.getElementById("section-bg").value;
+                section.style.color = document.getElementById("text-color").value;
+                section.style.fontFamily = document.getElementById("font-family").value;
+                section.style.fontSize = document.getElementById("font-size").value;
+
+                // Buttons inside section
+                section.querySelectorAll(".btn").forEach(btn => {
+                    btn.style.setProperty('background-color', document.getElementById("btn-bg").value);
+                    btn.style.setProperty('color', document.getElementById("btn-text").value);
+                    btn.style.setProperty('border-radius', document.getElementById("btn-radius").value);
+                    btn.style.setProperty('font-size', document.getElementById("btn-size").value);
+                });
+            });
+        }
+
+        // Add event listeners
+        Object.keys(inputs).forEach(id => {
+            const inputElement = document.getElementById(id);
+            if (inputElement) {
+                inputElement.addEventListener("input", updateStyles);
+            }
+        });
+
+        sectionSelector.addEventListener("change", () => {
+            loadPreferences(sectionSelector.value);
+        });
+
+        function savePreferences() {
+            const section = sectionSelector.value;
+            const prefs = {};
+            Object.keys(inputs).forEach(id => {
+                prefs[id] = document.getElementById(id).value;
+            });
+            localStorage.setItem("theme-" + section, JSON.stringify(prefs));
+            alert("Saved for " + section + " preferences!");
+        }
+
+        function loadPreferences(section) {
+            const saved = localStorage.getItem("theme-" + section);
+            if (saved) {
+                const prefs = JSON.parse(saved);
+                for (let id in prefs) {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.value = prefs[id];
+                    }
+                }
+                updateStyles();
+            } else if (section === 'all') {
+                applyTheme('light');
+            }
+        }
+
+        function applyTheme(name) {
+            const themes = {
+                light: {
+                    "section-bg": "#f9f9f9",
+                    "text-color": "#333333",
+                    "btn-bg": "#007bff",
+                    "btn-text": "#ffffff"
+                },
+                dark: {
+                    "section-bg": "#333333",
+                    "text-color": "#f9f9f9",
+                    "btn-bg": "#555555",
+                    "btn-text": "#ffffff"
+                },
+                blue: {
+                    "section-bg": "#e3f2fd",
+                    "text-color": "#1976d2",
+                    "btn-bg": "#1976d2",
+                    "btn-text": "#ffffff"
+                },
+                red: {
+                    "section-bg": "#ffebee",
+                    "text-color": "#d32f2f",
+                    "btn-bg": "#d32f2f",
+                    "btn-text": "#ffffff"
+                },
+                green: {
+                    "section-bg": "#e8f5e9",
+                    "text-color": "#388e3c",
+                    "btn-bg": "#388e3c",
+                    "btn-text": "#ffffff"
+                },
+                purple: {
+                    "section-bg": "#f3e5f5",
+                    "text-color": "#5e35b1",
+                    "btn-bg": "#5e35b1",
+                    "btn-text": "#ffffff"
+                }
+            };
+            const theme = themes[name];
+            for (let id in theme) {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.value = theme[id];
+                }
+            }
+            updateStyles();
+        }
+
+        // Load defaults
+        window.onload = () => {
+            loadPreferences("all");
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quest Network Commerce</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #161618;
+            --bg-color: #f8fafc;
+            --text-color: #141516;
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --font-size: 16px;
+            --font-family: 'Poppins', sans-serif;
+            --shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            --background-style: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            --header-bg: #ffffff;
+            --footer-bg: #ffffff;
+        }
+        .dark-theme {
+            --bg-color: #0f172a;
+            --text-color: #e2e8f0;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            --background-style: linear-gradient(135deg, #0f172a, #1e293b);
+            --header-bg: #1e293b;
+            --footer-bg: #1e293b;
+        }
+        .theme-blue { --primary-color: #3b82f6; }
+        .theme-green { --primary-color: #10b981; }
+        .theme-purple { --primary-color: #a855f7; }
+        .theme-orange { --primary-color: #f97316; }
+        .theme-Black { --primary-color: #0e0e0d; }
+        .large-font { --font-size: 20px; }
+        .roboto { --font-family: 'Roboto', sans-serif; }
+        .montserrat { --font-family: 'Montserrat', sans-serif; }
+        .bg-solid { --background-style: var(--bg-color); }
+        .bg-image { --background-style: url('https://via.placeholder.com/1920x1080?text=Background'); }
+        body {
+            background: var(--background-style);
+            background-size: cover;
+            background-attachment: fixed;
+            color: var(--text-color);
+            font-size: var(--font-size);
+            font-family: var(--font-family);
+            transition: all 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header, footer {
+            background: var(--header-bg);
+            transition: background 0.4s ease;
+        }
+        footer {
+            background: var(--footer-bg);
+        }
+        .search-bar, .filter-btn, .voice-btn, .scan-btn, .image-btn, .upload-btn {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .search-bar:hover, .filter-btn:hover, .voice-btn:hover, .scan-btn:hover, .image-btn:hover, .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        .product-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+            background: linear-gradient(135deg, var(--card-bg), rgba(95, 95, 98, 0.2));
+        }
+        .btn-cta {
+            position: relative;
+            overflow: hidden;
+            background-color: var(--primary-color);
+        }
+        .btn-cta:hover { background-color: color-mix(in srgb, var(--primary-color) 80%, #000); }
+        .btn-cta::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.4s ease, height 0.4s ease;
+        }
+        .btn-cta:hover::after {
+            width: 200px;
+            height: 200px;
+        }
+        .skeleton { background: #e5e7eb; animation: pulse 1.5s infinite; }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--primary-color);
+            border-top: 3px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        @keyframes spin {
+            0% { transform: translateY(-50%) rotate(0deg); }
+            100% { transform: translateY(-50%) rotate(360deg); }
+        }
+        .voice-active .fa-microphone {
+            animation: pulseMic 1s infinite;
+        }
+        @keyframes pulseMic {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .search-top .search-section { position: sticky; top: 0; z-index: 10; }
+        .search-bottom .search-section { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0;
+            right: 0;
+            z-index: 10; 
+            background: var(--bg-color); 
+            padding: 1rem; 
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .search-bottom .results-section { margin-bottom: 150px; }
+        .search-left .search-section {
+            position: fixed; left: 0; top: 0; height: 100vh; width: 300px; padding: 1rem;
+            display: flex; flex-direction: column; gap: 1rem; z-index: 10;
+        }
+        .search-left .results-section { margin-left: 320px; }
+        .search-right .search-section {
+            position: fixed; right: 0; top: 0; height: 100vh; width: 300px; padding: 1rem;
+            display: flex; flex-direction: column; gap: 1rem; z-index: 10;
+        }
+        .search-right .results-section { margin-right: 320px; }
+        .search-left .search-input-group, .search-right .search-input-group {
+            flex-direction: column; gap: 1rem;
+        }
+        @media (max-width: 768px) {
+            .search-left .search-section, .search-right .search-section { width: 200px; }
+            .search-left .results-section { margin-left: 220px; }
+            .search-right .results-section { margin-right: 220px; }
+        }
+        @media (max-width: 480px) {
+            .search-left .search-section, .search-right .search-section {
+                position: static; width: 100%; height: auto;
+            }
+            .search-left .results-section, .search-right .results-section {
+                margin-left: 0; margin-right: 0;
+            }
+        }
+        .search-compact .search-input-group { display: flex; align-items: center; gap: 0.5rem; }
+        .search-compact .search-bar { width: 200px; }
+        .search-expanded .search-input-group { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+        .search-expanded .search-bar { flex: 1; min-width: 300px; }
+        .search-floating .search-section { position: fixed; bottom: 2rem; right: 2rem; z-index: 20; }
+        .search-floating .search-toggle-btn {
+            width: 60px; height: 60px; border-radius: 50%; background: var(--primary-color); color: white;
+            display: flex; justify-content: center; align-items: center; box-shadow: var(--shadow);
+        }
+        .search-floating .search-input-group {
+            display: none; background: var(--bg-color); padding: 1rem; border-radius: 1rem; box-shadow: var(--shadow);
+            position: absolute; bottom: 70px; right: 0; width: 300px;
+        }
+        .search-floating .search-input-group.active { display: block; }
+        @media (max-width: 480px) {
+            .search-floating .search-input-group { width: 90%; }
+            .search-compact .search-bar { width: 150px; }
+            .search-input-group { flex-direction: column; align-items: stretch; }
+        }
+        .layout-standard { /* Default layout, as is */ }
+        .layout-minimalist .breadcrumb { display: none; }
+        .layout-minimalist main { padding: 1rem; }
+        .layout-dashboard .dashboard-stats {
+            display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;
+        }
+        .layout-dashboard .stat-card {
+            background: var(--card-bg); backdrop-filter: blur(10px); padding: 1rem; border-radius: 0.75rem; flex: 1; min-width: 200px;
+        }
+        .layout-card-centric .product-card {
+            padding: 1.5rem; border-radius: 1rem;
+        }
+        .layout-card-centric .product-card img { height: 300px; }
+        .layout-card-centric .grid-layout { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+        .grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem; }
+        .list-layout { display: flex; flex-direction: column; gap: 1rem; }
+        .list-layout .product-card { display: flex; flex-direction: row; align-items: center; padding: 1rem; }
+        .list-layout .product-card img { width: 100px; height: 100px; margin-right: 1rem; }
+        .masonry-layout { column-count: 3; column-gap: 1.5rem; }
+        .masonry-layout .product-card { break-inside: avoid; margin-bottom: 1.5rem; }
+        @media (max-width: 768px) { .masonry-layout { column-count: 2; } }
+        @media (max-width: 480px) { .masonry-layout { column-count: 1; } }
+        .tooltip { position: relative; }
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 120px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 20;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: var(--bg-color);
+            padding: 2rem;
+            border-radius: 1rem;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            cursor: pointer;
+        }
+        .filter-chips { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+        .filter-chip {
+            display: flex; align-items: center; gap: 0.5rem; background: var(--primary-color); color: white;
+            padding: 0.5rem 1rem; border-radius: 1rem; font-size: 0.875rem; transition: background 0.3s ease;
+        }
+        .filter-chip:hover { background: color-mix(in srgb, var(--primary-color) 80%, #000); }
+        .filter-chip .remove-chip { cursor: pointer; }
+        .autosuggest, #previous-searches {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border-radius: 0.5rem;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 10;
+            display: none;
+        }
+        .autosuggest div, #previous-searches div {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+        }
+        .autosuggest div:hover, #previous-searches div:hover {
+            background: color-mix(in srgb, var(--primary-color) 20%, var(--bg-color));
+        }
+        .preview-container {
+            border: 2px solid var(--primary-color);
+            padding: 1rem;
+            background: var(--bg-color);
+            border-radius: 0.75rem;
+            margin-top: 1rem;
+        }
+        .dark-theme select, .dark-theme input {
+            background: #1e293b;
+            color: #e2e8f0;
+            border: 1px solid #4b5563;
+        }
+        .profile-dropdown {
+            position: relative;
+        }
+        .profile-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: var(--card-bg);
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow);
+            z-index: 10;
+        }
+        .profile-menu a {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: var(--text-color);
+        }
+        .profile-menu a:hover {
+            background: color-mix(in srgb, var(--primary-color) 20%, var(--bg-color));
+        }
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        .zoom-container {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            height: 192px;
+        }
+        .zoom-container img {
+            transition: transform 0.3s ease;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .zoom-container:hover img {
+            transform: scale(1.5);
+        }
+        #camera-modal {
+            background: rgba(0, 0, 0, 0.8);
+        }
+        #camera-modal .modal-content {
+            max-width: 800px;
+            text-align: center;
+        }
+        #camera-stream {
+            width: 100%;
+            max-height: 400px;
+            border-radius: 0.5rem;
+        }
+        #cart-modal .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        #cart-modal .cart-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+        #cart-modal .cart-item .remove-item {
+            cursor: pointer;
+            color: #ef4444;
+        }
+        #cart-modal .empty-cart {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-color);
+        }
+        #cart-modal .cart-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <header class="p-4 bg-[var(--header-bg)] flex flex-col sm:flex-row justify-between items-center shadow-md">
+        <div class="flex items-center space-x-3">
+            <svg class="w-10 h-10 text-[var(--primary-color)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18M3 9h18M3 15h18M3 21h18"></path>
+            </svg>
+            <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[var(--primary-color)] to-purple-500">
+                Quest Network Commerce Search
+            </h1>
+        </div>
+        <div class="flex items-center gap-3 mt-3 sm:mt-0">
+            <button id="cart-btn" class="relative p-2 text-[var(--text-color)] hover:text-[var(--primary-color)]" aria-label="Cart">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cart-count">0</span>
+            </button>
+            <div class="profile-dropdown">
+                <button id="profile-btn" class="p-2 text-[var(--text-color)] hover:text-[var(--primary-color)]" aria-label="Profile">
+                    <i class="fas fa-user"></i>
+                </button>
+                <div class="profile-menu">
+                    <a href="#">Profile</a>
+                    <a href="#">Orders</a>
+                    <a href="#">Wishlist</a>
+                    <a href="#">Logout</a>
+                </div>
+            </div>
+            <button id="customize-btn" class="p-2 text-[var(--text-color)] hover:text-[var(--primary-color)]" aria-label="Customize">
+                <i class="fas fa-cog"></i>
+            </button>
+        </div>
+    </header>
+
+    <div id="customize-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close text-2xl cursor-pointer">×</span>
+            <h2 class="text-xl font-semibold mb-4">Customize Your Experience</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Theme</label>
+                    <select id="modal-theme" class="w-full p-2 rounded-lg bg-gray-100 dark:bg-gray-800">
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Color Theme</label>
+                    <select id="modal-color-theme" class="w-full p-2 rounded-lg bg-gray-100 dark:bg-gray-800">
+                        <option value="Black">Black</option>
+                        <option value="blue">Blue</option>
+                        <option value="green">Green</option>
+                        <option value="purple">Purple</option>
+                        <option value="orange">Orange</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Background Style</label>
+                    <select id="modal-background-style" class="w-full p-2 rounded-lg bg-gray-100 dark:bg-gray-800">
+                        <option value="gradient">Gradient</option>
+                        <option value="solid">Solid</option>
+                        <option value="image">Image</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Font Size</label>
+                    <select id="modal-font-size" class="w-full p-2 rounded-lg bg-gray-100 dark:bg-gray-800">
+                        <option value="normal">Normal Font</option>
+                        <option value="large">Large Font</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Font Style</label>
+                    <select id="modal-font-style" class="w-full p-2 rounded-lg bg-gray-100 dark:bg-gray-800">
+                        <option value="poppins">Poppins</option>
+                        <option value="roboto">Roboto</option>
+                        <option value="montserrat">Montserrat</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Product Layout</label>
+                    <select id="modal-layout" class="w-full p-2 rounded-lg bg-gray-100 dark:bg-gray-800">
+                        <option value="grid">Grid</option>
+                        <option value="list">List</option>
+                        <option value="masonry">Masonry</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Search Position</label>
+                    <select id="modal-search-position" class="w-full p-2 rounded-lg bg-gray-100 dark:bg-gray-800">
+                        <option value="top">Top</option>
+                        <option value="bottom">Bottom</option>
+                        <option value="left">Left</option>
+                        <option value="right">Right</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Search Layout</label>
+                    <select id="modal-search-layout" class="w-full p-2 rounded-lg bg-gray-100 dark:bg-gray-800">
+                        <option value="default">Default Search</option>
+                        <option value="compact">Compact Search</option>
+                        <option value="expanded">Expanded Search</option>
+                        <option value="floating">Floating Search</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Page Template</label>
+                    <select id="modal-page-template" class="w-full p-2 rounded-lg bg-gray-100 dark:bg-gray-800">
+                        <option value="standard">Standard</option>
+                        <option value="minimalist">Minimalist</option>
+                        <option value="dashboard">Dashboard</option>
+                        <option value="card-centric">Card-Centric</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Header Style</label>
+                    <select id="modal-header-style" class="w-full p-2 rounded-lg bg-gray-100 dark:bg-gray-800">
+                        <option value="solid">Solid</option>
+                        <option value="transparent">Transparent</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Footer Style</label>
+                    <select id="modal-footer-style" class="w-full p-2 rounded-lg bg-gray-100 dark:bg-gray-800">
+                        <option value="detailed">Detailed</option>
+                        <option value="simple">Simple</option>
+                    </select>
+                </div>
+            </div>
+            <div class="preview-container">
+                <h3 class="text-lg font-semibold mb-2">Preview</h3>
+                <div id="preview-area" class="p-4 bg-[var(--bg-color)] rounded-lg" style="min-height: 200px;">
+                    <header class="p-2 mb-2" id="preview-header">Header Preview</header>
+                    <main class="p-2">Main Content Preview</main>
+                    <footer class="p-2 mt-2" id="preview-footer">Footer Preview</footer>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 mt-4">
+                <button id="apply-btn" class="px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg hover:bg-[color-mix(in srgb, var(--primary-color) 80%, #000)]">
+                    Apply
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="camera-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close text-2xl cursor-pointer">×</span>
+            <h2 class="text-xl font-semibold mb-4" id="camera-modal-title">Scan Barcode/QR Code</h2>
+            <video id="camera-stream" autoplay playsinline></video>
+            <canvas id="camera-canvas" style="display: none;"></canvas>
+            <div class="flex justify-center gap-3 mt-4">
+                <button id="capture-btn" class="px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg hover:bg-[color-mix(in srgb, var(--primary-color) 80%, #000)]">
+                    Capture
+                </button>
+                <label for="image-upload" class="px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg hover:bg-[color-mix(in srgb, var(--primary-color) 80%, #000)] cursor-pointer">
+                    Upload Image
+                </label>
+                <input type="file" id="image-upload" accept="image/*" style="display: none;">
+            </div>
+        </div>
+    </div>
+
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close text-2xl cursor-pointer">×</span>
+            <h2 class="text-xl font-semibold mb-4">Your Cart</h2>
+            <div id="cart-items"></div>
+            <div class="cart-footer">
+                <p class="text-lg font-semibold">Total: $<span id="cart-total">0</span></p>
+                <button id="checkout-btn" class="px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg hover:bg-[color-mix(in srgb, var(--primary-color) 80%, #000)]">
+                    Checkout
+                </button>
+            </div>
+        </div>
+    </div>
+
+   <nav class="breadcrumb px-6 py-2 text-sm">
+    <a href="#" class="text-[var(--primary-color)]">Home</a> >
+    <a href="#" class="text-[var(--primary-color)]">Aftermarket</a> >
+    <span class="text-gray-600 dark:text-gray-400">Spare Parts</span>
+</nav>
+
+    <main class="flex-1 p-6">
+        <div class="dashboard-stats hidden">
+            <div class="stat-card">
+                <h3 class="text-sm font-medium">Total Products</h3>
+                <p class="text-lg font-semibold">10</p>
+            </div>
+            <div class="stat-card">
+                <h3 class="text-sm font-medium">Categories</h3>
+                <p class="text-lg font-semibold">6</p>
+            </div>
+            <div class="stat-card">
+                <h3 class="text-sm font-medium">Brands</h3>
+                <p class="text-lg font-semibold">8</p>
+            </div>
+        </div>
+
+        <section class="search-section mb-8">
+    <!-- Search Input -->
+    <div class="search-input-group relative flex flex-col items-center gap-6">
+        <button id="search-toggle-btn" class="search-toggle-btn hidden">
+            <i class="fas fa-search"></i>
+        </button>
+        <div class="search-input-container flex justify-center w-full">
+            <div class="relative w-full max-w-2xl">
+                <input type="text" id="search-input" 
+                       placeholder="Search by Product, Category, Size, Color, Brand..." 
+                       class="search-bar w-full p-4 rounded-xl border-none focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]"
+                       aria-label="Search products">
+                <button id="clear-search" class="absolute right-16 p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300" style="display: none;" aria-label="Clear search">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="spinner" id="search-spinner"></div>
+                <div class="autosuggest" id="autosuggest"></div>
+                <div id="previous-searches"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-container flex flex-wrap gap-3 justify-center mb-6">
+        <div class="tooltip">
+            <select class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 filter-select" data-filter="product">
+                <option value="">All Products</option>
+            </select>
+            <span class="tooltip-text">Filter by product name</span>
+        </div>
+        <div class="tooltip">
+            <select class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 filter-select" data-filter="category">
+                <option value="">All Categories</option>
+            </select>
+            <span class="tooltip-text">Filter by product category</span>
+        </div>
+        <div class="tooltip">
+            <select class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 filter-select" data-filter="size">
+                <option value="">All Sizes</option>
+            </select>
+            <span class="tooltip-text">Filter by product size</span>
+        </div>
+        <div class="tooltip">
+            <select class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 filter-select" data-filter="color">
+                <option value="">All Colors</option>
+            </select>
+            <span class="tooltip-text">Filter by product color</span>
+        </div>
+        <div class="tooltip">
+            <select class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 filter-select" data-filter="brand">
+                <option value="">All Brands</option>
+            </select>
+            <span class="tooltip-text">Filter by product brand</span>
+        </div>
+        <div class="tooltip">
+            <select class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 filter-select" data-filter="price">
+                <option value="">All Prices</option>
+            </select>
+            <span class="tooltip-text">Filter by price range</span>
+        </div>
+        <div class="tooltip">
+            <input type="number" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 filter-input" data-filter="min-price" placeholder="Min Price" min="0">
+            <span class="tooltip-text">Minimum price</span>
+        </div>
+        <div class="tooltip">
+            <input type="number" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 filter-input" data-filter="max-price" placeholder="Max Price" min="0">
+            <span class="tooltip-text">Maximum price</span>
+        </div>
+        <div class="tooltip">
+            <select id="sort" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800">
+                <option value="relevance">Sort: Relevance</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="newest">Newest</option>
+                <option value="popularity">Popularity</option>
+            </select>
+            <span class="tooltip-text">Sort search results</span>
+        </div>
+    </div>
+
+    <!-- Icons -->
+    <div class="icon-buttons-container flex flex-wrap justify-center gap-3 mb-6">
+        <button id="voice-search" class="voice-btn p-4 bg-[var(--primary-color)] text-white rounded-xl hover:bg-[color-mix(in srgb, var(--primary-color) 80%, #000)] tooltip relative" aria-label="Voice search">
+            <i class="fas fa-microphone"></i>
+            <span class="tooltip-text">Voice Search</span>
+            <div class="spinner" id="voice-spinner"></div>
+        </button>
+        <button id="scan-code" class="scan-btn p-4 bg-[var(--primary-color)] text-white rounded-xl hover:bg-[color-mix(in srgb, var(--primary-color) 80%, #000)] tooltip relative" aria-label="Scan barcode or QR code">
+            <i class="fas fa-qrcode"></i>
+            <span class="tooltip-text">Scan Barcode/QR</span>
+            <div class="spinner" id="scan-spinner"></div>
+        </button>
+        <button id="image-search" class="image-btn p-4 bg-[var(--primary-color)] text-white rounded-xl hover:bg-[color-mix(in srgb, var(--primary-color) 80%, #000)] tooltip relative" aria-label="Image search">
+            <i class="fas fa-camera"></i>
+            <span class="tooltip-text">Image Search</span>
+            <div class="spinner" id="image-spinner"></div>
+        </button>
+        <button class="tooltip">
+            <label for="image-upload-search" class="upload-btn p-4 bg-[var(--primary-color)] text-white rounded-xl hover:bg-[color-mix(in srgb, var(--primary-color) 80%, #000)] cursor-pointer">
+                <i class="fas fa-upload"></i> Upload Image
+            </label>
+            <input type="file" id="image-upload-search" accept="image/*" style="display: none;">
+            <span class="tooltip-text">Upload an image to search</span>
+        </button>
+    </div>
+
+    <!-- Filter Chips -->
+    <div class="flex items-center gap-3 flex-wrap">
+        <div class="filter-chips" id="filter-chips"></div>
+        <button id="reset-filters" class="px-4 py-2 bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600" style="display: none;">
+            Reset Filters
+        </button>
+    </div>
+</section>
+
+        <section class="mb-8">
+    <h2 class="text-xl font-semibold mb-4">Most Searched Products</h2>
+    <div id="most-searched" class="grid-layout">
+        <div class="product-card p-5 rounded-xl" data-product="hex bolt" data-category="fasteners" data-size="M10" data-color="silver" data-brand="BoltMaster" data-price="5" data-barcode="1234567890123">
+            <img src="images/hex-bolt.jpg" alt="Hex Bolt" class="w-full h-48 object-cover rounded-lg mb-4 lazy" loading="lazy">
+            <h2 class="text-lg font-semibold">Hex Bolt</h2>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Price: $5</p>
+            <button class="btn-cta mt-4 px-5 py-2 text-white rounded-lg quick-view-btn" data-product="Hex Bolt">Quick View</button>
+            <button class="btn-cta mt-2 px-5 py-2 text-white rounded-lg add-to-cart" data-product="Hex Bolt">Add to Cart</button>
+        </div>
+        <div class="product-card p-5 rounded-xl" data-product="nylon washer" data-category="washers" data-size="M8" data-color="white" data-brand="WasherPro" data-price="2" data-barcode="2345678901234">
+            <img src="images/nylon-washer.jpg" alt="Nylon Washer" class="w-full h-48 object-cover rounded-lg mb-4 lazy" loading="lazy">
+            <h2 class="text-lg font-semibold">Nylon Washer</h2>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Price: $2</p>
+            <button class="btn-cta mt-4 px-5 py-2 text-white rounded-lg quick-view-btn" data-product="Nylon Washer">Quick View</button>
+            <button class="btn-cta mt-2 px-5 py-2 text-white rounded-lg add-to-cart" data-product="Nylon Washer">Add to Cart</button>
+        </div>
+    </div>
+</section>
+
+<section class="mb-8">
+    <h2 class="text-xl font-semibold mb-4">Previously Searched Products</h2>
+    <div id="previously-searched" class="grid-layout">
+        <div class="product-card p-5 rounded-xl" data-product="steel nut" data-category="fasteners" data-size="M12" data-color="silver" data-brand="NutKing" data-price="3" data-barcode="3456789012345">
+            <img src="images/steel-nut.jpg" alt="Steel Nut" class="w-full h-48 object-cover rounded-lg mb-4 lazy" loading="lazy">
+            <h2 class="text-lg font-semibold">Steel Nut</h2>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Price: $3</p>
+            <button class="btn-cta mt-4 px-5 py-2 text-white rounded-lg quick-view-btn" data-product="Steel Nut">Quick View</button>
+            <button class="btn-cta mt-2 px-5 py-2 text-white rounded-lg add-to-cart" data-product="Steel Nut">Add to Cart</button>
+        </div>
+        <div class="product-card p-5 rounded-xl" data-product="spring washer" data-category="washers" data-size="M6" data-color="silver" data-brand="SpringFix" data-price="1" data-barcode="4567890123456">
+            <img src="images/spring-washer.jpg" alt="Spring Washer" class="w-full h-48 object-cover rounded-lg mb-4 lazy" loading="lazy">
+            <h2 class="text-lg font-semibold">Spring Washer</h2>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Price: $1</p>
+            <button class="btn-cta mt-4 px-5 py-2 text-white rounded-lg quick-view-btn" data-product="Spring Washer">Quick View</button>
+            <button class="btn-cta mt-2 px-5 py-2 text-white rounded-lg add-to-cart" data-product="Spring Washer">Add to Cart</button>
+        </div>
+    </div>
+</section>
+
+<section id="results" class="results-section grid-layout">
+    <!-- Hex Bolt -->
+    <div class="product-card p-5 rounded-xl" data-product="hex bolt" data-category="fasteners" data-size="M10" data-color="silver" data-brand="BoltMaster" data-price="5" data-barcode="1234567890123">
+        <img src="images/hex-bolt.jpg" alt="Hex Bolt" class="w-full h-48 object-cover rounded-lg mb-4 lazy" loading="lazy">
+        <h2 class="text-lg font-semibold">Hex Bolt</h2>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Category: Fasteners</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Size: M10</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Color: Silver</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Brand: BoltMaster</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Price: $5</p>
+        <button class="btn-cta mt-4 px-5 py-2 text-white rounded-lg quick-view-btn" data-product="Hex Bolt">Quick View</button>
+        <button class="btn-cta mt-2 px-5 py-2 text-white rounded-lg add-to-cart" data-product="Hex Bolt">Add to Cart</button>
+    </div>
+
+    <!-- Nylon Washer -->
+    <div class="product-card p-5 rounded-xl" data-product="nylon washer" data-category="washers" data-size="M8" data-color="white" data-brand="WasherPro" data-price="2" data-barcode="2345678901234">
+        <img src="images/nylon-washer.jpg" alt="Nylon Washer" class="w-full h-48 object-cover rounded-lg mb-4 lazy" loading="lazy">
+        <h2 class="text-lg font-semibold">Nylon Washer</h2>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Category: Washers</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Size: M8</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Color: White</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Brand: WasherPro</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Price: $2</p>
+        <button class="btn-cta mt-4 px-5 py-2 text-white rounded-lg quick-view-btn" data-product="Nylon Washer">Quick View</button>
+        <button class="btn-cta mt-2 px-5 py-2 text-white rounded-lg add-to-cart" data-product="Nylon Washer">Add to Cart</button>
+    </div>
+
+    <!-- Steel Nut -->
+    <div class="product-card p-5 rounded-xl" data-product="steel nut" data-category="fasteners" data-size="M12" data-color="silver" data-brand="NutKing" data-price="3" data-barcode="3456789012345">
+        <img src="images/steel-nut.jpg" alt="Steel Nut" class="w-full h-48 object-cover rounded-lg mb-4 lazy" loading="lazy">
+        <h2 class="text-lg font-semibold">Steel Nut</h2>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Category: Fasteners</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Size: M12</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Color: Silver</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Brand: NutKing</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Price: $3</p>
+        <button class="btn-cta mt-4 px-5 py-2 text-white rounded-lg quick-view-btn" data-product="Steel Nut">Quick View</button>
+        <button class="btn-cta mt-2 px-5 py-2 text-white rounded-lg add-to-cart" data-product="Steel Nut">Add to Cart</button>
+    </div>
+
+    <!-- Excavator Bucket Teeth -->
+    <div class="product-card p-5 rounded-xl" data-product="excavator bucket teeth" data-category="mining equipment" data-size="standard" data-color="yellow" data-brand="DigPro" data-price="50" data-barcode="5678901234567">
+        <img src="images/excavator-bucket-teeth.jpg" alt="Excavator Bucket Teeth" class="w-full h-48 object-cover rounded-lg mb-4 lazy" loading="lazy">
+        <h2 class="text-lg font-semibold">Excavator Bucket Teeth</h2>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Category: Mining Equipment</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Size: Standard</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Color: Yellow</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Brand: DigPro</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Price: $50</p>
+        <button class="btn-cta mt-4 px-5 py-2 text-white rounded-lg quick-view-btn" data-product="Excavator Bucket Teeth">Quick View</button>
+        <button class="btn-cta mt-2 px-5 py-2 text-white rounded-lg add-to-cart" data-product="Excavator Bucket Teeth">Add to Cart</button>
+    </div>
+
+    <!-- Hydraulic Hose -->
+    <div class="product-card p-5 rounded-xl" data-product="hydraulic hose" data-category="hydraulics" data-size="1 inch" data-color="black" data-brand="HydroFlex" data-price="25" data-barcode="6789012345678">
+        <img src="images/hydraulic-hose.jpg" alt="Hydraulic Hose" class="w-full h-48 object-cover rounded-lg mb-4 lazy" loading="lazy">
+        <h2 class="text-lg font-semibold">Hydraulic Hose</h2>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Category: Hydraulics</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Size: 1 inch</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Color: Black</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Brand: HydroFlex</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Price: $25</p>
+        <button class="btn-cta mt-4 px-5 py-2 text-white rounded-lg quick-view-btn" data-product="Hydraulic Hose">Quick View</button>
+        <button class="btn-cta mt-2 px-5 py-2 text-white rounded-lg add-to-cart" data-product="Hydraulic Hose">Add to Cart</button>
+    </div>
+
+    <!-- Brake Pads -->
+    <div class="product-card p-5 rounded-xl" data-product="brake pads" data-category="vehicle parts" data-size="standard" data-color="gray" data-brand="BrakeSafe" data-price="30" data-barcode="7890123456789">
+        <img src="images/brake-pads.jpg" alt="Brake Pads" class="w-full h-48 object-cover rounded-lg mb-4 lazy" loading="lazy">
+        <h2 class="text-lg font-semibold">Brake Pads</h2>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Category: Vehicle Parts</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Size: Standard</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Color: Gray</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Brand: BrakeSafe</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Price: $30</p>
+        <button class="btn-cta mt-4 px-5 py-2 text-white rounded-lg quick-view-btn" data-product="Brake Pads">Quick View</button>
+        <button class="btn-cta mt-2 px-5 py-2 text-white rounded-lg add-to-cart" data-product="Brake Pads">Add to Cart</button>
+    </div>
+
+    <!-- Engine Oil Filter -->
+    <div class="product-card p-5 rounded-xl" data-product="engine oil filter" data-category="vehicle parts" data-size="standard" data-color="white" data-brand="FilterMax" data-price="15" data-barcode="8901234567890">
+        <img src="images/engine-oil-filter.jpg" alt="Engine Oil Filter" class="w-full h-48 object-cover rounded-lg mb-4 lazy" loading="lazy">
+        <h2 class="text-lg font-semibold">Engine Oil Filter</h2>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Category: Vehicle Parts</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Size: Standard</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Color: White</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Brand: FilterMax</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Price: $15</p>
+        <button class="btn-cta mt-4 px-5 py-2 text-white rounded-lg quick-view-btn" data-product="Engine Oil Filter">Quick View</button>
+        <button class="btn-cta mt-2 px-5 py-2 text-white rounded-lg add-to-cart" data-product="Engine Oil Filter">Add to Cart</button>
+    </div>
+</section>
+
+        <div id="pagination" class="flex justify-center gap-2 mt-6">
+            <button class="px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg disabled:opacity-50" disabled>Previous</button>
+            <button class="px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg">Next</button>
+        </div>
+    </main>
+
+    <div id="quick-view-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close text-2xl cursor-pointer">×</span>
+            <h2 id="modal-title" class="text-xl font-semibold mb-4"></h2>
+            <div class="zoom-container mb-4">
+                <img id="modal-image" src="" alt="Product" class="w-full h-48 object-cover rounded-lg">
+            </div>
+            <p id="modal-details" class="text-sm text-gray-600 dark:text-gray-400 mb-4"></p>
+            <button class="btn-cta px-5 py-2 text-white rounded-lg add-to-cart" data-product="">Add to Cart</button>
+        </div>
+    </div>
+
+    <footer id="footer" class="p-4 bg-[var(--footer-bg)] text-center shadow-md">
+        <div id="footer-detailed" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+                <h3 class="text-lg font-semibold mb-2">Network Commerce</h3>
+                <p class="text-sm">Your one-stop shop for all things tech and more.</p>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold mb-2">Quick Links</h3>
+                <ul class="text-sm">
+                    <li><a href="#" class="hover:text-[var(--primary-color)]">Home</a></li>
+                    <li><a href="#" class="hover:text-[var(--primary-color)]">About</a></li>
+                    <li><a href="#" class="hover:text-[var(--primary-color)]">Contact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold mb-2">Follow Us</h3>
+                <div class="flex justify-center gap-3">
+                    <a href="#" class="text-[var(--text-color)] hover:text-[var(--primary-color)]"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-[var(--text-color)] hover:text-[var(--primary-color)]"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-[var(--text-color)] hover:text-[var(--primary-color)]"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div id="footer-simple" class="hidden">
+            <p class="text-sm">© 2025 Quest Network Commerce.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.min.js"></script>
+    <!-- Add SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let stream = null;
+
+        const products = [
+            { name: 'hex bolt', barcode: '1234567890123', image: 'images/hex-bolt.jpg' },
+            { name: 'nylon washer', barcode: '2345678901234', image: 'images/nylon-washer.jpg' },
+            { name: 'steel nut', barcode: '3456789012345', image: 'images/steel-nut.jpg' },
+            { name: 'spring washer', barcode: '4567890123456', image: 'images/spring-washer.jpg' },
+            { name: 'excavator bucket teeth', barcode: '5678901234567', image: 'images/excavator-bucket-teeth.jpg' },
+            { name: 'hydraulic hose', barcode: '6789012345678', image: 'images/hydraulic-hose.jpg' },
+            { name: 'brake pads', barcode: '7890123456789', image: 'images/brake-pads.jpg' },
+            { name: 'engine oil filter', barcode: '8901234567890', image: 'images/engine-oil-filter.jpg' }
+        ];
+
+        const savePreferences = () => {
+            const preferences = {
+                theme: document.getElementById('modal-theme').value,
+                colorTheme: document.getElementById('modal-color-theme').value,
+                backgroundStyle: document.getElementById('modal-background-style').value,
+                fontSize: document.getElementById('modal-font-size').value,
+                fontStyle: document.getElementById('modal-font-style').value,
+                layout: document.getElementById('modal-layout').value,
+                searchPosition: document.getElementById('modal-search-position').value,
+                searchLayout: document.getElementById('modal-search-layout').value,
+                pageTemplate: document.getElementById('modal-page-template').value,
+                headerStyle: document.getElementById('modal-header-style').value,
+                footerStyle: document.getElementById('modal-footer-style').value,
+            };
+            localStorage.setItem('userPreferences', JSON.stringify(preferences));
+            applyPreferences();
+        };
+
+        const applyPreferences = () => {
+            const preferences = JSON.parse(localStorage.getItem('userPreferences')) || {};
+            const theme = preferences.theme || 'light';
+            const colorTheme = preferences.colorTheme || 'Black';
+            const backgroundStyle = preferences.backgroundStyle || 'gradient';
+            const fontSize = preferences.fontSize || 'normal';
+            const fontStyle = preferences.fontStyle || 'poppins';
+            const layout = preferences.layout || 'grid';
+            const searchPosition = preferences.searchPosition || 'top';
+            const searchLayout = preferences.searchLayout || 'default';
+            const pageTemplate = preferences.pageTemplate || 'standard';
+            const headerStyle = preferences.headerStyle || 'solid';
+            const footerStyle = preferences.footerStyle || 'detailed';
+
+            document.body.classList.remove('dark-theme');
+            if (theme === 'dark') document.body.classList.add('dark-theme');
+
+            document.body.classList.remove('theme-blue', 'theme-green', 'theme-purple', 'theme-orange');
+            document.body.classList.add(`theme-${colorTheme}`);
+
+            document.body.classList.remove('bg-gradient', 'bg-solid', 'bg-image');
+            document.body.classList.add(`bg-${backgroundStyle}`);
+
+            document.body.classList.remove('large-font');
+            if (fontSize === 'large') document.body.classList.add('large-font');
+
+            document.body.classList.remove('poppins', 'roboto', 'montserrat');
+            document.body.classList.add(fontStyle);
+
+            const resultsSection = document.getElementById('results');
+            resultsSection.classList.remove('grid-layout', 'list-layout', 'masonry-layout');
+            resultsSection.classList.add(`${layout}-layout`);
+
+            document.body.classList.remove('search-top', 'search-bottom', 'search-left', 'search-right');
+            document.body.classList.add(`search-${searchPosition}`);
+
+            document.body.classList.remove('search-default', 'search-compact', 'search-expanded', 'search-floating');
+            document.body.classList.add(`search-${searchLayout}`);
+
+            document.body.classList.remove('layout-standard', 'layout-minimalist', 'layout-dashboard', 'layout-card-centric');
+            document.body.classList.add(`layout-${pageTemplate}`);
+
+            document.querySelector('header').style.background = headerStyle === 'transparent' ? 'transparent' : 'var(--header-bg)';
+            document.getElementById('footer-detailed').classList.toggle('hidden', footerStyle !== 'detailed');
+            document.getElementById('footer-simple').classList.toggle('hidden', footerStyle !== 'simple');
+
+            updatePreview();
+        };
+
+        const updatePreview = () => {
+            const preferences = JSON.parse(localStorage.getItem('userPreferences')) || {};
+            const previewArea = document.getElementById('preview-area');
+            const previewHeader = document.getElementById('preview-header');
+            const previewFooter = document.getElementById('preview-footer');
+
+            previewArea.style.background = preferences.theme === 'dark' ? '#0f172a' : '#f8fafc';
+            previewArea.style.fontFamily = preferences.fontStyle || 'Poppins';
+            previewArea.style.fontSize = preferences.fontSize === 'large' ? '20px' : '16px';
+            previewHeader.style.background = preferences.headerStyle === 'transparent' ? 'transparent' : (preferences.theme === 'dark' ? '#1e293b' : '#ffffff');
+            previewFooter.style.background = preferences.theme === 'dark' ? '#1e293b' : '#ffffff';
+        };
+
+        const loadModalPreferences = () => {
+            const preferences = JSON.parse(localStorage.getItem('userPreferences')) || {};
+            document.getElementById('modal-theme').value = preferences.theme || 'light';
+            document.getElementById('modal-color-theme').value = preferences.colorTheme || 'blue';
+            document.getElementById('modal-background-style').value = preferences.backgroundStyle || 'gradient';
+            document.getElementById('modal-font-size').value = preferences.fontSize || 'normal';
+            document.getElementById('modal-font-style').value = preferences.fontStyle || 'poppins';
+            document.getElementById('modal-layout').value = preferences.layout || 'grid';
+            document.getElementById('modal-search-position').value = preferences.searchPosition || 'top';
+            document.getElementById('modal-search-layout').value = preferences.searchLayout || 'default';
+            document.getElementById('modal-page-template').value = preferences.pageTemplate || 'standard';
+            document.getElementById('modal-header-style').value = preferences.headerStyle || 'solid';
+            document.getElementById('modal-footer-style').value = preferences.footerStyle || 'detailed';
+            updatePreview();
+        };
+
+        const customizeBtn = document.getElementById('customize-btn');
+        const customizeModal = document.getElementById('customize-modal');
+        const modalClose = customizeModal.querySelector('.modal-close');
+        const applyBtn = document.getElementById('apply-btn');
+
+        customizeBtn.addEventListener('click', () => {
+            loadModalPreferences();
+            customizeModal.style.display = 'flex';
+        });
+
+        modalClose.addEventListener('click', () => {
+            customizeModal.style.display = 'none';
+        });
+
+        customizeModal.addEventListener('click', (e) => {
+            if (e.target === customizeModal) customizeModal.style.display = 'none';
+        });
+
+        applyBtn.addEventListener('click', () => {
+            savePreferences();
+            customizeModal.style.display = 'none';
+        });
+
+        document.querySelectorAll('#customize-modal select').forEach(select => {
+            select.addEventListener('change', updatePreview);
+        });
+
+        const searchToggleBtn = document.getElementById('search-toggle-btn');
+        const searchInputGroup = document.querySelector('.search-input-group');
+        searchToggleBtn.addEventListener('click', () => {
+            searchInputGroup.classList.toggle('active');
+        });
+
+        const populateDropdowns = () => {
+            const products = document.querySelectorAll('.product-card');
+            const filters = {
+                product: new Set(),
+                category: new Set(),
+                size: new Set(),
+                color: new Set(),
+                brand: new Set(),
+                price: new Set(['0-50', '50-100', '100-200', '200-500', '500-1000', '1000-2000'])
+            };
+
+            products.forEach(product => {
+                filters.product.add(product.dataset.product);
+                filters.category.add(product.dataset.category);
+                filters.size.add(product.dataset.size);
+                filters.color.add(product.dataset.color);
+                filters.brand.add(product.dataset.brand);
+            });
+
+            const productSelect = document.querySelector('.filter-select[data-filter="product"]');
+            Array.from(filters.product).sort().forEach(value => {
+                const option = document.createElement('option');
+                option.value = value;
+                option.textContent = value.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+                productSelect.appendChild(option);
+            });
+
+            const categorySelect = document.querySelector('.filter-select[data-filter="category"]');
+            Array.from(filters.category).sort().forEach(value => {
+                const option = document.createElement('option');
+                option.value = value;
+                option.textContent = value.charAt(0).toUpperCase() + value.slice(1);
+                categorySelect.appendChild(option);
+            });
+
+            const sizeSelect = document.querySelector('.filter-select[data-filter="size"]');
+            Array.from(filters.size).sort().forEach(value => {
+                const option = document.createElement('option');
+                option.value = value;
+                option.textContent = value.charAt(0).toUpperCase() + value.slice(1);
+                sizeSelect.appendChild(option);
+            });
+
+            const colorSelect = document.querySelector('.filter-select[data-filter="color"]');
+            Array.from(filters.color).sort().forEach(value => {
+                const option = document.createElement('option');
+                option.value = value;
+                option.textContent = value.charAt(0).toUpperCase() + value.slice(1);
+                colorSelect.appendChild(option);
+            });
+
+            const brandSelect = document.querySelector('.filter-select[data-filter="brand"]');
+            Array.from(filters.brand).sort().forEach(value => {
+                const option = document.createElement('option');
+                option.value = value;
+                option.textContent = value.charAt(0).toUpperCase() + value.slice(1);
+                brandSelect.appendChild(option);
+            });
+
+            const priceSelect = document.querySelector('.filter-select[data-filter="price"]');
+            filters.price.forEach(value => {
+                const option = document.createElement('option');
+                option.value = value;
+                option.textContent = `$${value.replace('-', ' - $')}`;
+                priceSelect.appendChild(option);
+            });
+        };
+
+        const searchInput = document.getElementById('search-input');
+        const clearSearchBtn = document.getElementById('clear-search');
+        const previousSearches = document.getElementById('previous-searches');
+        const autosuggest = document.getElementById('autosuggest');
+        const searchSpinner = document.getElementById('search-spinner');
+        let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+        let suggestions = [];
+
+        const updateSuggestions = () => {
+            suggestions = [];
+            const products = document.querySelectorAll('.product-card');
+            products.forEach(product => {
+                suggestions.push(product.dataset.product);
+                suggestions.push(product.dataset.category);
+                suggestions.push(product.dataset.size);
+                suggestions.push(product.dataset.color);
+                suggestions.push(product.dataset.brand);
+            });
+            suggestions = [...new Set(suggestions)];
+        };
+
+        const updatePreviousSearches = () => {
+            previousSearches.innerHTML = '';
+            searchHistory.forEach(search => {
+                const div = document.createElement('div');
+                div.textContent = search;
+                div.addEventListener('click', () => {
+                    searchInput.value = search;
+                    previousSearches.style.display = 'none';
+                    filterProducts();
+                });
+                previousSearches.appendChild(div);
+            });
+        };
+
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            clearSearchBtn.style.display = query ? 'block' : 'none';
+
+            autosuggest.innerHTML = '';
+            if (query) {
+                const filteredSuggestions = suggestions.filter(s => s.toLowerCase().includes(query));
+                filteredSuggestions.forEach(suggestion => {
+                    const div = document.createElement('div');
+                    div.textContent = suggestion;
+                    div.addEventListener('click', () => {
+                        searchInput.value = suggestion;
+                        autosuggest.style.display = 'none';
+                        filterProducts();
+                    });
+                    autosuggest.appendChild(div);
+                });
+                autosuggest.style.display = filteredSuggestions.length ? 'block' : 'none';
+            } else {
+                autosuggest.style.display = 'none';
+            }
+
+            searchSpinner.style.display = 'block';
+            setTimeout(() => {
+                searchSpinner.style.display = 'none';
+                filterProducts();
+            }, 500);
+        });
+
+        searchInput.addEventListener('focus', () => {
+            if (searchHistory.length) {
+                previousSearches.style.display = 'block';
+            }
+        });
+
+        searchInput.addEventListener('blur', () => {
+            setTimeout(() => {
+                previousSearches.style.display = 'none';
+                autosuggest.style.display = 'none';
+            }, 200);
+        });
+
+        clearSearchBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            clearSearchBtn.style.display = 'none';
+            filterProducts();
+        });
+
+        const voiceBtn = document.getElementById('voice-search');
+        const voiceSpinner = document.getElementById('voice-spinner');
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+
+            voiceBtn.addEventListener('click', () => {
+                voiceBtn.classList.add('voice-active');
+                voiceSpinner.style.display = 'block';
+                recognition.start();
+            });
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                searchInput.value = transcript;
+                voiceBtn.classList.remove('voice-active');
+                voiceSpinner.style.display = 'none';
+                clearSearchBtn.style.display = 'block';
+                filterProducts();
+            };
+
+            recognition.onerror = (event) => {
+                voiceBtn.classList.remove('voice-active');
+                voiceSpinner.style.display = 'none';
+                alert('Voice search error: ' + event.error);
+            };
+
+            recognition.onend = () => {
+                voiceBtn.classList.remove('voice-active');
+                voiceSpinner.style.display = 'none';
+            };
+        } else {
+            voiceBtn.addEventListener('click', () => {
+                alert('Voice search is not supported in this browser. Please use a modern browser like Chrome.');
+            });
+        };
+
+        const openCamera = async (mode) => {
+            const cameraModal = document.getElementById('camera-modal');
+            const cameraStream = document.getElementById('camera-stream');
+            const cameraModalTitle = document.getElementById('camera-modal-title');
+            const captureBtn = document.getElementById('capture-btn');
+
+            cameraModalTitle.textContent = mode === 'scan' ? 'Scan Barcode/QR Code' : 'Capture Image for Search';
+            cameraModal.style.display = 'flex';
+
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                cameraStream.srcObject = stream;
+                captureBtn.onclick = () => mode === 'scan' ? scanCode() : captureImage();
+            } catch (err) {
+                alert('Error accessing camera: ' + err.message);
+                closeCamera();
+            }
+        };
+
+        const closeCamera = () => {
+            const cameraModal = document.getElementById('camera-modal');
+            const cameraStream = document.getElementById('camera-stream');
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            cameraStream.srcObject = null;
+            cameraModal.style.display = 'none';
+        };
+
+        const scanCode = () => {
+            const cameraStream = document.getElementById('camera-stream');
+            const canvas = document.getElementById('camera-canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = cameraStream.videoWidth;
+            canvas.height = cameraStream.videoHeight;
+            context.drawImage(cameraStream, 0, 0, canvas.width, canvas.height);
+            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            const code = jsQR(imageData.data, imageData.width, imageData.height);
+
+            if (code) {
+                const product = products.find(p => p.barcode === code.data);
+                if (product) {
+                    searchInput.value = product.name;
+                    clearSearchBtn.style.display = 'block';
+                    filterProducts();
+
+                    // Use SweetAlert for the alert
+                    Swal.fire({
+                        title: 'Product Scanned',
+                        text: `Scanned product: ${product.name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}`,
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                    closeCamera();
+                } else {
+                    // Use SweetAlert for the alert
+                    Swal.fire({
+                        title: 'No Product Found',
+                        text: 'No product found for this barcode/QR code.',
+                        icon: 'error',
+                        confirmButtonText: 'Try Again'
+                    });
+                }
+            } else {
+                // Use SweetAlert for the alert
+                Swal.fire({
+                    title: 'No Code Detected',
+                    text: 'No barcode/QR code detected. Please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'Try Again'
+                });
+            }
+        };
+
+        const captureImage = () => {
+            const cameraStream = document.getElementById('camera-stream');
+            const canvas = document.getElementById('camera-canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = cameraStream.videoWidth;
+            canvas.height = cameraStream.videoHeight;
+            context.drawImage(cameraStream, 0, 0, canvas.width, canvas.height);
+            const imageData = canvas.toDataURL('image/png');
+            performImageSearch(imageData);
+            closeCamera();
+        };
+
+        const performImageSearch = (imageData) => {
+            // Simulated image recognition (replace with actual image recognition API if available)
+            const productNames = products.map(p => p.name);
+            const randomProduct = productNames[Math.floor(Math.random() * productNames.length)];
+            searchInput.value = randomProduct;
+            clearSearchBtn.style.display = 'block';
+            filterProducts();
+
+            // Use SweetAlert for the alert
+            Swal.fire({
+                title: 'Image Search Result',
+                text: `Image search found: ${randomProduct.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}`,
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        };
+
+        document.getElementById('image-upload').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = () => performImageSearch(reader.result);
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('scan-code').addEventListener('click', () => openCamera('scan'));
+        document.getElementById('image-search').addEventListener('click', () => openCamera('image'));
+        document.getElementById('camera-modal').querySelector('.modal-close').addEventListener('click', closeCamera);
+
+        const filterProducts = () => {
+            const query = searchInput.value.toLowerCase();
+            const products = document.querySelectorAll('.product-card');
+            const filters = {
+                product: document.querySelector('.filter-select[data-filter="product"]').value,
+                category: document.querySelector('.filter-select[data-filter="category"]').value,
+                size: document.querySelector('.filter-select[data-filter="size"]').value,
+                color: document.querySelector('.filter-select[data-filter="color"]').value,
+                brand: document.querySelector('.filter-select[data-filter="brand"]').value,
+                price: document.querySelector('.filter-select[data-filter="price"]').value,
+                minPrice: document.querySelector('.filter-input[data-filter="min-price"]').value,
+                maxPrice: document.querySelector('.filter-input[data-filter="max-price"]').value,
+            };
+
+            if (query && !searchHistory.includes(query)) {
+                searchHistory.unshift(query);
+                if (searchHistory.length > 5) searchHistory.pop();
+                localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+                updatePreviousSearches();
+            }
+
+            products.forEach(product => {
+                const matchesQuery = !query || Object.values(product.dataset).some(val => val.toLowerCase().includes(query));
+                const matchesProduct = !filters.product || product.dataset.product === filters.product;
+                const matchesCategory = !filters.category || product.dataset.category === filters.category;
+                const matchesSize = !filters.size || product.dataset.size === filters.size;
+                const matchesColor = !filters.color || product.dataset.color === filters.color;
+                const matchesBrand = !filters.brand || product.dataset.brand === filters.brand;
+                let matchesPrice = true;
+                if (filters.price) {
+                    const [min, max] = filters.price.split('-').map(Number);
+                    const price = Number(product.dataset.price);
+                    matchesPrice = price >= min && price <= max;
+                }
+                if (filters.minPrice || filters.maxPrice) {
+                    const price = Number(product.dataset.price);
+                    const minPrice = filters.minPrice ? Number(filters.minPrice) : 0;
+                    const maxPrice = filters.maxPrice ? Number(filters.maxPrice) : Infinity;
+                    matchesPrice = price >= minPrice && price <= maxPrice;
+                }
+
+                product.style.display = matchesQuery && matchesProduct && matchesCategory && matchesSize && matchesColor && matchesBrand && matchesPrice ? 'block' : 'none';
+            });
+
+            updateFilterChips();
+        };
+
+        const updateFilterChips = () => {
+            const filterChips = document.getElementById('filter-chips');
+            const resetFiltersBtn = document.getElementById('reset-filters');
+            filterChips.innerHTML = '';
+
+            const filters = {
+                product: document.querySelector('.filter-select[data-filter="product"]').value,
+                category: document.querySelector('.filter-select[data-filter="category"]').value,
+                size: document.querySelector('.filter-select[data-filter="size"]').value,
+                color: document.querySelector('.filter-select[data-filter="color"]').value,
+                brand: document.querySelector('.filter-select[data-filter="brand"]').value,
+                price: document.querySelector('.filter-select[data-filter="price"]').value,
+                minPrice: document.querySelector('.filter-input[data-filter="min-price"]').value,
+                maxPrice: document.querySelector('.filter-input[data-filter="max-price"]').value,
+            };
+
+            let hasFilters = false;
+            Object.entries(filters).forEach(([key, value]) => {
+                if (value) {
+                    hasFilters = true;
+                    const chip = document.createElement('div');
+                    chip.classList.add('filter-chip');
+                    chip.innerHTML = `
+                        ${key.charAt(0).toUpperCase() + key.slice(1)}: ${value}
+                        <span class="remove-chip">×</span>
+                    `;
+                    chip.querySelector('.remove-chip').addEventListener('click', () => {
+                        if (key === 'minPrice' || key === 'maxPrice') {
+                            document.querySelector(`.filter-input[data-filter="${key}"]`).value = '';
+                        } else {
+                            document.querySelector(`.filter-select[data-filter="${key}"]`).value = '';
+                        }
+                        filterProducts();
+                    });
+                    filterChips.appendChild(chip);
+                }
+            });
+
+            resetFiltersBtn.style.display = hasFilters ? 'block' : 'none';
+        };
+
+        document.querySelectorAll('.filter-select, .filter-input').forEach(element => {
+            element.addEventListener('change', filterProducts);
+        });
+
+        document.getElementById('reset-filters').addEventListener('click', () => {
+            document.querySelectorAll('.filter-select').forEach(select => select.value = '');
+            document.querySelectorAll('.filter-input').forEach(input => input.value = '');
+            filterProducts();
+        });
+
+        document.getElementById('sort').addEventListener('change', (e) => {
+            const sortValue = e.target.value;
+            const results = document.getElementById('results');
+            const products = Array.from(results.querySelectorAll('.product-card'));
+
+            products.sort((a, b) => {
+                if (sortValue === 'price-low') {
+                    return Number(a.dataset.price) - Number(b.dataset.price);
+                } else if (sortValue === 'price-high') {
+                    return Number(b.dataset.price) - Number(a.dataset.price);
+                } else {
+                    return 0; // Add more sorting logic if needed
+                }
+            });
+
+            results.innerHTML = '';
+            products.forEach(product => results.appendChild(product));
+        });
+
+        const updateCartUI = () => {
+            const cartItems = document.getElementById('cart-items');
+            const cartCount = document.getElementById('cart-count');
+            const cartTotal = document.getElementById('cart-total');
+
+            cartItems.innerHTML = '';
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p class="empty-cart">Your cart is empty.</p>';
+            } else {
+                cart.forEach((item, index) => {
+                    const product = products.find(p => p.name === item.name);
+                    if (product) { // Ensure the product exists
+                        const cartItem = document.createElement('div');
+                        cartItem.classList.add('cart-item');
+                        cartItem.innerHTML = `
+                            <img src="${product.image}" alt="${item.name}">
+                            <div class="flex-1">
+                                <h3 class="text-lg font-semibold">${item.name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Quantity: ${item.quantity}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Price: $${item.price}</p>
+                            </div>
+                            <span class="remove-item"><i class="fas fa-trash"></i></span>
+                        `;
+                        cartItem.querySelector('.remove-item').addEventListener('click', () => {
+                            cart.splice(index, 1);
+                            localStorage.setItem('cart', JSON.stringify(cart));
+                            updateCartUI();
+                        });
+                        cartItems.appendChild(cartItem);
+                    }
+                });
+            }
+
+            const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+            cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartTotal.textContent = total.toFixed(2);
+        };
+
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const productName = e.target.dataset.product;
+                const productCard = e.target.closest('.product-card');
+                const price = Number(productCard.dataset.price);
+                const existingItem = cart.find(item => item.name === productName);
+
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    cart.push({ name: productName, price, quantity: 1 });
+                }
+
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartUI();
+
+                // Use SweetAlert for the alert
+                Swal.fire({
+                    title: 'Added to Cart',
+                    text: `${productName.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')} added to cart!`,
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            });
+        });
+
+        document.getElementById('cart-btn').addEventListener('click', () => {
+            document.getElementById('cart-modal').style.display = 'flex';
+        });
+
+        document.getElementById('cart-modal').querySelector('.modal-close').addEventListener('click', () => {
+            document.getElementById('cart-modal').style.display = 'none';
+        });
+
+        document.getElementById('cart-modal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('cart-modal')) {
+                document.getElementById('cart-modal').style.display = 'none';
+            }
+        });
+
+        document.getElementById('checkout-btn').addEventListener('click', () => {
+            alert('Proceeding to checkout...');
+            cart = [];
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartUI();
+            document.getElementById('cart-modal').style.display = 'none';
+        });
+
+        document.querySelectorAll('.quick-view-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const productCard = e.target.closest('.product-card');
+                if (!productCard) {
+                    console.error('Product card not found.');
+                    return;
+                }
+
+                const productName = productCard.dataset.product;
+                const modal = document.getElementById('quick-view-modal');
+                const modalTitle = document.getElementById('modal-title');
+                const modalImage = document.getElementById('modal-image');
+                const modalDetails = document.getElementById('modal-details');
+                const addToCartBtn = modal.querySelector('.add-to-cart');
+
+                modalTitle.textContent = productName.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+                modalImage.src = productCard.querySelector('img').src;
+                modalDetails.innerHTML = `
+                    Category: ${productCard.dataset.category.charAt(0).toUpperCase() + productCard.dataset.category.slice(1)}<br>
+                    Size: ${productCard.dataset.size}<br>
+                    Color: ${productCard.dataset.color.charAt(0).toUpperCase() + productCard.dataset.color.slice(1)}<br>
+                    Brand: ${productCard.dataset.brand.charAt(0).toUpperCase() + productCard.dataset.brand.slice(1)}<br>
+                    Price: $${productCard.dataset.price}
+                `;
+                addToCartBtn.dataset.product = productName;
+                modal.style.display = 'flex';
+            });
+        });
+
+        document.getElementById('quick-view-modal').querySelector('.modal-close').addEventListener('click', () => {
+            document.getElementById('quick-view-modal').style.display = 'none';
+        });
+
+        document.getElementById('quick-view-modal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('quick-view-modal')) {
+                document.getElementById('quick-view-modal').style.display = 'none';
+            }
+        });
+
+        document.getElementById('profile-btn').addEventListener('click', () => {
+            const profileMenu = document.querySelector('.profile-menu');
+            profileMenu.style.display = profileMenu.style.display === 'block' ? 'none' : 'block';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (!e.target.closest('.profile-dropdown')) {
+                document.querySelector('.profile-menu').style.display = 'none';
+            }
+        });
+
+        document.getElementById('image-upload-search').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = () => performImageSearch(reader.result);
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            populateDropdowns();
+            updateSuggestions();
+            updatePreviousSearches();
+            applyPreferences();
+            updateCartUI();
+        });
+    </script>
+    <script>
+    document.querySelectorAll('.filter-input[data-filter="min-price"], .filter-input[data-filter="max-price"]').forEach(input => {
+        input.addEventListener('input', () => {
+            if (input.value < 0) {
+                input.value = ''; // Clear the input if a negative value is entered
+                alert('Please enter a positive value for the price.');
+            }
+        });
+    });
+</script>
+</body>
+</html>

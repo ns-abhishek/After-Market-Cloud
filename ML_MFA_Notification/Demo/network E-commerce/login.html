@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - ShopEasy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/notifications.css">
+</head>
+<body class="login-page">
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>ShopEasy</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#">Products</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="login.html" class="active">Login</a></li>
+                </ul>
+            </nav>
+            <div class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count">0</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Theme Switcher -->
+        <div class="theme-switcher">
+            <div class="theme-switcher-toggle" id="theme-toggle" title="Change Theme">
+                <i class="fas fa-palette"></i>
+                <span class="tooltip">Change Theme</span>
+            </div>
+            <div class="theme-options" id="theme-options">
+                <div class="theme-option active" data-theme="">
+                    <div class="theme-color" style="background-color: #1a1f2b;"></div>
+                    <span>Dark</span>
+                </div>
+                <div class="theme-option" data-theme="theme-light">
+                    <div class="theme-color" style="background-color: #f5f7fa;"></div>
+                    <span>Light</span>
+                </div>
+                <div class="theme-option" data-theme="theme-blue">
+                    <div class="theme-color" style="background-color: #1a3a5f;"></div>
+                    <span>Blue</span>
+                </div>
+                <div class="theme-option" data-theme="theme-purple">
+                    <div class="theme-color" style="background-color: #2d1a4a;"></div>
+                    <span>Purple</span>
+                </div>
+                <div class="theme-option" data-theme="theme-green">
+                    <div class="theme-color" style="background-color: #1b4e2d;"></div>
+                    <span>Green</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="login-container">
+                <div class="login-header">
+                    <h2>Login to Your Account</h2>
+                    <p>Welcome back! Please enter your details to access your account.</p>
+                </div>
+
+                <form id="login-form" class="login-form">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <div class="input-with-icon">
+                            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="input-with-icon password-input-container">
+                            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                            <i class="fas fa-lock"></i>
+                            <button type="button" id="toggle-password" class="toggle-password" aria-label="Toggle password visibility">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Password Strength Indicator (hidden until password input) -->
+                    <div id="password-strength-container" class="password-strength-container">
+                        <div class="strength-label">Password Strength: <span id="strength-text">None</span></div>
+                        <div class="strength-meter">
+                            <div id="strength-bar" class="strength-bar"></div>
+                        </div>
+                        <div class="strength-requirements">
+                            <div id="req-length" class="requirement"><i class="fas fa-times"></i> At least 8 characters</div>
+                            <div id="req-uppercase" class="requirement"><i class="fas fa-times"></i> At least 1 uppercase letter</div>
+                            <div id="req-lowercase" class="requirement"><i class="fas fa-times"></i> At least 1 lowercase letter</div>
+                            <div id="req-number" class="requirement"><i class="fas fa-times"></i> At least 1 number</div>
+                            <div id="req-special" class="requirement"><i class="fas fa-times"></i> At least 1 special character</div>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <div class="remember-me">
+                            <input type="checkbox" id="remember" name="remember">
+                            <label for="remember">Remember me</label>
+                        </div>
+                        <a href="#" id="forgot-password" class="forgot-password">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="login-button">Login</button>
+
+                    <div class="register-link">
+                        <p>Don't have an account? <a href="register.html">Register</a></p>
+                    </div>
+
+                    <!-- Demo Lockout Button (for testing purposes) -->
+                    <div class="demo-section">
+                        <button type="button" id="demo-lockout-btn" class="demo-button">Demo Account Lockout</button>
+                        <p class="demo-note">Click to simulate 3 failed login attempts and see the account lockout feature</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Forgot Password Modal -->
+        <div id="forgot-password-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Reset Your Password</h3>
+                    <button id="close-forgot-modal" class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="forgot-step-1" class="forgot-step active">
+                        <p>Enter your email address and we'll send you a verification code.</p>
+                        <div class="form-group">
+                            <label for="recovery-email">Email Address</label>
+                            <input type="email" id="recovery-email" placeholder="Enter your email" required>
+                        </div>
+                        <button id="send-code-btn" class="primary-button">Send Code</button>
+                    </div>
+
+                    <div id="forgot-step-2" class="forgot-step">
+                        <p>Enter the verification code sent to your email.</p>
+                        <div class="form-group">
+                            <label for="verification-code">Verification Code</label>
+                            <div class="otp-container">
+                                <input type="text" class="otp-input" maxlength="1" data-index="1">
+                                <input type="text" class="otp-input" maxlength="1" data-index="2">
+                                <input type="text" class="otp-input" maxlength="1" data-index="3">
+                                <input type="text" class="otp-input" maxlength="1" data-index="4">
+                                <input type="text" class="otp-input" maxlength="1" data-index="5">
+                                <input type="text" class="otp-input" maxlength="1" data-index="6">
+                            </div>
+                        </div>
+                        <div class="resend-code">
+                            <span id="resend-timer">Resend code in <span id="timer-count">60</span>s</span>
+                            <a href="#" id="resend-code-btn" class="disabled">Resend Code</a>
+                        </div>
+                        <button id="verify-code-btn" class="primary-button">Verify Code</button>
+                    </div>
+
+                    <div id="forgot-step-3" class="forgot-step">
+                        <p>Create a new password for your account.</p>
+                        <div class="form-group">
+                            <label for="new-password">New Password</label>
+                            <div class="input-with-icon password-input-container">
+                                <input type="password" id="new-password" placeholder="Enter new password" required>
+                                <button type="button" id="toggle-new-password" class="toggle-password" aria-label="Toggle password visibility">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Password Strength Indicator for new password -->
+                        <div id="new-password-strength-container" class="password-strength-container">
+                            <div class="strength-label">Password Strength: <span id="new-strength-text">None</span></div>
+                            <div class="strength-meter">
+                                <div id="new-strength-bar" class="strength-bar"></div>
+                            </div>
+                            <div class="strength-requirements">
+                                <div id="new-req-length" class="requirement"><i class="fas fa-times"></i> At least 8 characters</div>
+                                <div id="new-req-uppercase" class="requirement"><i class="fas fa-times"></i> At least 1 uppercase letter</div>
+                                <div id="new-req-lowercase" class="requirement"><i class="fas fa-times"></i> At least 1 lowercase letter</div>
+                                <div id="new-req-number" class="requirement"><i class="fas fa-times"></i> At least 1 number</div>
+                                <div id="new-req-special" class="requirement"><i class="fas fa-times"></i> At least 1 special character</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirm-password">Confirm Password</label>
+                            <div class="input-with-icon password-input-container">
+                                <input type="password" id="confirm-password" placeholder="Confirm new password" required>
+                                <button type="button" id="toggle-confirm-password" class="toggle-password" aria-label="Toggle password visibility">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button id="reset-password-btn" class="primary-button">Reset Password</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Lockout Modal -->
+        <div id="account-lockout-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Account Temporarily Locked</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="lockout-content">
+                        <div class="lockout-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <p class="lockout-message">For your security, your account has been temporarily locked due to multiple failed login attempts.</p>
+                        <div class="lockout-timer">
+                            <p>You can try again in:</p>
+                            <div class="countdown-timer">
+                                <span id="lockout-minutes">05</span>:<span id="lockout-seconds">00</span>
+                            </div>
+                        </div>
+                        <div class="lockout-options">
+                            <p>Need immediate access?</p>
+                            <button id="unlock-account-btn" class="primary-button">Unlock via Email Verification</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 ShopEasy. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/login.js"></script>
+</body>
+</html>

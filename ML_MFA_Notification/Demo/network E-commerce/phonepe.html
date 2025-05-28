@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhonePe Payment</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* PhonePe Modal */
+        .phonepe-modal {
+            width: 90%;
+            max-width: 450px;
+            background-color: #000000;
+            border: 2px solid #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Modal Header */
+        .phonepe-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #333333;
+        }
+
+        .phonepe-header h3 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        /* Modal Body */
+        .phonepe-body {
+            padding: 20px;
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        /* PhonePe Logo */
+        .phonepe-logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .phonepe-logo img {
+            height: 50px;
+            margin-bottom: 15px;
+            background-color: #fff;
+            padding: 8px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            object-fit: contain;
+            max-width: 180px;
+        }
+
+        /* QR Code Container */
+        .qr-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .qr-code {
+            width: 220px;
+            height: 220px;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .qr-code img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Spinner Animation */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #000000;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Instructions */
+        .instructions {
+            background-color: #111111;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .instructions h4 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .instructions ol {
+            color: #aaaaaa;
+            margin-bottom: 0;
+            padding-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+
+        /* Payment Details */
+        .payment-details {
+            margin-bottom: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .detail-label {
+            color: #aaaaaa;
+        }
+
+        .detail-value {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        /* Modal Footer */
+        .phonepe-footer {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #333333;
+            background-color: #000000;
+        }
+
+        .cancel-btn {
+            padding: 12px 20px;
+            background-color: transparent;
+            border: 1px solid #555555;
+            color: #ffffff;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .verify-btn {
+            padding: 12px 20px;
+            background-color: #ffffff;
+            border: none;
+            color: #000000;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Success Screen */
+        .success-screen {
+            padding: 30px;
+            text-align: center;
+            display: none;
+        }
+
+        .success-icon {
+            font-size: 60px;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+
+        .success-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .success-message {
+            color: #aaaaaa;
+            margin-bottom: 20px;
+        }
+
+        .transaction-details {
+            background-color: #111111;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .transaction-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .continue-btn {
+            padding: 14px 24px;
+            background-color: #ffffff;
+            border: none;
+            color: #000000;
+            border-radius: 8px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        /* Error Message */
+        .error-message {
+            text-align: center;
+            padding: 20px;
+            color: #000000;
+        }
+
+        .error-icon {
+            font-size: 40px;
+            color: #ff5555;
+            margin-bottom: 15px;
+        }
+
+        .retry-btn {
+            background-color: #000000;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="phonepe-modal">
+        <div class="phonepe-header">
+            <h3>PhonePe</h3>
+            <button class="close-btn" id="close-btn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="phonepe-body" id="payment-screen">
+            <div class="phonepe-logo">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/PhonePe_logo.svg/1200px-PhonePe_logo.svg.png" alt="PhonePe Logo">
+            </div>
+
+            <div class="qr-container">
+                <div class="qr-code" id="qr-code">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+
+            <div class="instructions">
+                <h4>Scan with PhonePe App</h4>
+                <ol>
+                    <li>Open your PhonePe app</li>
+                    <li>Tap on 'Scan QR'</li>
+                    <li>Point your camera at this QR code</li>
+                    <li>Confirm payment in your app</li>
+                </ol>
+            </div>
+
+            <div class="payment-details">
+                <div class="detail-row">
+                    <span class="detail-label">Amount:</span>
+                    <span class="detail-value" id="amount">₹269.98</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Transaction ID:</span>
+                    <span class="detail-value" id="transaction-id">TRX-270793-9019</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Time remaining:</span>
+                    <span class="detail-value" id="timer">05:00</span>
+                </div>
+            </div>
+        </div>
+        <div class="success-screen" id="success-screen">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="success-title">Payment Successful</div>
+            <div class="success-message">Your PhonePe payment has been processed successfully.</div>
+            <div class="transaction-details">
+                <div class="transaction-row">
+                    <span class="detail-label">Amount:</span>
+                    <span class="detail-value" id="success-amount">₹269.98</span>
+                </div>
+                <div class="transaction-row">
+                    <span class="detail-label">Transaction ID:</span>
+                    <span class="detail-value" id="success-transaction-id">TRX-270793-9019</span>
+                </div>
+                <div class="transaction-row">
+                    <span class="detail-label">Date:</span>
+                    <span class="detail-value" id="success-date"></span>
+                </div>
+                <div class="transaction-row">
+                    <span class="detail-label">Payment Method:</span>
+                    <span class="detail-value">PhonePe</span>
+                </div>
+            </div>
+            <button class="continue-btn" id="continue-btn">Continue</button>
+        </div>
+        <div class="phonepe-footer" id="payment-footer">
+            <button class="cancel-btn" id="cancel-btn">Cancel</button>
+            <button class="verify-btn" id="verify-btn">I've Paid</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const closeBtn = document.getElementById('close-btn');
+            const cancelBtn = document.getElementById('cancel-btn');
+            const verifyBtn = document.getElementById('verify-btn');
+            const qrCodeContainer = document.getElementById('qr-code');
+            const timerElement = document.getElementById('timer');
+            const paymentScreen = document.getElementById('payment-screen');
+            const successScreen = document.getElementById('success-screen');
+            const paymentFooter = document.getElementById('payment-footer');
+            const continueBtn = document.getElementById('continue-btn');
+
+            // Set success date
+            document.getElementById('success-date').textContent = new Date().toLocaleDateString();
+
+            // Generate QR code
+            generateQRCode();
+
+            // Start timer
+            startTimer();
+
+            // Button event listeners
+            closeBtn.addEventListener('click', function() {
+                window.location.href = 'payment.html';
+            });
+
+            cancelBtn.addEventListener('click', function() {
+                window.location.href = 'payment.html';
+            });
+
+            verifyBtn.addEventListener('click', function() {
+                // Show verification in progress
+                verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+                verifyBtn.disabled = true;
+                cancelBtn.disabled = true;
+
+                // Simulate verification
+                setTimeout(function() {
+                    // Show success screen
+                    paymentScreen.style.display = 'none';
+                    paymentFooter.style.display = 'none';
+                    successScreen.style.display = 'block';
+                }, 2000);
+            });
+
+            continueBtn.addEventListener('click', function() {
+                window.location.href = 'confirmation.html';
+            });
+
+            // Generate QR code function
+            function generateQRCode() {
+                const amount = document.getElementById('amount').textContent.replace('₹', '');
+                const transactionId = document.getElementById('transaction-id').textContent;
+
+                // Generate QR code data
+                const qrData = `upi://pay?pa=merchant@phonepe&pn=ShopEasy&am=${amount}&cu=INR&tn=Payment%20for%20order%20${transactionId}`;
+
+                // Use a more reliable QR code service
+                const qrImage = document.createElement('img');
+
+                // Try multiple QR code services for reliability
+                // First try QR Server API
+                qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}`;
+                qrImage.alt = "PhonePe QR Code";
+                qrImage.style.width = "100%";
+                qrImage.style.height = "100%";
+
+                // Handle image loading
+                qrImage.onload = function() {
+                    // Clear loading spinner and add QR code
+                    qrCodeContainer.innerHTML = '';
+                    qrCodeContainer.appendChild(qrImage);
+                };
+
+                qrImage.onerror = function() {
+                    // If first service fails, try GoQR.me API
+                    const backupQrImage = document.createElement('img');
+                    backupQrImage.src = `https://goqr.me/api/v1/create-qr-code/?data=${encodeURIComponent(qrData)}&size=200x200&charset-source=UTF-8`;
+                    backupQrImage.alt = "PhonePe QR Code";
+                    backupQrImage.style.width = "100%";
+                    backupQrImage.style.height = "100%";
+
+                    backupQrImage.onload = function() {
+                        qrCodeContainer.innerHTML = '';
+                        qrCodeContainer.appendChild(backupQrImage);
+                    };
+
+                    backupQrImage.onerror = function() {
+                        // If both services fail, use a static QR code image
+                        qrCodeContainer.innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 29 29">
+                                <path d="M1,1h7v7h-7z M10,1h1v1h-1z M12,1h3v1h-3z M16,1h1v1h-1z M18,1h2v2h-2z M21,1h7v7h-7z M3,3v3h3v-3z M23,3v3h3v-3z M8,4h1v1h-1z M10,4h1v1h-1z M13,4h1v1h-1z M15,4h1v1h-1z M8,6h2v1h-2z M11,6h1v1h-1z M14,6h3v1h-3z M18,6h1v1h-1z M1,10h1v1h-1z M3,10h5v1h-5z M10,10h1v1h-1z M12,10h1v1h-1z M14,10h1v1h-1z M17,10h1v1h-1z M20,10h1v1h-1z M22,10h2v1h-2z M25,10h1v1h-1z M27,10h1v1h-1z M3,12h1v1h-1z M6,12h2v1h-2z M9,12h2v1h-2z M13,12h3v1h-3z M18,12h1v1h-1z M20,12h1v1h-1z M22,12h1v1h-1z M25,12h1v1h-1z M1,13h1v2h-1z M3,13h1v3h-1z M5,13h1v1h-1z M9,13h1v2h-1z M11,13h1v1h-1z M17,13h1v1h-1z M19,13h1v1h-1z M21,13h1v1h-1z M23,13h1v1h-1z M25,13h1v1h-1z M27,13h1v3h-1z M5,14h1v1h-1z M7,14h1v1h-1z M11,14h1v1h-1z M13,14h1v1h-1z M15,14h1v1h-1z M17,14h1v1h-1z M19,14h1v1h-1z M21,14h1v1h-1z M23,14h1v1h-1z M25,14h1v1h-1z M1,15h1v1h-1z M5,15h1v1h-1z M7,15h1v1h-1z M11,15h1v1h-1z M13,15h1v1h-1z M15,15h1v1h-1z M17,15h1v1h-1z M19,15h1v1h-1z M21,15h1v1h-1z M23,15h1v1h-1z M25,15h1v1h-1z M5,16h1v1h-1z M7,16h1v1h-1z M9,16h1v1h-1z M13,16h1v1h-1z M15,16h1v1h-1z M17,16h1v1h-1z M19,16h1v1h-1z M21,16h1v1h-1z M23,16h1v1h-1z M25,16h1v1h-1z M1,17h1v1h-1z M3,17h1v1h-1z M5,17h1v1h-1z M7,17h1v1h-1z M9,17h1v1h-1z M11,17h1v1h-1z M13,17h1v1h-1z M15,17h1v1h-1z M17,17h1v1h-1z M19,17h1v1h-1z M21,17h1v1h-1z M23,17h1v1h-1z M25,17h1v1h-1z M27,17h1v1h-1z M10,18h1v1h-1z M12,18h1v1h-1z M14,18h1v1h-1z M16,18h1v1h-1z M18,18h1v1h-1z M21,18h7v7h-7z M1,21h7v7h-7z M10,21h1v1h-1z M12,21h1v1h-1z M14,21h1v1h-1z M16,21h1v1h-1z M18,21h1v1h-1z M23,23v3h3v-3z M3,23v3h3v-3z M10,24h1v1h-1z M13,24h1v1h-1z M15,24h1v1h-1z M17,24h1v1h-1z M10,26h1v1h-1z M12,26h1v1h-1z M14,26h1v1h-1z M16,26h1v1h-1z M18,26h1v1h-1z" fill="#000000"/>
+                            </svg>
+                        `;
+                    };
+                };
+            }
+
+            // Start timer function
+            function startTimer() {
+                let timeLeft = 5 * 60; // 5 minutes
+
+                const timerInterval = setInterval(function() {
+                    const minutes = Math.floor(timeLeft / 60);
+                    const seconds = timeLeft % 60;
+
+                    timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                    if (--timeLeft < 0) {
+                        clearInterval(timerInterval);
+
+                        // Show expired message
+                        qrCodeContainer.innerHTML = `
+                            <div class="error-message">
+                                <div class="error-icon">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                </div>
+                                <p>QR code has expired</p>
+                                <button class="retry-btn" id="refresh-btn">Generate New QR</button>
+                            </div>
+                        `;
+
+                        // Add refresh button event listener
+                        document.getElementById('refresh-btn').addEventListener('click', function() {
+                            qrCodeContainer.innerHTML = '<div class="spinner"></div>';
+                            setTimeout(generateQRCode, 500);
+                            startTimer();
+                        });
+                    }
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>

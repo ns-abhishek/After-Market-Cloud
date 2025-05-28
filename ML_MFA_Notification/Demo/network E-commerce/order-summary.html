@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Summary - ShopEasy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/payment.css">
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+        
+        .page-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--payment-text);
+        }
+    </style>
+</head>
+<body class="payment-page">
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>ShopEasy</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#">Products</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="login.html">Login</a></li>
+                </ul>
+            </nav>
+            <div class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count">0</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Theme Switcher -->
+        <div class="theme-switcher">
+            <div class="theme-switcher-toggle" id="theme-toggle" title="Change Theme">
+                <i class="fas fa-palette"></i>
+                <span class="tooltip">Change Theme</span>
+            </div>
+            <div class="theme-options" id="theme-options">
+                <div class="theme-option active" data-theme="">
+                    <div class="theme-color" style="background-color: #1a1f2b;"></div>
+                    <span>Dark</span>
+                </div>
+                <div class="theme-option" data-theme="theme-light">
+                    <div class="theme-color" style="background-color: #f5f7fa;"></div>
+                    <span>Light</span>
+                </div>
+                <div class="theme-option" data-theme="theme-blue">
+                    <div class="theme-color" style="background-color: #1a3a5f;"></div>
+                    <span>Blue</span>
+                </div>
+                <div class="theme-option" data-theme="theme-purple">
+                    <div class="theme-color" style="background-color: #2d1b4e;"></div>
+                    <span>Purple</span>
+                </div>
+                <div class="theme-option" data-theme="theme-green">
+                    <div class="theme-color" style="background-color: #1b4e2d;"></div>
+                    <span>Green</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <h1 class="page-title">Order Summary</h1>
+            
+            <!-- Standalone Order Summary Box -->
+            <div class="order-summary-box">
+                <h3>Order Summary</h3>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span>$279.97</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping</span>
+                    <span>$0.00</span>
+                </div>
+                <div class="summary-row">
+                    <span>Tax</span>
+                    <span>$22.40</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span>$302.37</span>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="pay-button" style="max-width: 300px; margin: 0 auto;">Proceed to Payment</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 ShopEasy. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Switcher Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeOptions = document.getElementById('theme-options');
+            const themeOptionElements = document.querySelectorAll('.theme-option');
+
+            // Apply theme function
+            function applyTheme(theme) {
+                // First, remove all theme classes
+                document.body.classList.remove('theme-light', 'theme-blue', 'theme-purple', 'theme-green');
+
+                // Then add the selected theme class if it's not the default dark theme
+                if (theme) {
+                    document.body.classList.add(theme);
+                }
+
+                // Update active state in theme options
+                themeOptionElements.forEach(option => {
+                    option.classList.remove('active');
+                    if (option.getAttribute('data-theme') === theme) {
+                        option.classList.add('active');
+                    }
+                });
+
+                // Save theme preference
+                localStorage.setItem('payment-theme', theme || '');
+            }
+
+            // Load saved theme from localStorage
+            const savedTheme = localStorage.getItem('payment-theme');
+            if (savedTheme) {
+                applyTheme(savedTheme);
+            }
+
+            // Toggle theme options panel
+            themeToggle.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent event from bubbling up
+                themeOptions.classList.toggle('show');
+            });
+
+            // Close theme options when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!themeOptions.contains(event.target)) {
+                    themeOptions.classList.remove('show');
+                }
+            });
+
+            // Theme selection
+            themeOptionElements.forEach(option => {
+                option.addEventListener('click', function() {
+                    const theme = this.getAttribute('data-theme');
+                    applyTheme(theme);
+                    themeOptions.classList.remove('show');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

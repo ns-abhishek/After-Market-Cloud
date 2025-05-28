@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - ShopEasy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/payment.css">
+    <link rel="stylesheet" href="css/payment-modals.css">
+    <link rel="stylesheet" href="css/payment-groups.css">
+    <link rel="stylesheet" href="css/payment-buttons.css">
+    <link rel="stylesheet" href="css/notifications.css">
+    <link rel="stylesheet" href="css/modern-header.css">
+    <link rel="stylesheet" href="css/help-modal.css">
+    <link rel="stylesheet" href="css/payment-qr.css">
+    <link rel="stylesheet" href="css/payment-fixes.css">
+    <link rel="stylesheet" href="css/theme-switcher.css">
+    <link rel="stylesheet" href="css/button-theme-fix.css">
+    <link rel="stylesheet" href="css/google-pay-fix.css">
+    <style>
+        /* QR Code Spinner Animation */
+        @keyframes qrSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .qr-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #000000;
+            border-radius: 50%;
+            animation: qrSpin 1s linear infinite;
+        }
+
+        /* New Direct Payment Modal Styles */
+        #direct-payment-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #direct-payment-modal.show {
+            display: flex;
+        }
+
+        .direct-modal-content {
+            width: 90%;
+            max-width: 450px;
+            background-color: #000000;
+            border: 2px solid #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .direct-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #333333;
+        }
+
+        .direct-modal-header h3 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .direct-modal-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .direct-modal-body {
+            padding: 20px;
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        .direct-payment-logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            width: 200px;
+            margin: 0 auto 20px;
+        }
+
+        .direct-payment-logo img {
+            height: 50px;
+            object-fit: contain;
+        }
+
+        .direct-qr-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .direct-qr-code {
+            width: 220px;
+            height: 220px;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .direct-qr-instructions {
+            text-align: center;
+            margin-top: 15px;
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 12px;
+            width: 100%;
+        }
+
+        .direct-qr-instructions h4 {
+            margin-bottom: 10px;
+            color: #ffffff;
+            font-size: 16px;
+        }
+
+        .direct-qr-instructions ol {
+            text-align: left;
+            padding-left: 25px;
+            color: #cccccc;
+        }
+
+        .direct-qr-instructions li {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .direct-payment-details {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .direct-payment-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 15px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .direct-payment-timer {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .direct-modal-footer {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #333333;
+            background-color: #000000;
+        }
+
+        .direct-cancel-btn {
+            padding: 12px 20px;
+            background-color: transparent;
+            border: 1px solid #555555;
+            color: #ffffff;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .direct-verify-btn {
+            padding: 12px 20px;
+            background-color: #ffffff;
+            border: none;
+            color: #000000;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .direct-payment-success {
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .direct-success-icon {
+            font-size: 60px;
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+
+        .direct-success-message {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 15px;
+        }
+
+        .direct-success-details {
+            color: #aaaaaa;
+            margin-bottom: 20px;
+        }
+
+        .direct-continue-btn {
+            padding: 14px 24px;
+            background-color: #ffffff;
+            border: none;
+            color: #000000;
+            border-radius: 8px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body class="payment-page">
+    <!-- Modern Header -->
+    <header class="modern-header">
+        <div class="container">
+            <!-- Logo Section -->
+            <div class="logo">
+                <i class="fas fa-shopping-bag logo-icon"></i>
+                <h1>Payment</h1>
+            </div>
+
+            <!-- Checkout Progress -->
+            <div class="checkout-progress">
+                <div class="checkout-step completed">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Cart</div>
+                </div>
+                <div class="step-connector"></div>
+                <div class="checkout-step completed">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Shipping</div>
+                </div>
+                <div class="step-connector"></div>
+                <div class="checkout-step active">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Payment</div>
+                </div>
+                <div class="step-connector"></div>
+                <div class="checkout-step">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Confirmation</div>
+                </div>
+            </div>
+
+            <!-- User Actions -->
+            <div class="user-actions">
+                <div class="secure-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Secure Checkout</span>
+                </div>
+                <button class="action-button" id="help-button">
+                    <i class="fas fa-question-circle"></i>
+                    <!-- <span class="tooltip">Help</span> -->
+                </button>
+                <button class="action-button" id="back-to-cart-button">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="badge cart-count">3</span>
+                    <span class="tooltip">Back to Cart</span>
+                    <!-- Mini Order Summary -->
+                    <div class="mini-order-summary">
+                        <h4>Order Summary</h4>
+                        <div class="mini-summary-row">
+                            <span>Subtotal</span>
+                            <span id="mini-subtotal">$279.97</span>
+                        </div>
+                        <div class="mini-summary-row">
+                            <span>Shipping</span>
+                            <span id="mini-shipping">$0.00</span>
+                        </div>
+                        <div class="mini-summary-row">
+                            <span>Tax</span>
+                            <span id="mini-tax">$22.40</span>
+                        </div>
+                        <div class="mini-summary-row total">
+                            <span>Total</span>
+                            <span id="mini-total">$302.37</span>
+                        </div>
+                    </div>
+                </button>
+                <button class="action-button" id="user-profile-button">
+                    <i class="fas fa-user-circle"></i>
+                    <!-- <span class="tooltip">Account</span> -->
+                </button>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 66.66%"></div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Theme Switcher -->
+        <div class="theme-switcher">
+            <div class="theme-switcher-toggle" id="theme-toggle" title="Toggle Dark/Light Mode">
+                <i class="fas fa-moon"></i>
+                <span class="tooltip">Toggle Dark/Light Mode</span>
+            </div>
+            <div class="theme-options" id="theme-options">
+                <div class="theme-option active" data-theme="">
+                    <div class="theme-color" style="background-color: #000000;"></div>
+                    <span>Dark Mode</span>
+                </div>
+                <div class="theme-option" data-theme="theme-white">
+                    <div class="theme-color" style="background-color: #ffffff;"></div>
+                    <span>Light Mode</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="payment-container">
+            <!-- Left Panel - Payment Methods -->
+            <div class="payment-methods-panel">
+                <div class="panel-header">
+                    <h2>Payment Methods</h2>
+                    <div class="security-badge">
+                        <i class="fas fa-shield-alt"></i> Secured Payment
+                    </div>
+                </div>
+
+                <!-- Saved Payment Methods Section -->
+                <div class="saved-methods-section">
+                    <div class="section-header">
+                        <h3>Saved Payment Methods</h3>
+                        <div class="manage-link-container">
+                            <button id="manage-payment-methods" class="manage-link">
+                                <i class="fas fa-cog"></i> Manage
+                            </button>
+                        </div>
+                    </div>
+                    <div id="saved-cards-container" class="saved-cards">
+                        <!-- Saved cards will be dynamically loaded here -->
+                    </div>
+                    <div class="no-saved-methods" id="no-saved-methods" style="display: none;">
+                        <p>You don't have any saved payment methods.</p>
+                        <button id="add-first-payment-method" class="secondary-button">
+                            <i class="fas fa-plus"></i> Add Payment Method
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Payment Options Section -->
+                <div class="payment-options-section">
+                    <h3>Payment Options</h3>
+
+                    <!-- Network Payment Group (Accordion) -->
+                    <div class="payment-group">
+                        <div class="payment-group-header accordion-header">
+                            <div class="group-icon">
+                                <i class="fas fa-network-wired"></i>
+                            </div>
+                            <h4>Network Payment</h4>
+                            <div class="accordion-toggle">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        <div class="payment-options accordion-content">
+                            <div class="payment-option">
+                                <div class="option-select">
+                                    <div class="radio-btn"></div>
+                                </div>
+                                <div class="option-icon">
+                                    <i class="far fa-credit-card"></i>
+                                </div>
+                                <div class="option-info">
+                                    <div class="option-name">Credit/Debit Cards</div>
+                                </div>
+                                <!-- <div class="option-price">₹150.00</div> -->
+                            </div>
+                            <div class="payment-option">
+                                <div class="option-select">
+                                    <div class="radio-btn"></div>
+                                </div>
+                                <div class="option-icon">
+                                    <i class="fab fa-apple-pay"></i>
+                                </div>
+                                <div class="option-info">
+                                    <div class="option-name">Apple Pay</div>
+                                </div>
+                                <!-- <div class="option-price">₹150.00</div> -->
+                            </div>
+                            <div class="payment-option">
+                                <div class="option-select">
+                                    <div class="radio-btn"></div>
+                                </div>
+                                <div class="option-icon">
+                                    <i class="fab fa-google-pay"></i>
+                                </div>
+                                <div class="option-info">
+                                    <div class="option-name">Google Pay</div>
+                                </div>
+                                <!-- <div class="option-price">₹150.00</div> -->
+                            </div>
+                            <div class="payment-option">
+                                <div class="option-select">
+                                    <div class="radio-btn"></div>
+                                </div>
+                                <div class="option-icon">
+                                    <i class="fas fa-mobile-alt"></i>
+                                </div>
+                                <div class="option-info">
+                                    <div class="option-name">PhonePe</div>
+                                </div>
+                                <!-- <div class="option-price">₹2.00</div> -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bank Payment Group (Accordion) -->
+                    <div class="payment-group">
+                        <div class="payment-group-header accordion-header">
+                            <div class="group-icon">
+                                <i class="fas fa-university"></i>
+                            </div>
+                            <h4>Bank Payment</h4>
+                            <div class="accordion-toggle">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        <div class="payment-options accordion-content">
+                            <div class="payment-option">
+                                <div class="option-select">
+                                    <div class="radio-btn"></div>
+                                </div>
+                                <div class="option-icon">
+                                    <i class="fas fa-university"></i>
+                                </div>
+                                <div class="option-info">
+                                    <div class="option-name">Bank Transfer</div>
+                                </div>
+                                <!-- <div class="option-price">₹2.00</div> -->
+                            </div>
+                            <div class="payment-option">
+                                <div class="option-select">
+                                    <div class="radio-btn"></div>
+                                </div>
+                                <div class="option-icon">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                </div>
+                                <div class="option-info">
+                                    <div class="option-name">Buy Now Pay Later</div>
+                                </div>
+                                <!-- <div class="option-price">₹2.00</div> -->
+                            </div>
+                            <div class="payment-option">
+                                <div class="option-select">
+                                    <div class="radio-btn"></div>
+                                </div>
+                                <div class="option-icon">
+                                    <i class="fab fa-bitcoin"></i>
+                                </div>
+                                <div class="option-info">
+                                    <div class="option-name">Cryptocurrency</div>
+                                </div>
+                                <!-- <div class="option-price">₹2.00</div> -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cash Payment Group (Accordion) -->
+                    <div class="payment-group">
+                        <div class="payment-group-header accordion-header">
+                            <div class="group-icon">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <h4>Cash Payment</h4>
+                            <div class="accordion-toggle">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        <div class="payment-options accordion-content">
+                            <div class="payment-option">
+                                <div class="option-select">
+                                    <div class="radio-btn"></div>
+                                </div>
+                                <div class="option-icon cash-icon">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                </div>
+                                <div class="option-info" style="color:#2c3e50">
+                                    <div class="option-name">Cash on Delivery</div>
+                                </div>
+                                <!-- <div class="option-price">₹2.00</div> -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Action for Left Panel -->
+                    <div class="payment-action">
+                        <button id="left-panel-pay-button" class="pay-button" style="display: none;">
+                            Pay Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel - Payment Details & Order Summary -->
+            <div class="payment-details-panel">
+                <!-- Payment Details Section -->
+                <div class="payment-details-section">
+                    <div class="panel-header">
+                        <h2>Payment Details</h2>
+                    </div>
+
+                    <!-- Payment Method Display -->
+                    <div id="payment-method-display" class="payment-method-display">
+                        <!-- This will be dynamically updated based on selected payment method -->
+                    </div>
+
+                    <!-- Credit Card Form -->
+                    <div id="credit-card-form" class="payment-form">
+                        <div class="card-preview">
+                            <div class="card-type">
+                                <i class="fab fa-cc-visa"></i>
+                                <i class="fab fa-cc-mastercard"></i>
+                                <i class="fab fa-cc-amex"></i>
+                            </div>
+                            <div class="card-number-display">•••• •••• •••• ••••</div>
+                            <div class="card-details">
+                                <div class="card-holder">
+                                    <span class="label">Card Holder</span>
+                                    <span class="value">EXAMPLE NAME</span>
+                                </div>
+                                <div class="card-expiry">
+                                    <span class="label">Expires</span>
+                                    <span class="value">MM/YY</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="card-number">Card Number</label>
+                            <div class="input-with-icon">
+                                <input type="text" id="card-number" placeholder="1234 5678 9012 3456">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="card-holder">Card Holder Name</label>
+                            <input type="text" id="card-holder" placeholder="Name on card">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="expiry-date">Expiry Date</label>
+                                <input type="text" id="expiry-date" placeholder="MM/YY">
+                            </div>
+                            <div class="form-group">
+                                <label for="cvv">CVV</label>
+                                <div class="input-with-icon">
+                                    <input type="text" id="cvv" placeholder="123">
+                                    <i class="fas fa-question-circle" title="3-digit security code on the back of your card"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="save-card-option">
+                            <label class="checkbox-container">
+                                <input type="checkbox" checked>
+                                <span class="checkmark"></span>
+                                Save card for future payments
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- PayPal Form -->
+                    <div id="paypal-form" class="payment-form">
+                        <div class="payment-method-content paypal-content">
+                            <div class="payment-logo">
+                                <i class="fab fa-paypal"></i>
+                            </div>
+                            <h3>PayPal Checkout</h3>
+                            <p class="payment-description">You'll be redirected to PayPal to complete your purchase securely.</p>
+                            <div class="payment-benefits">
+                                <div class="benefit-item">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <span>Buyer Protection</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-lock"></i>
+                                    <span>Secure Checkout</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-credit-card"></i>
+                                    <span>No Card Fees</span>
+                                </div>
+                            </div>
+                            <button id="paypal-button" class="paypal-button">
+                                <span>Continue with PayPal</span>
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Apple Pay Form -->
+                    <div id="apple-pay-form" class="payment-form">
+                        <div class="payment-method-content apple-pay-content">
+                            <div class="payment-logo apple-logo">
+                                <i class="fab fa-apple"></i>
+                            </div>
+                            <h3>Apple Pay</h3>
+                            <p class="payment-description">Complete your purchase with a single click using Apple Pay.</p>
+                            <div class="payment-benefits">
+                                <div class="benefit-item">
+                                    <i class="fas fa-bolt"></i>
+                                    <span>Fast Checkout</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-fingerprint"></i>
+                                    <span>Secure Authentication</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <span>Device Protection</span>
+                                </div>
+                            </div>
+                            <button id="apple-pay-button" class="apple-pay-button">
+                                <i class="fab fa-apple"></i>
+                                <span>Pay</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Google Pay Form -->
+                    <div id="google-pay-form" class="payment-form">
+                        <div class="payment-method-content google-pay-content">
+                            <div class="payment-logo google-logo">
+                                <i class="fab fa-google"></i>
+                            </div>
+                            <h3>Google Pay</h3>
+                            <p class="payment-description">Fast, simple checkout with Google Pay.</p>
+                            <div class="payment-benefits">
+                                <div class="benefit-item">
+                                    <i class="fas fa-bolt"></i>
+                                    <span>Quick Checkout</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-lock"></i>
+                                    <span>Secure Payment</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-globe"></i>
+                                    <span>Works Everywhere</span>
+                                </div>
+                            </div>
+                            <button id="google-pay-button" class="google-pay-button">
+                                <i class="fab fa-google"></i>
+                                <span>Pay</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Bank Transfer Form -->
+                    <div id="bank-transfer-form" class="payment-form">
+                        <div class="payment-method-content bank-transfer-content">
+                            <div class="payment-logo bank-logo">
+                                <i class="fas fa-university"></i>
+                            </div>
+                            <h3>Bank Transfer</h3>
+                            <p class="payment-description">Make a direct transfer to our bank account.</p>
+
+                            <div class="bank-details">
+                                <div class="bank-detail-item">
+                                    <span class="detail-label">Account Name:</span>
+                                    <span class="detail-value">ShopEasy Inc.</span>
+                                </div>
+                                <div class="bank-detail-item">
+                                    <span class="detail-label">Account Number:</span>
+                                    <span class="detail-value">1234 5678 9012 3456</span>
+                                </div>
+                                <div class="bank-detail-item">
+                                    <span class="detail-label">Bank Name:</span>
+                                    <span class="detail-value">Global Bank</span>
+                                </div>
+                                <div class="bank-detail-item">
+                                    <span class="detail-label">SWIFT/BIC:</span>
+                                    <span class="detail-value">GLBAUS12</span>
+                                </div>
+                            </div>
+
+                            <div class="payment-benefits">
+                                <div class="benefit-item">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <span>No Card Fees</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <span>Secure Transfer</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Verified Account</span>
+                                </div>
+                            </div>
+
+                            <div class="bank-transfer-actions">
+                                <button id="copy-bank-details" class="secondary-button">
+                                    <i class="fas fa-copy"></i>
+                                    <span>Copy Details</span>
+                                </button>
+                                <button id="confirm-bank-transfer" class="bank-transfer-button">
+                                    <i class="fas fa-check"></i>
+                                    <span>I've Made the Transfer</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cash on Delivery Form -->
+                    <div id="cash-delivery-form" class="payment-form">
+                        <div class="payment-method-content cash-delivery-content">
+                            <div class="payment-logo cash-logo">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <h3>Cash on Delivery</h3>
+                            <p class="payment-description">Pay with cash when your order is delivered.</p>
+
+                            <div class="cod-info">
+                                <div class="cod-info-icon">
+                                    <i class="fas fa-info-circle"></i>
+                                </div>
+                                <p>Please have the exact amount ready at the time of delivery. Our delivery personnel may not carry change.</p>
+                            </div>
+
+                            <div class="payment-benefits">
+                                <div class="benefit-item">
+                                    <i class="fas fa-money-bill"></i>
+                                    <span>Pay Later</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-truck"></i>
+                                    <span>Home Delivery</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-box-open"></i>
+                                    <span>Check Before Paying</span>
+                                </div>
+                            </div>
+
+                            <button id="confirm-cod" class="cod-button">
+                                <i class="fas fa-check"></i>
+                                <span>Confirm Cash on Delivery</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Buy Now Pay Later Form -->
+                    <div id="buy-now-pay-later-form" class="payment-form">
+                        <div class="payment-method-content bnpl-content">
+                            <div class="payment-logo bnpl-logo">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <h3>Buy Now Pay Later</h3>
+                            <p class="payment-description">Split your payment into installments with no interest.</p>
+
+                            <div class="bnpl-providers">
+                                <div class="bnpl-provider">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/PayPal.svg/1200px-PayPal.svg.png" alt="PayPal">
+                                    <span>PayPal</span>
+                                </div>
+                                <div class="bnpl-provider">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Afterpay_Logo.svg/2560px-Afterpay_Logo.svg.png" alt="Afterpay">
+                                    <span>Afterpay</span>
+                                </div>
+                                <div class="bnpl-provider">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Klarna_Logo_black.svg/2560px-Klarna_Logo_black.svg.png" alt="Klarna">
+                                    <span>Klarna</span>
+                                </div>
+                            </div>
+
+                            <div class="bnpl-installments">
+                                <h4>Payment Schedule</h4>
+                                <div class="installment-plan">
+                                    <div class="installment">
+                                        <div class="installment-date">Today</div>
+                                        <div class="installment-amount" id="first-installment">$67.50</div>
+                                    </div>
+                                    <div class="installment">
+                                        <div class="installment-date">In 2 weeks</div>
+                                        <div class="installment-amount" id="second-installment">$67.50</div>
+                                    </div>
+                                    <div class="installment">
+                                        <div class="installment-date">In 4 weeks</div>
+                                        <div class="installment-amount" id="third-installment">$67.50</div>
+                                    </div>
+                                    <div class="installment">
+                                        <div class="installment-date">In 6 weeks</div>
+                                        <div class="installment-amount" id="fourth-installment">$67.50</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="payment-benefits">
+                                <div class="benefit-item">
+                                    <i class="fas fa-percentage"></i>
+                                    <span>0% Interest</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>4 Installments</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>No Credit Check</span>
+                                </div>
+                            </div>
+
+                            <button id="select-bnpl-provider" class="bnpl-button">
+                                <i class="fas fa-credit-card"></i>
+                                <span>Choose Payment Provider</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Cryptocurrency Form -->
+                    <div id="cryptocurrency-form" class="payment-form">
+                        <div class="payment-method-content crypto-content">
+                            <div class="payment-logo crypto-logo">
+                                <i class="fab fa-bitcoin"></i>
+                            </div>
+                            <h3>Cryptocurrency</h3>
+                            <p class="payment-description">Pay with your preferred cryptocurrency.</p>
+
+                            <div class="crypto-selector">
+                                <div class="crypto-options">
+                                    <div class="crypto-option active" data-crypto="bitcoin">
+                                        <div class="crypto-icon">
+                                            <i class="fab fa-bitcoin"></i>
+                                        </div>
+                                        <div class="crypto-name">Bitcoin</div>
+                                    </div>
+                                    <div class="crypto-option" data-crypto="ethereum">
+                                        <div class="crypto-icon">
+                                            <i class="fab fa-ethereum"></i>
+                                        </div>
+                                        <div class="crypto-name">Ethereum</div>
+                                    </div>
+                                    <div class="crypto-option" data-crypto="litecoin">
+                                        <div class="crypto-icon">
+                                            <i class="fab fa-litecoin-ltc"></i>
+                                        </div>
+                                        <div class="crypto-name">Litecoin</div>
+                                    </div>
+                                    <div class="crypto-option" data-crypto="usdt">
+                                        <div class="crypto-icon">
+                                            <i class="fas fa-dollar-sign"></i>
+                                        </div>
+                                        <div class="crypto-name">USDT</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="crypto-details">
+                                <div class="crypto-amount">
+                                    <div class="amount-label">Amount:</div>
+                                    <div class="amount-value">
+                                        <span id="crypto-fiat-amount">$269.98</span>
+                                        <span class="amount-separator">=</span>
+                                        <span id="crypto-amount">0.00452 BTC</span>
+                                    </div>
+                                </div>
+
+                                <div class="crypto-address">
+                                    <div class="address-label">Send to this address:</div>
+                                    <div class="address-value">
+                                        <code id="crypto-wallet-address">bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</code>
+                                        <button id="copy-crypto-address" class="copy-address-btn">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="crypto-qr">
+                                    <div id="crypto-qr-code" class="qr-code">
+                                        <!-- QR code will be generated here -->
+                                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh" alt="Crypto QR Code">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="payment-benefits">
+                                <div class="benefit-item">
+                                    <i class="fas fa-lock"></i>
+                                    <span>Secure</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-globe"></i>
+                                    <span>Borderless</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-bolt"></i>
+                                    <span>Fast Transfer</span>
+                                </div>
+                            </div>
+
+                            <button id="confirm-crypto-payment" class="crypto-button">
+                                <i class="fas fa-check"></i>
+                                <span>I've Sent the Payment</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- PhonePe Form -->
+                    <div id="phonepe-form" class="payment-form">
+                        <div class="payment-method-content phonepe-content">
+                            <div class="payment-logo phonepe-logo">
+                                <img src="images/phonepe.jpeg" alt="PhonePe Logo">
+                            </div>
+                            <h3>PhonePe</h3>
+                            <p class="payment-description">Fast and secure payments with PhonePe.</p>
+
+                            <div class="phonepe-options">
+                                <div class="phonepe-option-group">
+                                    <h4>Pay using</h4>
+                                    <div class="phonepe-options-list">
+                                        <div class="phonepe-option active">
+                                            <div class="phonepe-option-icon">
+                                                <i class="fas fa-mobile-alt"></i>
+                                            </div>
+                                            <div class="phonepe-option-details">
+                                                <div class="phonepe-option-name">PhonePe App</div>
+                                                <div class="phonepe-option-desc">Scan QR code with your PhonePe app</div>
+                                            </div>
+                                            <div class="phonepe-option-select">
+                                                <div class="radio-btn active"></div>
+                                            </div>
+                                        </div>
+                                        <div class="phonepe-option">
+                                            <div class="phonepe-option-icon">
+                                                <i class="fas fa-credit-card"></i>
+                                            </div>
+                                            <div class="phonepe-option-details">
+                                                <div class="phonepe-option-name">UPI ID / Number</div>
+                                                <div class="phonepe-option-desc">Pay using your UPI ID or mobile number</div>
+                                            </div>
+                                            <div class="phonepe-option-select">
+                                                <div class="radio-btn"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="phonepe-qr-section">
+                                <div class="phonepe-qr-code">
+                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=merchant@phonepe&pn=ShopEasy&am=269.98&cu=INR&tn=Payment%20for%20order" alt="PhonePe QR Code">
+                                </div>
+                                <div class="phonepe-qr-instructions">
+                                    <p>1. Open your PhonePe app</p>
+                                    <p>2. Tap on 'Scan & Pay'</p>
+                                    <p>3. Scan this QR code</p>
+                                    <p>4. Confirm payment in your app</p>
+                                </div>
+                            </div>
+
+                            <div class="phonepe-upi-section" style="display: none;">
+                                <div class="phonepe-upi-form">
+                                    <div class="form-group">
+                                        <label for="upi-id">Enter UPI ID or Mobile Number</label>
+                                        <div class="input-with-icon">
+                                            <input type="text" id="upi-id" class="form-control" placeholder="yourname@upi or 9876543210">
+                                            <i class="fas fa-at"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="payment-benefits">
+                                <div class="benefit-item">
+                                    <i class="fas fa-bolt"></i>
+                                    <span>Instant</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <span>Secure</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-rupee-sign"></i>
+                                    <span>No Fees</span>
+                                </div>
+                            </div>
+
+                            <button id="proceed-phonepe-payment" class="phonepe-button">
+                                <i class="fas fa-mobile-alt"></i>
+                                <span>Pay with PhonePe</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Security Features Section -->
+                    <div class="security-features">
+                        <div class="security-feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <div class="feature-info">
+                                <div class="feature-title">Tokenized & Encrypted</div>
+                                <div class="feature-desc">Your payment data is securely encrypted</div>
+                            </div>
+                        </div>
+                        <div class="security-feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="feature-info">
+                                <div class="feature-title">Two-Factor Authentication</div>
+                                <div class="feature-desc">Extra security for credit card payments</div>
+                            </div>
+                        </div>
+                        <div class="security-feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="feature-info">
+                                <div class="feature-title">AI Fraud Detection</div>
+                                <div class="feature-desc">Real-time monitoring for suspicious activity</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Summary & Payment Action -->
+                <div class="order-summary-section">
+                    <div class="order-summary">
+                        <h3>Order Summary</h3>
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span id="summary-subtotal">$249.98</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Shipping</span>
+                            <span id="summary-shipping">$0.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Tax</span>
+                            <span id="summary-tax">$20.00</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span id="summary-total">$269.98</span>
+                        </div>
+                    </div>
+
+                    <!-- Unified Payment Action -->
+                    <div class="payment-action">
+                        <button id="unified-pay-button" class="pay-button">
+                            <span class="pay-with-text">Pay with Apple Pay</span>
+                        </button>
+                        <div class="secure-payment-note">
+                            <i class="fas fa-lock"></i> Secure payment processed
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- QR Code Payment Modal -->
+    <div class="qr-payment-modal" id="qr-payment-modal">
+        <div class="qr-payment-content">
+            <div class="qr-payment-header">
+                <h3>Scan QR Code to Pay</h3>
+                <button class="close-qr-modal" id="close-qr-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="qr-payment-body">
+                <div class="payment-method-info">
+                    <div class="payment-method-icon" id="qr-payment-icon">
+                        <i class="fab fa-bitcoin"></i>
+                    </div>
+                    <div class="payment-method-details">
+                        <div class="payment-method-name" id="qr-payment-name">Payment Method</div>
+                        <div class="payment-method-amount" id="qr-payment-amount">$0.00</div>
+                    </div>
+                </div>
+                <div class="qr-code-container">
+                    <div class="qr-code" id="qr-code">
+                        <!-- QR code will be generated here -->
+                    </div>
+                    <div class="qr-code-timer">
+                        <div class="timer-circle">
+                            <svg width="120" height="120" viewBox="0 0 120 120">
+                                <circle cx="60" cy="60" r="54" fill="none" stroke="#e6e6e6" stroke-width="12" />
+                                <circle cx="60" cy="60" r="54" fill="none" stroke="#4a6de5" stroke-width="12"
+                                    stroke-dasharray="339.292" stroke-dashoffset="0" id="timer-circle" />
+                            </svg>
+                            <div class="timer-text">
+                                <span id="timer-minutes">05</span>:<span id="timer-seconds">00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="qr-payment-instructions">
+                    <p>1. Open your payment app</p>
+                    <p>2. Scan the QR code</p>
+                    <p>3. Complete the payment</p>
+                </div>
+                <div class="qr-payment-status" id="qr-payment-status">
+                    <div class="status-icon">
+                        <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                    <div class="status-text">Waiting for payment...</div>
+                </div>
+            </div>
+            <div class="qr-payment-footer">
+                <button class="cancel-payment-btn" id="cancel-payment-btn">Cancel</button>
+                <button class="check-payment-btn" id="check-payment-btn">I've Paid</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PhonePe Redirect Modal -->
+    <div class="phonepay-modal" id="phonepay-modal">
+        <div class="phonepay-content">
+            <div class="phonepay-header">
+                <h3>Redirecting to PhonePe</h3>
+                <button class="close-phonepay-modal" id="close-phonepay-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="phonepay-body">
+                <div class="phonepay-logo">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/PhonePe_logo.svg/1200px-PhonePe_logo.svg.png" alt="PhonePe Logo">
+                </div>
+                <div class="phonepay-message">
+                    <p>You will be redirected to PhonePe to complete your payment.</p>
+                    <p>Amount: <span id="phonepay-amount">$0.00</span></p>
+                </div>
+                <div class="phonepay-loader">
+                    <div class="loader-spinner"></div>
+                    <p>Preparing secure connection...</p>
+                </div>
+            </div>
+            <div class="phonepay-footer">
+                <button class="cancel-phonepay-btn" id="cancel-phonepay-btn">Cancel</button>
+                <button class="proceed-phonepay-btn" id="proceed-phonepay-btn" onclick="processPhonePePayment()">Proceed</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Database Connection Status -->
+    <div class="db-status" id="db-status">
+        <div class="db-status-icon">
+            <i class="fas fa-database"></i>
+        </div>
+        <div class="db-status-text">Database Connected</div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notification-container"></div>
+
+    <!-- Payment Methods Management Modal -->
+    <div id="payment-methods-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Manage Payment Methods</h3>
+                <button class="close-modal" id="close-payment-methods-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="payment-methods-list" id="payment-methods-list">
+                    <!-- Payment methods will be listed here -->
+                </div>
+                <div class="no-payment-methods" id="no-payment-methods" style="display: none;">
+                    <p>You don't have any saved payment methods.</p>
+                </div>
+                <button id="add-payment-method" class="primary-button">
+                    <i class="fas fa-plus"></i> Add New Payment Method
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Payment Method Modal -->
+    <div id="edit-payment-method-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="edit-payment-modal-title">Add Payment Method</h3>
+                <button class="close-modal" id="close-edit-payment-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="payment-method-form">
+                    <input type="hidden" id="payment-method-id">
+
+                    <div class="form-group">
+                        <label for="payment-method-type">Payment Method Type</label>
+                        <div class="select-wrapper black-white-select">
+                            <select id="payment-method-type" class="form-control">
+                                <option value="credit-card">Credit/Debit Card</option>
+                                <option value="paypal">PayPal</option>
+                                <option value="apple-pay">Apple Pay</option>
+                                <option value="google-pay">Google Pay</option>
+                            </select>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+
+                    <!-- Credit Card Fields -->
+                    <div id="credit-card-fields">
+                        <div class="form-group">
+                            <label for="edit-card-number">Card Number</label>
+                            <div class="input-with-icon">
+                                <input type="text" id="edit-card-number" class="form-control" placeholder="1234 5678 9012 3456">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit-card-holder">Card Holder Name</label>
+                            <input type="text" id="edit-card-holder" class="form-control" placeholder="Name on card">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="edit-expiry-date">Expiry Date</label>
+                                <input type="text" id="edit-expiry-date" class="form-control" placeholder="MM/YY">
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-cvv">CVV</label>
+                                <div class="input-with-icon">
+                                    <input type="text" id="edit-cvv" class="form-control" placeholder="123">
+                                    <i class="fas fa-question-circle" title="3-digit security code on the back of your card"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PayPal Fields -->
+                    <div id="paypal-fields" style="display: none;">
+                        <div class="form-group">
+                            <label for="edit-paypal-email">PayPal Email</label>
+                            <div class="input-with-icon">
+                                <input type="email" id="edit-paypal-email" class="form-control" placeholder="your@email.com">
+                                <i class="fab fa-paypal"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Apple Pay / Google Pay Fields -->
+                    <div id="digital-wallet-fields" style="display: none;">
+                        <div class="digital-wallet-info">
+                            <p>Your device is already set up for this payment method.</p>
+                            <p>No additional information is needed.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="payment-nickname">Nickname (Optional)</label>
+                        <input type="text" id="payment-nickname" class="form-control" placeholder="e.g., My Personal Card">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" id="cancel-payment-edit" class="secondary-button">Cancel</button>
+                        <button type="submit" id="save-payment-method" class="primary-button">Save Payment Method</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Payment Method Confirmation Modal -->
+    <div id="delete-payment-method-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Delete Payment Method</h3>
+                <button class="close-modal" id="close-delete-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this payment method?</p>
+                <p>This action cannot be undone.</p>
+
+                <div class="payment-method-preview" id="delete-payment-preview">
+                    <!-- Payment method details will be shown here -->
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" id="cancel-delete" class="secondary-button">Cancel</button>
+                    <button type="button" id="confirm-delete" class="danger-button">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Payment. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/payment.js"></script>
+    <script src="js/modern-header.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+    <script src="js/payment-fix.js"></script>
+    <script src="js/google-pay-fix.js"></script>
+
+    <!-- Direct Payment Modal -->
+    <div id="direct-payment-modal" class="direct-payment-modal">
+        <div class="direct-modal-content">
+            <div class="direct-modal-header">
+                <h3 id="direct-payment-title">Google Pay</h3>
+                <button class="direct-modal-close" id="direct-modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="direct-modal-body">
+                <div class="direct-payment-logo">
+                    <img id="direct-payment-logo-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Google_Pay_Logo_%282020%29.svg/1200px-Google_Pay_Logo_%282020%29.svg.png" alt="Google Pay Logo">
+                </div>
+
+                <div class="direct-qr-container">
+                    <div class="direct-qr-code" id="direct-qr-code">
+                        <div class="qr-spinner"></div>
+                    </div>
+                </div>
+
+                <div class="direct-qr-instructions">
+                    <h4>Scan with Payment App</h4>
+                    <ol>
+                        <li>Open your payment app</li>
+                        <li>Tap on 'Scan QR'</li>
+                        <li>Point your camera at this QR code</li>
+                        <li>Confirm payment in your app</li>
+                    </ol>
+                </div>
+
+                <div class="direct-payment-details">
+                    <div class="direct-payment-detail">
+                        <div style="color: #aaaaaa; font-size: 14px;">Amount:</div>
+                        <div id="direct-payment-amount" style="color: #ffffff; font-weight: 600; font-size: 14px;">$0.00</div>
+                    </div>
+                    <div class="direct-payment-detail">
+                        <div style="color: #aaaaaa; font-size: 14px;">Transaction ID:</div>
+                        <div id="direct-payment-transaction" style="color: #ffffff; font-weight: 600; font-size: 14px;">XXXXXXXX</div>
+                    </div>
+                    <div class="direct-payment-timer">
+                        <div style="color: #ffffff; font-size: 14px;">Time remaining:</div>
+                        <div id="direct-payment-timer" style="color: #ffffff; font-weight: 600; font-family: monospace; font-size: 16px;">05:00</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="direct-modal-footer">
+                <button class="direct-cancel-btn" id="direct-cancel-btn">Cancel</button>
+                <button class="direct-verify-btn" id="direct-verify-btn">I've Paid</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Direct Payment Script -->
+    <script>
+        // Direct Payment Handler
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const directModal = document.getElementById('direct-payment-modal');
+            const directTitle = document.getElementById('direct-payment-title');
+            const directLogoImg = document.getElementById('direct-payment-logo-img');
+            const directQrCode = document.getElementById('direct-qr-code');
+            const directAmount = document.getElementById('direct-payment-amount');
+            const directTransaction = document.getElementById('direct-payment-transaction');
+            const directTimer = document.getElementById('direct-payment-timer');
+            const directCloseBtn = document.getElementById('direct-modal-close');
+            const directCancelBtn = document.getElementById('direct-cancel-btn');
+            const directVerifyBtn = document.getElementById('direct-verify-btn');
+
+            // Database status element
+            const dbStatus = document.getElementById('db-status');
+
+            // Override Google Pay button
+            const googlePayBtn = document.getElementById('google-pay-button');
+            if (googlePayBtn) {
+                googlePayBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    // Use our fixed Google Pay implementation
+                    if (typeof window.processGooglePay === 'function') {
+                        window.processGooglePay();
+                    } else {
+                        showDirectPayment('google-pay');
+                    }
+                    return false;
+                });
+            }
+
+            // Override PhonePe button
+            const phonePeBtn = document.getElementById('proceed-phonepe-payment');
+            if (phonePeBtn) {
+                phonePeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    showDirectPayment('phonepe');
+                    return false;
+                });
+            }
+
+            // Close and cancel buttons
+            if (directCloseBtn) {
+                directCloseBtn.addEventListener('click', function() {
+                    closeDirectPayment();
+                });
+            }
+
+            if (directCancelBtn) {
+                directCancelBtn.addEventListener('click', function() {
+                    closeDirectPayment();
+                });
+            }
+
+            // Verify payment button
+            if (directVerifyBtn) {
+                directVerifyBtn.addEventListener('click', function() {
+                    verifyDirectPayment();
+                });
+            }
+
+            // Show direct payment modal
+            function showDirectPayment(type) {
+                // Get total amount
+                const summaryTotal = document.getElementById('summary-total');
+                const amount = parseFloat(summaryTotal.textContent.replace('$', ''));
+
+                // Generate transaction ID
+                const transactionId = 'TX' + Math.random().toString(36).substr(2, 9).toUpperCase();
+
+                // Set payment details
+                directAmount.textContent = '$' + amount.toFixed(2);
+                directTransaction.textContent = transactionId;
+
+                // Set payment type specific details
+                if (type === 'google-pay') {
+                    directTitle.textContent = 'Google Pay';
+                    directLogoImg.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Google_Pay_Logo_%282020%29.svg/1200px-Google_Pay_Logo_%282020%29.svg.png';
+                    directLogoImg.alt = 'Google Pay Logo';
+                } else if (type === 'phonepe') {
+                    directTitle.textContent = 'PhonePe';
+                    directLogoImg.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/PhonePe_logo.svg/1200px-PhonePe_logo.svg.png';
+                    directLogoImg.alt = 'PhonePe Logo';
+                }
+
+                // Generate QR code
+                const qrData = `${type}://pay?pa=merchant@${type}&pn=ShopEasy&am=${amount.toFixed(2)}&cu=USD&tn=Payment%20for%20order%20${transactionId}`;
+
+                // Create QR code image
+                const qrImage = document.createElement('img');
+                qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(qrData)}`;
+                qrImage.alt = `${type} QR Code`;
+                qrImage.style.width = '100%';
+                qrImage.style.height = '100%';
+                qrImage.style.backgroundColor = '#ffffff';
+                qrImage.style.padding = '10px';
+                qrImage.style.borderRadius = '8px';
+
+                // Clear loading spinner and add QR code
+                directQrCode.innerHTML = '';
+                directQrCode.appendChild(qrImage);
+
+                // Show the modal
+                directModal.classList.add('show');
+
+                // Start timer
+                startDirectTimer();
+            }
+
+            // Close direct payment modal
+            function closeDirectPayment() {
+                directModal.classList.remove('show');
+
+                // Clear timer if exists
+                if (directModal.dataset.timerInterval) {
+                    clearInterval(parseInt(directModal.dataset.timerInterval));
+                }
+            }
+
+            // Start direct payment timer
+            function startDirectTimer() {
+                // Clear existing timer if any
+                if (directModal.dataset.timerInterval) {
+                    clearInterval(parseInt(directModal.dataset.timerInterval));
+                }
+
+                let timeLeft = 5 * 60; // 5 minutes
+
+                const timerInterval = setInterval(() => {
+                    const minutes = Math.floor(timeLeft / 60);
+                    const seconds = timeLeft % 60;
+
+                    directTimer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+
+                        // Show expired message
+                        directQrCode.innerHTML = `
+                            <div style="text-align: center; padding: 20px;">
+                                <i class="fas fa-exclamation-circle" style="font-size: 40px; color: #ff5555; margin-bottom: 15px;"></i>
+                                <p style="margin-bottom: 15px; color: #ffffff;">QR code has expired</p>
+                                <button id="refresh-direct-qr" style="background-color: #ffffff; color: #000000; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer;">Generate New QR</button>
+                            </div>
+                        `;
+
+                        // Add event listener to refresh button
+                        const refreshBtn = document.getElementById('refresh-direct-qr');
+                        if (refreshBtn) {
+                            refreshBtn.addEventListener('click', () => {
+                                const paymentType = directTitle.textContent.toLowerCase().replace(' ', '-');
+                                showDirectPayment(paymentType);
+                            });
+                        }
+                    }
+
+                    timeLeft--;
+                }, 1000);
+
+                // Store the interval ID
+                directModal.dataset.timerInterval = timerInterval;
+            }
+
+            // Verify direct payment
+            function verifyDirectPayment() {
+                // Show checking payment status
+                directVerifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+                directVerifyBtn.disabled = true;
+
+                // Simulate database connection
+                setTimeout(() => {
+                    if (dbStatus) {
+                        dbStatus.classList.add('show', 'connected');
+                        setTimeout(() => {
+                            dbStatus.classList.remove('show');
+                        }, 2000);
+                    }
+
+                    // Simulate payment verification
+                    setTimeout(() => {
+                        // Get payment details
+                        const amount = directAmount.textContent;
+                        const transactionId = directTransaction.textContent;
+                        const currentDate = new Date().toLocaleDateString();
+                        const paymentType = directTitle.textContent;
+
+                        // Show success message
+                        const modalContent = directModal.querySelector('.direct-modal-content');
+                        if (modalContent) {
+                            modalContent.innerHTML = `
+                                <div style="padding: 30px; background-color: #000000; color: #ffffff; text-align: center; border-radius: 16px;">
+                                    <div style="font-size: 60px; color: #ffffff; margin-bottom: 20px;">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <div style="font-size: 24px; font-weight: 600; color: #ffffff; margin-bottom: 15px;">
+                                        Payment Successful!
+                                    </div>
+                                    <div style="color: #aaaaaa; margin-bottom: 20px;">
+                                        <p style="margin: 5px 0;">Amount: ${amount}</p>
+                                        <p style="margin: 5px 0;">Transaction ID: ${transactionId}</p>
+                                        <p style="margin: 5px 0;">Date: ${currentDate}</p>
+                                        <p style="margin: 5px 0;">Payment Method: ${paymentType}</p>
+                                    </div>
+                                    <button id="continue-to-confirmation" style="padding: 14px 24px; background-color: #ffffff; border: none; color: #000000; border-radius: 8px; font-weight: 600; width: 100%; cursor: pointer; margin-top: 20px;">
+                                        Continue
+                                    </button>
+                                </div>
+                            `;
+
+                            // Add event listener to continue button
+                            const continueBtn = document.getElementById('continue-to-confirmation');
+                            if (continueBtn) {
+                                continueBtn.addEventListener('click', function() {
+                                    window.location.href = 'confirmation.html';
+                                });
+                            }
+                        }
+
+                        // Show success notification
+                        if (window.showNotification) {
+                            window.showNotification('success', 'Payment Successful', `Your ${paymentType} payment has been processed successfully.`);
+                        }
+                    }, 2000);
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>

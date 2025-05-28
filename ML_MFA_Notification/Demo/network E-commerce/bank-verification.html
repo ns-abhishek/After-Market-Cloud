@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Verified - ShopEasy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/payment.css">
+    <link rel="stylesheet" href="css/theme-switcher.css">
+    <link rel="stylesheet" href="css/payment-verification.css">
+</head>
+<body class="payment-page">
+    <!-- Modern Header -->
+    <header class="modern-header">
+        <div class="container">
+            <!-- Logo Section -->
+            <div class="logo">
+                <i class="fas fa-shopping-bag logo-icon"></i>
+                <h1>ShopEasy</h1>
+            </div>
+
+            <!-- Checkout Progress -->
+            <div class="checkout-progress">
+                <div class="checkout-step completed">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Cart</div>
+                </div>
+                <div class="step-connector"></div>
+                <div class="checkout-step completed">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Shipping</div>
+                </div>
+                <div class="step-connector"></div>
+                <div class="checkout-step completed">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Payment</div>
+                </div>
+                <div class="step-connector"></div>
+                <div class="checkout-step active">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Confirmation</div>
+                </div>
+            </div>
+
+            <!-- User Actions -->
+            <div class="user-actions">
+                <div class="secure-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Secure Checkout</span>
+                </div>
+                <button class="action-button" id="help-button">
+                    <i class="fas fa-question-circle"></i>
+                    <span class="tooltip">Help</span>
+                </button>
+                <button class="action-button" id="user-profile-button">
+                    <i class="fas fa-user-circle"></i>
+                    <span class="tooltip">Account</span>
+                </button>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 100%"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Theme Switcher -->
+    <div class="theme-switcher">
+        <div class="theme-switcher-toggle" id="theme-toggle" title="Toggle Dark/Light Mode">
+            <i class="fas fa-moon"></i>
+            <span class="tooltip">Toggle Dark/Light Mode</span>
+        </div>
+        <div class="theme-options" id="theme-options">
+            <div class="theme-option active" data-theme="">
+                <div class="theme-color" style="background-color: #000000;"></div>
+                <span>Dark Mode</span>
+            </div>
+            <div class="theme-option" data-theme="theme-white">
+                <div class="theme-color" style="background-color: #ffffff;"></div>
+                <span>Light Mode</span>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- Bank Transfer Payment Verification -->
+        <div class="payment-verification-container">
+            <div class="verification-header">
+                <div class="verification-icon">
+                    <i class="fas fa-university"></i>
+                </div>
+                <h2 class="verification-title">Payment Verified</h2>
+            </div>
+
+            <div class="verification-content">
+                <h3 class="verification-message">Thank You!</h3>
+                <p class="verification-subtitle">Your bank transfer payment has been verified.</p>
+
+                <div class="transaction-details">
+                    <div class="detail-row">
+                        <div class="detail-label">Amount</div>
+                        <div class="detail-value">$269.98</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Transaction ID</div>
+                        <div class="detail-value">TRX-457734-5263</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Date</div>
+                        <div class="detail-value">14/5/2023</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Payment Method</div>
+                        <div class="detail-value">Bank Transfer</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Status</div>
+                        <div class="detail-value">Completed</div>
+                    </div>
+                </div>
+
+                <div class="notification-box">
+                    <div class="notification-icon">
+                        <i class="fas fa-info"></i>
+                    </div>
+                    <div class="notification-text">
+                        Your payment has been received and verified. Your order is now being processed. You will receive an email notification when your order is ready to ship.
+                    </div>
+                </div>
+            </div>
+
+            <div class="verification-footer">
+                <button class="continue-button">
+                    <span>Continue to Order Details</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 ShopEasy. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Switcher Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeOptions = document.getElementById('theme-options');
+            const themeOptionElements = document.querySelectorAll('.theme-option');
+            
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem('payment-theme');
+            if (savedTheme) {
+                applyTheme(savedTheme);
+            }
+            
+            // Apply theme function
+            function applyTheme(theme) {
+                // First, remove all theme classes
+                document.body.classList.remove('theme-white');
+                
+                // Then add the selected theme class if it's not the default dark theme
+                if (theme) {
+                    document.body.classList.add(theme);
+                    // Update icon to moon for light mode (since we're switching to dark when clicked)
+                    if (theme === 'theme-white') {
+                        themeToggle.querySelector('i').classList.remove('fa-sun');
+                        themeToggle.querySelector('i').classList.add('fa-moon');
+                    }
+                } else {
+                    // Update icon to sun for dark mode (since we're switching to light when clicked)
+                    themeToggle.querySelector('i').classList.remove('fa-moon');
+                    themeToggle.querySelector('i').classList.add('fa-sun');
+                }
+                
+                // Update active state in theme options
+                themeOptionElements.forEach(option => {
+                    option.classList.remove('active');
+                    if (option.getAttribute('data-theme') === theme) {
+                        option.classList.add('active');
+                    }
+                });
+                
+                // Save theme preference
+                localStorage.setItem('payment-theme', theme || '');
+            }
+            
+            // Toggle theme options panel
+            themeToggle.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent event from bubbling up
+                
+                // Direct toggle between dark and light mode
+                const currentTheme = document.body.classList.contains('theme-white') ? '' : 'theme-white';
+                applyTheme(currentTheme);
+            });
+            
+            // Theme option selection
+            themeOptionElements.forEach(option => {
+                option.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Prevent event from bubbling up
+                    const theme = this.getAttribute('data-theme');
+                    applyTheme(theme);
+                    themeOptions.classList.remove('show');
+                });
+            });
+            
+            // Close theme options when clicking outside
+            document.addEventListener('click', function() {
+                themeOptions.classList.remove('show');
+            });
+        });
+    </script>
+</body>
+</html>

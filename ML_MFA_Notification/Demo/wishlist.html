@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Parts Wishlist</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #fff;
+            color: #000;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+        }
+
+        .wishlist-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .wishlist-header h1 {
+            font-size: 24px;
+            color: #000;
+        }
+
+        .wishlist-header .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .wishlist-header .item-count {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .select-all {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .select-all label {
+            font-size: 14px;
+            color: #000;
+        }
+
+        .header-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+            position: relative;
+            background-color: #000;
+            color: #fff;
+        }
+
+        .move-to-cart-btn {
+            background-color: #000;
+            color: #fff;
+        }
+
+        .move-to-cart-btn:hover {
+            background-color: #333;
+        }
+
+        .manage-collections-btn, .sort-btn, .filter-btn, .share-btn {
+            background-color: #000;
+            color: #fff;
+        }
+
+        .manage-collections-btn:hover, .sort-btn:hover, .filter-btn:hover, .share-btn:hover {
+            background-color: #333;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            z-index: 10;
+        }
+
+        .dropdown.show {
+            display: block;
+        }
+
+        .dropdown .dropdown-item {
+            padding: 10px;
+            font-size: 14px;
+            color: #000;
+            cursor: pointer;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .dropdown .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown .dropdown-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .create-collection-form, .assign-collection-form {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border-top: 1px solid #ccc;
+        }
+
+        .create-collection-form input, .assign-collection-form select {
+            padding: 5px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            color: #000;
+        }
+
+        .create-collection-form button, .assign-collection-form button {
+            padding: 5px;
+            background-color: #000;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .create-collection-form button:hover, .assign-collection-form button:hover {
+            background-color: #333;
+        }
+
+        .category-filter {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .category-tab {
+            padding: 8px 15px;
+            font-size: 14px;
+            color: #666;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .category-tab.active {
+            background-color: #000;
+            color: #fff;
+            border-color: #000;
+        }
+
+        .category-tab:hover {
+            background-color: #000;
+            color: #fff;
+            border-color: #000;
+        }
+
+        .wishlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-card input[type="checkbox"] {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            cursor: pointer;
+        }
+
+        .product-image {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            background-color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+        }
+
+        .product-image img[src]:not([src=""]) {
+            opacity: 1;
+        }
+
+        .product-image::after {
+            content: "Image";
+            position: absolute;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .product-image img[src=""], .product-image img:not([src]) {
+            opacity: 0;
+        }
+
+        .product-image img[src=""] + ::after, .product-image img:not([src]) + ::after {
+            display: block;
+        }
+
+        .sold-out-label, .discount-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            font-size: 12px;
+            color: #fff;
+            border-radius: 3px;
+        }
+
+        .sold-out-label {
+            background-color: #666;
+        }
+
+        .discount-tag {
+            background-color: #000;
+        }
+
+        .product-details {
+            padding: 15px;
+        }
+
+        .product-details h3 {
+            font-size: 16px;
+            color: #000;
+            margin-bottom: 5px;
+        }
+
+        .product-details p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .product-details .collection-tag {
+            font-size: 12px;
+            color: #000;
+            margin-bottom: 5px;
+        }
+
+        .product-details .rating {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .product-details .price {
+            font-size: 16px;
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 10px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .remove-btn, .add-to-cart-btn, .move-to-collection-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .remove-btn {
+            background-color: #000;
+            color: #fff;
+        }
+
+        .remove-btn:hover {
+            background-color: #333;
+        }
+
+        .add-to-cart-btn {
+            background-color: #000;
+            color: #fff;
+        }
+
+        .add-to-cart-btn:hover {
+            background-color: #333;
+        }
+
+        .move-to-collection-btn {
+            background-color: #fff;
+            color: #000;
+            border: 1px solid #ccc;
+            position: relative;
+        }
+
+        .move-to-collection-btn:hover {
+            background-color: #f5f5f5;
+        }
+
+        .collection-options {
+            display: none;
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            min-width: 150px;
+            z-index: 10;
+        }
+
+        .collection-options.show {
+            display: block;
+        }
+
+        .collection-options .option {
+            padding: 8px 10px;
+            font-size: 13px;
+            color: #000;
+            cursor: pointer;
+        }
+
+        .collection-options .option:hover {
+            background-color: #f5f5f5;
+        }
+
+        .empty-wishlist {
+            text-align: center;
+            padding: 50px 0;
+        }
+
+        .empty-wishlist p {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .shop-now-btn {
+            padding: 10px 20px;
+            background-color: #000;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .shop-now-btn:hover {
+            background-color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .wishlist-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+
+            .category-tab {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .remove-btn, .add-to-cart-btn, .move-to-collection-btn {
+                width: 100%;
+            }
+
+            .header-actions {
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+
+            .header-btn {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="wishlist-header">
+            <div class="select-all">
+                <input type="checkbox" id="selectAll">
+                <label for="selectAll">Select All</label>
+            </div>
+            <div class="header-actions">
+                <span class="item-count">5 Items</span>
+                <button class="move-to-cart-btn header-btn">Move to Cart</button>
+                <div style="position: relative;">
+                    <button class="manage-collections-btn header-btn">Manage Collections</button>
+                    <div class="dropdown" id="collectionsDropdown">
+                        <div class="dropdown-item">Brake Upgrades (2 items)</div>
+                        <div class="dropdown-item">Engine Spares (1 item)</div>
+                        <div class="dropdown-item">Suspension Parts (0 items)</div>
+                        <div class="create-collection-form">
+                            <input type="text" id="newCollectionName" placeholder="New Collection Name">
+                            <button onclick="createCollection()">Create</button>
+                        </div>
+                        <div class="assign-collection-form">
+                            <select id="assignCollectionSelect">
+                                <option value="brake-upgrades">Brake Upgrades</option>
+                                <option value="engine-spares">Engine Spares</option>
+                                <option value="suspension-parts">Suspension Parts</option>
+                            </select>
+                            <button onclick="assignToCollection()">Assign Selected</button>
+                        </div>
+                    </div>
+                </div>
+                <div style="position: relative;">
+                    <button class="sort-btn header-btn">Sort By</button>
+                    <div class="dropdown" id="sortDropdown">
+                        <div class="dropdown-item" onclick="sortWishlist('price-low-high')">Price: Low to High</div>
+                        <div class="dropdown-item" onclick="sortWishlist('price-high-low')">Price: High to Low</div>
+                        <div class="dropdown-item" onclick="sortWishlist('newest')">Newest First</div>
+                    </div>
+                </div>
+                <div style="position: relative;">
+                    <button class="filter-btn header-btn">Filter By</button>
+                    <div class="dropdown" id="filterDropdown">
+                        <div class="dropdown-item" onclick="filterWishlist('all')">All</div>
+                        <div class="dropdown-item" onclick="filterWishlist('in-stock')">In Stock</div>
+                        <div class="dropdown-item" onclick="filterWishlist('out-of-stock')">Out of Stock</div>
+                    </div>
+                </div>
+                <div style="position: relative;">
+                    <button class="share-btn header-btn">Share</button>
+                    <div class="dropdown" id="shareDropdown">
+                        <div class="dropdown-item" onclick="shareWishlist('link')">Copy Link</div>
+                        <div class="dropdown-item" onclick="shareWishlist('email')">Email</div>
+                        <div class="dropdown-item" onclick="shareWishlist('social')">Social Media</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Filter Tabs with Updated Counters -->
+        <div class="category-filter">
+            <div class="category-tab active" data-category="all">ALL (5)</div>
+            <div class="category-tab" data-category="brakes">Brakes (2)</div>
+            <div class="category-tab" data-category="fasteners">Fasteners (3)</div>
+        </div>
+
+        <!-- Wishlist Grid -->
+        <div class="wishlist-grid" id="wishlistGrid">
+            <!-- Product Card 1 -->
+            <div class="product-card" data-price="59.99" data-availability="in-stock" data-category="brakes">
+                <input type="checkbox" class="select-item" data-id="1">
+                <div class="product-image">
+                    <img src="images/brake-pads.jpg" alt="Ceramic Brake Pads">
+                </div>
+                <div class="product-details">
+                    <h3>Ceramic Brake Pads</h3>
+                    <p>Front, Set of 4</p>
+                    <div class="collection-tag">In: Brake Upgrades</div>
+                    <div class="rating">★★★★☆ (4.5)</div>
+                    <div class="price">₹59.99</div>
+                    <div class="action-buttons">
+                        <button class="add-to-cart-btn">Add to Cart</button>
+                        <button class="remove-btn">Remove</button>
+                        <div style="position: relative;">
+                            <button class="move-to-collection-btn">Move to Collection</button>
+                            <div class="collection-options" id="collectionOptions1">
+                                <div class="option" onclick="moveToCollection(1, 'Brake Upgrades')">Brake Upgrades</div>
+                                <div class="option" onclick="moveToCollection(1, 'Engine Spares')">Engine Spares</div>
+                                <div class="option" onclick="moveToCollection(1, 'Suspension Parts')">Suspension Parts</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Product Card 2 -->
+            <div class="product-card" data-price="12.99" data-availability="in-stock" data-category="fasteners">
+                <input type="checkbox" class="select-item" data-id="2">
+                <div class="product-image">
+                    <img src="images/NutsandBolts.jpg" alt="Stainless Steel Bolts">
+                    <div class="discount-tag">10% Off</div>
+                </div>
+                <div class="product-details">
+                    <h3>Stainless Steel Bolts</h3>
+                    <p>M8, Pack of 50</p>
+                    <div class="collection-tag">In: Engine Spares</div>
+                    <div class="rating">★★★★★ (4.8)</div>
+                    <div class="price">₹12.99</div>
+                    <div class="action-buttons">
+                        <button class="add-to-cart-btn">Add to Cart</button>
+                        <button class="remove-btn">Remove</button>
+                        <div style="position: relative;">
+                            <button class="move-to-collection-btn">Move to Collection</button>
+                            <div class="collection-options" id="collectionOptions2">
+                                <div class="option" onclick="moveToCollection(2, 'Brake Upgrades')">Brake Upgrades</div>
+                                <div class="option" onclick="moveToCollection(2, 'Engine Spares')">Engine Spares</div>
+                                <div class="option" onclick="moveToCollection(2, 'Suspension Parts')">Suspension Parts</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Product Card 3 -->
+            <div class="product-card" data-price="89.99" data-availability="out-of-stock" data-category="brakes">
+                <input type="checkbox" class="select-item" data-id="3">
+                <div class="product-image">
+                    <img src="images/StarterMotor.jpg" alt="Performance Brake Rotors">
+                    <div class="sold-out-label">Sold Out</div>
+                </div>
+                <div class="product-details">
+                    <h3>Performance Brake Rotors</h3>
+                    <p>Slotted, Pair</p>
+                    <div class="collection-tag">In: Brake Upgrades</div>
+                    <div class="rating">★★★★☆ (4.3)</div>
+                    <div class="price">₹89.99</div>
+                    <div class="action-buttons">
+                        <button class="add-to-cart-btn" disabled>Add to Cart</button>
+                        <button class="remove-btn">Remove</button>
+                        <div style="position: relative;">
+                            <button class="move-to-collection-btn">Move to Collection</button>
+                            <div class="collection-options" id="collectionOptions3">
+                                <div class="option" onclick="moveToCollection(3, 'Brake Upgrades')">Brake Upgrades</div>
+                                <div class="option" onclick="moveToCollection(3, 'Engine Spares')">Engine Spares</div>
+                                <div class="option" onclick="moveToCollection(3, 'Suspension Parts')">Suspension Parts</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Product Card 4 -->
+            <!-- <div class="product-card" data-price="29.99" data-availability="in-stock" data-category="suspension">
+                <input type="checkbox" class="select-item" data-id="4">
+                <div class="product-image">
+                    <img src="contents/bushings.png" alt="Polyurethane Bushings">
+                </div>
+                <div class="product-details">
+                    <h3>Polyurethane Bushings</h3>
+                    <p>Control Arm, Set of 4</p>
+                    <div class="collection-tag">In: Suspension Parts</div>
+                    <div class="rating">★★★★☆ (4.2)</div>
+                    <div class="price">₹29.99</div>
+                    <div class="action-buttons">
+                        <button class="add-to-cart-btn">Add to Cart</button>
+                        <button class="remove-btn">Remove</button>
+                        <div style="position: relative;">
+                            <button class="move-to-collection-btn">Move to Collection</button>
+                            <div class="collection-options" id="collectionOptions4">
+                                <div class="option" onclick="moveToCollection(4, 'Brake Upgrades')">Brake Upgrades</div>
+                                <div class="option" onclick="moveToCollection(4, 'Engine Spares')">Engine Spares</div>
+                                <div class="option" onclick="moveToCollection(4, 'Suspension Parts')">Suspension Parts</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+            <!-- Product Card 5 -->
+            <!-- <div class="product-card" data-price="45.99" data-availability="in-stock" data-category="engine">
+                <input type="checkbox" class="select-item" data-id="5">
+                <div class="product-image">
+                    <img src="images/" alt="Iridium Spark Plugs">
+                    <div class="discount-tag">15% Off</div>
+                </div>
+                <div class="product-details">
+                    <h3>Iridium Spark Plugs</h3>
+                    <p>Set of 6</p>
+                    <div class="collection-tag">In: Engine Spares</div>
+                    <div class="rating">★★★★★ (4.7)</div>
+                    <div class="price">₹45.99</div>
+                    <div class="action-buttons">
+                        <button class="add-to-cart-btn">Add to Cart</button>
+                        <button class="remove-btn">Remove</button>
+                        <div style="position: relative;">
+                            <button class="move-to-collection-btn">Move to Collection</button>
+                            <div class="collection-options" id="collectionOptions5">
+                                <div class="option" onclick="moveToCollection(5, 'Brake Upgrades')">Brake Upgrades</div>
+                                <div class="option" onclick="moveToCollection(5, 'Engine Spares')">Engine Spares</div>
+                                <div class="option" onclick="moveToCollection(5, 'Suspension Parts')">Suspension Parts</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+            <!-- Product Card 6 -->
+            <div class="product-card" data-price="9.99" data-availability="in-stock" data-category="fasteners">
+                <input type="checkbox" class="select-item" data-id="6">
+                <div class="product-image">
+                    <img src="images/screws.jpg" alt="Hex Nuts">
+                </div>
+                <div class="product-details">
+                    <h3>Hex Nuts</h3>
+                    <p>M6, Pack of 100</p>
+                    <div class="collection-tag">In: Engine Spares</div>
+                    <div class="rating">★★★★☆ (4.4)</div>
+                    <div class="price">₹9.99</div>
+                    <div class="action-buttons">
+                        <button class="add-to-cart-btn">Add to Cart</button>
+                        <button class="remove-btn">Remove</button>
+                        <div style="position: relative;">
+                            <button class="move-to-collection-btn">Move to Collection</button>
+                            <div class="collection-options" id="collectionOptions6">
+                                <div class="option" onclick="moveToCollection(6, 'Brake Upgrades')">Brake Upgrades</div>
+                                <div class="option" onclick="moveToCollection(6, 'Engine Spares')">Engine Spares</div>
+                                <div class="option" onclick="moveToCollection(6, 'Suspension Parts')">Suspension Parts</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Product Card 7 -->
+            <div class="product-card" data-price="19.99" data-availability="out-of-stock" data-category="fasteners">
+                <input type="checkbox" class="select-item" data-id="7">
+                <div class="product-image">
+                    <img src="images/MachineScrewsSet.jpg" alt="Socket Head Screws">
+                    <div class="sold-out-label">Sold Out</div>
+                </div>
+                <div class="product-details">
+                    <h3>Socket Head Screws</h3>
+                    <p>M10, Pack of 25</p>
+                    <div class="collection-tag">In: Suspension Parts</div>
+                    <div class="rating">★★★★☆ (4.6)</div>
+                    <div class="price">₹19.99</div>
+                    <div class="action-buttons">
+                        <button class="add-to-cart-btn" disabled>Add to Cart</button>
+                        <button class="remove-btn">Remove</button>
+                        <div style="position: relative;">
+                            <button class="move-to-collection-btn">Move to Collection</button>
+                            <div class="collection-options" id="collectionOptions7">
+                                <div class="option" onclick="moveToCollection(7, 'Brake Upgrades')">Brake Upgrades</div>
+                                <div class="option" onclick="moveToCollection(7, 'Engine Spares')">Engine Spares</div>
+                                <div class="option" onclick="moveToCollection(7, 'Suspension Parts')">Suspension Parts</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Product Card 8 -->
+            <!-- <div class="product-card" data-price="69.99" data-availability="in-stock" data-category="engine">
+                <input type="checkbox" class="select-item" data-id="8">
+                <div class="product-image">
+                    <img src="contents/oil-filter.jpg" alt="High-Flow Air Filter">
+                    <div class="discount-tag">10% Off</div>
+                </div>
+                <div class="product-details">
+                    <h3>High-Flow Air Filter</h3>
+                    <p>Universal Fit</p>
+                    <div class="collection-tag">In: Engine Spares</div>
+                    <div class="rating">★★★★☆ (4.5)</div>
+                    <div class="price">₹69.99</div>
+                    <div class="action-buttons">
+                        <button class="add-to-cart-btn">Add to Cart</button>
+                        <button class="remove-btn">Remove</button>
+                        <div style="position: relative;">
+                            <button class="move-to-collection-btn">Move to Collection</button>
+                            <div class="collection-options" id="collectionOptions8">
+                                <div class="option" onclick="moveToCollection(8, 'Brake Upgrades')">Brake Upgrades</div>
+                                <div class="option" onclick="moveToCollection(8, 'Engine Spares')">Engine Spares</div>
+                                <div class="option" onclick="moveToCollection(8, 'Suspension Parts')">Suspension Parts</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+        <!-- Empty Wishlist State (Hidden by Default) -->
+        <div class="empty-wishlist" style="display: none;">
+            <p>Your auto parts wishlist is empty.</p>
+            <button class="shop-now-btn">Shop Now</button>
+        </div>
+    </div>
+
+    <script>
+        // Toggle dropdown visibility
+        function toggleDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            const allDropdowns = document.querySelectorAll('.dropdown, .collection-options');
+            allDropdowns.forEach(dd => {
+                if (dd.id !== dropdownId) dd.classList.remove('show');
+            });
+            dropdown.classList.toggle('show');
+        }
+
+        document.querySelector('.manage-collections-btn').addEventListener('click', () => toggleDropdown('collectionsDropdown'));
+        document.querySelector('.sort-btn').addEventListener('click', () => toggleDropdown('sortDropdown'));
+        document.querySelector('.filter-btn').addEventListener('click', () => toggleDropdown('filterDropdown'));
+        document.querySelector('.share-btn').addEventListener('click', () => toggleDropdown('shareDropdown'));
+        document.querySelectorAll('.move-to-collection-btn').forEach((btn, index) => {
+            btn.addEventListener('click', () => toggleDropdown(`collectionOptions${index + 1}`));
+        });
+
+        // Select All functionality
+        document.getElementById('selectAll').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.select-item');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+        });
+
+        // Category filter functionality
+        document.querySelectorAll('.category-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+                // Add active class to clicked tab
+                this.classList.add('active');
+
+                const category = this.getAttribute('data-category');
+                const cards = document.querySelectorAll('.product-card');
+
+                cards.forEach(card => {
+                    const cardCategory = card.getAttribute('data-category');
+                    if (category === 'all' || cardCategory === category) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Simulate creating a new collection
+        function createCollection() {
+            const collectionName = document.getElementById('newCollectionName').value;
+            if (collectionName) {
+                alert(`Created new collection: ${collectionName}`);
+            }
+        }
+
+        // Simulate assigning selected items to a collection
+        function assignToCollection() {
+            const selectedItems = document.querySelectorAll('.select-item:checked');
+            const collection = document.getElementById('assignCollectionSelect').value;
+            if (selectedItems.length === 0) {
+                alert('Please select at least one item to assign to a collection.');
+                return;
+            }
+            selectedItems.forEach(item => {
+                const itemId = item.getAttribute('data-id');
+                const card = item.closest('.product-card');
+                const collectionTag = card.querySelector('.collection-tag');
+                collectionTag.textContent = `In: ${collection.replace('-', ' ').replace(/(^\w|\s\w)/g, m => m.toUpperCase())}`;
+            });
+            alert(`Assigned ${selectedItems.length} item(s) to ${collection.replace('-', ' ').replace(/(^\w|\s\w)/g, m => m.toUpperCase())}`);
+        }
+
+        // Simulate moving an individual item to a collection
+        function moveToCollection(itemId, collectionName) {
+            const card = document.querySelector(`.select-item[data-id="${itemId}"]`).closest('.product-card');
+            const collectionTag = card.querySelector('.collection-tag');
+            collectionTag.textContent = `In: ${collectionName}`;
+            alert(`Moved item ${itemId} to ${collectionName}`);
+        }
+
+        // Simulate sorting
+        function sortWishlist(criteria) {
+            const grid = document.getElementById('wishlistGrid');
+            const cards = Array.from(grid.getElementsByClassName('product-card'));
+            cards.sort((a, b) => {
+                const priceA = parseFloat(a.getAttribute('data-price'));
+                const priceB = parseFloat(b.getAttribute('data-price'));
+                return criteria === 'price-low-high' ? priceA - priceB : priceB - priceA;
+            });
+            grid.innerHTML = '';
+            cards.forEach(card => grid.appendChild(card));
+        }
+
+        // Simulate filtering
+        function filterWishlist(criteria) {
+            const cards = document.getElementsByClassName('product-card');
+            Array.from(cards).forEach(card => {
+                const availability = card.getAttribute('data-availability');
+                if (criteria === 'all' || availability === criteria) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Simulate sharing
+        function shareWishlist(method) {
+            alert(`Sharing wishlist via ${method}`);
+        }
+    </script>
+</body>
+</html>
