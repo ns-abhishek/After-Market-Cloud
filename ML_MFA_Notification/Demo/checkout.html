@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - AutoParts Shop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <!-- <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #1976d2 0%, #42a5f5 100%);
+            --secondary-gradient: linear-gradient(135deg, #ff6d00 0%, #ff9e40 100%);
+            --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+            --transition-speed: 0.3s;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        body.dark-theme {
+            background-color: #212529;
+            color: #f8f9fa;
+        }
+
+        .navbar {
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .card {
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+        }
+
+        .card-header {
+            background: var(--primary-gradient);
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        .address-card, .shipping-option {
+            cursor: pointer;
+            border: 2px solid #dee2e6;
+            transition: border-color var(--transition-speed) ease;
+        }
+
+        .address-card.selected, .shipping-option.selected {
+            border-color: #1976d2;
+            background-color: rgba(25, 118, 210, 0.05);
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .summary-item.total {
+            font-weight: bold;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #1565c0 0%, #2196f3 100%);
+        }
+
+        .text-success {
+            color: #28a745 !important;
+        }
+
+        .text-muted {
+            font-size: 0.9rem;
+        }
+    </style> -->
+    <link rel="stylesheet" href="cart.css">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg fixed-top"
+        style="background-color: #1a1a1a; box-shadow: 0 2px 5px rgba(0,0,0,0.5);">
+        <div class="container-fluid" style="padding: 0 20px;">
+            <a class="navbar-brand" href="index.html"
+                style="color: #ffffff; font-family: 'Arial', sans-serif; font-size: 1.5rem; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; transition: color 0.3s ease;">
+                NETWORK COMMERCE
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"
+                style="border: 1px solid #ffffff; padding: 5px;">
+                <span class="navbar-toggler-icon"
+                    style="background-image: url('data:image/svg+xml;charset=utf8,%3Csvg viewBox=\" 0 0 30 30\"
+                    xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cpath stroke=\"%23ffffff\" stroke-width=\"2\"
+                    stroke-linecap=\"round\" stroke-miterlimit=\"10\" d=\"M4 7h22M4 15h22M4
+                    23h22\"/%3E%3C/svg%3E');"></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid mt-5 pt-5 checkout-container">
+        <div class="row">
+            <!-- Left Section: Delivery Address, Shipping Options, Order Summary -->
+            <div class="col-lg-8 col-md-12 mb-4">
+                <!-- Delivery Address -->
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white d-flex align-items-center">
+                        <h5 class="mb-0">DELIVERY ADDRESS</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="address-card selected mb-3 p-3" data-id="1">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="address" id="address1" checked>
+                                <label class="form-check-label">
+                                    <strong id="address-name">John Doe</strong> <span id="address-contact">+1 234 567
+                                        8900</span><br>
+                                    <span id="address-details">123 Main St, Apt 4B, Springfield, IL 62701</span>
+                                </label>
+                            </div>
+                            <button class="btn btn-link btn-sm edit-address">EDIT</button>
+                            <div class="edit-form">
+                                <form class="address-form">
+                                    <input type="hidden" name="addressId" value="1">
+                                    <div class="mb-2">
+                                        <input type="text" class="form-control form-control-sm" name="name"
+                                            value="John Doe" required>
+                                    </div>
+                                    <div class="mb-2">
+                                        <input type="tel" class="form-control form-control-sm" name="contact"
+                                            value="+1 234 567 8900" required>
+                                    </div>
+                                    <div class="mb-2">
+                                        <textarea class="form-control form-control-sm" name="details" rows="2"
+                                            required>123 Main St, Apt 4B, Springfield, IL 62701</textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-sm me-1">Save</button>
+                                    <button type="button" class="btn btn-secondary btn-sm cancel-edit">Cancel</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="address-card p-3 mb-3" data-id="2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="address" id="address2">
+                                <label class="form-check-label">
+                                    <strong id="address2-name">Jane Smith</strong> <span id="address2-contact">+1 987
+                                        654 3210</span><br>
+                                    <span id="address2-details">456 Oak Ave, Chicago, IL 60601</span>
+                                </label>
+                            </div>
+                            <button class="btn btn-link btn-sm edit-address">EDIT</button>
+                            <div class="edit-form">
+                                <form class="address-form">
+                                    <input type="hidden" name="addressId" value="2">
+                                    <div class="mb-2">
+                                        <input type="text" class="form-control form-control-sm" name="name"
+                                            value="Jane Smith" required>
+                                    </div>
+                                    <div class="mb-2">
+                                        <input type="tel" class="form-control form-control-sm" name="contact"
+                                            value="+1 987 654 3210" required>
+                                    </div>
+                                    <div class="mb-2">
+                                        <textarea class="form-control form-control-sm" name="details" rows="2"
+                                            required>456 Oak Ave, Chicago, IL 60601</textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-sm me-1">Save</button>
+                                    <button type="button" class="btn btn-secondary btn-sm cancel-edit">Cancel</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <a href="#" class="text-primary add-address"><i class="bi bi-plus-circle me-1"></i> Add a
+                                new address</a>
+                        </div>
+                        <div class="add-form mt-3" style="display: none;">
+                            <form id="addAddressForm">
+                                <div class="mb-2">
+                                    <input type="text" class="form-control form-control-sm" name="name"
+                                        placeholder="Name" required>
+                                </div>
+                                <div class="mb-2">
+                                    <input type="tel" class="form-control form-control-sm" name="contact"
+                                        placeholder="Contact Number" required>
+                                </div>
+                                <div class="mb-2">
+                                    <textarea class="form-control form-control-sm" name="details" rows="2"
+                                        placeholder="Address Details" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-sm me-1">Add</button>
+                                <button type="button" class="btn btn-secondary btn-sm cancel-add">Cancel</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipping Options -->
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white d-flex align-items-center">
+                        <h5 class="mb-0">SHIPPING OPTIONS</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="shipping-option selected mb-2 p-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="shipping" value="standard" checked>
+                                <label class="form-check-label">
+                                    <strong>Standard Shipping</strong><br>
+                                    <span class="text-muted">Delivery in 3-7 business days</span>
+                                </label>
+                            </div>
+                            <span class="text-success">FREE</span>
+                        </div>
+                        <div class="shipping-option mb-2 p-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="shipping" value="express">
+                                <label class="form-check-label">
+                                    <strong>Express Shipping</strong><br>
+                                    <span class="text-muted">Delivery in 1-3 business days</span>
+                                </label>
+                            </div>
+                            <span id="express-cost">₹0.00</span>
+                        </div>
+                        <div class="shipping-option p-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="shipping" value="same-day">
+                                <label class="form-check-label">
+                                    <strong>Same Day Delivery</strong><br>
+                                    <span class="text-muted">Delivery today (order before 2PM)</span>
+                                </label>
+                            </div>
+                            <span id="same-day-cost">₹0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="card">
+                    <div class="card-header bg-primary text-white d-flex align-items-center">
+                        <h5 class="mb-0">ORDER SUMMARY</h5>
+                    </div>
+                    <div class="card-body" id="order-items">
+                        <!-- Order items will be rendered here -->
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Right Section: Price Details -->
+            <div class="col-lg-4 col-md-12 price-details-container">
+                <div class="card">
+                    <div class="card-header bg-primary text-white d-flex align-items-center">
+                        <h5 class="mb-0">PRICE DETAILS</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="summary-item">
+                            <span>Price (<span id="item-count"></span> items)</span>
+                            <span id="subtotal">₹0.00</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Delivery Charges</span>
+                            <span id="delivery-charges" class="text-success">FREE</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Packaging Charge</span>
+                            <span id="packaging-charge">₹0.00</span>
+                        </div>
+                        <!-- <div class="summary-item">
+                            <span>Protect Promise Fee <i class="bi bi-info-circle"></i></span>
+                            <span id="protect-fee">₹0.00</span>
+                        </div> -->
+                        <div class="summary-item">
+                            <span>Loyalty Points Discount</span>
+                            <span id="loyalty-discount">₹0.00</span>
+                        </div>
+                        <div class="summary-item total">
+                            <span>Total Payable</span>
+                            <span id="total-payable">₹0.00</span>
+                        </div>
+                        <div class="text-success mt-3">
+                            Your Total Savings on this order <span id="savings">₹0.00</span>
+                        </div>
+
+                        <div class="mt-3">
+                            <p>Available Loyalty Points: <span id="loyalty-points">0</span></p>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="redeem-points"
+                                    placeholder="Points to redeem" min="0">
+                                <button class="btn btn-outline-primary" id="redeem-btn">Redeem</button>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary w-100" style="margin-top: 20px;">
+                            <i class="bi bi-arrow-right"></i> CONTINUE WITH PAYMENT
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-body"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script>
+        // Constants
+        const TAX_RATE = 0.08;
+        const DISCOUNT_RATE = 0.05;
+        const LOYALTY_POINT_VALUE = 0.01;
+        const MAX_LOYALTY_POINTS = 500;
+
+        // State variables
+        let items = [];
+        let loyaltyPoints = 500; // Example: User has 500 loyalty points
+        let loyaltyPointsDiscount = 0;
+        let deliveryCharge = 0;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const navbar = document.querySelector('.navbar');
+            const priceDetails = document.querySelector('.price-details-container');
+            const navbarHeight = navbar.offsetHeight;
+            priceDetails.style.top = `${navbarHeight + 20}px`; // 20px margin
+
+
+
+
+            // // Theme buttons
+            // document.getElementById('light-theme-btn').addEventListener('click', () => setTheme('light'));
+            // document.getElementById('dark-theme-btn').addEventListener('click', () => setTheme('dark'));
+
+            // Get cart data from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const cartData = urlParams.get('cart');
+            if (cartData) {
+                items = JSON.parse(decodeURIComponent(cartData));
+            }
+
+            // Setup event listeners
+            document.getElementById('redeem-btn').addEventListener('click', redeemLoyaltyPoints);
+            document.querySelectorAll('input[name="shipping"]').forEach(option => {
+                option.addEventListener('change', updateDeliveryCharges);
+            });
+
+            // Address selection
+            document.querySelectorAll('.address-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    document.querySelectorAll('.address-card').forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    const radio = card.querySelector('input[type="radio"]');
+                    if (radio) radio.checked = true;
+                    updateDeliveryCharges();
+                });
+            });
+
+            // Shipping option selection
+            document.querySelectorAll('.shipping-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    document.querySelectorAll('.shipping-option').forEach(o => o.classList.remove('selected'));
+                    option.classList.add('selected');
+                    const radio = option.querySelector('input[type="radio"]');
+                    if (radio) radio.checked = true;
+                    updateDeliveryCharges();
+                });
+            });
+
+            // Render checkout page
+            renderCheckoutPage();
+        });
+
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                document.body.classList.add('dark-theme');
+                document.getElementById('dark-theme-btn').classList.add('active');
+                document.getElementById('light-theme-btn').classList.remove('active');
+            } else {
+                document.body.classList.remove('dark-theme');
+                document.getElementById('light-theme-btn').classList.add('active');
+                document.getElementById('dark-theme-btn').classList.remove('active');
+            }
+        }
+
+        function showToast(message) {
+            const toastEl = document.getElementById('toast');
+            if (!toastEl) return;
+            toastEl.querySelector('.toast-body').textContent = message;
+            const toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        }
+
+        function calculateShippingCost(method, location) {
+            const baseWeight = items.reduce((total, item) => total + (item.quantity * 1), 0); // Assume 1kg per item
+            let distanceFactor = 1;
+
+            // Simple distance factor based on location (mocked for demonstration)
+            if (location.includes('Bangalore')) {
+                distanceFactor = 1; // Base location
+            } else if (location.includes('Nandi')) {
+                distanceFactor = 1.5; // Further away
+            }
+
+            // Shipping cost calculation
+            if (method === 'standard') {
+                return 0; // Free standard shipping
+            } else if (method === 'express') {
+                return baseWeight * 100 * distanceFactor; // ₹100 per kg
+            } else if (method === 'same-day') {
+                return baseWeight * 200 * distanceFactor; // ₹200 per kg
+            }
+            return 0;
+        }
+
+        function updateDeliveryCharges() {
+            const selectedAddress = document.querySelector('input[name="address"]:checked').closest('.address-card');
+            const addressDetails = selectedAddress.querySelector('label').textContent;
+            const selectedShipping = document.querySelector('input[name="shipping"]:checked').value;
+
+            // Check if same-day delivery is available (current time: 07:20 PM IST, May 13, 2025)
+            const now = new Date();
+            const cutoffTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 14, 0, 0); // 2 PM
+            const sameDayOption = document.querySelector('input[value="same-day"]');
+            if (now > cutoffTime) {
+                sameDayOption.disabled = true;
+                sameDayOption.closest('.shipping-option').classList.add('text-muted');
+                sameDayOption.closest('.shipping-option').querySelector('label').innerHTML = `
+                    <strong>Same Day Delivery</strong><br>
+                    <span class="text-muted">Unavailable (order after 2PM)</span>
+                `;
+                if (selectedShipping === 'same-day') {
+                    document.querySelector('input[value="standard"]').checked = true;
+                    document.querySelector('input[value="standard"]').closest('.shipping-option').classList.add('selected');
+                }
+            }
+
+            // Calculate delivery charges based on shipping method and location
+            deliveryCharge = calculateShippingCost(selectedShipping, addressDetails);
+
+            // Update UI
+            document.getElementById('express-cost').textContent = `₹${calculateShippingCost('express', addressDetails).toFixed(2)}`;
+            document.getElementById('same-day-cost').textContent = `₹${calculateShippingCost('same-day', addressDetails).toFixed(2)}`;
+            document.getElementById('delivery-charges').textContent = deliveryCharge === 0 ? 'FREE' : `₹${deliveryCharge.toFixed(2)}`;
+            document.getElementById('delivery-charges').classList.toggle('text-success', deliveryCharge === 0);
+
+            updatePriceDetails();
+        }
+
+        function redeemLoyaltyPoints() {
+            const pointsToRedeem = parseInt(document.getElementById('redeem-points').value) || 0;
+            if (pointsToRedeem <= 0) {
+                showToast('Please enter a valid number of points to redeem.');
+                return;
+            }
+            if (pointsToRedeem > loyaltyPoints) {
+                showToast('You do not have enough loyalty points.');
+                return;
+            }
+            if (pointsToRedeem > MAX_LOYALTY_POINTS) {
+                showToast(`You can redeem up to ${MAX_LOYALTY_POINTS} points per order.`);
+                return;
+            }
+
+            loyaltyPointsDiscount = pointsToRedeem * LOYALTY_POINT_VALUE;
+            loyaltyPoints -= pointsToRedeem;
+            document.getElementById('loyalty-points').textContent = loyaltyPoints;
+            document.getElementById('redeem-points').value = '';
+            showToast(`Redeemed ${pointsToRedeem} points successfully!`);
+            updatePriceDetails();
+        }
+
+        function updatePriceDetails() {
+            let subtotal = items.reduce((total, item) => total + (item.price * item.quantity), 0);
+            const packagingCharge = 109;
+            // const protectFee = 19;
+            const totalPayable = subtotal + packagingCharge + deliveryCharge - loyaltyPointsDiscount;
+            const savings = items.reduce((total, item) => total + (item.price * item.quantity * DISCOUNT_RATE), 0) + loyaltyPointsDiscount;
+
+            document.getElementById('item-count').textContent = items.length;
+            document.getElementById('subtotal').textContent = `₹${subtotal.toFixed(2)}`;
+            document.getElementById('packaging-charge').textContent = `₹${packagingCharge.toFixed(2)}`;
+            // document.getElementById('protect-fee').textContent = `₹${protectFee.toFixed(2)}`;
+            document.getElementById('loyalty-discount').textContent = `₹${loyaltyPointsDiscount.toFixed(2)}`;
+            document.getElementById('total-payable').textContent = `₹${totalPayable.toFixed(2)}`;
+            document.getElementById('savings').textContent = `₹${savings.toFixed(2)}`;
+        }
+
+        function increaseQuantity(itemId) {
+            const item = items.find(i => i.id === itemId);
+            if (!item) return;
+
+            item.quantity += 1;
+            renderCheckoutPage();
+            updateDeliveryCharges();
+            showToast(`Increased quantity for ${item.name}`);
+        }
+
+        function decreaseQuantity(itemId) {
+            const item = items.find(i => i.id === itemId);
+            if (!item || item.quantity <= 1) return;
+
+            item.quantity -= 1;
+            renderCheckoutPage();
+            updateDeliveryCharges();
+            showToast(`Decreased quantity for ${item.name}`);
+        }
+
+        function removeItem(itemId) {
+            const index = items.findIndex(item => item.id === itemId);
+            if (index === -1) return;
+
+            const item = items[index];
+            items.splice(index, 1);
+            renderCheckoutPage();
+            updateDeliveryCharges();
+            showToast(`${item.name} removed from order`);
+        }
+
+        function renderCheckoutPage() {
+            // Delivery Address
+            document.getElementById('address-name').textContent = 'Arjun Sharma';
+            document.getElementById('address-contact').textContent = '9876543210';
+            document.getElementById('address-details').textContent = 'Sai Residency, 12th B Cross, Koramangala, Bengaluru, Karnataka - 560034';
+            document.getElementById('address2-name').textContent = 'Arjun Sharma';
+            document.getElementById('address2-contact').textContent = '9876543210';
+            document.getElementById('address2-details').textContent = 'Plot 23, Shivam Nagar, Mysuru, Karnataka - 570019';
+
+            // Order Summary
+            const orderItemsContainer = document.getElementById('order-items');
+            orderItemsContainer.innerHTML = '';
+            if (items.length === 0) {
+                orderItemsContainer.innerHTML = '<p class="text-muted">No items in your order</p>';
+                return;
+            }
+
+            // Get selected shipping method
+            const selectedShipping = document.querySelector('input[name="shipping"]:checked').value;
+            const deliveryDate = calculateDeliveryDate(selectedShipping);
+
+            items.forEach(item => {
+                const subtotal = item.price * item.quantity;
+                const discount = subtotal * DISCOUNT_RATE;
+                const total = subtotal - discount;
+
+                const itemElement = document.createElement('div');
+                itemElement.className = 'order-item'; // Updated class name
+                itemElement.id = `order-item-${item.id}`;
+                itemElement.innerHTML = `
+            <img src="${item.image}" alt="${item.name}" class="item-image" style="width: 200px; height: 200px; object-fit: cover; border-radius: 4px;">
+            <div class="flex-grow-1">
+                <h6>${item.name}</h6>
+                <p class="text-muted">Price per unit: ₹${item.price.toFixed(2)}</p>
+                <p class="text-muted">Qty: <span id="quantity-${item.id}">${item.quantity}</span> | Subtotal: ₹${subtotal.toFixed(2)}</p>
+                <p class="text-success">Discount (5%): ₹${discount.toFixed(2)}</p>
+                <p class="font-weight-bold">Total: ₹${total.toFixed(2)}</p>
+                <p class="delivery-date">Estimated Delivery: ${deliveryDate}</p>
+                <div class="d-flex gap-2 mt-1">
+                    <div class="input-group input-group-sm">
+                        <button class="btn btn-outline-primary" onclick="decreaseQuantity(${item.id})"><i class="bi bi-dash"></i></button>
+                        <span class="input-group-text" id="quantity-display-${item.id}">${item.quantity}</span>
+                        <button class="btn btn-outline-primary" onclick="increaseQuantity(${item.id})"><i class="bi bi-plus"></i></button>
+                    </div>
+                    <button class="btn btn-outline-danger btn-sm" onclick="removeItem(${item.id})"><i class="bi bi-trash"></i> Remove</button>
+                </div>
+            </div>
+        `;
+                orderItemsContainer.appendChild(itemElement);
+            });
+
+            // Loyalty Points
+            document.getElementById('loyalty-points').textContent = loyaltyPoints;
+
+            // Initial price details
+            updateDeliveryCharges();
+        }
+
+
+
+        document.querySelectorAll('.address-card').forEach(card => {
+            card.querySelector('.form-check').style.display = 'block';
+            card.querySelector('.edit-address').style.display = 'block';
+            card.querySelector('.edit-form').style.display = 'none';
+            const name = card.querySelector('strong').textContent;
+            const contact = card.querySelector('span[id$="-contact"]').textContent;
+            const details = card.querySelector('span[id$="-details"]').textContent;
+            card.querySelector('input[name="name"]').value = name;
+            card.querySelector('input[name="contact"]').value = contact;
+            card.querySelector('textarea[name="details"]').value = details;
+        });
+
+        document.querySelectorAll('.edit-address').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const card = e.target.closest('.address-card');
+                card.querySelector('.form-check').style.display = 'none';
+                card.querySelector('.edit-address').style.display = 'none';
+                card.querySelector('.edit-form').style.display = 'block';
+            });
+        });
+        document.querySelectorAll('.cancel-edit').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const card = e.target.closest('.address-card');
+                card.querySelector('.form-check').style.display = 'block';
+                card.querySelector('.edit-address').style.display = 'block';
+                card.querySelector('.edit-form').style.display = 'none';
+                card.querySelector('.address-form').reset();
+                // Restore original values
+                const name = card.querySelector('strong').textContent;
+                const contact = card.querySelector('span[id$="-contact"]').textContent;
+                const details = card.querySelector('span[id$="-details"]').textContent;
+                card.querySelector('input[name="name"]').value = name;
+                card.querySelector('input[name="contact"]').value = contact;
+                card.querySelector('textarea[name="details"]').value = details;
+            });
+        });
+        document.querySelectorAll('.address-form').forEach(form => {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
+                const card = form.closest('.address-card');
+                const name = form.querySelector('input[name="name"]').value;
+                const contact = form.querySelector('input[name="contact"]').value;
+                const details = form.querySelector('textarea[name="details"]').value;
+
+                card.querySelector('strong').textContent = name;
+                card.querySelector('span[id$="-contact"]').textContent = contact;
+                card.querySelector('span[id$="-details"]').textContent = details;
+
+                card.querySelector('.form-check').style.display = 'block';
+                card.querySelector('.edit-address').style.display = 'block';
+                card.querySelector('.edit-form').style.display = 'none';
+            });
+        });
+
+        // Show add address form
+        document.querySelector('.add-address').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.querySelector('.add-form').style.display = 'block';
+            document.querySelector('.add-address').style.display = 'none';
+        });
+
+        // Cancel add
+        document.querySelector('.cancel-add').addEventListener('click', () => {
+            document.querySelector('.add-form').style.display = 'none';
+            document.querySelector('.add-address').style.display = 'block';
+            document.getElementById('addAddressForm').reset();
+        });
+
+        // Add new address
+        document.getElementById('addAddressForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!e.target.checkValidity()) {
+                e.target.reportValidity();
+                return;
+            }
+            const name = e.target.querySelector('input[name="name"]').value;
+            const contact = e.target.querySelector('input[name="contact"]').value;
+            const details = e.target.querySelector('textarea[name="details"]').value;
+            const newId = Date.now().toString();
+
+            const newCard = document.createElement('div');
+            newCard.className = 'address-card p-3 mb-3';
+            newCard.dataset.id = newId;
+            newCard.innerHTML = `
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="address" id="address${newId}">
+                    <label class="form-check-label">
+                        <strong>${name}</strong> <span>${contact}</span><br>
+                        <span>${details}</span>
+                    </label>
+                </div>
+                <button class="btn btn-link btn-sm edit-address">EDIT</button>
+                <div class="edit-form">
+                    <form class="address-form">
+                        <input type="hidden" name="addressId" value="${newId}">
+                        <div class="mb-2">
+                            <input type="text" class="form-control form-control-sm" name="name" value="${name}" required>
+                        </div>
+                        <div class="mb-2">
+                            <input type="tel" class="form-control form-control-sm" name="contact" value="${contact}" required>
+                        </div>
+                        <div class="mb-2">
+                            <textarea class="form-control form-control-sm" name="details" rows="2" required>${details}</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm me-1">Save</button>
+                        <button type="button" class="btn btn-secondary btn-sm cancel-edit">Cancel</button>
+                    </form>
+                </div>
+            `;
+            document.querySelector('.card-body').insertBefore(newCard, document.querySelector('.mt-3'));
+
+            // Add event listeners for new card
+            newCard.querySelector('.edit-address').addEventListener('click', (e) => {
+                const card = e.target.closest('.address-card');
+                card.querySelector('.form-check').style.display = 'none';
+                card.querySelector('.edit-address').style.display = 'none';
+                card.querySelector('.edit-form').style.display = 'block';
+            });
+
+            newCard.querySelector('.cancel-edit').addEventListener('click', (e) => {
+                const card = e.target.closest('.address-card');
+                card.querySelector('.form-check').style.display = 'block';
+                card.querySelector('.edit-address').style.display = 'block';
+                card.querySelector('.edit-form').style.display = 'none';
+                card.querySelector('.address-form').reset();
+                const name = card.querySelector('strong').textContent;
+                const contact = card.querySelector('span[id$="-contact"]').textContent;
+                const details = card.querySelector('span[id$="-details"]').textContent;
+                card.querySelector('input[name="name"]').value = name;
+                card.querySelector('input[name="contact"]').value = contact;
+                card.querySelector('textarea[name="details"]').value = details;
+            });
+
+            newCard.querySelector('.address-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (!e.target.checkValidity()) {
+                    e.target.reportValidity();
+                    return;
+                }
+                const card = e.target.closest('.address-card');
+                const name = e.target.querySelector('input[name="name"]').value;
+                const contact = e.target.querySelector('input[name="contact"]').value;
+                const details = e.target.querySelector('textarea[name="details"]').value;
+
+                card.querySelector('strong').textContent = name;
+                card.querySelector('span[id$="-contact"]').textContent = contact;
+                card.querySelector('span[id$="-details"]').textContent = details;
+
+                card.querySelector('.form-check').style.display = 'block';
+                card.querySelector('.edit-address').style.display = 'block';
+                card.querySelector('.edit-form').style.display = 'none';
+            });
+
+            // Reset and hide add form
+            document.querySelector('.add-form').style.display = 'none';
+            document.querySelector('.add-address').style.display = 'block';
+            e.target.reset();
+        });
+
+        // Handle radio button selection
+        document.querySelectorAll('.form-check-input').forEach(input => {
+            input.addEventListener('change', (e) => {
+                document.querySelectorAll('.address-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                e.target.closest('.address-card').classList.add('selected');
+            });
+        });
+
+
+        function calculateDeliveryDate(shippingMethod) {
+            const now = new Date(); // Current date and time: 12:15 PM IST, May 14, 2025
+            const cutoffTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 14, 0, 0); // 2 PM cutoff
+            let deliveryDate = new Date(now);
+
+            if (shippingMethod === 'standard') {
+                // Delivery in 3-7 business days
+                deliveryDate.setDate(now.getDate() + 7); // Use max for simplicity
+            } else if (shippingMethod === 'express') {
+                // Delivery in 1-3 business days
+                deliveryDate.setDate(now.getDate() + 3); // Use max for simplicity
+            } else if (shippingMethod === 'same-day') {
+                // Delivery today if before 2 PM
+                if (now <= cutoffTime) {
+                    deliveryDate = new Date(now); // Today
+                } else {
+                    // Fallback to next day if after cutoff
+                    deliveryDate.setDate(now.getDate() + 1);
+                }
+            }
+
+            // Format date as "Month Day, Year" (e.g., "May 21, 2025")
+            return deliveryDate.toLocaleDateString('en-US', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric'
+            });
+        }
+    </script>
+</body>
+
+</html>

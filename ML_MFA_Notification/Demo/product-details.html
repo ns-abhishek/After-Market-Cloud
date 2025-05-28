@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quest Network Commerce</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background-color: #f4f7fb;
+    }
+
+    nav {
+      box-shadow: none;
+    }
+
+    .brand-logo {
+      font-weight: 600;
+    }
+
+    .card {
+      transition: all 0.3s ease-in-out;
+      border-radius: 10px;
+    }
+
+    .card:hover {
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      transform: scale(1.02);
+    }
+
+    .filter-toggle {
+      margin: 20px auto;
+      display: flex;
+      justify-content: center;
+    }
+
+    .filters-panel {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+      color: black;
+    }
+
+    .hide-on-load {
+      display: none;
+    }
+
+    footer {
+      margin-top: 50px;
+      background: #222;
+      color: #eee;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h5 {
+      font-weight: 500;
+    }
+
+    .product-title {
+      font-weight: 600;
+    }
+
+    .card-image img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .select-wrapper input.select-dropdown {
+      color: black !important;
+    }
+
+    .dropdown-content li span {
+      color: black !important;
+    }
+
+    .select-wrapper .caret {
+      fill: black !important;
+    }
+
+    .select-wrapper input.select-dropdown:disabled {
+      color: black !important;
+      opacity: 0.6;
+    }
+
+    .price-range-label {
+      margin-top: 10px;
+      display: block;
+      color: black;
+    }
+
+    .clear-filters {
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    .search-container {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .search-container input {
+      padding-right: 40px;
+    }
+
+    .search-container .clear-search {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: black;
+    }
+
+    /* Detailed View Styles */
+    .product-images img {
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 10px;
+    }
+
+    .card-review {
+      padding: 10px;
+      background: #fff;
+      margin-bottom: 10px;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #e0e0e0;
+      padding: 5px 10px;
+      margin: 5px;
+      border-radius: 20px;
+    }
+
+    #productDetails {
+      display: none;
+      padding: 20px;
+    }
+
+    #productListView {
+      display: block;
+    }
+
+    .back-btn {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="black">
+    <div class="nav-wrapper container">
+      <a href="#" class="brand-logo">Quest Network Commerce</a>
+      <ul class="right">
+        <li><a href="#"><i class="material-icons">home</i></a></li>
+        <li><a href="#"><i class="material-icons">shopping_cart</i></a></li>
+        <li><a href="#"><i class="material-icons">person</i></a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="filter-toggle">
+      <a class="btn waves-effect waves-light black" onclick="toggleFilters()">
+        <i class="material-icons left">tune</i> Show Filters
+      </a>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    <!-- Product List View -->
+    <div id="productListView">
+      <div class="row">
+        <!-- Filters Panel -->
+        <div class="col l3 m4 s12 hide-on-load" id="filterPanel">
+          <div class="filters-panel">
+            <h5>Filter Products</h5>
+            <div class="search-container">
+              <div class="input-field">
+                <input type="text" id="searchInput" placeholder="Search products..." />
+                <label for="searchInput">Search</label>
+                <i class="material-icons clear-search" onclick="clearSearch()">clear</i>
+              </div>
+            </div>
+            <div class="input-field">
+              <select id="categoryFilter">
+                <option value="" selected>All Categories</option>
+                <option>Pumps</option>
+                <option>Gearboxes</option>
+                <option>Bearings</option>
+                <option>Conveyors</option>
+                <option>Pistons</option>
+              </select>
+              <label>Category</label>
+            </div>
+            <div class="input-field">
+              <select id="brandFilter">
+                <option value="" selected>All Brands</option>
+                <option>Generic</option>
+                <option>Bosch</option>
+                <option>SKF</option>
+                <option>Siemens</option>
+              </select>
+              <label>Brand</label>
+            </div>
+            <div class="input-field" style="margin-top: 32px;">
+              <input type="range" id="priceFilter" min="0" max="60000" value="60000" style="margin-top: 40px;" />
+              <label>Price Range</label>
+              <span class="price-range-label" id="priceValue">Up to ₹60,000</span>
+            </div>
+            <div class="input-field">
+              <select id="ratingFilter">
+                <option value="" selected>All Ratings</option>
+                <option>5 Stars</option>
+                <option>4 Stars</option>
+              </select>
+              <label>Rating</label>
+            </div>
+            <div class="input-field">
+              <select id="colorFilter">
+                <option value="" selected>All Colors</option>
+                <option>Black</option>
+                <option>Silver</option>
+                <option>Gray</option>
+              </select>
+              <label>Color</label>
+            </div>
+            <div class="input-field">
+              <select id="availabilityFilter">
+                <option value="" selected>All Availability</option>
+                <option>In Stock</option>
+                <option>Out of Stock</option>
+              </select>
+              <label>Availability</label>
+            </div>
+            <div class="input-field">
+              <select id="conditionFilter">
+                <option value="" selected>All Conditions</option>
+                <option>New</option>
+                <option>Refurbished</option>
+              </select>
+              <label>Condition</label>
+            </div>
+            <div class="input-field">
+              <select id="warrantyFilter">
+                <option value="" selected>All Warranties</option>
+                <option>6 Months</option>
+                <option>1 Year</option>
+              </select>
+              <label>Warranty</label>
+            </div>
+            <a class="btn waves-effect waves-light black clear-filters" onclick="clearFilters()">Clear Filters</a>
+          </div>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="col l9 m8 s12">
+          <div class="row" id="productList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Details View -->
+    <div id="productDetails"></div>
+  </div>
+
+  <footer>
+    <p>© 2025 Quest Network Commerce. All rights reserved.</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    // Product data
+    const products = [
+      {
+        name: "Hydraulic Pump",
+        price: 25999,
+        img: "Images/hydraulic_pump.jpg",
+        desc: "High-pressure, durable pump for industrial use",
+        category: "Pumps",
+        brand: "Bosch",
+        rating: "5 Stars",
+        color: "Silver",
+        availability: "In Stock",
+        condition: "New",
+        warranty: "1 Year"
+      },
+      {
+        name: "Gearbox Assembly",
+        price: 45499,
+        img: "Images/gearbox_assembly.jpg",
+        desc: "Precision-engineered gearbox for heavy machinery",
+        category: "Gearboxes",
+        brand: "Siemens",
+        rating: "4 Stars",
+        color: "Black",
+        availability: "In Stock",
+        condition: "New",
+        warranty: "1 Year"
+      },
+      {
+        name: "Industrial Bearing",
+        price: 3999,
+        img: "Images/industrial_bearing.jpg",
+        desc: "High-performance bearing for smooth operation",
+        category: "Bearings",
+        brand: "SKF",
+        rating: "5 Stars",
+        color: "Silver",
+        availability: "Out of Stock",
+        condition: "New",
+        warranty: "6 Months"
+      },
+      {
+        name: "Conveyor Belt",
+        price: 12999,
+        img: "Images/conveyor_belt.jpg",
+        desc: "Durable belt for material handling systems",
+        category: "Conveyors",
+        brand: "Generic",
+        rating: "4 Stars",
+        color: "Black",
+        availability: "In Stock",
+        condition: "New",
+        warranty: "1 Year"
+      },
+      {
+        name: "Engine Piston",
+        price: 7499,
+        img: "Images/engine_piston.jpg",
+        desc: "Heat-resistant piston for efficient engine performance",
+        category: "Pistons",
+        brand: "Generic",
+        rating: "5 Stars",
+        color: "Silver",
+        availability: "In Stock",
+        condition: "New",
+        warranty: "6 Months"
+      }
+    ];
+
+    // Initialize Materialize components
+    document.addEventListener('DOMContentLoaded', function () {
+      const initializeSelects = () => {
+        const selects = document.querySelectorAll('select');
+        selects.forEach(select => {
+          const instance = M.FormSelect.getInstance(select);
+          if (instance) instance.destroy();
+          M.FormSelect.init(select);
+        });
+      };
+      initializeSelects();
+
+      const filterInputs = [
+        'categoryFilter',
+        'brandFilter',
+        'ratingFilter',
+        'colorFilter',
+        'availabilityFilter',
+        'conditionFilter',
+        'warrantyFilter'
+      ];
+      filterInputs.forEach(id => {
+        const element = document.getElementById(id);
+        element.addEventListener('change', debounce(applyFilters, 100));
+      });
+
+      const priceFilter = document.getElementById('priceFilter');
+      priceFilter.addEventListener('input', updatePriceDisplay);
+      priceFilter.addEventListener('change', debounce(applyFilters, 100));
+
+      const searchInput = document.getElementById('searchInput');
+      searchInput.addEventListener('input', debounce(applyFilters, 300));
+
+      renderProducts(products);
+    });
+
+    // Debounce function
+    function debounce(func, wait) {
+      let timeout;
+      return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+      };
+    }
+
+    // Toggle filter panel
+    function toggleFilters() {
+      const panel = document.getElementById("filterPanel");
+      panel.classList.toggle("hide-on-load");
+    }
+
+    // Update price range display
+    function updatePriceDisplay() {
+      //const priceFilter = document.getElementById('priceFilter');
+      const priceValue = document.getElementById('priceValue');
+      priceValue.textContent = `Up to ₹${parseInt(priceFilter.value).toLocaleString('en-IN')}`;
+      applyFilters();
+    }
+
+    // Apply filters and search
+    function applyFilters() {
+      const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+      const category = document.getElementById('categoryFilter').value;
+      const brand = document.getElementById('brandFilter').value;
+      const price = parseInt(document.getElementById('priceFilter').value);
+      const rating = document.getElementById('ratingFilter').value;
+      const color = document.getElementById('colorFilter').value;
+      const availability = document.getElementById('availabilityFilter').value;
+      const condition = document.getElementById('conditionFilter').value;
+      const warranty = document.getElementById('warrantyFilter').value;
+
+      console.log({ searchQuery, category, brand, price, rating, color, availability, condition, warranty });
+
+      const filteredProducts = products.filter(product => {
+        const matchesSearch = !searchQuery ||
+          product.name.toLowerCase().includes(searchQuery) ||
+          product.desc.toLowerCase().includes(searchQuery);
+
+        return matchesSearch &&
+          (!category || product.category === category) &&
+          (!brand || product.brand === brand) &&
+          (product.price <= price) &&
+          (!rating || product.rating === rating) &&
+          (!color || product.color === color) &&
+          (!availability || product.availability === availability) &&
+          (!condition || product.condition === condition) &&
+          (!warranty || product.warranty === warranty);
+      });
+
+      renderProducts(filteredProducts);
+    }
+
+    // Render products to the DOM
+    function renderProducts(productsToRender) {
+      const productList = document.getElementById("productList");
+      productList.innerHTML = '';
+
+      if (productsToRender.length === 0) {
+        productList.innerHTML = '<p class="center">No products match the selected filters or search.</p>';
+        return;
+      }
+
+      productsToRender.forEach((p, i) => {
+        productList.innerHTML += `
+          <div class="col s12 m6 l4">
+            <div class="card hoverable">
+              <div class="card-image">
+                <img src="${p.img}" alt="${p.name}">
+              </div>
+              <div class="card-content">
+                <span class="card-title product-title">${p.name}</span>
+                <p><strong>₹${p.price.toLocaleString('en-IN')}</strong></p>
+                <p>${p.desc}</p>
+              </div>
+              <div class="card-action">
+                <a href="#" onclick="showProductDetails(${i})" class="blue-text text-darken-2">View Details</a>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    // Show product details
+    function showProductDetails(productId) {
+      const product = products[productId];
+      if (!product) {
+        return;
+      }
+
+      const productListView = document.getElementById('productListView');
+      const productDetails = document.getElementById('productDetails');
+      productListView.style.display = 'none';
+      productDetails.style.display = 'block';
+
+      productDetails.innerHTML = `
+        <a href="#" onclick="showProductList()" class="btn waves-effect waves-light black back-btn">Back to Products</a>
+        <div class="row">
+          <div class="col s12 m6">
+            <div class="product-images">
+              <img src="${product.img}" alt="${product.name}">
+              <img src="${product.img}" alt="${product.name} Side View">
+            </div>
+            <div>
+              <h6>Product Video:</h6>
+              <video controls width="100%">
+                <source src="sample-video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+
+          <div class="col s12 m6">
+            <h4>${product.name}</h4>
+            <p><strong>Price:</strong> ₹${product.price.toLocaleString('en-IN')} <span style="text-decoration:line-through;color:gray;">₹${(product.price * 1.1).toLocaleString('en-IN')}</span> <span style="color:green;">Save 10%</span></p>
+            <p><strong>Availability:</strong> <span style="color:${product.availability === 'In Stock' ? 'green' : 'red'};">${product.availability}</span></p>
+
+            <div class="input-field" style="width: 100px;">
+              <input type="number" min="1" value="1" id="quantity" />
+              <label for="quantity">Qty</label>
+            </div>
+
+            <p><strong>Rating:</strong> ⭐ ${product.rating === '5 Stars' ? '5.0' : '4.0'}/5 (100 reviews)</p>
+
+            <h5>Key Features</h5>
+            <ul>
+              <li>${product.category} Design</li>
+              <li>High Durability</li>
+              <li>${product.color} Finish</li>
+              <li>${product.warranty} Warranty</li>
+              <li>${product.condition} Condition</li>
+            </ul>
+
+            <h5>Description</h5>
+            <p>${product.desc}</p>
+
+            <h5>Specifications</h5>
+            <table>
+              <tr><td><strong>Category</strong></td><td>${product.category}</td></tr>
+              <tr><td><strong>Brand</strong></td><td>${product.brand}</td></tr>
+              <tr><td><strong>Color</strong></td><td>${product.color}</td></tr>
+              <tr><td><strong>Condition</strong></td><td>${product.condition}</td></tr>
+              <tr><td><strong>Warranty</strong></td><td>${product.warranty}</td></tr>
+              <tr><td><strong>Availability</strong></td><td>${product.availability}</td></tr>
+            </table>
+
+            <h5>Product Variants</h5>
+            <p>
+              <label>
+                <input name="variant" type="radio" checked />
+                <span>${product.color} - Standard</span>
+              </label>
+              <label>
+                <input name="variant" type="radio" />
+                <span>${product.color === 'Silver' ? 'Black' : 'Silver'} - Standard</span>
+              </label>
+            </p>
+
+            <h5>Shipping Info</h5>
+            <p><strong>Delivery:</strong> 5-7 days</p>
+            <p><strong>Shipping Options:</strong> Standard, Express</p>
+
+            <h5>Return & Refund</h5>
+            <p>30-day return policy. Item must be in original packaging. Full refund guaranteed.</p>
+
+            <h5>Warranty</h5>
+            <p>${product.warranty} Manufacturer Warranty</p>
+
+            <h5>Promotions</h5>
+            <p><strong>Use code:</strong> <span style="background:#757572;padding:3px 8px;">INDUSTRIAL10</span> for 10% off</p>
+
+            <h5>Tags</h5>
+            <div>
+              <span class="tag">${product.category.toLowerCase()}</span>
+              <span class="tag">${product.brand.toLowerCase()}</span>
+              <span class="tag">${product.color.toLowerCase()}</span>
+              <span class="tag">industrial</span>
+            </div>
+
+            <h5>Seller Info</h5>
+            <p><strong>Seller:</strong> IndustryMart (⭐ 4.8/5, 2,000 ratings)</p>
+
+            <div>
+              <a href="#" class="btn-large black">Add to Cart</a>
+              <a href="#" class="btn-large grey">Buy Now</a>
+            </div>
+
+            <div style="margin-top: 20px;">
+              <h6>Share:</h6>
+              <a href="#"><i class="material-icons">share</i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reviews -->
+        <div class="row">
+          <h5>Customer Reviews</h5>
+          <div class="col s12 m4">
+            <div class="card-review">
+              <p><strong>Amit K.</strong> ⭐⭐⭐⭐⭐</p>
+              <p>Reliable and high-quality ${product.category.toLowerCase()}. Highly recommend!</p>
+            </div>
+          </div>
+          <div class="col s12 m4">
+            <div class="card-review">
+              <p><strong>Priya S.</strong> ⭐⭐⭐⭐</p>
+              <p>Good performance, but delivery took a bit long.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q&A -->
+        <div class="row">
+          <h5>Customer Questions & Answers</h5>
+          <ul class="collection">
+            <li class="collection-item"><strong>Q:</strong> Is it compatible with heavy machinery? <br/><strong>A:</strong> Yes, designed for industrial applications.</li>
+            <li class="collection-item"><strong>Q:</strong> What is the warranty period? <br/><strong>A:</strong> ${product.warranty}.</li>
+          </ul>
+        </div>
+
+        <!-- FAQ -->
+        <div class="row">
+          <h5>FAQ</h5>
+          <ul class="collapsible">
+            <li>
+              <div class="collapsible-header"><i class="material-icons">help_outline</i>How to claim warranty?</div>
+              <div class="collapsible-body"><span>Contact the manufacturer with your product serial number.</span></div>
+            </li>
+            <li>
+              <div class="collapsible-header"><i class="material-icons">help_outline</i>How to maintain the product?</div>
+              <div class="collapsible-body"><span>Follow the maintenance guide in the product manual.</span></div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Related Products -->
+        <div class="row">
+          <h5>Related Products</h5>
+          ${products
+          .filter((_, i) => i !== productId)
+          .slice(0, 2)
+          .map((p, i) => `
+              <div class="col s12 m4">
+                <div class="card">
+                  <div class="card-image"><img src="${p.img}" alt="${p.name}"></div>
+                  <div class="card-content"><span class="card-title">${p.name}</span><p>₹${p.price.toLocaleString('en-IN')}</p></div>
+                  <div class="card-action"><a href="#" onclick="showProductDetails(${products.indexOf(p)})">View Details</a></div>
+                </div>
+              </div>
+            `).join('')}
+        </div>
+      `;
+
+      // Re-initialize Materialize components
+      M.Collapsible.init(document.querySelectorAll('.collapsible'));
+      M.updateTextFields();
+    }
+
+    // Show product list
+    function showProductList() {
+      document.getElementById('productListView').style.display = 'block';
+      document.getElementById('productDetails').style.display = 'none';
+      document.getElementById('productDetails').innerHTML = '';
+    }
+
+    // Clear all filters and search
+    function clearFilters() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('categoryFilter').value = '';
+      document.getElementById('brandFilter').value = '';
+      document.getElementById('priceFilter').value = '60000';
+      document.getElementById('ratingFilter').value = '';
+      document.getElementById('colorFilter').value = '';
+      document.getElementById('availabilityFilter').value = '';
+      document.getElementById('conditionFilter').value = '';
+      document.getElementById('warrantyFilter').value = '';
+
+      const selects = document.querySelectorAll('select');
+      selects.forEach(select => {
+        const instance = M.FormSelect.getInstance(select);
+        if (instance) instance.destroy();
+        M.FormSelect.init(select);
+      });
+
+      updatePriceDisplay();
+      renderProducts(products);
+      showProductList();
+    }
+
+    // Clear search input
+    function clearSearch() {
+      document.getElementById('searchInput').value = '';
+      applyFilters();
+    }
+  </script>
+</body>
+
+</html>

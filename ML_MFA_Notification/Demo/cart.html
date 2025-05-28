@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoParts Shop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="cart.css">
+
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg fixed-top"
+        style="background-color: #1a1a1a; box-shadow: 0 2px 5px rgba(0,0,0,0.5);">
+        <div class="container-fluid" style="padding: 0 20px;">
+            <a class="navbar-brand" href="index.html"
+                style="color: #ffffff; font-family: 'Arial', sans-serif; font-size: 1.5rem; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; transition: color 0.3s ease;">
+                NETWORK COMMERCE
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"
+                style="border: 1px solid #ffffff; padding: 5px;">
+                <span class="navbar-toggler-icon"
+                    style="background-image: url('data:image/svg+xml;charset=utf8,%3Csvg viewBox=\" 0 0 30 30\"
+                    xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cpath stroke=\"%23ffffff\" stroke-width=\"2\"
+                    stroke-linecap=\"round\" stroke-miterlimit=\"10\" d=\"M4 7h22M4 15h22M4
+                    23h22\"/%3E%3C/svg%3E');"></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid mt-5 pt-3">
+        <div class="row">
+            <!-- Cart and Related Sections -->
+            <div class="col-lg-8 col-md-12 mb-4">
+                <!-- Cart Items -->
+                <div class="card mb-4 mt-3">
+                    <div class="card-header bg-primary text-white d-flex align-items-center">
+                        <i class="bi bi-cart me-2"></i>
+                        <h5 class="mb-0">Your Cart</h5>
+                    </div>
+                    <div class="card-body" id="cart-items">
+                        <!-- Cart items will be rendered here -->
+                    </div>
+                </div>
+
+                <!-- Saved for Later -->
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white d-flex align-items-center">
+                        <i class="bi bi-bookmark me-2"></i>
+                        <h5 class="mb-0">Saved for Later</h5>
+                    </div>
+                    <div class="card-body" id="saved-items">
+                        <!-- Saved items will be rendered here -->
+                    </div>
+                </div>
+
+                <!-- Frequently Bought Together -->
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white d-flex align-items-center">
+                        <i class="bi bi-link-45deg me-2"></i>
+                        <h5 class="mb-0">Frequently Bought Together</h5>
+                    </div>
+                    <div class="card-body" id="related-items">
+                        <!-- Related items will be rendered here -->
+                    </div>
+                </div>
+
+                <!-- Recently Viewed -->
+
+                <div class="card">
+                    <div class="card-header bg-primary text-white d-flex align-items-center">
+                        <i class="bi bi-eye me-2"></i>
+                        <h5 class="mb-0">Recently Viewed</h5>
+                    </div>
+                    <div class="card-body scroll-container" id="recently-viewed">
+                        <!-- Recently viewed items will be rendered here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Summary Sidebar -->
+            <div class="col-lg-4 col-md-12 sidebar-container">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white d-flex align-items-center">
+                        <i class="bi bi-receipt me-2"></i>
+                        <h5 class="mb-0">Order Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="summary-item">
+                            <span>Subtotal:</span>
+                            <span id="subtotal-all">₹45.00</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Tax (8%):</span>
+                            <span id="tax-all">₹3.60</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Discount (5%):</span>
+                            <span id="discount-all">₹2.25</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Loyalty Points:</span>
+                            <span id="loyalty-discount-all">₹0.00</span>
+                        </div>
+                        <div class="summary-item total">
+                            <span>Grand Total:</span>
+                            <span id="total-all">₹46.35</span>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="promo-code" placeholder="Promo Code">
+                            <button class="btn btn-outline-primary" id="apply-promo-btn">Apply</button>
+                        </div>
+                        <div class="d-flex gap-2 mb-3">
+                            <button class="btn btn-outline-primary flex-fill" id="share-cart-btn"><i
+                                    class="bi bi-share"></i> Share Cart</button>
+                        </div>
+                        <button class="btn btn-primary w-100" id="checkout-btn"><i class="bi bi-arrow-right"></i>
+                            Proceed to Checkout</button>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white d-flex align-items-center">
+                        <i class="bi bi-truck me-2"></i>
+                        <h5 class="mb-0">Delivery Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><i class="bi bi-clock me-2"></i> Estimated delivery: 2-3 business days</p>
+                        <!-- <p><i class="bi bi-geo-alt me-2"></i> Shipping to: Default Address</p> -->
+                        <p><i class="bi bi-pin-map me-2"></i> PIN Code: <span id="pin-code">565435</span></p>
+                        <!-- <button class="btn btn-outline-primary me-2" id="change-address-btn">Change Address</button> -->
+                        <button class="btn btn-outline-primary" id="edit-pin-btn">Edit PIN</button>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="shareModalLabel">Share Your Cart</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Copy the link below to share your cart:</p>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="share-link" readonly>
+                        <button class="btn btn-primary" onclick="copyShareLink()">Copy</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-body"></div>
+        </div>
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+
+    <script>
+        // Constants
+        const TAX_RATE = 0.08;
+        const DISCOUNT_RATE = 0.05;
+        const LOYALTY_POINT_VALUE = 0.01;
+        const MAX_LOYALTY_POINTS = 500;
+
+        // State variables
+        let loyaltyPointsDiscount = 0;
+        let items = [
+            { id: 1, name: 'Aftermarket Brake Pads', price: 10, quantity: 1, image: 'images/breakpad.jpeg' },
+            { id: 2, name: 'Aftermarket Exhaust System', price: 20, quantity: 1, image: 'images/exaust.jpg' },
+            { id: 3, name: 'Aftermarket Air Filter', price: 15, quantity: 1, image: 'images/airfilter.jpeg' }
+        ];
+        let savedForLaterItems = [];
+        let recentlyViewedItems = [
+            { id: 4, name: 'Performance Air Filter', price: 15, image: 'images/airfilter.jpeg' },
+            { id: 5, name: 'Exhaust System', price: 20, image: 'images/exaust.jpg' },
+            { id: 6, name: 'Brake Pads', price: 10, image: 'images/breakpad.jpeg' },
+            { id: 7, name: 'Car Spoiler', price: 50, image: 'images/carspoiler.jpeg' },
+            { id: 8, name: 'Alloy Wheel', price: 100, image: 'images/alloywheel.jpeg' },
+            { id: 9, name: 'Suspension Kit', price: 80, image: 'images/suspention.jpeg' }
+        ];
+        let relatedItems = [
+            { id: 10, name: 'Alloy Wheel', price: 100, image: 'images/alloywheel.jpeg' },
+            { id: 11, name: 'Suspension Kit', price: 80, image: 'images/suspention.jpeg' }
+        ];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize Bootstrap Toasts
+            const toastEl = document.getElementById('toast');
+            if (!toastEl) {
+                console.error('Toast element not found');
+                return;
+            }
+            const toast = new bootstrap.Toast(toastEl);
+
+            // Set up event listeners
+            const setupEventListener = (id, handler) => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('click', handler);
+                } else {
+                    console.warn(`Element with ID ${id} not found`);
+                }
+            };
+
+            setupEventListener('save-cart-btn', saveCart);
+            setupEventListener('share-cart-btn', shareCart);
+            setupEventListener('checkout-btn', proceedToCheckout);
+            setupEventListener('apply-promo-btn', applyPromoCode);
+            setupEventListener('change-address-btn', changeAddress);
+            setupEventListener('light-theme-btn', () => setTheme('light'));
+            setupEventListener('dark-theme-btn', () => setTheme('dark'));
+            setupEventListener('close-checkout-btn', closeCheckout);
+            setupEventListener('back-to-cart-btn', backToCart);
+            setupEventListener('continue-to-shipping-btn', () => {
+                const tab = bootstrap.Tab.getInstance(document.querySelector('#step-shipping'));
+                if (tab) tab.show();
+            });
+            setupEventListener('continue-to-payment-btn', continueToPayment);
+            setupEventListener('back-to-shipping-btn', backToShipping);
+            setupEventListener('place-order-btn', placeOrder);
+
+            // Render initial state
+            renderCartItems();
+            renderSavedItems();
+            renderRelatedItems();
+            renderRecentlyViewedItems();
+            updateCartSummary();
+
+            // Handle responsive behavior
+            handleResponsiveLayout();
+            window.addEventListener('resize', handleResponsiveLayout);
+
+            // Add touch support
+            enableTouchScrolling();
+
+            // Accessibility improvements
+            improveAccessibility();
+
+            // Address card selection
+            document.querySelectorAll('.address-card:not(.add-new)').forEach(card => {
+                card.addEventListener('click', () => {
+                    document.querySelectorAll('.address-card').forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                });
+            });
+
+            // Shipping option selection
+            document.querySelectorAll('.shipping-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    document.querySelectorAll('.shipping-option').forEach(o => o.classList.remove('selected'));
+                    option.classList.add('selected');
+                    const radio = option.querySelector('input[type="radio"]');
+                    if (radio) radio.checked = true;
+                });
+            });
+        });
+
+        // Theme functions
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                document.body.classList.add('dark-theme');
+                const darkBtn = document.getElementById('dark-theme-btn');
+                const lightBtn = document.getElementById('light-theme-btn');
+                if (darkBtn) darkBtn.classList.add('active');
+                if (lightBtn) lightBtn.classList.remove('active');
+            } else {
+                document.body.classList.remove('dark-theme');
+                const lightBtn = document.getElementById('light-theme-btn');
+                const darkBtn = document.getElementById('dark-theme-btn');
+                if (lightBtn) lightBtn.classList.add('active');
+                if (darkBtn) darkBtn.classList.remove('active');
+            }
+        }
+
+        // Toast notification
+        function showToast(message) {
+            const toastEl = document.getElementById('toast');
+            if (!toastEl) return;
+            toastEl.querySelector('.toast-body').textContent = message;
+            const toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        }
+
+        // Cart functions
+        function renderCartItems() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            if (!cartItemsContainer) return;
+
+            cartItemsContainer.innerHTML = '';
+            if (items.length === 0) {
+                cartItemsContainer.innerHTML = '<p class="text-muted">Your cart is empty</p>';
+                return;
+            }
+
+            items.forEach(item => {
+                const subtotal = item.price * item.quantity;
+                const tax = subtotal * TAX_RATE;
+                const discount = subtotal * DISCOUNT_RATE;
+                const total = subtotal + tax - discount;
+
+                const itemElement = document.createElement('div');
+                itemElement.className = 'cart-item d-flex flex-column flex-md-row align-items-md-center';
+                itemElement.id = `item-${item.id}`;
+                itemElement.innerHTML = `
+            <img src="${item.image}" alt="${item.name}" class="item-image">
+            <div class="item-details flex-grow-1">
+                <h5>${item.name} - ₹${item.price.toFixed(2)}</h5>
+                <div class="item-price">
+                    <p>Tax (8%): ₹<span id="tax-${item.id}">${tax.toFixed(2)}</span></p>
+                    <p>Discount (5%): ₹<span id="discount-${item.id}">${discount.toFixed(2)}</span></p>
+                    <p>Total: ₹<span id="total-${item.id}">${total.toFixed(2)}</span></p>
+                </div>
+                <div class="item-actions d-flex flex-wrap gap-2">
+                    <div class="input-group input-group-sm w-auto">
+                        <button class="btn btn-outline-primary" onclick="decreaseQuantity(${item.id})"><i class="bi bi-dash"></i></button>
+                        <span class="input-group-text" id="quantity-${item.id}">${item.quantity}</span>
+                        <button class="btn btn-outline-primary" onclick="increaseQuantity(${item.id})"><i class="bi bi-plus"></i></button>
+                    </div>
+                    <button class="btn btn-outline-primary btn-sm" onclick="saveForLater(${item.id})"><i class="bi bi-bookmark"></i> Save for Later</button>
+                    <button class="btn btn-outline-danger btn-sm" onclick="removeItem(${item.id})"><i class="bi bi-trash"></i> Remove</button>
+                    <button class="btn btn-outline-primary btn-sm" onclick="addToWishlist(${item.id})"><i class="bi bi-heart"></i></button>
+                    <button class="btn btn-primary btn-sm" onclick="buyNow(${item.id})"><i class="bi bi-lightning"></i> Buy Now</button>
+                </div>
+            </div>
+        `;
+                cartItemsContainer.appendChild(itemElement);
+            });
+        }
+
+        function renderSavedItems() {
+            const savedItemsContainer = document.getElementById('saved-items');
+            if (!savedItemsContainer) return;
+
+            savedItemsContainer.innerHTML = '';
+            if (savedForLaterItems.length === 0) {
+                savedItemsContainer.innerHTML = '<p class="text-muted">No saved items</p>';
+                return;
+            }
+
+            savedForLaterItems.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'saved-item d-flex flex-column flex-md-row align-items-md-center';
+                itemElement.id = `saved-item-${item.id}`;
+                itemElement.innerHTML = `
+            <img src="${item.image}" alt="${item.name}" class="item-image">
+            <div class="item-details flex-grow-1">
+                <h5>${item.name} - ₹${item.price.toFixed(2)}</h5>
+                <div class="item-actions d-flex gap-2">
+                    <button class="btn btn-primary btn-sm" onclick="moveToCart(${item.id})"><i class="bi bi-cart"></i> Move to Cart</button>
+                    <button class="btn btn-outline-danger btn-sm" onclick="removeFromSaved(${item.id})"><i class="bi bi-trash"></i></button>
+                </div>
+            </div>
+        `;
+                savedItemsContainer.appendChild(itemElement);
+            });
+        }
+
+        function renderRelatedItems() {
+            const relatedItemsContainer = document.getElementById('related-items');
+            if (!relatedItemsContainer) return;
+
+            relatedItemsContainer.innerHTML = '';
+            relatedItems.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'related-item d-flex flex-column flex-md-row align-items-md-center';
+                itemElement.id = `related-item-${item.id}`;
+                itemElement.innerHTML = `
+            <img src="${item.image}" alt="${item.name}" class="item-image">
+            <div class="item-details flex-grow-1">
+                <h5>${item.name} - ₹${item.price.toFixed(2)}</h5>
+                <button class="btn btn-primary btn-sm" onclick="addToCartFromRelated(${item.id})"><i class="bi bi-cart-plus"></i> Add to Cart</button>
+            </div>
+        `;
+                relatedItemsContainer.appendChild(itemElement);
+            });
+        }
+
+        function renderRecentlyViewedItems() {
+            const scrollContainer = document.getElementById('recently-viewed');
+            if (!scrollContainer) return;
+
+            scrollContainer.innerHTML = '';
+            recentlyViewedItems.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'scroll-item';
+                itemElement.innerHTML = `
+            <img src="${item.image}" alt="${item.name}" class="scroll-item-image">
+            <p>${item.name} - ₹${item.price.toFixed(2)}</p>
+            <button class="btn btn-primary btn-sm" onclick="addToCartFromRecent(${item.id})"><i class="bi bi-cart-plus"></i> Add to Cart</button>
+        `;
+                scrollContainer.appendChild(itemElement);
+            });
+        }
+
+        function updateCartSummary() {
+            let subtotalAll = 0;
+            let taxAll = 0;
+            let discountAll = 0;
+
+            items.forEach(item => {
+                const quantity = item.quantity;
+                const subtotal = item.price * quantity;
+                subtotalAll += subtotal;
+                taxAll += subtotal * TAX_RATE;
+                discountAll += subtotal * DISCOUNT_RATE;
+            });
+
+            const totalAll = subtotalAll + taxAll - discountAll - loyaltyPointsDiscount;
+
+            const updateElement = (id, value) => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = '₹' + value.toFixed(2);
+            };
+
+            updateElement('subtotal-all', subtotalAll);
+            updateElement('tax-all', taxAll);
+            updateElement('discount-all', discountAll);
+            updateElement('loyalty-discount-all', loyaltyPointsDiscount);
+            updateElement('total-all', totalAll);
+        }
+
+        function increaseQuantity(itemId) {
+            const item = items.find(i => i.id === itemId);
+            if (!item) return;
+
+            item.quantity += 1;
+            const quantityElement = document.getElementById(`quantity-${itemId}`);
+            if (quantityElement) quantityElement.textContent = item.quantity;
+
+            const subtotal = item.price * item.quantity;
+            const tax = subtotal * TAX_RATE;
+            const discount = subtotal * DISCOUNT_RATE;
+            const total = subtotal + tax - discount;
+
+            const updateElement = (id, value) => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = value.toFixed(2);
+            };
+
+            updateElement(`tax-${itemId}`, tax);
+            updateElement(`discount-${itemId}`, discount);
+            updateElement(`total-${itemId}`, total);
+
+            updateCartSummary();
+            showToast(`Increased quantity for ${item.name}`);
+        }
+
+        function decreaseQuantity(itemId) {
+            const item = items.find(i => i.id === itemId);
+            if (!item || item.quantity <= 1) return;
+
+            item.quantity -= 1;
+            const quantityElement = document.getElementById(`quantity-${itemId}`);
+            if (quantityElement) quantityElement.textContent = item.quantity;
+
+            const subtotal = item.price * item.quantity;
+            const tax = subtotal * TAX_RATE;
+            const discount = subtotal * DISCOUNT_RATE;
+            const total = subtotal + tax - discount;
+
+            const updateElement = (id, value) => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = value.toFixed(2);
+            };
+
+            updateElement(`tax-${itemId}`, tax);
+            updateElement(`discount-${itemId}`, discount);
+            updateElement(`total-${itemId}`, total);
+
+            updateCartSummary();
+            showToast(`Decreased quantity for ${item.name}`);
+        }
+
+        function removeItem(itemId) {
+            const index = items.findIndex(item => item.id === itemId);
+            if (index === -1) return;
+
+            const item = items[index];
+            items.splice(index, 1);
+            const itemElement = document.getElementById(`item-${itemId}`);
+            if (itemElement) itemElement.remove();
+            updateCartSummary();
+            showToast(`${item.name} removed from cart`);
+            renderCartItems();
+        }
+
+        function saveForLater(itemId) {
+            const index = items.findIndex(item => item.id === itemId);
+            if (index === -1) return;
+
+            const item = items[index];
+            savedForLaterItems.push({ ...item });
+            items.splice(index, 1);
+            updateCartSummary();
+            renderCartItems();
+            renderSavedItems();
+            showToast(`${item.name} saved for later`);
+        }
+
+        function removeFromSaved(itemId) {
+            const index = savedForLaterItems.findIndex(item => item.id === itemId);
+            if (index === -1) return;
+
+            const item = savedForLaterItems[index];
+            savedForLaterItems.splice(index, 1);
+            renderSavedItems();
+            showToast(`${item.name} removed from saved items`);
+        }
+
+        function moveToCart(itemId) {
+            const index = savedForLaterItems.findIndex(item => item.id === itemId);
+            if (index === -1) return;
+
+            const item = savedForLaterItems[index];
+            items.push({ ...item });
+            savedForLaterItems.splice(index, 1);
+            updateCartSummary();
+            renderCartItems();
+            renderSavedItems();
+            showToast(`${item.name} moved to cart`);
+        }
+
+        function addToWishlist(itemId) {
+            const item = items.find(i => i.id === itemId);
+            if (item) {
+                showToast(`${item.name} added to wishlist`);
+            }
+        }
+
+        function buyNow(itemId) {
+            const item = items.find(i => i.id === itemId);
+            if (item) {
+                showToast(`Proceeding to buy ${item.name} now!`);
+            }
+        }
+
+        function saveCart() {
+            showToast("Cart saved successfully!");
+        }
+
+        function shareCart() {
+            const cartData = items.map(item => ({
+                id: item.id,
+                quantity: item.quantity
+            }));
+            const shareUrl = `${window.location.origin}?cart=${encodeURIComponent(JSON.stringify(cartData))}`;
+            const shareLinkInput = document.getElementById('share-link');
+            if (shareLinkInput) shareLinkInput.value = shareUrl;
+
+            const shareModal = new bootstrap.Modal(document.getElementById('shareModal'));
+            shareModal.show();
+        }
+
+        function copyShareLink() {
+            const shareLinkInput = document.getElementById('share-link');
+            if (!shareLinkInput) return;
+            shareLinkInput.select();
+            document.execCommand('copy');
+            showToast('Share link copied to clipboard!');
+        }
+
+        function proceedToCheckout() {
+            if (items.length === 0) {
+                showToast("Your cart is empty!");
+                return;
+            }
+            // Redirect to the new checkout page with cart data
+            const cartData = encodeURIComponent(JSON.stringify(items));
+            window.location.href = `checkout.html?cart=${cartData}`;
+        }
+
+        function closeCheckout() {
+            const checkoutModal = bootstrap.Modal.getInstance(document.getElementById('checkoutModal'));
+            if (checkoutModal) checkoutModal.hide();
+        }
+
+        function backToCart() {
+            const tab = bootstrap.Tab.getInstance(document.querySelector('#step-cart'));
+            if (tab) tab.show();
+        }
+
+        function continueToPayment() {
+            const tab = bootstrap.Tab.getInstance(document.querySelector('#step-payment'));
+            if (tab) tab.show();
+            showToast("Proceeding to payment...");
+        }
+
+        function backToShipping() {
+            const tab = bootstrap.Tab.getInstance(document.querySelector('#step-shipping'));
+            if (tab) tab.show();
+        }
+
+        function placeOrder() {
+            showToast("Order placed successfully!");
+            const tab = bootstrap.Tab.getInstance(document.querySelector('#step-confirmation'));
+            if (tab) tab.show();
+
+            // Clear cart
+            items = [];
+            updateCartSummary();
+            renderCartItems();
+
+            // Close modal after delay
+            setTimeout(() => {
+                closeCheckout();
+            }, 3000);
+        }
+
+        function addToCartFromRecent(itemId) {
+            const item = recentlyViewedItems.find(i => i.id === itemId);
+            if (!item) return;
+
+            const existingItem = items.find(i => i.id === itemId);
+            if (existingItem) {
+                existingItem.quantity += 1;
+                renderCartItems();
+            } else {
+                items.push({ ...item, quantity: 1 });
+                renderCartItems();
+            }
+            updateCartSummary();
+            showToast(`${item.name} added to cart`);
+        }
+
+        function addToCartFromRelated(itemId) {
+            const item = relatedItems.find(i => i.id === itemId);
+            if (!item) return;
+
+            const existingItem = items.find(i => i.id === itemId);
+            if (existingItem) {
+                existingItem.quantity += 1;
+                renderCartItems();
+            } else {
+                items.push({ ...item, quantity: 1 });
+                renderCartItems();
+            }
+            updateCartSummary();
+            showToast(`${item.name} added to cart`);
+        }
+
+        function applyPromoCode() {
+            const promoCodeInput = document.getElementById('promo-code');
+            if (!promoCodeInput) return;
+            const promoCode = promoCodeInput.value.trim();
+            if (!promoCode) {
+                showToast('Please enter a promo code');
+                return;
+            }
+            showToast(`Promo code "${promoCode}" applied successfully!`);
+        }
+
+        function changeAddress() {
+            showToast('Address change functionality will be implemented soon');
+        }
+
+        function handleResponsiveLayout() {
+            const scrollContainers = document.querySelectorAll('.scroll-container');
+            scrollContainers.forEach(container => {
+                container.style.overflowX = 'auto';
+                container.style.webkitOverflowScrolling = 'touch';
+                container.style.scrollBehavior = 'smooth';
+            });
+        }
+
+        function enableTouchScrolling() {
+            const scrollContainers = document.querySelectorAll('.scroll-container');
+            scrollContainers.forEach(container => {
+                let isDown = false;
+                let startX;
+                let scrollLeft;
+
+                container.addEventListener('mousedown', (e) => {
+                    isDown = true;
+                    container.style.cursor = 'grabbing';
+                    startX = e.pageX - container.offsetLeft;
+                    scrollLeft = container.scrollLeft;
+                });
+
+                container.addEventListener('mouseleave', () => {
+                    isDown = false;
+                    container.style.cursor = 'grab';
+                });
+
+                container.addEventListener('mouseup', () => {
+                    isDown = false;
+                    container.style.cursor = 'grab';
+                });
+
+                container.addEventListener('mousemove', (e) => {
+                    if (!isDown) return;
+                    e.preventDefault();
+                    const x = e.pageX - container.offsetLeft;
+                    const walk = (x - startX) * 2;
+                    container.scrollLeft = scrollLeft - walk;
+                });
+            });
+        }
+
+        function improveAccessibility() {
+            document.querySelectorAll('.btn').forEach(button => {
+                if (!button.getAttribute('aria-label') && button.textContent.trim()) {
+                    button.setAttribute('aria-label', button.textContent.trim());
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Tab') {
+                    document.body.classList.add('keyboard-navigation');
+                }
+            });
+
+            document.addEventListener('mousedown', () => {
+                document.body.classList.remove('keyboard-navigation');
+            });
+        }
+    </script>
+</body>
+
+</html>
