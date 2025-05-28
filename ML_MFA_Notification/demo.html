@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multilingual Service Form Demo</title>
+  <style>
+    /* Base Styles */
+    :root {
+      font-family: Arial, sans-serif;
+      line-height: 1.5;
+      font-weight: 400;
+      color: #213547;
+      background-color: #ffffff;
+    }
+
+    /* Navigation Arrows Styles */
+    .nav-arrow {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(0, 0, 0, 0.6);
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+
+    .nav-arrow:hover {
+      background-color: rgba(0, 0, 0, 0.8);
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .left-arrow {
+      left: 20px;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      background-color: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      width: 100%;
+      padding-top: 70px; /* Space for navbar */
+    }
+
+    /* Navbar Styles */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background-color: #000000;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }
+
+    .navbar-title {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    /* App Styles */
+    .app {
+      position: relative;
+      width: 100%;
+      padding: 1rem;
+    }
+
+    .language-selector-container {
+      position: relative;
+      display: inline-block;
+      height: 60px;
+    }
+
+    .language-trigger {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 60px;
+      color: white;
+      padding: 0;
+      margin: 0;
+    }
+
+    .globe-icon {
+      display: inline-block;
+    }
+
+    /* Language Selector Styles */
+    .language-selector {
+      position: absolute;
+      right: 0;
+      top: 60px;
+    }
+
+    .language-panel {
+      position: relative;
+      background-color: white;
+      border-radius: 0;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      min-width: 150px;
+      z-index: 1001;
+      margin-top: 0;
+    }
+
+    .language-swatch {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 15px;
+      border: none;
+      border-bottom: 1px solid #e0e0e0;
+      border-radius: 0;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      color: black;
+      font-weight: 500;
+      background-color: white;
+      background-image: none !important;
+    }
+
+    .language-swatch:last-child {
+      border-bottom: none;
+    }
+
+    .language-swatch:hover {
+      background-color: #f0f0f0;
+    }
+
+    .language-swatch.active {
+      font-weight: bold;
+      background-color: #f0f0f0;
+    }
+
+    .language-name {
+      margin-right: 10px;
+    }
+
+    .checkmark {
+      font-size: 16px;
+    }
+
+    /* Service Form Styles */
+    .service-form-container {
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .service-form {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .form-header {
+      background-color: #000000;
+      color: white;
+      padding: 10px 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .form-header h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .form-buttons {
+      display: flex;
+      gap: 5px;
+    }
+
+    .btn {
+      padding: 5px 15px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .btn-edit {
+      background-color: #cccccc; /* Cement color */
+      color: #000;
+    }
+
+    .btn-exit {
+      background-color: #000000;
+      color: white;
+      border: 1px solid white;
+    }
+
+    .btn-delete {
+      background-color: #cccccc; /* Cement color */
+      color: #000;
+    }
+
+    .form-content {
+      padding: 15px;
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+      gap: 15px;
+    }
+
+    .form-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .form-group label {
+      margin-right: 10px;
+      min-width: 150px;
+      color: #555;
+    }
+
+    .form-control {
+      padding: 5px 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      width: 200px;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      margin-left: 5px;
+    }
+
+    .required {
+      color: red;
+    }
+
+    .operation-detail {
+      border-top: 1px solid #ccc;
+      padding: 15px;
+    }
+
+    .operation-detail h3 {
+      background-color: #000000;
+      color: white;
+      padding: 8px 15px;
+      margin: 0 0 15px 0;
+      font-size: 16px;
+    }
+
+    .operation-controls {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+
+    .operation-code, .operation-description {
+      font-weight: bold;
+      margin-left: 20px;
+    }
+
+    .operation-table {
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      padding: 20px;
+      margin-bottom: 15px;
+      background-color: #e6e6e6; /* Lighter cement color */
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .no-records {
+      color: #777;
+      font-style: italic;
+    }
+
+    .form-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Arrow - Left -->
+  <div class="nav-arrow left-arrow" id="left-nav-arrow">
+    <span style="font-size: 24px;">←</span>
+  </div>
+
+  <nav class="navbar">
+    <div class="navbar-title" id="navTitle">1st Free Service</div>
+    <div class="language-selector-container">
+      <button class="language-trigger" id="languageTrigger" aria-label="Change language">
+        <span class="globe-icon">🌐</span>
+      </button>
+      <div class="language-selector" id="languageSelector" style="display: none;">
+        <div class="language-panel">
+          <button class="language-swatch active" data-lang="en">
+            <span class="language-name">English</span>
+            <span class="checkmark">✓</span>
+          </button>
+          <button class="language-swatch" data-lang="es">
+            <span class="language-name">Español</span>
+          </button>
+          <button class="language-swatch" data-lang="fr">
+            <span class="language-name">Français</span>
+          </button>
+          <button class="language-swatch" data-lang="de">
+            <span class="language-name">Deutsch</span>
+          </button>
+          <button class="language-swatch" data-lang="hi">
+            <span class="language-name">हिन्दी</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="app">
+
+      <div class="service-form-container">
+        <div class="service-form">
+          <div class="form-header">
+            <h2 id="formTitle">1st Free Service</h2>
+            <div class="form-buttons">
+              <button class="btn btn-edit" id="editBtn">Edit</button>
+              <button class="btn btn-exit" id="exitBtn">Exit</button>
+            </div>
+          </div>
+
+          <div class="form-content">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="serviceTypeName" id="serviceTypeNameLabel">
+                  Service Type Name : <span class="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="serviceTypeName"
+                  class="form-control"
+                  value="1st Free Service"
+                  readonly
+                />
+              </div>
+              <div class="form-group checkbox-group">
+                <label id="isActiveLabel">
+                  Is Active?
+                </label>
+                <input type="checkbox" checked readonly />
+              </div>
+              <div class="form-group checkbox-group">
+                <label id="isInstallationLabel">
+                  Is Installation?
+                </label>
+                <input type="checkbox" readonly />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group checkbox-group">
+                <label id="isMandatoryLabel">
+                  Is Mandatory? <span class="required">*</span>
+                </label>
+                <input type="checkbox" readonly />
+              </div>
+              <div class="form-group checkbox-group">
+                <label id="isConsiderForDemandLabel">
+                  Is Consider For Demand?
+                </label>
+                <input type="checkbox" readonly />
+              </div>
+              <div class="form-group checkbox-group">
+                <label id="isWarrantyLabel">
+                  Is Warranty?
+                </label>
+                <input type="checkbox" readonly />
+              </div>
+              <div class="form-group checkbox-group">
+                <label id="isInsuranceLabel">
+                  Is Insurance?
+                </label>
+                <input type="checkbox" readonly />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="serviceDueReading" id="serviceDueReadingLabel">
+                  Service Due Reading :
+                </label>
+                <input
+                  type="text"
+                  id="serviceDueReading"
+                  class="form-control"
+                  value="100"
+                  readonly
+                />
+              </div>
+              <div class="form-group">
+                <label for="serviceDueDays" id="serviceDueDaysLabel">
+                  Service Due Days :
+                </label>
+                <input
+                  type="text"
+                  id="serviceDueDays"
+                  class="form-control"
+                  value="365"
+                  readonly
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="operation-detail">
+            <h3 id="operationDetailLabel">Operation Detail</h3>
+            <div class="operation-controls">
+              <button class="btn btn-edit" id="editOpBtn">Edit</button>
+              <button class="btn btn-delete" id="deleteBtn">Delete</button>
+              <div class="operation-code" id="operationCodeLabel">
+                Operation Code <span class="required">*</span>
+              </div>
+              <div class="operation-description" id="operationDescriptionLabel">
+                Operation Description
+              </div>
+            </div>
+
+            <div class="operation-table">
+              <div class="no-records" id="noRecordsLabel">
+                No Records To View
+              </div>
+            </div>
+
+            <div class="form-footer">
+              <button class="btn btn-edit" id="editFooterBtn">Edit</button>
+              <button class="btn btn-exit" id="exitFooterBtn">Exit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Add navigation functionality when the DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      // Left arrow navigation to Theme 3
+      document.getElementById('left-nav-arrow').addEventListener('click', function() {
+        window.location.href = 'MLTheme3.html';
+      });
+    });
+
+    // Translations
+    const translations = {
+      en: {
+        formTitle: "1st Free Service",
+        serviceTypeName: "Service Type Name",
+        isActive: "Is Active",
+        isInstallation: "Is Installation",
+        isMandatory: "Is Mandatory",
+        isConsiderForDemand: "Is Consider For Demand",
+        isWarranty: "Is Warranty",
+        isInsurance: "Is Insurance",
+        serviceDueReading: "Service Due Reading",
+        serviceDueDays: "Service Due Days",
+        operationDetail: "Operation Detail",
+        edit: "Edit",
+        delete: "Delete",
+        exit: "Exit",
+        operationCode: "Operation Code",
+        operationDescription: "Operation Description",
+        noRecords: "No Records To View"
+      },
+      es: {
+        formTitle: "1er Servicio Gratuito",
+        serviceTypeName: "Nombre del Tipo de Servicio",
+        isActive: "¿Está Activo",
+        isInstallation: "¿Es Instalación",
+        isMandatory: "¿Es Obligatorio",
+        isConsiderForDemand: "¿Considerar Para Demanda",
+        isWarranty: "¿Es Garantía",
+        isInsurance: "¿Es Seguro",
+        serviceDueReading: "Lectura de Vencimiento del Servicio",
+        serviceDueDays: "Días de Vencimiento del Servicio",
+        operationDetail: "Detalle de Operación",
+        edit: "Editar",
+        delete: "Eliminar",
+        exit: "Salir",
+        operationCode: "Código de Operación",
+        operationDescription: "Descripción de Operación",
+        noRecords: "No Hay Registros Para Ver"
+      },
+      fr: {
+        formTitle: "1er Service Gratuit",
+        serviceTypeName: "Nom du Type de Service",
+        isActive: "Est Actif",
+        isInstallation: "Est Installation",
+        isMandatory: "Est Obligatoire",
+        isConsiderForDemand: "Considérer Pour la Demande",
+        isWarranty: "Est Garantie",
+        isInsurance: "Est Assurance",
+        serviceDueReading: "Lecture d'Échéance du Service",
+        serviceDueDays: "Jours d'Échéance du Service",
+        operationDetail: "Détail de l'Opération",
+        edit: "Modifier",
+        delete: "Supprimer",
+        exit: "Quitter",
+        operationCode: "Code d'Opération",
+        operationDescription: "Description de l'Opération",
+        noRecords: "Aucun Enregistrement à Afficher"
+      },
+      de: {
+        formTitle: "1. Kostenloser Service",
+        serviceTypeName: "Servicetypname",
+        isActive: "Ist Aktiv",
+        isInstallation: "Ist Installation",
+        isMandatory: "Ist Obligatorisch",
+        isConsiderForDemand: "Für Nachfrage Berücksichtigen",
+        isWarranty: "Ist Garantie",
+        isInsurance: "Ist Versicherung",
+        serviceDueReading: "Service-Fälligkeitsablesung",
+        serviceDueDays: "Service-Fälligkeitstage",
+        operationDetail: "Betriebsdetail",
+        edit: "Bearbeiten",
+        delete: "Löschen",
+        exit: "Beenden",
+        operationCode: "Betriebscode",
+        operationDescription: "Betriebsbeschreibung",
+        noRecords: "Keine Datensätze zum Anzeigen"
+      },
+      hi: {
+        formTitle: "पहली मुफ्त सेवा",
+        serviceTypeName: "सेवा प्रकार का नाम",
+        isActive: "सक्रिय है",
+        isInstallation: "स्थापना है",
+        isMandatory: "अनिवार्य है",
+        isConsiderForDemand: "मांग के लिए विचार करें",
+        isWarranty: "वारंटी है",
+        isInsurance: "बीमा है",
+        serviceDueReading: "सेवा देय रीडिंग",
+        serviceDueDays: "सेवा देय दिन",
+        operationDetail: "ऑपरेशन विवरण",
+        edit: "संपादित करें",
+        delete: "हटाएं",
+        exit: "बाहर निकलें",
+        operationCode: "ऑपरेशन कोड",
+        operationDescription: "ऑपरेशन विवरण",
+        noRecords: "देखने के लिए कोई रिकॉर्ड नहीं"
+      }
+    };
+
+    // Current language
+    let currentLanguage = 'en';
+
+    // Function to update UI with translations
+    function updateUI(lang) {
+      const t = translations[lang];
+
+      // Update navbar title
+      document.getElementById('navTitle').textContent = t.formTitle;
+
+      // Update all text elements
+      document.getElementById('formTitle').textContent = t.formTitle;
+      document.getElementById('serviceTypeNameLabel').innerHTML = t.serviceTypeName + ' : <span class="required">*</span>';
+      document.getElementById('isActiveLabel').textContent = t.isActive + '?';
+      document.getElementById('isInstallationLabel').textContent = t.isInstallation + '?';
+      document.getElementById('isMandatoryLabel').innerHTML = t.isMandatory + '? <span class="required">*</span>';
+      document.getElementById('isConsiderForDemandLabel').textContent = t.isConsiderForDemand + '?';
+      document.getElementById('isWarrantyLabel').textContent = t.isWarranty + '?';
+      document.getElementById('isInsuranceLabel').textContent = t.isInsurance + '?';
+      document.getElementById('serviceDueReadingLabel').textContent = t.serviceDueReading + ' :';
+      document.getElementById('serviceDueDaysLabel').textContent = t.serviceDueDays + ' :';
+      document.getElementById('operationDetailLabel').textContent = t.operationDetail;
+      document.getElementById('editBtn').textContent = t.edit;
+      document.getElementById('exitBtn').textContent = t.exit;
+      document.getElementById('editOpBtn').textContent = t.edit;
+      document.getElementById('deleteBtn').textContent = t.delete;
+      document.getElementById('operationCodeLabel').innerHTML = t.operationCode + ' <span class="required">*</span>';
+      document.getElementById('operationDescriptionLabel').textContent = t.operationDescription;
+      document.getElementById('noRecordsLabel').textContent = t.noRecords;
+      document.getElementById('editFooterBtn').textContent = t.edit;
+      document.getElementById('exitFooterBtn').textContent = t.exit;
+
+      // Update language swatches
+      const swatches = document.querySelectorAll('.language-swatch');
+      swatches.forEach(swatch => {
+        const swatchLang = swatch.getAttribute('data-lang');
+        if (swatchLang === lang) {
+          swatch.classList.add('active');
+          swatch.innerHTML = `<span class="language-name">${swatch.querySelector('.language-name').textContent}</span><span class="checkmark">✓</span>`;
+        } else {
+          swatch.classList.remove('active');
+          swatch.innerHTML = `<span class="language-name">${swatch.querySelector('.language-name').textContent}</span>`;
+        }
+      });
+
+      // Update current language
+      currentLanguage = lang;
+    }
+
+    // Initialize event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+      // Language trigger button
+      const languageTrigger = document.getElementById('languageTrigger');
+      const languageSelector = document.getElementById('languageSelector');
+
+      languageTrigger.addEventListener('click', function() {
+        const isVisible = languageSelector.style.display === 'block';
+        languageSelector.style.display = isVisible ? 'none' : 'block';
+      });
+
+      // Language swatches
+      const swatches = document.querySelectorAll('.language-swatch');
+      swatches.forEach(swatch => {
+        swatch.addEventListener('click', function() {
+          const lang = this.getAttribute('data-lang');
+          updateUI(lang);
+          languageSelector.style.display = 'none';
+        });
+      });
+
+      // Initialize with English
+      updateUI('en');
+    });
+  </script>
+</body>
+</html>

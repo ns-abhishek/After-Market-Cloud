@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1st Free Service - Material UI</title>
+  <!-- Material Design Lite CSS -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.grey-indigo.min.css">
+  <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: 'Roboto', sans-serif;
+      background-color: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* Navigation Arrows Styles */
+    .nav-arrow {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(0, 0, 0, 0.6);
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 1002; /* Higher than language panel */
+      transition: all 0.3s ease;
+    }
+
+    .nav-arrow:hover {
+      background-color: rgba(0, 0, 0, 0.8);
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .right-arrow {
+      right: 20px;
+    }
+
+    .left-arrow {
+      left: 20px;
+    }
+
+    .service-form-card {
+      width: 100%;
+      max-width: 1200px; /* Increased max-width */
+    }
+
+    .mdl-card__title {
+      background-color: #000000; /* Black header */
+      color: white;
+      height: auto;
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mdl-card__supporting-text {
+      width: auto;
+      padding: 16px;
+    }
+
+    .mdl-card__title-text {
+      font-size: 16px;
+      margin: 0;
+    }
+
+    .mdl-card__actions {
+      display: flex;
+      justify-content: flex-end;
+      padding: 0;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      background-color: #e6e2dd; /* Light cement color footer */
+      min-height: 1px;
+    }
+
+    .empty-footer.mdl-card__actions {
+      padding: 0;
+      margin: 0;
+      height: 1px;
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+      gap: 20px;
+    }
+
+    .no-bottom-margin {
+      margin-bottom: 0;
+    }
+
+    .section-divider {
+      border: none;
+      border-top: 1px solid #e0e0e0;
+      margin: 0 -16px; /* Extend beyond the padding of mdl-card__supporting-text */
+      padding: 0;
+      width: calc(100% + 32px); /* Full width plus the padding of mdl-card__supporting-text */
+    }
+
+    .form-group {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      min-width: auto;
+    }
+
+    .mdl-checkbox {
+      margin-right: 20px;
+    }
+
+    .required {
+      color: red;
+    }
+
+    .operation-detail {
+      margin-top: 0;
+      margin-left: -16px; /* Extend beyond the padding of mdl-card__supporting-text */
+      margin-right: -16px; /* Extend beyond the padding of mdl-card__supporting-text */
+      border: 1px solid #000000;
+      border-top: none; /* Remove top border to connect with divider */
+      border-left: none; /* Remove left border */
+      border-right: none; /* Remove right border */
+      border-radius: 0;
+      width: calc(100% + 32px); /* Full width plus the padding of mdl-card__supporting-text */
+    }
+
+    .operation-header {
+      padding: 0;
+      background-color: #000000; /* Black header */
+      color: white;
+      cursor: pointer;
+    }
+
+    .operation-header-title {
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .operation-arrow {
+      margin-right: 5px;
+      font-size: 18px;
+    }
+
+    .operation-content {
+      padding: 0;
+      border-top: none;
+      display: none;
+      background-color: white;
+    }
+
+    /* Operation Detail Table Styles */
+    .operation-table-container {
+      width: 100%;
+      border: none;
+      table-layout: fixed; /* Ensures the table respects column widths */
+    }
+
+    .operation-table-header {
+      display: flex;
+      background-color: #e6e2dd; /* Light cement color */
+      border-bottom: none;
+    }
+
+    .operation-actions {
+      display: flex;
+      padding: 8px 12px;
+      width: 150px; /* Fixed width for actions column */
+      border-right: none;
+      background-color: #e6e2dd; /* Light cement color */
+      color: black;
+    }
+
+    .action-btn {
+      margin-right: 15px;
+      cursor: pointer;
+      font-weight: normal;
+      font-size: 13px;
+    }
+
+    .operation-column {
+      padding: 8px 12px;
+      font-weight: normal;
+      display: flex;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .operation-code {
+      width: 30%; /* Percentage-based width */
+      border-right: none;
+    }
+
+    .operation-description {
+      flex-grow: 1;
+    }
+
+    .sort-icon {
+      margin-left: 5px;
+      font-size: 18px;
+      color: #000000; /* Black icon */
+    }
+
+    .operation-table-body {
+      min-height: 30px;
+      background-color: white;
+      border-bottom: none;
+    }
+
+    .no-records-message {
+      padding: 10px 15px;
+      text-align: right;
+      color: #333;
+      font-size: 12px;
+    }
+
+    .operation-footer {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px;
+      background-color: #e6e2dd; /* Light cement color footer */
+      border-top: none;
+    }
+
+    .add-button-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .add-record-btn {
+      width: 20px;
+      height: 20px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+    }
+
+    .add-record-btn img {
+      width: 16px;
+      height: 16px;
+    }
+
+    .footer-buttons {
+      display: flex;
+      gap: 5px;
+    }
+
+    .footer-btn {
+      background-color: #e6e2dd; /* Light cement color */
+      border: none;
+      padding: 2px 8px;
+      cursor: pointer;
+      font-size: 12px;
+      border-radius: 0;
+    }
+
+    .edit-btn {
+      background-color: #000000; /* Black */
+      color: white;
+    }
+
+    .exit-btn {
+      background-color: #000000; /* Black background */
+      color: white;
+    }
+
+    .mdl-textfield {
+      width: 100%;
+    }
+
+    .header-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .custom-button {
+      background-color: #e6e2dd; /* Light cement color */
+      color: black;
+      text-transform: none;
+      box-shadow: none;
+      min-width: 60px;
+    }
+
+    .custom-button:hover {
+      background-color: #b8b2a7; /* Darker cement on hover */
+    }
+
+    .language-button {
+      background-color: #e6e2dd !important; /* Light cement background */
+      color: black !important;
+      border: 1px solid #b8b2a7 !important; /* Darker cement border */
+      /* No transitions */
+    }
+
+    /* Removed hover effect for language button */
+
+    .flag-icon {
+      display: inline-block;
+      margin-right: 6px;
+      font-size: 16px;
+    }
+
+    .empty-footer {
+      min-height: 10px;
+      padding: 0;
+    }
+
+    .close-icon {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      color: white;
+      cursor: pointer;
+    }
+
+    /* Language Selection Styles */
+
+    .language-experience {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 900px;
+      max-height: 80vh;
+      background-color: rgba(0,0,0,0.9);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      z-index: 1001;
+      opacity: 0;
+      visibility: hidden;
+      /* No transitions */
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      overflow-y: auto;
+    }
+
+    .language-experience.visible {
+      opacity: 1;
+      visibility: visible;
+      /* No transition, appears instantly */
+    }
+
+    .language-search-container {
+      width: 100%;
+      max-width: 800px;
+      margin-bottom: 20px;
+    }
+
+    .language-search-box {
+      background-color: white;
+      border-radius: 8px;
+      padding: 10px 15px;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .search-icon {
+      color: #666;
+      margin-right: 10px;
+    }
+
+    .language-search-input {
+      border: none;
+      outline: none;
+      width: 100%;
+      font-size: 16px;
+      padding: 5px 0;
+    }
+
+    .language-cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 800px;
+      gap: 20px;
+      padding: 20px;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+
+    .no-results {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      margin-top: 20px;
+      display: none;
+      color: #666;
+    }
+
+    .language-card {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      width: 200px;
+      cursor: pointer;
+      /* Removed transition effects */
+      text-align: center;
+      position: relative;
+      border: 2px solid transparent;
+      margin: 5px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    /* Removed hover effect for language cards */
+
+    .language-card.active {
+      border: 2px solid #000000;
+      background-color: #f5f5f5;
+    }
+
+    .language-card.active::after {
+      content: "✓";
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #000000;
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .language-icon {
+      width: 60px;
+      height: 40px;
+      margin: 0 auto 15px;
+      background-size: cover;
+      background-position: center;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .language-icon[data-lang="en"] {
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjM1IDY1MCIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPg0KPGRlZnM+DQo8ZyBpZD0idW5pb24iPg0KPHVzZSB5PSItLjIxNiIgeGxpbms6aHJlZj0iI3g0Ii8+DQo8dXNlIHk9Ii0uMjE2IiB4bGluazpocmVmPSIjeDN4Ii8+DQo8dXNlIHk9Ii0uMjE2IiB4bGluazpocmVmPSIjeDJ4eCIvPg0KPHVzZSB5PSItLjIxNiIgeGxpbms6aHJlZj0iI3h4eCIvPg0KPC9nPg0KPGcgaWQ9IngiPg0KPHVzZSB5PSItLjIxNiIgeGxpbms6aHJlZj0iI3h4Ii8+DQo8dXNlIHk9Ii0uMjE2IiB4bGluazpocmVmPSIjeHgiIHg9IjI0Ii8+DQo8L2c+DQo8ZyBpZD0ieHgiPg0KPHVzZSB5PSItLjIxNiIgeGxpbms6aHJlZj0iI3giLz4NCjx1c2UgeT0iLS4yMTYiIHhsaW5rOmhyZWY9IiN4IiB4PSIyNCIvPg0KPC9nPg0KPHBhdGggZmlsbD0iI2ZmZiIgaWQ9IngiIGQ9Ik0wLC0xIEwwLjU4Nzc4NSwwLjgwOTAxNyBILTAuOTUxMDU3IEwwLjM4MTI3MSwtMC4zMDkwMTcgTC0wLjIwNjUxNCwxLjUgTDAuMzgxMjcxLDAuODA5MDE3IEwwLjk2ODgyOSwxLjUgTDAuMzgxMjcxLC0wLjMwOTAxNyBMMS43MTM3OTksMC44MDkwMTcgSDAuMTc0OTU3IHoiLz4NCjx1c2UgaWQ9InN0YXIiIHhsaW5rOmhyZWY9IiN4IiB0cmFuc2Zvcm09InNjYWxlKDMwKSIvPg0KPHVzZSBpZD0ieHgiIHhsaW5rOmhyZWY9IiNzdGFyIiB4PSIxMjAiLz4NCjx1c2UgaWQ9Inh4eCIgeGxpbms6aHJlZj0iI3N0YXIiIHg9IjI0MCIvPg0KPHVzZSBpZD0ieHh4eCIgeGxpbms6aHJlZj0iI3N0YXIiIHg9IjM2MCIvPg0KPHVzZSBpZD0ieHh4eHgiIHhsaW5rOmhyZWY9IiNzdGFyIiB4PSI0ODAiLz4NCjx1c2UgaWQ9IjN4IiB4bGluazpocmVmPSIjeHgiIHg9IjEyMCIvPg0KPHVzZSBpZD0iNHgiIHhsaW5rOmhyZWY9IiN4IiB4PSIyNDAiLz4NCjx1c2UgaWQ9IjV4IiB4bGluazpocmVmPSIjeHgiIHg9IjM2MCIvPg0KPHVzZSBpZD0iNngiIHhsaW5rOmhyZWY9IiN4IiB4PSI0ODAiLz4NCjx1c2UgaWQ9IjJ4eCIgeGxpbms6aHJlZj0iI3h4IiB4PSIyNDAiLz4NCjwvZGVmcz4NCjxyZWN0IHdpZHRoPSIxMjM1IiBoZWlnaHQ9IjY1MCIgZmlsbD0iI2JkMzAzOSIvPg0KPHBhdGggZD0iTTAsNTAgSDEyMzUgTTAsMTUwIEgxMjM1IE0wLDI1MCBIMTIzNSBNMCwzNTAgSDEyMzUgTTAsNDUwIEgxMjM1IE0wLDU1MCBIMTIzNSBNMCw2NTAgSDEyMzUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIzMCIvPg0KPHJlY3Qgd2lkdGg9IjQ5NCIgaGVpZ2h0PSIzNTAiIGZpbGw9IiMwMDIxNDciLz4NCjx1c2UgeGxpbms6aHJlZj0iI3VuaW9uIiB0cmFuc2Zvcm09Im1hdHJpeCgwLjUsMCwwLDAuNSw0Ny4wMTY5NywyOC4wMTY5NykiLz4NCjx1c2UgeGxpbms6aHJlZj0iIzZ4IiB0cmFuc2Zvcm09Im1hdHJpeCgwLjUsMCwwLDAuNSw0Ny4wMTY5Nyw2OC4wMTY5NykiLz4NCjx1c2UgeGxpbms6aHJlZj0iI3VuaW9uIiB0cmFuc2Zvcm09Im1hdHJpeCgwLjUsMCwwLDAuNSw0Ny4wMTY5NywxMDguMDE2OTcpIi8+DQo8dXNlIHhsaW5rOmhyZWY9IiM2eCIgdHJhbnNmb3JtPSJtYXRyaXgoMC41LDAsMCwwLjUsNDcuMDE2OTcsMTQ4LjAxNjk3KSIvPg0KPHVzZSB4bGluazpocmVmPSIjdW5pb24iIHRyYW5zZm9ybT0ibWF0cml4KDAuNSwwLDAsMC41LDQ3LjAxNjk3LDE4OC4wMTY5NykiLz4NCjx1c2UgeGxpbms6aHJlZj0iIzV4IiB0cmFuc2Zvcm09Im1hdHJpeCgwLjUsMCwwLDAuNSw0Ny4wMTY5NywyMjguMDE2OTcpIi8+DQo8dXNlIHhsaW5rOmhyZWY9IiN1bmlvbiIgdHJhbnNmb3JtPSJtYXRyaXgoMC41LDAsMCwwLjUsNDcuMDE2OTcsMjY4LjAxNjk3KSIvPg0KPHVzZSB4bGluazpocmVmPSIjNHgiIHRyYW5zZm9ybT0ibWF0cml4KDAuNSwwLDAsMC41LDQ3LjAxNjk3LDMwOC4wMTY5NykiLz4NCjwvc3ZnPg==');
+    }
+
+    .language-icon[data-lang="es"] {
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3NTAgNTAwIj4NCjxyZWN0IHdpZHRoPSI3NTAiIGhlaWdodD0iNTAwIiBmaWxsPSIjYzYwYjFlIi8+DQo8cmVjdCB3aWR0aD0iNzUwIiBoZWlnaHQ9IjI1MCIgeSA9IjEyNSIgZmlsbD0iI2ZmYzQwMCIvPg0KPC9zdmc+DQo=');
+    }
+
+    .language-icon[data-lang="fr"] {
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5MDAgNjAwIj4NCjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNjAwIiBmaWxsPSIjRUQyOTM5Ii8+DQo8cmVjdCB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgZmlsbD0iI2ZmZiIvPg0KPHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSI2MDAiIGZpbGw9IiMwMDIzOTUiLz4NCjwvc3ZnPg0K');
+    }
+
+    .language-icon[data-lang="hi"] {
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgOTAwIDYwMCI+DQo8cmVjdCB3aWR0aD0iOTAwIiBoZWlnaHQ9IjYwMCIgZmlsbD0iI2YyZjJmMiIvPg0KPHJlY3Qgd2lkdGg9IjkwMCIgaGVpZ2h0PSIyMDAiIHk9IjIwMCIgZmlsbD0iI2ZmOTkzMyIvPg0KPHJlY3Qgd2lkdGg9IjkwMCIgaGVpZ2h0PSIyMDAiIHk9IjQwMCIgZmlsbD0iIzEzODgwOCIvPg0KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNDUwLDMwMCkiPg0KPGNpcmNsZSByPSI5MiIgZmlsbD0iIzAwMDA4MCIvPg0KPGNpcmNsZSByPSI4MCIgZmlsbD0iI2YyZjJmMiIvPg0KPGNpcmNsZSByPSIxNiIgZmlsbD0iIzAwMDA4MCIvPg0KPGcgaWQ9ImQyIj4NCjxnIGlkPSJkIj4NCjxnIGlkPSJjIj4NCjxnIGlkPSJiIj4NCjxnIGlkPSJhIj4NCjxjaXJjbGUgcj0iNCIgZmlsbD0iIzAwMDA4MCIgdHJhbnNmb3JtPSJyb3RhdGUoMCkgdHJhbnNsYXRlKDAgLTQwKSIvPg0KPGNpcmNsZSByPSI0IiBmaWxsPSIjMDAwMDgwIiB0cmFuc2Zvcm09InJvdGF0ZSgxNSkgdHJhbnNsYXRlKDAgLTQwKSIvPg0KPC9nPg0KPHVzZSB4bGluazpocmVmPSIjYSIgdHJhbnNmb3JtPSJyb3RhdGUoMzApIi8+DQo8L2c+DQo8dXNlIHhsaW5rOmhyZWY9IiNiIiB0cmFuc2Zvcm09InJvdGF0ZSg2MCkiLz4NCjwvZz4NCjx1c2UgeGxpbms6aHJlZj0iI2MiIHRyYW5zZm9ybT0icm90YXRlKDEyMCkiLz4NCjwvZz4NCjx1c2UgeGxpbms6aHJlZj0iI2QiIHRyYW5zZm9ybT0icm90YXRlKDE4MCkiLz4NCjwvZz4NCjx1c2UgeGxpbms6aHJlZj0iI2QyIiB0cmFuc2Zvcm09InJvdGF0ZSgyNDApIi8+DQo8L2c+DQo8L3N2Zz4NCg==');
+    }
+
+    .flag-icon {
+      display: inline-block;
+      margin-right: 8px;
+      font-size: 16px;
+    }
+
+    .language-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+      font-size: 16px;
+    }
+
+    .language-description {
+      color: #666;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .close-language {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      color: white;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    /* Language Selection Styles */
+    .language-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #000000;
+      color: white;
+      padding: 8px 16px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .language-selector {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .language-selector i {
+      margin-right: 8px;
+    }
+
+    .language-options {
+      position: fixed;
+      top: 40px;
+      right: 16px;
+      background-color: white;
+      border-radius: 4px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      width: 300px;
+      max-width: 90%;
+      z-index: 1001;
+      overflow: hidden;
+      display: none;
+    }
+
+    .language-option {
+      padding: 16px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      /* No transitions */
+    }
+
+    .language-option:last-child {
+      border-bottom: none;
+    }
+
+    /* Removed hover effect for language options */
+
+    .language-option.active {
+      background-color: #e6e2dd;
+    }
+
+    .language-name {
+      font-weight: bold;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+    }
+
+    .language-name::before {
+      content: '';
+      display: inline-block;
+      width: 24px;
+      height: 16px;
+      margin-right: 8px;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .language-name[data-lang="en"]::before {
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjM1IDY1MCIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPg0KPGRlZnM+DQo8ZyBpZD0idW5pb24iPg0KPHVzZSB5PSItLjIxNiIgeGxpbms6aHJlZj0iI3g0Ii8+DQo8dXNlIHk9Ii0uMjE2IiB4bGluazpocmVmPSIjeDN4Ii8+DQo8dXNlIHk9Ii0uMjE2IiB4bGluazpocmVmPSIjeDJ4eCIvPg0KPHVzZSB5PSItLjIxNiIgeGxpbms6aHJlZj0iI3h4eCIvPg0KPC9nPg0KPGcgaWQ9IngiPg0KPHVzZSB5PSItLjIxNiIgeGxpbms6aHJlZj0iI3h4Ii8+DQo8dXNlIHk9Ii0uMjE2IiB4bGluazpocmVmPSIjeHgiIHg9IjI0Ii8+DQo8L2c+DQo8ZyBpZD0ieHgiPg0KPHVzZSB5PSItLjIxNiIgeGxpbms6aHJlZj0iI3giLz4NCjx1c2UgeT0iLS4yMTYiIHhsaW5rOmhyZWY9IiN4IiB4PSIyNCIvPg0KPC9nPg0KPHBhdGggZmlsbD0iI2ZmZiIgaWQ9IngiIGQ9Ik0wLC0xIEwwLjU4Nzc4NSwwLjgwOTAxNyBILTAuOTUxMDU3IEwwLjM4MTI3MSwtMC4zMDkwMTcgTC0wLjIwNjUxNCwxLjUgTDAuMzgxMjcxLDAuODA5MDE3IEwwLjk2ODgyOSwxLjUgTDAuMzgxMjcxLC0wLjMwOTAxNyBMMS43MTM3OTksMC44MDkwMTcgSDAuMTc0OTU3IHoiLz4NCjx1c2UgaWQ9InN0YXIiIHhsaW5rOmhyZWY9IiN4IiB0cmFuc2Zvcm09InNjYWxlKDMwKSIvPg0KPHVzZSBpZD0ieHgiIHhsaW5rOmhyZWY9IiNzdGFyIiB4PSIxMjAiLz4NCjx1c2UgaWQ9Inh4eCIgeGxpbms6aHJlZj0iI3N0YXIiIHg9IjI0MCIvPg0KPHVzZSBpZD0ieHh4eCIgeGxpbms6aHJlZj0iI3N0YXIiIHg9IjM2MCIvPg0KPHVzZSBpZD0ieHh4eHgiIHhsaW5rOmhyZWY9IiNzdGFyIiB4PSI0ODAiLz4NCjx1c2UgaWQ9IjN4IiB4bGluazpocmVmPSIjeHgiIHg9IjEyMCIvPg0KPHVzZSBpZD0iNHgiIHhsaW5rOmhyZWY9IiN4IiB4PSIyNDAiLz4NCjx1c2UgaWQ9IjV4IiB4bGluazpocmVmPSIjeHgiIHg9IjM2MCIvPg0KPHVzZSBpZD0iNngiIHhsaW5rOmhyZWY9IiN4IiB4PSI0ODAiLz4NCjx1c2UgaWQ9IjJ4eCIgeGxpbms6aHJlZj0iI3h4IiB4PSIyNDAiLz4NCjwvZGVmcz4NCjxyZWN0IHdpZHRoPSIxMjM1IiBoZWlnaHQ9IjY1MCIgZmlsbD0iI2JkMzAzOSIvPg0KPHBhdGggZD0iTTAsNTAgSDEyMzUgTTAsMTUwIEgxMjM1IE0wLDI1MCBIMTIzNSBNMCwzNTAgSDEyMzUgTTAsNDUwIEgxMjM1IE0wLDU1MCBIMTIzNSBNMCw2NTAgSDEyMzUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIzMCIvPg0KPHJlY3Qgd2lkdGg9IjQ5NCIgaGVpZ2h0PSIzNTAiIGZpbGw9IiMwMDIxNDciLz4NCjx1c2UgeGxpbms6aHJlZj0iI3VuaW9uIiB0cmFuc2Zvcm09Im1hdHJpeCgwLjUsMCwwLDAuNSw0Ny4wMTY5NywyOC4wMTY5NykiLz4NCjx1c2UgeGxpbms6aHJlZj0iIzZ4IiB0cmFuc2Zvcm09Im1hdHJpeCgwLjUsMCwwLDAuNSw0Ny4wMTY5Nyw2OC4wMTY5NykiLz4NCjx1c2UgeGxpbms6aHJlZj0iI3VuaW9uIiB0cmFuc2Zvcm09Im1hdHJpeCgwLjUsMCwwLDAuNSw0Ny4wMTY5NywxMDguMDE2OTcpIi8+DQo8dXNlIHhsaW5rOmhyZWY9IiM2eCIgdHJhbnNmb3JtPSJtYXRyaXgoMC41LDAsMCwwLjUsNDcuMDE2OTcsMTQ4LjAxNjk3KSIvPg0KPHVzZSB4bGluazpocmVmPSIjdW5pb24iIHRyYW5zZm9ybT0ibWF0cml4KDAuNSwwLDAsMC41LDQ3LjAxNjk3LDE4OC4wMTY5NykiLz4NCjx1c2UgeGxpbms6aHJlZj0iIzV4IiB0cmFuc2Zvcm09Im1hdHJpeCgwLjUsMCwwLDAuNSw0Ny4wMTY5NywyMjguMDE2OTcpIi8+DQo8dXNlIHhsaW5rOmhyZWY9IiN1bmlvbiIgdHJhbnNmb3JtPSJtYXRyaXgoMC41LDAsMCwwLjUsNDcuMDE2OTcsMjY4LjAxNjk3KSIvPg0KPHVzZSB4bGluazpocmVmPSIjNHgiIHRyYW5zZm9ybT0ibWF0cml4KDAuNSwwLDAsMC41LDQ3LjAxNjk3LDMwOC4wMTY5NykiLz4NCjwvc3ZnPg==');
+    }
+
+    .language-name[data-lang="es"]::before {
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3NTAgNTAwIj4NCjxyZWN0IHdpZHRoPSI3NTAiIGhlaWdodD0iNTAwIiBmaWxsPSIjYzYwYjFlIi8+DQo8cmVjdCB3aWR0aD0iNzUwIiBoZWlnaHQ9IjI1MCIgeSA9IjEyNSIgZmlsbD0iI2ZmYzQwMCIvPg0KPC9zdmc+DQo=');
+    }
+
+    .language-name[data-lang="fr"]::before {
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5MDAgNjAwIj4NCjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNjAwIiBmaWxsPSIjRUQyOTM5Ii8+DQo8cmVjdCB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgZmlsbD0iI2ZmZiIvPg0KPHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSI2MDAiIGZpbGw9IiMwMDIzOTUiLz4NCjwvc3ZnPg0K');
+    }
+
+    .language-name[data-lang="hi"]::before {
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgOTAwIDYwMCI+DQo8cmVjdCB3aWR0aD0iOTAwIiBoZWlnaHQ9IjYwMCIgZmlsbD0iI2YyZjJmMiIvPg0KPHJlY3Qgd2lkdGg9IjkwMCIgaGVpZ2h0PSIyMDAiIHk9IjIwMCIgZmlsbD0iI2ZmOTkzMyIvPg0KPHJlY3Qgd2lkdGg9IjkwMCIgaGVpZ2h0PSIyMDAiIHk9IjQwMCIgZmlsbD0iIzEzODgwOCIvPg0KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNDUwLDMwMCkiPg0KPGNpcmNsZSByPSI5MiIgZmlsbD0iIzAwMDA4MCIvPg0KPGNpcmNsZSByPSI4MCIgZmlsbD0iI2YyZjJmMiIvPg0KPGNpcmNsZSByPSIxNiIgZmlsbD0iIzAwMDA4MCIvPg0KPGcgaWQ9ImQyIj4NCjxnIGlkPSJkIj4NCjxnIGlkPSJjIj4NCjxnIGlkPSJiIj4NCjxnIGlkPSJhIj4NCjxjaXJjbGUgcj0iNCIgZmlsbD0iIzAwMDA4MCIgdHJhbnNmb3JtPSJyb3RhdGUoMCkgdHJhbnNsYXRlKDAgLTQwKSIvPg0KPGNpcmNsZSByPSI0IiBmaWxsPSIjMDAwMDgwIiB0cmFuc2Zvcm09InJvdGF0ZSgxNSkgdHJhbnNsYXRlKDAgLTQwKSIvPg0KPC9nPg0KPHVzZSB4bGluazpocmVmPSIjYSIgdHJhbnNmb3JtPSJyb3RhdGUoMzApIi8+DQo8L2c+DQo8dXNlIHhsaW5rOmhyZWY9IiNiIiB0cmFuc2Zvcm09InJvdGF0ZSg2MCkiLz4NCjwvZz4NCjx1c2UgeGxpbms6aHJlZj0iI2MiIHRyYW5zZm9ybT0icm90YXRlKDEyMCkiLz4NCjwvZz4NCjx1c2UgeGxpbms6aHJlZj0iI2QiIHRyYW5zZm9ybT0icm90YXRlKDE4MCkiLz4NCjwvZz4NCjx1c2UgeGxpbms6aHJlZj0iI2QyIiB0cmFuc2Zvcm09InJvdGF0ZSgyNDApIi8+DQo8L2c+DQo8L3N2Zz4NCg==');
+    }
+
+    .language-description {
+      color: #666;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Arrows -->
+  <div class="nav-arrow left-arrow" id="left-nav-arrow">
+    <i class="material-icons">arrow_back</i>
+  </div>
+  <div class="nav-arrow right-arrow" id="right-nav-arrow">
+    <i class="material-icons">arrow_forward</i>
+  </div>
+
+
+  <!-- Language Experience Panel -->
+  <div class="language-experience" id="languageExperience">
+    <button class="close-language" id="closeLanguage">×</button>
+
+    <!-- Language Search Bar -->
+    <div class="language-search-container">
+      <div class="language-search-box">
+        <i class="material-icons search-icon">search</i>
+        <input type="text" id="languageSearch" class="language-search-input" placeholder="Search language or type 'escape' to exit..." autofocus>
+      </div>
+    </div>
+
+    <div class="language-cards" id="languageCards">
+      <div class="language-card active" data-lang="en" data-search="english">
+        <div class="language-icon">🇺🇸</div>
+        <div class="language-title">English</div>
+        <div class="language-description">Experience the service form in English - the global language of business and technology</div>
+      </div>
+      <div class="language-card" data-lang="es" data-search="espanol spanish español">
+        <div class="language-icon">🇪🇸</div>
+        <div class="language-title">Español</div>
+        <div class="language-description">Experimente el formulario de servicio en español - un idioma con rica historia y cultura</div>
+      </div>
+      <div class="language-card" data-lang="fr" data-search="francais french français">
+        <div class="language-icon">🇫🇷</div>
+        <div class="language-title">Français</div>
+        <div class="language-description">Découvrez le formulaire de service en français - la langue de l'élégance et de la diplomatie</div>
+      </div>
+      <div class="language-card" data-lang="hi" data-search="hindi हिंदी indian india">
+        <div class="language-icon">🇮🇳</div>
+        <div class="language-title">हिंदी (Hindi)</div>
+        <div class="language-description">सेवा प्रपत्र का हिंदी में अनुभव करें - भारत की सबसे अधिक बोली जाने वाली भाषा</div>
+      </div>
+      <div class="language-card" data-lang="de" data-search="german deutsch germany">
+        <div class="language-icon">🇩🇪</div>
+        <div class="language-title">Deutsch</div>
+        <div class="language-description">Erleben Sie das Serviceformular auf Deutsch - eine präzise und strukturierte Sprache</div>
+      </div>
+      <div class="language-card" data-lang="it" data-search="italian italiano italy">
+        <div class="language-icon">🇮🇹</div>
+        <div class="language-title">Italiano</div>
+        <div class="language-description">Prova il modulo di servizio in italiano - la lingua dell'arte e della cultura</div>
+      </div>
+      <div class="language-card" data-lang="pt" data-search="portuguese portugues português brazil portugal">
+        <div class="language-icon">🇵🇹</div>
+        <div class="language-title">Português</div>
+        <div class="language-description">Experimente o formulário de serviço em português - falado em vários continentes</div>
+      </div>
+      <div class="language-card" data-lang="ja" data-search="japanese japan nihongo">
+        <div class="language-icon">🇯🇵</div>
+        <div class="language-title">日本語 (Japanese)</div>
+        <div class="language-description">サービスフォームを日本語でご利用ください - 伝統と革新の言語</div>
+      </div>
+    </div>
+
+    <!-- No Results Message -->
+    <div class="no-results" id="noResults">
+      No languages found matching your search.
+    </div>
+  </div>
+
+  <div class="service-form-card mdl-card mdl-shadow--2dp">
+    <div class="mdl-card__title">
+      <h2 class="mdl-card__title-text">1st Free Service</h2>
+      <div class="header-buttons">
+        <button class="mdl-button mdl-js-button mdl-button--raised custom-button" id="editBtn">
+          Edit
+        </button>
+        <button class="mdl-button mdl-js-button mdl-button--raised custom-button language-button" id="languageBtn">
+          <span class="flag-icon" id="currentFlag">🇺🇸</span>
+          <span id="currentLang">English</span>
+        </button>
+        <button class="mdl-button mdl-js-button mdl-button--raised custom-button" id="exitBtn">
+          Exit
+        </button>
+      </div>
+    </div>
+
+    <div class="mdl-card__supporting-text">
+      <div class="form-row">
+        <div class="form-group">
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="text" id="serviceTypeName" value="1st Free Service">
+            <label class="mdl-textfield__label" for="serviceTypeName">Service Type Name <span class="required">*</span></label>
+          </div>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="isActive">
+            <input type="checkbox" id="isActive" class="mdl-checkbox__input">
+            <span class="mdl-checkbox__label">Is Active?</span>
+          </label>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="isInstallation">
+            <input type="checkbox" id="isInstallation" class="mdl-checkbox__input">
+            <span class="mdl-checkbox__label">Is Installation?</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group checkbox-group">
+          <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="isMandatory">
+            <input type="checkbox" id="isMandatory" class="mdl-checkbox__input">
+            <span class="mdl-checkbox__label">Is Mandatory?</span>
+          </label>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="isConsiderForDemand">
+            <input type="checkbox" id="isConsiderForDemand" class="mdl-checkbox__input">
+            <span class="mdl-checkbox__label">Is Consider For Demand?</span>
+          </label>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="isWarranty">
+            <input type="checkbox" id="isWarranty" class="mdl-checkbox__input">
+            <span class="mdl-checkbox__label">Is Warranty?</span>
+          </label>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="isInsurance">
+            <input type="checkbox" id="isInsurance" class="mdl-checkbox__input">
+            <span class="mdl-checkbox__label">Is Insurance?</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-row no-bottom-margin">
+        <div class="form-group">
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="text" id="serviceDueReading" value="100">
+            <label class="mdl-textfield__label" for="serviceDueReading">Service Due Reading</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="text" id="serviceDueDays" value="365">
+            <label class="mdl-textfield__label" for="serviceDueDays">Service Due Days</label>
+          </div>
+        </div>
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="operation-detail">
+        <div class="operation-header" id="operationHeader">
+          <div class="operation-header-title">
+            <i class="material-icons operation-arrow">arrow_drop_down</i>
+            <span>Operation Detail</span>
+          </div>
+        </div>
+        <div class="operation-content" id="operationContent">
+          <!-- Operation Detail Table -->
+          <div class="operation-table-container">
+            <div class="operation-table-header">
+              <div class="operation-actions">
+                <span class="action-btn">Edit</span>
+                <span class="action-btn">Delete</span>
+              </div>
+              <div class="operation-column operation-code">
+                <span>Operation Code</span>
+                <span class="required">*</span>
+                <i class="material-icons sort-icon">arrow_drop_down</i>
+              </div>
+              <div class="operation-column operation-description">
+                <span>Operation Description</span>
+              </div>
+            </div>
+            <div class="operation-table-body">
+              <div class="no-records-message">
+                <span>No Records To View</span>
+              </div>
+            </div>
+          </div>
+          <div class="operation-footer">
+            <div class="add-button-container">
+              <button class="add-record-btn">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48bGluZSB4MT0iMTIiIHkxPSI1IiB4Mj0iMTIiIHkyPSIxOSI+PC9saW5lPjxsaW5lIHgxPSI1IiB5MT0iMTIiIHgyPSIxOSIgeTI9IjEyIj48L2xpbmU+PC9zdmc+" alt="Add" />
+              </button>
+            </div>
+            <div class="footer-buttons">
+              <button class="footer-btn edit-btn">Edit</button>
+              <button class="footer-btn exit-btn">Exit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer completely removed -->
+  </div>
+
+  <script>
+    // Simple JavaScript to toggle the operation detail section
+    document.getElementById('operationHeader').addEventListener('click', function() {
+      const content = document.getElementById('operationContent');
+      const arrow = this.querySelector('.operation-arrow');
+
+      if (content.style.display === 'block') {
+        content.style.display = 'none';
+        arrow.textContent = 'arrow_right';
+      } else {
+        content.style.display = 'block';
+        arrow.textContent = 'arrow_drop_down';
+      }
+    });
+
+    // Language selection functionality
+    const languageBtn = document.getElementById('languageBtn');
+    const languageExperience = document.getElementById('languageExperience');
+    const closeLanguage = document.getElementById('closeLanguage');
+    const languageCards = document.querySelectorAll('.language-card');
+    const languageSearch = document.getElementById('languageSearch');
+    const noResults = document.getElementById('noResults');
+    const languageCardsContainer = document.getElementById('languageCards');
+
+    // Track current language
+    let currentLanguage = 'en';
+
+    // Toggle language experience visibility from header button
+    languageBtn.addEventListener('click', function() {
+      languageExperience.classList.add('visible');
+      // Focus on search input when panel opens immediately
+      languageSearch.focus();
+    });
+
+    // Add keyboard event listener for Escape key
+    languageSearch.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        // Close the language panel
+        languageExperience.classList.remove('visible');
+
+        // Clear search and reset card visibility
+        languageSearch.value = '';
+        languageCards.forEach(card => {
+          card.style.display = 'block';
+        });
+        noResults.style.display = 'none';
+        languageCardsContainer.style.display = 'flex';
+      }
+    });
+
+    // Search functionality
+    languageSearch.addEventListener('input', function() {
+      const searchTerm = this.value.toLowerCase().trim();
+      let hasResults = false;
+
+      // Check for escape keyword
+      if (searchTerm === 'escape' || searchTerm === 'esc') {
+        // Close the language panel
+        languageExperience.classList.remove('visible');
+
+        // Clear search and reset card visibility
+        languageSearch.value = '';
+        languageCards.forEach(card => {
+          card.style.display = 'block';
+        });
+        noResults.style.display = 'none';
+        languageCardsContainer.style.display = 'flex';
+        return;
+      }
+
+      // Filter language cards based on search term
+      languageCards.forEach(card => {
+        const searchData = card.getAttribute('data-search').toLowerCase();
+        const langTitle = card.querySelector('.language-title').textContent.toLowerCase();
+
+        // Check if search term matches the beginning of any word in searchData or langTitle
+        const isMatch = searchTerm === '' ||
+                        searchData.split(' ').some(word => word.startsWith(searchTerm)) ||
+                        langTitle.startsWith(searchTerm);
+
+        if (isMatch) {
+          card.style.display = 'block';
+          hasResults = true;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Show/hide no results message
+      noResults.style.display = hasResults ? 'none' : 'block';
+      languageCardsContainer.style.display = hasResults ? 'flex' : 'none';
+    });
+
+    // Close language experience and clear search
+    closeLanguage.addEventListener('click', function() {
+      // Hide the panel
+      languageExperience.classList.remove('visible');
+
+      // Clear search and reset card visibility
+      languageSearch.value = '';
+      languageCards.forEach(card => {
+        card.style.display = 'block';
+      });
+      noResults.style.display = 'none';
+      languageCardsContainer.style.display = 'flex';
+    });
+
+    // Function to update the active language card
+    function updateActiveLanguageCard() {
+      // Remove active class from all cards
+      languageCards.forEach(card => {
+        card.classList.remove('active');
+        // Add active class to the current language card
+        if (card.getAttribute('data-lang') === currentLanguage) {
+          card.classList.add('active');
+        }
+      });
+    }
+
+    // Language selection
+    languageCards.forEach(card => {
+      card.addEventListener('click', function() {
+        const lang = this.getAttribute('data-lang');
+        const langTitle = this.querySelector('.language-title').textContent;
+
+        // Update current language
+        currentLanguage = lang;
+
+        // Update active state
+        updateActiveLanguageCard();
+
+        // Update language button text
+        document.getElementById('currentLang').textContent = langTitle;
+
+        // Update flag icon
+        const flagEmoji = this.querySelector('.language-icon').textContent;
+        document.getElementById('currentFlag').textContent = flagEmoji;
+
+        // Hide language experience after selection
+        languageExperience.classList.remove('visible');
+
+        // Clear search input and reset all cards visibility
+        languageSearch.value = '';
+        languageCards.forEach(card => {
+          card.style.display = 'block';
+        });
+        noResults.style.display = 'none';
+        languageCardsContainer.style.display = 'flex';
+
+        // Update form text based on selected language
+        updateFormLanguage(lang);
+      });
+    });
+
+    // When opening the language panel, ensure the current language is highlighted
+    languageBtn.addEventListener('click', updateActiveLanguageCard);
+
+    // Function to update form text based on selected language
+    function updateFormLanguage(lang) {
+      const translations = {
+        'en': {
+          'formTitle': '1st Free Service',
+          'serviceTypeName': 'Service Type Name',
+          'isActive': 'Is Active?',
+          'isInstallation': 'Is Installation?',
+          'isMandatory': 'Is Mandatory?',
+          'isConsiderForDemand': 'Is Consider For Demand?',
+          'isWarranty': 'Is Warranty?',
+          'isInsurance': 'Is Insurance?',
+          'serviceDueReading': 'Service Due Reading',
+          'serviceDueDays': 'Service Due Days',
+          'operationDetail': 'Operation Detail',
+          'edit': 'Edit',
+          'exit': 'Exit'
+        },
+        'es': {
+          'formTitle': 'Primer Servicio Gratuito',
+          'serviceTypeName': 'Nombre del Tipo de Servicio',
+          'isActive': '¿Está Activo?',
+          'isInstallation': '¿Es Instalación?',
+          'isMandatory': '¿Es Obligatorio?',
+          'isConsiderForDemand': '¿Considerar Para Demanda?',
+          'isWarranty': '¿Es Garantía?',
+          'isInsurance': '¿Es Seguro?',
+          'serviceDueReading': 'Lectura de Vencimiento',
+          'serviceDueDays': 'Días de Vencimiento',
+          'operationDetail': 'Detalle de Operación',
+          'edit': 'Editar',
+          'exit': 'Salir'
+        },
+        'fr': {
+          'formTitle': '1er Service Gratuit',
+          'serviceTypeName': 'Nom du Type de Service',
+          'isActive': 'Est Actif?',
+          'isInstallation': 'Est Installation?',
+          'isMandatory': 'Est Obligatoire?',
+          'isConsiderForDemand': 'Considérer Pour Demande?',
+          'isWarranty': 'Est Garantie?',
+          'isInsurance': 'Est Assurance?',
+          'serviceDueReading': 'Lecture d\'Échéance',
+          'serviceDueDays': 'Jours d\'Échéance',
+          'operationDetail': 'Détail d\'Opération',
+          'edit': 'Modifier',
+          'exit': 'Quitter'
+        },
+        'hi': {
+          'formTitle': 'पहली मुफ्त सेवा',
+          'serviceTypeName': 'सेवा प्रकार का नाम',
+          'isActive': 'सक्रिय है?',
+          'isInstallation': 'स्थापना है?',
+          'isMandatory': 'अनिवार्य है?',
+          'isConsiderForDemand': 'मांग के लिए विचार करें?',
+          'isWarranty': 'वारंटी है?',
+          'isInsurance': 'बीमा है?',
+          'serviceDueReading': 'सेवा देय रीडिंग',
+          'serviceDueDays': 'सेवा देय दिन',
+          'operationDetail': 'ऑपरेशन विवरण',
+          'edit': 'संपादित करें',
+          'exit': 'बाहर निकलें'
+        }
+      };
+
+      const t = translations[lang] || translations['en'];
+
+      // Update form elements with translated text
+      document.querySelector('.mdl-card__title-text').textContent = t.formTitle;
+      document.querySelector('label[for="serviceTypeName"]').innerHTML = t.serviceTypeName + ' <span class="required">*</span>';
+      document.querySelector('label[for="isActive"] .mdl-checkbox__label').textContent = t.isActive;
+      document.querySelector('label[for="isInstallation"] .mdl-checkbox__label').textContent = t.isInstallation;
+      document.querySelector('label[for="isMandatory"] .mdl-checkbox__label').textContent = t.isMandatory;
+      document.querySelector('label[for="isConsiderForDemand"] .mdl-checkbox__label').textContent = t.isConsiderForDemand;
+      document.querySelector('label[for="isWarranty"] .mdl-checkbox__label').textContent = t.isWarranty;
+      document.querySelector('label[for="isInsurance"] .mdl-checkbox__label').textContent = t.isInsurance;
+      document.querySelector('label[for="serviceDueReading"]').textContent = t.serviceDueReading;
+      document.querySelector('label[for="serviceDueDays"]').textContent = t.serviceDueDays;
+      document.querySelector('#operationHeader span').textContent = t.operationDetail;
+
+      // Update header buttons
+      document.getElementById('editBtn').textContent = t.edit;
+      document.getElementById('exitBtn').textContent = t.exit;
+    }
+
+    // Navigation arrows functionality
+    document.getElementById('left-nav-arrow').addEventListener('click', function() {
+      window.location.href = 'MLTheme_1.html';
+    });
+
+    document.getElementById('right-nav-arrow').addEventListener('click', function() {
+      window.location.href = 'MLTheme3.html';
+    });
+  </script>
+</body>
+</html>

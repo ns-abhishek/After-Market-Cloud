@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multilingual Service Form</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Navigation Arrows Styles */
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .nav-arrow:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .right-arrow {
+            right: 20px;
+        }
+
+        .left-arrow {
+            left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation Arrow - Left (to Home) -->
+        <div class="nav-arrow left-arrow" id="left-nav-arrow">
+            <span class="material-icons">arrow_back</span>
+        </div>
+
+        <!-- Navigation Arrow - Right -->
+        <div class="nav-arrow right-arrow" id="right-nav-arrow">
+            <span class="material-icons">arrow_forward</span>
+        </div>
+
+        <div class="form-container">
+            <div class="form-header">
+                <h1 id="form-title">1st Free Service</h1>
+                <div class="form-buttons">
+                    <button id="btn-edit" class="header-button">Edit</button>
+                    <button id="btn-exit" class="header-button">Exit</button>
+                    <button id="language-toggle" class="header-button language-button">
+                        <span class="material-icons">language</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <table class="form-table">
+                    <tr>
+                        <td><label id="label-service-type-name" for="service-type-name" class="required">Service Type Name</label></td>
+                        <td><input type="text" id="service-type-name" name="service-type-name" value="1st Free Service" class="full-width"></td>
+                        <td><label id="label-is-active" for="is-active">Is Active?</label></td>
+                        <td><input type="checkbox" id="is-active" name="is-active" checked></td>
+                    </tr>
+                    <tr>
+                        <td><label id="label-is-mandatory" for="is-mandatory">Is Mandatory?</label></td>
+                        <td><input type="checkbox" id="is-mandatory" name="is-mandatory"></td>
+                        <td><label id="label-is-warranty" for="is-warranty">Is Warranty?</label></td>
+                        <td><input type="checkbox" id="is-warranty" name="is-warranty"></td>
+                    </tr>
+                    <tr>
+                        <td><label id="label-consider-demand" for="consider-demand">Is Consider For Demand?</label></td>
+                        <td><input type="checkbox" id="consider-demand" name="consider-demand"></td>
+                        <td><label id="label-is-insurance" for="is-insurance">Is Insurance?</label></td>
+                        <td><input type="checkbox" id="is-insurance" name="is-insurance"></td>
+                    </tr>
+                    <tr>
+                        <td><label id="label-service-due-reading" for="service-due-reading">Service Due Reading</label></td>
+                        <td><input type="text" id="service-due-reading" name="service-due-reading" value="100"></td>
+                        <td><label id="label-service-due-days" for="service-due-days">Service Due Days</label></td>
+                        <td><input type="text" id="service-due-days" name="service-due-days" value="365"></td>
+                    </tr>
+                </table>
+
+                <div class="section-header">
+                    <h2 id="operation-detail">Operation Detail</h2>
+                </div>
+
+                <div class="operation-table-container">
+                    <table class="operation-table">
+                        <thead>
+                            <tr>
+                                <th class="action-column">Edit</th>
+                                <th class="action-column">Delete</th>
+                                <th id="th-operation-code" class="required">Operation Code</th>
+                                <th id="th-operation-description">Operation Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="4" class="no-records" id="no-records-message">No Records To View</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="form-actions">
+                    <button id="btn-edit-bottom" class="action-button">Edit</button>
+                    <button id="btn-exit-bottom" class="action-button">Exit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Language Selection Menu -->
+    <div class="language-menu" id="language-menu">
+        <button class="language-option" data-lang="en">EN</button>
+        <button class="language-option" data-lang="es">ES</button>
+        <button class="language-option" data-lang="fr">FR</button>
+        <button class="language-option" data-lang="de">DE</button>
+        <button class="language-option" data-lang="hi">HI</button>
+    </div>
+
+    <!-- Overlay for dimming effect -->
+    <div class="dimming-overlay" id="dimming-overlay"></div>
+
+    <script src="translations.js"></script>
+    <script src="script.js"></script>
+
+    <!-- Navigation Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Left arrow navigation to Home page
+            const leftArrow = document.getElementById('left-nav-arrow');
+            leftArrow.addEventListener('click', function() {
+                window.location.href = 'Home-new.html';
+            });
+
+            // Right arrow navigation to Theme 2
+            const rightArrow = document.getElementById('right-nav-arrow');
+            rightArrow.addEventListener('click', function() {
+                window.location.href = 'material-ui-static.html';
+            });
+        });
+    </script>
+</body>
+</html>

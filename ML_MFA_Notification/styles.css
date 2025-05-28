@@ -1,0 +1,357 @@
+:root {
+    --primary-color: #000000; /* Black */
+    --secondary-color: #8c8c8c; /* Cement */
+    --accent-color: #555555;
+    --text-color: #000;
+    --light-gray: #f5f5f5;
+    --medium-gray: #e0e0e0;
+    --dark-gray: #888;
+    --white: #fff;
+    --header-bg: #000000; /* Black */
+    --table-header-bg: #000000; /* Black */
+    --table-border: #ccc;
+    --section-header-bg: #000000; /* Black */
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--light-gray);
+    color: var(--text-color);
+    line-height: 1.4;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0;
+    margin-top: 190px; /* 5cm ≈ 190px */
+}
+
+.form-container {
+    background-color: var(--white);
+    border: 1px solid #999;
+    box-shadow: var(--shadow);
+    padding: 0;
+}
+
+.form-header {
+    background-color: var(--header-bg);
+    color: var(--white);
+    padding: 8px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+h1 {
+    color: var(--white);
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.form-buttons {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.header-button {
+    background-color: var(--header-bg);
+    color: var(--white);
+    border: 1px solid var(--white);
+    padding: 2px 8px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.language-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 4px;
+    margin-left: 5px;
+    position: relative;
+    z-index: 1001; /* Ensure it's above the dimming overlay */
+    background-color: #000;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+}
+
+.language-button .material-icons {
+    font-size: 16px;
+}
+
+.language-button:hover {
+    background-color: #333;
+}
+
+.form-section {
+    padding: 15px;
+}
+
+.form-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.form-table td {
+    padding: 5px 10px;
+}
+
+.form-table input[type="text"] {
+    padding: 3px 5px;
+    border: 1px solid var(--table-border);
+    font-size: 14px;
+    color: var(--text-color);
+    background-color: var(--white);
+}
+
+.full-width {
+    width: 100%;
+}
+
+label {
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.required:after {
+    content: " *";
+    color: red;
+}
+
+.section-header {
+    background-color: var(--section-header-bg);
+    color: var(--white);
+    padding: 5px 10px;
+    margin: 15px 0 10px 0;
+}
+
+.section-header h2 {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.operation-table-container {
+    margin: 10px 0;
+    border: 1px solid var(--table-border);
+}
+
+.operation-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.operation-table th {
+    background-color: var(--table-header-bg);
+    color: var(--white);
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px 10px;
+    text-align: left;
+    border: 1px solid var(--white);
+}
+
+.action-column {
+    width: 60px;
+}
+
+.operation-table td {
+    padding: 5px 10px;
+    border: 1px solid var(--table-border);
+    font-size: 14px;
+}
+
+.no-records {
+    text-align: center;
+    padding: 10px;
+    color: var(--dark-gray);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+    margin-top: 15px;
+}
+
+.action-button {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: 1px solid var(--primary-color);
+    padding: 3px 10px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+/* Language Menu Styling */
+.language-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.language-menu.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.language-option {
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: #777;
+    color: white;
+    border: 2px solid white;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55),
+                background-color 0.3s ease;
+    transform: scale(0);
+}
+
+.language-option:hover {
+    transform: scale(1.1) !important;
+}
+
+.language-option.active {
+    background-color: #333;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.language-option[data-lang="en"] {
+    background-color: #222;
+}
+
+.language-option[data-lang="es"] {
+    background-color: #444;
+}
+
+.language-option[data-lang="fr"] {
+    background-color: #666;
+}
+
+.language-option[data-lang="de"] {
+    background-color: #888;
+}
+
+.language-option[data-lang="hi"] {
+    background-color: #aaa;
+}
+
+/* Dimming overlay */
+.dimming-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.dimming-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Content dimming when language overlay is active */
+.content-dimmed {
+    position: relative;
+}
+
+.content-dimmed::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+/* Toast notification */
+.toast-notification {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-size: 14px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+    z-index: 1000;
+}
+
+.toast-notification.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Pulse animation for language selection */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+    }
+    70% {
+        transform: scale(1.1);
+        box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    }
+}
+
+.pulse-animation {
+    animation: pulse 0.5s ease-in-out;
+}
+
+/* Fade transition for text elements */
+label, h1, button {
+    transition: opacity 0.3s ease;
+}
+
+/* Ensure all form inputs have proper text color */
+input[type="text"],
+input[type="date"],
+input[type="time"],
+input[type="email"],
+input[type="number"],
+textarea,
+select {
+    color: var(--text-color);
+    background-color: var(--white);
+}
