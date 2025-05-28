@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parts Management System</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Material Design Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Material Design Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top elevation-2">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center md-headline-6" href="#">
+                <i class="material-icons me-2">inventory_2</i>
+                Parts Management System
+            </a>
+
+            <button class="navbar-toggler border-0" type="button" id="mobileMenuToggle">
+                <i class="material-icons text-white">menu</i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <!-- Navigation items removed for cleaner interface -->
+                </ul>
+
+                <div class="d-flex align-items-center">
+                    <div class="search-container me-3">
+                        <input type="text" class="form-control" id="globalSearch" placeholder="Search parts, categories, or IDs...">
+                    </div>
+
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light dropdown-toggle border-0" type="button" data-bs-toggle="dropdown">
+                            <i class="material-icons">account_circle</i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end elevation-2">
+                            <li><a class="dropdown-item md-body-2" href="#"><i class="material-icons me-2">person</i>Profile</a></li>
+                            <li><a class="dropdown-item md-body-2" href="#"><i class="material-icons me-2">settings</i>Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item md-body-2" href="#"><i class="material-icons me-2">logout</i>Sign Out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Drawer Overlay -->
+    <div class="mobile-drawer-overlay" id="mobileDrawerOverlay"></div>
+
+    <!-- Main Content -->
+    <div class="container-fluid main-content">
+        <div class="row">
+            <!-- Material Design Sidebar -->
+            <div class="sidebar elevation-1" id="sidebar">
+                <!-- Fixed Header -->
+                <div class="sidebar-header">
+                    <h5 class="sidebar-title md-headline-6">Smart Filters</h5>
+                    <button class="btn btn-outline-secondary btn-sm" id="clearFilters">
+                        <i class="material-icons me-1">clear_all</i>Clear All Filters
+                    </button>
+                </div>
+
+                <!-- Scrollable Content -->
+                <div class="sidebar-content">
+
+                    <!-- Category Filter -->
+                    <div class="filter-section">
+                        <h6 class="filter-title md-overline">
+                            <i class="material-icons">category</i>Category
+                        </h6>
+                        <div class="filter-options">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="accessory">
+                                <label class="form-check-label md-body-2" for="accessory">Accessory (Outside)</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="autClassic">
+                                <label class="form-check-label md-body-2" for="autClassic">AUT-Classic/New Look</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="lfs96">
+                                <label class="form-check-label md-body-2" for="lfs96">LFS 96-2000</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="lfs2000">
+                                <label class="form-check-label md-body-2" for="lfs2000">LFS 2000-2007</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="lfs2007">
+                                <label class="form-check-label md-body-2" for="lfs2007">LFS 2007-2015</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="transit">
+                                <label class="form-check-label md-body-2" for="transit">Transit Connect</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Part Function Group Filter -->
+                    <div class="filter-section">
+                        <h6 class="filter-title md-overline">
+                            <i class="material-icons">build_circle</i>Function Group
+                        </h6>
+                        <div class="filter-options">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="electrical">
+                                <label class="form-check-label md-body-2" for="electrical">Electrical</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="mechanical">
+                                <label class="form-check-label md-body-2" for="mechanical">Mechanical</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="hardware">
+                                <label class="form-check-label md-body-2" for="hardware">Hardware</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="brakeSystem">
+                                <label class="form-check-label md-body-2" for="brakeSystem">Brake System</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="airSystem">
+                                <label class="form-check-label md-body-2" for="airSystem">Air System</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="interior">
+                                <label class="form-check-label md-body-2" for="interior">Interior</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="engine">
+                                <label class="form-check-label md-body-2" for="engine">Engine</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="transmission">
+                                <label class="form-check-label md-body-2" for="transmission">Transmission</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- UOM Filter -->
+                    <div class="filter-section">
+                        <h6 class="filter-title md-overline">
+                            <i class="material-icons">straighten</i>Unit of Measure
+                        </h6>
+                        <div class="filter-options">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="each">
+                                <label class="form-check-label md-body-2" for="each">Each</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="piece">
+                                <label class="form-check-label md-body-2" for="piece">Piece</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="sqm">
+                                <label class="form-check-label md-body-2" for="sqm">Square Meter</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="meter">
+                                <label class="form-check-label md-body-2" for="meter">Meter</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="kg">
+                                <label class="form-check-label md-body-2" for="kg">Kilogram</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Is Component Filter -->
+                    <div class="filter-section">
+                        <h6 class="filter-title md-overline">
+                            <i class="material-icons">extension</i>Component Type
+                        </h6>
+                        <div class="filter-options">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="isComponent">
+                                <label class="form-check-label md-body-2" for="isComponent">Component</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="notComponent">
+                                <label class="form-check-label md-body-2" for="notComponent">Non-Component</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Status Filter -->
+                    <div class="filter-section">
+                        <h6 class="filter-title md-overline">
+                            <i class="material-icons">toggle_on</i>Status
+                        </h6>
+                        <div class="filter-options">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="active">
+                                <label class="form-check-label md-body-2" for="active">Active</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="inactive">
+                                <label class="form-check-label md-body-2" for="inactive">Inactive</label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Material Design Main Content Area -->
+            <div class="content-area">
+                <!-- Header Actions -->
+                <div class="content-header">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <h1 class="page-title md-headline-4">Parts Inventory Dashboard</h1>
+                            <p class="text-secondary md-body-1">Comprehensive parts management and inventory control system</p>
+                        </div>
+
+                        <div class="header-actions">
+                            <div class="btn-group elevation-1" role="group">
+                                <button type="button" class="btn active" id="cardView" title="Card View">
+                                    <i class="material-icons">view_module</i>
+                                </button>
+                                <button type="button" class="btn" id="listView" title="List View">
+                                    <i class="material-icons">view_list</i>
+                                </button>
+                                <button type="button" class="btn" id="tableView" title="Table View">
+                                    <i class="material-icons">table_chart</i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Material Design Quick Stats -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-3">
+                            <div class="stat-card stat-card-blue elevation-1 scale-in">
+                                <div class="stat-icon bg-blue">
+                                    <i class="material-icons">inventory_2</i>
+                                </div>
+                                <div class="stat-content">
+                                    <h3 class="md-headline-5">100,000</h3>
+                                    <p class="md-caption">Total Inventory</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card stat-card-green elevation-1 scale-in">
+                                <div class="stat-icon bg-green">
+                                    <i class="material-icons">check_circle</i>
+                                </div>
+                                <div class="stat-content">
+                                    <h3 class="md-headline-5">90,000</h3>
+                                    <p class="md-caption">Active Stock</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card stat-card-orange elevation-1 scale-in">
+                                <div class="stat-icon bg-orange">
+                                    <i class="material-icons">pause_circle</i>
+                                </div>
+                                <div class="stat-content">
+                                    <h3 class="md-headline-5">10,000</h3>
+                                    <p class="md-caption">Inactive Stock</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card stat-card-purple elevation-1 scale-in">
+                                <div class="stat-icon bg-purple">
+                                    <i class="material-icons">category</i>
+                                </div>
+                                <div class="stat-content">
+                                    <h3 class="md-headline-5">18</h3>
+                                    <p class="md-caption">Categories</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scrollable Parts Container -->
+                <div class="parts-container-wrapper">
+                    <!-- Selection Controls -->
+                    <div class="selection-controls" id="selectionControls">
+                        <span class="selection-info" id="selectionInfo">0 items selected</span>
+                        <button class="btn-delete-selected" id="deleteSelected">
+                            <i class="material-icons me-1">delete</i>Delete Selected
+                        </button>
+                    </div>
+
+                    <!-- Master Selection -->
+                    <div class="master-selection" id="masterSelection" style="display: none;">
+                        <input type="checkbox" id="selectAll">
+                        <label for="selectAll">Select All</label>
+                    </div>
+
+                    <div id="partsContainer" class="fade-in-up">
+                        <!-- Parts will be loaded here dynamically -->
+                        <div class="loading" id="loadingIndicator">
+                            <div class="spinner"></div>
+                            <div class="loading-text">Loading Parts...</div>
+                        </div>
+                    </div>
+
+                    <!-- Material Design Pagination -->
+                    <nav aria-label="Parts pagination" class="mt-4">
+                        <ul class="pagination">
+                            <li class="page-item disabled">
+                                <a class="page-link elevation-1" href="#" tabindex="-1">
+                                    <i class="material-icons">chevron_left</i>
+                                    <span class="d-none d-sm-inline ms-1">Previous</span>
+                                </a>
+                            </li>
+                            <li class="page-item active">
+                                <a class="page-link elevation-2" href="#">1</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link elevation-1" href="#">2</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link elevation-1" href="#">3</a>
+                            </li>
+                            <li class="page-item">
+                                <span class="page-link bg-transparent border-0">...</span>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link elevation-1" href="#">2000</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link elevation-1" href="#">
+                                    <span class="d-none d-sm-inline me-1">Next</span>
+                                    <i class="material-icons">chevron_right</i>
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="pagination-info">
+                            <small class="text-secondary md-caption">
+                                Showing 1-8 of 100,000 parts
+                            </small>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+</body>
+</html>

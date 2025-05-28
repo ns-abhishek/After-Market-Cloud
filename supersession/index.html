@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supersession UI - Light Theme with Popups</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f7f9fc;
+            color: #333333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .header h1 {
+            font-size: 1.6rem;
+            margin: 0;
+            color: #1f2937;
+        }
+        .header .controls {
+            display: flex;
+            gap: 12px;
+        }
+        .header button {
+            background-color: #5eead4;
+            color: #1f2937;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+        }
+        .header button:hover {
+            background-color: #4bc9b5;
+        }
+        .card-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .card-header, .card {
+            display: flex;
+            background-color: #f1f5f9;
+            border-radius: 8px;
+            padding: 12px;
+        }
+        .card-header {
+            font-weight: bold;
+            color: #4b5563;
+            font-size: 0.9rem;
+        }
+        .card {
+            background-color: #ffffff;
+            border: 1px solid #e5e7eb;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: grab;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .card.dragging {
+            opacity: 0.7;
+            background-color: #f1f5f9;
+        }
+        .card div, .card-header div {
+            flex: 1;
+            padding: 0 8px;
+            display: flex;
+            align-items: center;
+        }
+        .card div:first-child, .card-header div:first-child {
+            flex: 0 0 50px;
+            justify-content: center;
+        }
+        .edit-icon {
+            font-size: 1.2rem;
+            color: #6b7280;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .edit-icon:hover {
+            color: #3b82f6;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .pagination button {
+            background-color: #fb7185;
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .pagination button:hover {
+            background-color: #f43f5e;
+        }
+        .pagination button:disabled {
+            background-color: #d1d5db;
+            cursor: not-allowed;
+        }
+        .pagination span {
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
+        /* Advanced Search Popup Styles */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .popup {
+            width: 550px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        .popup.open {
+            display: block;
+        }
+        .popup h2 {
+            font-size: 1.2rem;
+            color: #1f2937;
+            margin: 0 0 10px 0;
+        }
+        .popup .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #6b7280;
+        }
+        .popup .close:hover {
+            color: #fb7185;
+        }
+        .popup .search-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .popup .search-row {
+            display: flex;
+            gap: 10px;
+        }
+        .popup .options {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .popup .options h3 {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin: 5px 0 2px 0;
+        }
+        .popup .draggable {
+            background-color: #ecfeff;
+            border: 1px solid #5eead4;
+            border-radius: 6px;
+            padding: 6px;
+            cursor: grab;
+            font-size: 0.8rem;
+            color: #1f2937;
+            transition: background-color 0.2s;
+        }
+        .popup .draggable:hover {
+            background-color: #cffafe;
+        }
+        .popup .drop-area-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .popup .drop-area {
+            border: 2px dashed #e5e7eb;
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #6b7280;
+            min-height: 80px;
+            background-color: #f9fafb;
+            flex-grow: 1;
+        }
+        .popup .drop-area.dragover {
+            border-color: #5eead4;
+            background-color: #ecfeff;
+        }
+        .popup .filter-tags {
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid #e5e7eb;
+            color: #6b7280;
+            font-size: 0.8rem;
+            max-height: 60px;
+            overflow-y: auto;
+        }
+        .popup .filter-tags span {
+            background-color: #ffffff;
+            border: 1px solid #5eead4;
+            border-radius: 6px;
+            padding: 3px 8px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            display: inline-block;
+            font-size: 0.8rem;
+        }
+        .popup .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .popup button {
+            background-color: #fb7185;
+            color: #ffffff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .popup button:hover {
+            background-color: #f43f5e;
+        }
+        .popup button:first-child {
+            background-color: #5eead4;
+            color: #1f2937;
+        }
+        .popup button:first-child:hover {
+            background-color: #4bc9b5;
+        }
+        .popup input[type="text"] {
+            padding: 6px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            width: 100%;
+        }
+        /* Edit Popup Styles */
+        .edit-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+        }
+        .edit-popup {
+            width: 400px;
+            background-color: #e6f0fa;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        .edit-popup.open {
+            display: block;
+        }
+        .edit-popup h2 {
+            font-size: 1.2rem;
+            color: #1e40af;
+            margin: 0 0 15px 0;
+        }
+        .edit-popup .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #6b7280;
+        }
+        .edit-popup .close:hover {
+            color: #ef4444;
+        }
+        .edit-popup .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 10px;
+            align-items: center;
+        }
+        .edit-popup label {
+            font-size: 0.9rem;
+            color: #1e40af;
+            font-weight: 500;
+        }
+        .edit-popup input[type="text"],
+        .edit-popup select {
+            padding: 6px;
+            border: 1px solid #bfdbfe;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .edit-popup .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .edit-popup button {
+            background-color: #3b82f6;
+            color: #ffffff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .edit-popup button:hover {
+            background-color: #2563eb;
+        }
+        .edit-popup button:last-child {
+            background-color: #9ca3af;
+        }
+        .edit-popup button:last-child:hover {
+            background-color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Supersession</h1>
+            <div class="controls">
+                <button onclick="openPopup()">Advanced Search</button>
+                <button onclick="alert('Export clicked!')">Export</button>
+                <button onclick="window.location.reload()">Refresh</button>
+                <button onclick="alert('New entry clicked!')">+ New</button>
+            </div>
+        </div>
+        <div class="card-container" id="container">
+            <div class="card-header">
+                <div>Edit</div>
+                <div>Company</div>
+                <div>Supersession Type</div>
+                <div>Consumption Code</div>
+                <div>Replacing Code</div>
+                <div>Remarks</div>
+                <div>Is Active?</div>
+            </div>
+            <div class="card" draggable="true">
+                <div><span class="edit-icon" data-row="0">✏️</span></div>
+                <div>HCL_AMP</div>
+                <div>One to One</div>
+                <div>None</div>
+                <div>one to one</div>
+                <div>1-1</div>
+                <div>YES</div>
+            </div>
+            <div class="card" draggable="true">
+                <div><span class="edit-icon" data-row="1">✏️</span></div>
+                <div>HCL_AMP</div>
+                <div>One to One</div>
+                <div>Pre-production</div>
+                <div>one to one</div>
+                <div>Super1</div>
+                <div>YES</div>
+            </div>
+        </div>
+        <div class="pagination">
+            <button onclick="changePage(-1)" id="prevBtn">Previous</button>
+            <span id="pageInfo">Page 1 of 2</span>
+            <button onclick="changePage(1)" id="nextBtn">Next</button>
+        </div>
+    </div>
+
+    <!-- Advanced Search Popup -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup" id="advancedSearch">
+            <h2>Advanced Search</h2>
+            <span class="close" onclick="closePopup()">×</span>
+            <div class="search-container">
+                <div class="search-row">
+                    <div class="options">
+                        <h3>Columns</h3>
+                        <div class="draggable" draggable="true" data-type="column" data-value="Company">Company</div>
+                        <div class="draggable" draggable="true" data-type="column" data-value="Supersession Type">Supersession Type</div>
+                        <div class="draggable" draggable="true" data-type="column" data-value="Consumption Code">Consumption Code</div>
+                        <div class="draggable" draggable="true" data-type="column" data-value="Replacing Code">Replacing Code</div>
+                        <div class="draggable" draggable="true" data-type="column" data-value="Remarks">Remarks</div>
+                        <div class="draggable" draggable="true" data-type="column" data-value="Is Active?">Is Active?</div>
+                        <h3>Operators</h3>
+                        <div class="draggable" draggable="true" data-type="operator" data-value="Equals">Equals</div>
+                        <div class="draggable" draggable="true" data-type="operator" data-value="Contains">Contains</div>
+                        <div class="draggable" draggable="true" data-type="operator" data-value="Not Equals">Not Equals</div>
+                        <h3>Conditions</h3>
+                        <div class="draggable" draggable="true" data-type="condition" data-value="AND">AND</div>
+                        <div class="draggable" draggable="true" data-type="condition" data-value="OR">OR</div>
+                    </div>
+                    <div class="drop-area-container">
+                        <input type="text" id="filterValue" placeholder="Enter filter value">
+                        <div class="drop-area" id="dropArea">
+                            Drag and drop columns, operators, and conditions here
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-tags" id="filterTags">
+                    <span>Supersession Type</span>
+                    <span>Consumption Code</span>
+                    <span>Replacing Code</span>
+                </div>
+                <div class="buttons">
+                    <button onclick="removeFilter()">Remove Filter</button>
+                    <button onclick="applyFilters()">Apply Filters</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Popup -->
+    <div class="edit-popup-overlay" id="editPopupOverlay">
+        <div class="edit-popup" id="editPopup">
+            <h2>Edit Row</h2>
+            <span class="close" onclick="closeEditPopup()">×</span>
+            <div class="form-grid">
+                <label for="editCompany">Company:</label>
+                <input type="text" id="editCompany">
+                <label for="editSupersessionType">Supersession Type:</label>
+                <input type="text" id="editSupersessionType">
+                <label for="editConsumptionCode">Consumption Code:</label>
+                <input type="text" id="editConsumptionCode">
+                <label for="editReplacingCode">Replacing Code:</label>
+                <input type="text" id="editReplacingCode">
+                <label for="editRemarks">Remarks:</label>
+                <input type="text" id="editRemarks">
+                <label for="editIsActive">Is Active?:</label>
+                <select id="editIsActive">
+                    <option value="YES">YES</option>
+                    <option value="NO">NO</option>
+                </select>
+            </div>
+            <div class="buttons">
+                <button onclick="saveEdit()">Save</button>
+                <button onclick="closeEditPopup()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Drag and Drop Functionality for Cards
+        const cardContainer = document.getElementById('container');
+        let draggedCard = null;
+
+        cardContainer.addEventListener('dragstart', (e) => {
+            draggedCard = e.target.closest('.card');
+            if (draggedCard) {
+                draggedCard.classList.add('dragging');
+            }
+        });
+
+        cardContainer.addEventListener('dragend', () => {
+            if (draggedCard) {
+                draggedCard.classList.remove('dragging');
+                draggedCard = null;
+            }
+        });
+
+        cardContainer.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            const card = e.target.closest('.card');
+            if (card && card !== draggedCard && draggedCard) {
+                const allCards = Array.from(cardContainer.querySelectorAll('.card'));
+                const draggedIndex = allCards.indexOf(draggedCard);
+                const targetIndex = allCards.indexOf(card);
+                if (draggedIndex < targetIndex) {
+                    cardContainer.insertBefore(draggedCard, card.nextSibling);
+                } else {
+                    cardContainer.insertBefore(draggedCard, card);
+                }
+            }
+        });
+
+        // Pagination Functionality
+        let currentPage = 1;
+        const totalPages = 2;
+
+        function updatePagination() {
+            document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages}`;
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage === totalPages;
+        }
+
+        function changePage(direction) {
+            currentPage += direction;
+            if (currentPage < 1) currentPage = 1;
+            if (currentPage > totalPages) currentPage = totalPages;
+            updatePagination();
+            applyFiltersToGrid();
+        }
+
+        updatePagination();
+
+        // Advanced Search Popup Functionality
+        const popupOverlay = document.getElementById('popupOverlay');
+        const popup = document.getElementById('advancedSearch');
+        const dropArea = document.getElementById('dropArea');
+        const filterTags = document.getElementById('filterTags');
+        const filterValueInput = document.getElementById('filterValue');
+        let currentFilter = { column: '', operator: '', condition: '', value: '' };
+        let filters = [];
+        let originalCards = Array.from(cardContainer.querySelectorAll('.card')).map(card => card.cloneNode(true));
+
+        function openPopup() {
+            popupOverlay.style.display = 'flex';
+            popup.classList.add('open');
+        }
+
+        function closePopup() {
+            popupOverlay.style.display = 'none';
+            popup.classList.remove('open');
+        }
+
+        const draggables = document.querySelectorAll('.draggable');
+
+        draggables.forEach(draggable => {
+            draggable.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', JSON.stringify({
+                    type: draggable.dataset.type,
+                    value: draggable.dataset.value
+                }));
+            });
+        });
+
+        dropArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropArea.classList.add('dragover');
+        });
+
+        dropArea.addEventListener('dragleave', () => {
+            dropArea.classList.remove('dragover');
+        });
+
+        dropArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropArea.classList.remove('dragover');
+            const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+            const { type, value } = data;
+
+            if (type === 'column') {
+                currentFilter.column = value;
+            } else if (type === 'operator') {
+                currentFilter.operator = value;
+            } else if (type === 'condition') {
+                currentFilter.condition = value;
+            }
+
+            if (currentFilter.column && currentFilter.operator && filterValueInput.value) {
+                currentFilter.value = filterValueInput.value;
+                filters.push({ ...currentFilter });
+                const tag = document.createElement('span');
+                tag.textContent = `${currentFilter.column} ${currentFilter.operator} ${currentFilter.value}${currentFilter.condition ? ' ' + currentFilter.condition : ''}`;
+                filterTags.appendChild(tag);
+                applyFiltersToGrid();
+                currentFilter = { column: '', operator: '', condition: '', value: '' };
+                filterValueInput.value = '';
+            }
+
+            updateDropArea();
+        });
+
+        function updateDropArea() {
+            dropArea.innerHTML = '';
+            if (currentFilter.column) {
+                dropArea.innerHTML += `<span style="margin-right: 5px; color: #5eead4;">Column: ${currentFilter.column}</span>`;
+            }
+            if (currentFilter.operator) {
+                dropArea.innerHTML += `<span style="margin-right: 5px; color: #5eead4;">Operator: ${currentFilter.operator}</span>`;
+            }
+            if (currentFilter.condition) {
+                dropArea.innerHTML += `<span style="margin-right: 5px; color: #5eead4;">Condition: ${currentFilter.condition}</span>`;
+            }
+            if (!currentFilter.column && !currentFilter.operator && !currentFilter.condition) {
+                dropArea.innerHTML = 'Drag and drop columns, operators, and conditions here';
+            }
+        }
+
+        function clearFilters() {
+            filters = [];
+            filterTags.innerHTML = '';
+            currentFilter = { column: '', operator: '', condition: '', value: '' };
+            filterValueInput.value = '';
+            updateDropArea();
+        }
+
+        function applyFiltersToGrid() {
+            while (cardContainer.children.length > 1) {
+                cardContainer.removeChild(cardContainer.lastChild);
+            }
+            originalCards.forEach(card => {
+                const clonedCard = card.cloneNode(true);
+                cardContainer.appendChild(clonedCard);
+                clonedCard.style.display = '';
+            });
+
+            const cards = Array.from(cardContainer.querySelectorAll('.card'));
+            let filteredCards = [...cards];
+            let previousCondition = null;
+
+            filters.forEach((filter, index) => {
+                const tempCards = filteredCards.filter(card => {
+                    const cells = Array.from(card.children);
+                    let cellValue = '';
+                    switch (filter.column) {
+                        case 'Company':
+                            cellValue = cells[1].textContent;
+                            break;
+                        case 'Supersession Type':
+                            cellValue = cells[2].textContent;
+                            break;
+                        case 'Consumption Code':
+                            cellValue = cells[3].textContent;
+                            break;
+                        case 'Replacing Code':
+                            cellValue = cells[4].textContent;
+                            break;
+                        case 'Remarks':
+                            cellValue = cells[5].textContent;
+                            break;
+                        case 'Is Active?':
+                            cellValue = cells[6].textContent;
+                            break;
+                    }
+
+                    const filterValue = filter.value.toLowerCase();
+                    if (filter.operator === 'Equals') {
+                        return cellValue.toLowerCase() === filterValue;
+                    } else if (filter.operator === 'Contains') {
+                        return cellValue.toLowerCase().includes(filterValue);
+                    } else if (filter.operator === 'Not Equals') {
+                        return cellValue.toLowerCase() !== filterValue;
+                    }
+                    return true;
+                });
+
+                if (index === 0 || !previousCondition) {
+                    filteredCards = tempCards;
+                } else if (previousCondition === 'AND') {
+                    filteredCards = filteredCards.filter(card => tempCards.includes(card));
+                } else if (previousCondition === 'OR') {
+                    filteredCards = [...new Set([...filteredCards, ...tempCards])];
+                }
+                previousCondition = filter.condition;
+            });
+
+            while (cardContainer.children.length > 1) {
+                cardContainer.removeChild(cardContainer.lastChild);
+            }
+
+            filteredCards.forEach(card => {
+                cardContainer.appendChild(card);
+                card.style.display = '';
+            });
+
+            if (filteredCards.length === 0) {
+                alert('No results found for the applied filters.');
+            }
+        }
+
+        function removeFilter() {
+            if (filters.length > 0) {
+                filters.pop();
+                filterTags.removeChild(filterTags.lastChild);
+                applyFiltersToGrid();
+            }
+        }
+
+        function applyFilters() {
+            if (currentFilter.column && currentFilter.operator && filterValueInput.value) {
+                currentFilter.value = filterValueInput.value;
+                filters.push({ ...currentFilter });
+                const tag = document.createElement('span');
+                tag.textContent = `${currentFilter.column} ${currentFilter.operator} ${currentFilter.value}${currentFilter.condition ? ' ' + currentFilter.condition : ''}`;
+                filterTags.appendChild(tag);
+                currentFilter = { column: '', operator: '', condition: '', value: '' };
+                filterValueInput.value = '';
+                updateDropArea();
+            }
+            applyFiltersToGrid();
+            closePopup();
+        }
+
+        // Edit Popup Functionality
+        const editPopupOverlay = document.getElementById('editPopupOverlay');
+        const editPopup = document.getElementById('editPopup');
+        let currentEditRow = null;
+
+        function openEditPopup(rowIndex) {
+            currentEditRow = rowIndex;
+            const row = cardContainer.querySelectorAll('.card')[rowIndex];
+            const cells = row.children;
+
+            document.getElementById('editCompany').value = cells[1].textContent;
+            document.getElementById('editSupersessionType').value = cells[2].textContent;
+            document.getElementById('editConsumptionCode').value = cells[3].textContent;
+            document.getElementById('editReplacingCode').value = cells[4].textContent;
+            document.getElementById('editRemarks').value = cells[5].textContent;
+            document.getElementById('editIsActive').value = cells[6].textContent;
+
+            editPopupOverlay.style.display = 'flex';
+            editPopup.classList.add('open');
+        }
+
+        function closeEditPopup() {
+            editPopupOverlay.style.display = 'none';
+            editPopup.classList.remove('open');
+            currentEditRow = null;
+        }
+
+        function saveEdit() {
+            if (currentEditRow === null) return;
+
+            const row = cardContainer.querySelectorAll('.card')[currentEditRow];
+            const cells = row.children;
+
+            cells[1].textContent = document.getElementById('editCompany').value;
+            cells[2].textContent = document.getElementById('editSupersessionType').value;
+            cells[3].textContent = document.getElementById('editConsumptionCode').value;
+            cells[4].textContent = document.getElementById('editReplacingCode').value;
+            cells[5].textContent = document.getElementById('editRemarks').value;
+            cells[6].textContent = document.getElementById('editIsActive').value;
+
+            // Update originalCards to reflect the edit
+            originalCards[currentEditRow] = row.cloneNode(true);
+
+            closeEditPopup();
+        }
+
+        // Add event listeners to all edit icons
+        const editIcons = cardContainer.querySelectorAll('.edit-icon');
+        editIcons.forEach(icon => {
+            icon.addEventListener('click', (e) => {
+                const rowIndex = parseInt(e.target.dataset.row);
+                openEditPopup(rowIndex);
+            });
+        });
+    </script>
+</body>
+</html>

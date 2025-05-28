@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Segment Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Top Header -->
+    <header class="top-header">
+        <div class="header-left">
+            <span class="company-name">HCLSoftware</span>
+        </div>
+        <div class="header-right">
+            <span class="welcome-text">Welcome: Admin</span>
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-chart-pie"></i> Segment Management</h1>
+            <p class="subtitle">Manage Primary and Secondary Segments</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Primary Segment Selection -->
+            <section class="primary-segment-section">
+                <h2>Primary Segment</h2>
+                <div class="segment-selector">
+                    <select id="primarySegmentSelect" class="primary-select">
+                        <option value="">Select Primary Segment</option>
+                        <option value="agriculture">Agriculture</option>
+                        <option value="automobile">Automobile</option>
+                        <option value="construction">Construction</option>
+                        <option value="fleet">Fleet</option>
+                        <option value="government">Government</option>
+                        <option value="mining">Mining</option>
+                    </select>
+                    <i class="fas fa-chevron-down select-icon"></i>
+                </div>
+            </section>
+
+            <!-- Secondary Segments Section -->
+            <section class="secondary-segment-section" id="secondarySection" style="display: none;">
+                <div class="section-header">
+                    <h2>Secondary Segments</h2>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" id="addBtn">
+                            <i class="fas fa-plus"></i> Add
+                        </button>
+                        <button class="btn btn-danger" id="deleteBtn" disabled>
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                        <button class="btn btn-success" id="saveBtn">
+                            <i class="fas fa-save"></i> Save
+                        </button>
+                        <button class="btn btn-info" id="searchBtn">
+                            <i class="fas fa-search"></i> Advanced Search
+                        </button>
+                        <button class="btn btn-secondary" id="exportBtn">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                        <button class="btn btn-light" id="refreshBtn">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="search-container" id="searchContainer" style="display: none;">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search secondary segments...">
+                        <button class="btn btn-sm btn-secondary" id="clearSearch">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Secondary Segments Table -->
+                <div class="table-container">
+                    <table class="segments-table" id="segmentsTable">
+                        <thead>
+                            <tr>
+                                <th class="checkbox-col">
+                                    <input type="checkbox" id="selectAll">
+                                </th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                                <th>Secondary Segment</th>
+                                <th>Is Active?</th>
+                            </tr>
+                        </thead>
+                        <tbody id="segmentsTableBody">
+                            <!-- Dynamic content will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination-container">
+                    <div class="pagination-info">
+                        <span id="paginationInfo">View 1 - 2 of 2</span>
+                    </div>
+                    <div class="pagination-controls">
+                        <button class="btn btn-sm btn-light" id="prevPage" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span class="page-info">
+                            Page <span id="currentPage">1</span> of <span id="totalPages">1</span>
+                        </span>
+                        <button class="btn btn-sm btn-light" id="nextPage" disabled>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <select id="itemsPerPage" class="items-per-page">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add Segment Modal -->
+    <div class="modal" id="addModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Secondary Segment</h3>
+                <button class="close-btn" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addSegmentForm">
+                    <div class="form-group">
+                        <label for="segmentName">Segment Name:</label>
+                        <input type="text" id="segmentName" name="segmentName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="isActive">Is Active?</label>
+                        <select id="isActive" name="isActive">
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelAdd">Cancel</button>
+                <button class="btn btn-primary" id="confirmAdd">Add Segment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Advanced Search Modal -->
+    <div class="modal" id="advancedSearchModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Advanced Search</h3>
+                <button class="close-btn" id="closeAdvancedSearch">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="search-form">
+                    <div class="search-criteria" id="searchCriteria">
+                        <div class="search-row">
+                            <div class="form-row">
+                                <div class="form-col">
+                                    <label>Select Column:</label>
+                                    <select class="search-column">
+                                        <option value="">--Select--</option>
+                                        <option value="name">Secondary Segment</option>
+                                        <option value="isActive">Is Active</option>
+                                    </select>
+                                </div>
+                                <div class="form-col">
+                                    <label>Select Operator:</label>
+                                    <select class="search-operator">
+                                        <option value="">--Select--</option>
+                                        <option value="contains">Contains</option>
+                                        <option value="equals">Equals</option>
+                                        <option value="startsWith">Starts With</option>
+                                        <option value="endsWith">Ends With</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-col">
+                                    <label>Value:</label>
+                                    <input type="text" class="search-value" placeholder="Enter value">
+                                </div>
+                                <div class="form-col">
+                                    <label>Select Condition:</label>
+                                    <select class="search-condition">
+                                        <option value="">--Select--</option>
+                                        <option value="and">AND</option>
+                                        <option value="or">OR</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-primary add-filter-btn">Add Filter</button>
+                                <button type="button" class="btn btn-danger remove-filter-btn">Remove Filter</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="search-results-area">
+                        <textarea id="searchResults" placeholder="Search criteria will appear here..." readonly></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelAdvancedSearch">Cancel</button>
+                <button class="btn btn-primary" id="applyAdvancedSearch">Search</button>
+                <button class="btn btn-light" id="clearAdvancedSearch">Clear</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,2534 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Part Details - Parts Management System</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Material Design Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="styles.css" rel="stylesheet">
+    <link href="part-details.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="index.html">
+                <i class="material-icons me-2">inventory</i>
+                Parts Management
+            </a>
+
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="index.html">
+                    <i class="material-icons me-1">arrow_back</i>Back to Parts
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid main-content">
+        <!-- Compact Modern Header -->
+        <div class="part-header-compact">
+            <div class="header-background"></div>
+            <div class="header-content-compact">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <div class="part-title-compact">
+                            <nav aria-label="breadcrumb" class="compact-breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="index.html">Parts</a></li>
+                                    <li class="breadcrumb-item active">Details</li>
+                                </ol>
+                            </nav>
+                            <div class="title-row">
+                                <h1 class="part-title-compact me-2">
+                                    <span class="part-number">OEM-0000052</span>
+                                    <span class="part-status-badge">Active</span>
+                                </h1>
+
+                            </div>
+                            <h2 class="part-description-compact">TWINE GUIDE</h2>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="meta-stats-compact">
+                            <div class="meta-row">
+                                <div class="meta-item-compact">
+                                    <i class="material-icons">label</i>
+                                    <span class="meta-label">Prefix:</span>
+                                    <span class="meta-value" id="metaPrefix">OEM</span>
+                                </div>
+                                <div class="meta-item-compact">
+                                    <i class="material-icons">category</i>
+                                    <span class="meta-label">Category:</span>
+                                    <span class="meta-value" id="metaCategory">Accessory (Outside)</span>
+                                </div>
+                            </div>
+                            <div class="meta-row">
+                                <div class="meta-item-compact">
+                                    <i class="material-icons">functions</i>
+                                    <span class="meta-label">Function:</span>
+                                    <span class="meta-value" id="metaFunction">Electrical</span>
+                                </div>
+                                <div class="meta-item-compact">
+                                    <i class="material-icons">straighten</i>
+                                    <span class="meta-label">UOM:</span>
+                                    <span class="meta-value" id="metaUOM">Each</span>
+                                </div>
+                            </div>
+                            <div class="stats-row">
+                                <div class="stat-compact">
+                                    <i class="material-icons text-primary">inventory</i>
+                                    <span class="stat-value" id="quickStock">150</span>
+                                    <span class="stat-label">Stock</span>
+                                </div>
+                                <div class="stat-compact">
+                                    <i class="material-icons text-success">attach_money</i>
+                                    <span class="stat-value" id="quickPrice">$100.00</span>
+                                    <span class="stat-label">Price</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Compact Navigation Tabs -->
+        <div class="detail-tabs-compact">
+            <div class="tabs-header-compact">
+                <h3 class="tabs-title-compact">Part Details</h3>
+                <div class="header-actions-compact">
+                    <button class="btn btn-sm btn-outline-secondary" onclick="exportData()">
+                        <i class="material-icons">download</i>Export
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary">
+                        <i class="material-icons">print</i>Print
+                    </button>
+                </div>
+            </div>
+            <nav class="nav nav-pills nav-compact" id="partDetailTabs" role="tablist">
+                <button class="nav-link active" id="overview-tab" data-bs-toggle="pill" data-bs-target="#overview"
+                    type="button" role="tab">
+                    <i class="material-icons">dashboard</i>
+                    <span>Overview</span>
+                </button>
+                <button class="nav-link" id="stock-tab" data-bs-toggle="pill" data-bs-target="#stock" type="button"
+                    role="tab">
+                    <i class="material-icons">inventory_2</i>
+                    <span>Stock</span>
+                </button>
+                <button class="nav-link" id="pricing-tab" data-bs-toggle="pill" data-bs-target="#pricing" type="button"
+                    role="tab">
+                    <i class="material-icons">attach_money</i>
+                    <span>Pricing</span>
+                </button>
+                <button class="nav-link" id="manufacturer-tab" data-bs-toggle="pill" data-bs-target="#manufacturer"
+                    type="button" role="tab">
+                    <i class="material-icons">business</i>
+                    <span>Manufacturer</span>
+                </button>
+                <button class="nav-link" id="assets-tab" data-bs-toggle="pill" data-bs-target="#assets" type="button"
+                    role="tab">
+                    <i class="material-icons">precision_manufacturing</i>
+                    <span>Assets</span>
+                </button>
+
+                <button class="nav-link" id="competitor-price-tab" data-bs-toggle="pill"
+                    data-bs-target="#competitor-price" type="button" role="tab" aria-controls="competitor-price">
+                    <i class="material-icons">attach_money</i>
+                    <span>Competitor Price Details</span>
+                </button>
+
+                <button class="nav-link" id="attachments-tab" data-bs-toggle="pill" data-bs-target="#attachments"
+                    type="button" role="tab">
+                    <i class="material-icons">attach_file</i>
+                    <span>Files</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="partDetailTabContent">
+            <!-- Overview Tab -->
+            <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                <div class="row g-2">
+                    <!-- Left: Images Gallery -->
+                    <div class="col-lg-5">
+                        <div class="detail-card-ultra-compact">
+                            <div class="card-header-ultra-compact">
+                                <h6><i class="material-icons me-1">photo_library</i>Part Images</h6>
+                                <button class="btn btn-primary btn-xxs" data-bs-toggle="modal"
+                                    data-bs-target="#uploadImageModal">
+                                    <i class="material-icons">add_photo_alternate</i>
+                                </button>
+                            </div>
+                            <div class="card-body-ultra-compact p-0">
+                                <!-- Ultra Compact Image Gallery -->
+                                <div class="part-images-ultra-compact">
+                                    <!-- Main Image Display -->
+                                    <div class="main-image-ultra-compact">
+                                        <img id="mainPartImage" src="" alt="Part Image"
+                                            class="main-part-image-ultra-compact" onclick="zoomImage()"
+                                            style="height: 350px;">
+
+                                        <!-- Image Controls Overlay -->
+                                        <div class="image-controls-overlay">
+                                            <button class="btn btn-sm btn-light" onclick="zoomImage()" title="Zoom">
+                                                <i class="material-icons">zoom_in</i>
+                                            </button>
+                                            <button class="btn btn-sm btn-light" onclick="downloadImage()"
+                                                title="Download">
+                                                <i class="material-icons">download</i>
+                                            </button>
+                                            <button class="btn btn-sm btn-light" onclick="shareImage()" title="Share">
+                                                <i class="material-icons">share</i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Thumbnails -->
+                                    <div class="thumbnails-ultra-compact">
+                                        <!-- Thumbnails will be populated by JavaScript -->
+                                    </div>
+
+                                    <!-- Compare View Container (Hidden by default) -->
+                                    <div id="compareViewer" class="compare-viewer" style="display: none;">
+                                        <div class="compare-container">
+                                            <div class="compare-header">
+                                                <h6><i class="material-icons me-1">compare</i>Compare Images</h6>
+                                                <div class="compare-controls">
+                                                    <button class="btn btn-sm btn-outline-primary" onclick="syncZoom()"
+                                                        title="Sync Zoom">
+                                                        <i class="material-icons">sync</i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-outline-primary"
+                                                        onclick="resetCompare()" title="Reset">
+                                                        <i class="material-icons">refresh</i>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div class="compare-images">
+                                                <div class="compare-image-slot" id="compareSlot1">
+                                                    <div class="compare-image-container">
+                                                        <img id="compareImage1" src="" alt="Compare Image 1"
+                                                            class="compare-image">
+                                                        <div class="compare-image-overlay">
+                                                            <div class="compare-image-label">Image 1</div>
+                                                            <div class="compare-image-controls">
+                                                                <button class="btn btn-sm btn-light"
+                                                                    onclick="zoomCompareImage(1, 'in')" title="Zoom In">
+                                                                    <i class="material-icons">zoom_in</i>
+                                                                </button>
+                                                                <button class="btn btn-sm btn-light"
+                                                                    onclick="zoomCompareImage(1, 'out')"
+                                                                    title="Zoom Out">
+                                                                    <i class="material-icons">zoom_out</i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="compare-image-selector">
+                                                        <select class="form-select form-select-sm" id="imageSelect1"
+                                                            onchange="changeCompareImage(1)">
+                                                            <option value="">Select Image 1</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="compare-divider">
+                                                    <div class="compare-divider-line"></div>
+                                                    <div class="compare-vs">VS</div>
+                                                </div>
+
+                                                <div class="compare-image-slot" id="compareSlot2">
+                                                    <div class="compare-image-container">
+                                                        <img id="compareImage2" src="" alt="Compare Image 2"
+                                                            class="compare-image">
+                                                        <div class="compare-image-overlay">
+                                                            <div class="compare-image-label">Image 2</div>
+                                                            <div class="compare-image-controls">
+                                                                <button class="btn btn-sm btn-light"
+                                                                    onclick="zoomCompareImage(2, 'in')" title="Zoom In">
+                                                                    <i class="material-icons">zoom_in</i>
+                                                                </button>
+                                                                <button class="btn btn-sm btn-light"
+                                                                    onclick="zoomCompareImage(2, 'out')"
+                                                                    title="Zoom Out">
+                                                                    <i class="material-icons">zoom_out</i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="compare-image-selector">
+                                                        <select class="form-select form-select-sm" id="imageSelect2"
+                                                            onchange="changeCompareImage(2)">
+                                                            <option value="">Select Image 2</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="compare-info">
+                                                <div class="compare-info-item">
+                                                    <span class="compare-info-label">Sync Zoom:</span>
+                                                    <span class="compare-info-value" id="syncStatus">Disabled</span>
+                                                </div>
+                                                <div class="compare-info-item">
+                                                    <span class="compare-info-label">Zoom Level:</span>
+                                                    <span class="compare-info-value" id="zoomLevel">100%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- View Options (Moved below image views) -->
+                                    <div class="image-view-options">
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <button type="button" class="btn btn-outline-primary view-btn active"
+                                                data-view="single">
+                                                <i class="material-icons">image</i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-primary view-btn"
+                                                data-view="compare">
+                                                <i class="material-icons">compare</i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Quick Stats + Part Details -->
+                    <div class="col-lg-7">
+                        <!-- Quick Stats Row -->
+                        <div class="quick-stats-row mb-2">
+                            <div class="stat-item-ultra-compact">
+                                <i class="material-icons text-primary">inventory</i>
+                                <div class="stat-content">
+                                    <span class="stat-value" id="quickStock">150</span>
+                                    <span class="stat-label">In Stock</span>
+                                </div>
+                            </div>
+                            <div class="stat-item-ultra-compact">
+                                <i class="material-icons text-success">attach_money</i>
+                                <div class="stat-content">
+                                    <span class="stat-value" id="quickPrice">$100.00</span>
+                                    <span class="stat-label">Last Price</span>
+                                </div>
+                            </div>
+                            <div class="stat-item-ultra-compact">
+                                <i class="material-icons text-info">trending_up</i>
+                                <div class="stat-content">
+                                    <span class="stat-value" id="quickMovement">Fast</span>
+                                    <span class="stat-label">Movement</span>
+                                </div>
+                            </div>
+                            <div class="stat-item-ultra-compact">
+                                <i class="material-icons text-warning">schedule</i>
+                                <div class="stat-content">
+                                    <span class="stat-value" id="quickStatus">Active</span>
+                                    <span class="stat-label">Status</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Part Information -->
+                        <div class="detail-card-ultra-compact">
+                            <div class="card-header-ultra-compact">
+                                <h6><i class="material-icons me-1">info</i>Part Information</h6>
+                                <div class="header-actions-ultra-compact">
+                                    <button class="btn btn-primary btn-xxs btn-edit">
+                                        <i class="material-icons">edit</i>
+                                    </button>
+                                    <button class="btn btn-success btn-xxs btn-save" style="display: none;">
+                                        <i class="material-icons">save</i>
+                                    </button>
+                                    <button class="btn btn-secondary btn-xxs btn-cancel" style="display: none;">
+                                        <i class="material-icons">cancel</i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body-ultra-compact">
+                                <!-- Ultra Compact Information Grid -->
+                                <div class="info-grid-ultra-compact">
+                                    <!-- Row 1: Primary Info -->
+                                    <div class="info-row-ultra-compact">
+                                        <div class="info-item-ultra-compact">
+                                            <label>Part Number <span class="required">*</span></label>
+                                            <div class="info-value-ultra-compact primary" data-field="id"></div>
+                                        </div>
+                                        <div class="info-item-ultra-compact">
+                                            <label>Category <span class="required">*</span></label>
+                                            <div class="info-value-ultra-compact" data-field="category"></div>
+                                        </div>
+                                        <div class="info-item-ultra-compact">
+                                            <label>Type</label>
+                                            <div class="info-value-ultra-compact" data-field="partType"></div>
+                                        </div>
+                                    </div>
+                                    <!-- Row 2: Description -->
+                                    <div class="info-row-ultra-compact">
+                                        <div class="info-item-ultra-compact full-width">
+                                            <label>Description <span class="required">*</span></label>
+                                            <div class="info-value-ultra-compact" data-field="description"></div>
+                                        </div>
+                                    </div>
+                                    <!-- Row 3: Classification -->
+                                    <div class="info-row-ultra-compact">
+                                        <div class="info-item-ultra-compact">
+                                            <label>Component? <span class="required">*</span></label>
+                                            <div class="info-value-ultra-compact badge-value" data-field="isComponent">
+                                                <span class="badge bg-success"></span>
+                                            </div>
+                                        </div>
+                                        <div class="info-item-ultra-compact">
+                                            <label>Active? <span class="required">*</span></label>
+                                            <div class="info-value-ultra-compact badge-value" data-field="isActive">
+                                                <span class="badge bg-success"></span>
+                                            </div>
+                                        </div>
+                                        <div class="info-item-ultra-compact">
+                                            <label>Movement <span class="required">*</span></label>
+                                            <div class="info-value-ultra-compact" data-field="movement"></div>
+                                        </div>
+                                    </div>
+                                    <!-- Row 4: Physical Properties -->
+                                    <div class="info-row-ultra-compact">
+                                        <div class="info-item-ultra-compact">
+                                            <label>UOM <span class="required">*</span></label>
+                                            <div class="info-value-ultra-compact" data-field="uom"></div>
+                                        </div>
+                                        <div class="info-item-ultra-compact">
+                                            <label>Weight</label>
+                                            <div class="info-value-ultra-compact" data-field="weight"></div>
+                                        </div>
+                                        <div class="info-item-ultra-compact">
+                                            <label>Function Group</label>
+                                            <div class="info-value-ultra-compact" data-field="partFunctionGroup"></div>
+                                        </div>
+                                    </div>
+                                    <!-- Row 5: Status Flags -->
+                                    <div class="info-row-ultra-compact">
+                                        <div class="info-item-ultra-compact">
+                                            <label>Hazardous?</label>
+                                            <div class="info-value-ultra-compact badge-value" data-field="isHazardous">
+                                                <span class="badge bg-secondary"></span>
+                                            </div>
+                                        </div>
+                                        <div class="info-item-ultra-compact">
+                                            <label>Local?</label>
+                                            <div class="info-value-ultra-compact badge-value" data-field="isLocal">
+                                                <span class="badge bg-secondary"></span>
+                                            </div>
+                                        </div>
+                                        <div class="info-item-ultra-compact">
+                                            <label>Kit Part?</label>
+                                            <div class="info-value-ultra-compact badge-value" data-field="isKitPart">
+                                                <span class="badge bg-secondary"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Collapsible Additional Info -->
+                                    <div class="additional-info-toggle-ultra-compact">
+                                        <button class="btn btn-link btn-xs p-0" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#additionalInfo">
+                                            <i class="material-icons me-1">expand_more</i>More Details
+                                        </button>
+                                    </div>
+                                    <div class="collapse" id="additionalInfo">
+                                        <div class="info-row-ultra-compact">
+                                            <div class="info-item-ultra-compact">
+                                                <label>Prefix</label>
+                                                <div class="info-value-ultra-compact" data-field="prefix"></div>
+                                            </div>
+                                            <div class="info-item-ultra-compact">
+                                                <label>Alias Number</label>
+                                                <div class="info-value-ultra-compact" data-field="aliasPartNumber">
+                                                </div>
+                                            </div>
+                                            <div class="info-item-ultra-compact">
+                                                <label>Alias Prefix</label>
+                                                <div class="info-value-ultra-compact" data-field="aliasPartPrefix">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="info-row-ultra-compact">
+                                            <div class="info-item-ultra-compact">
+                                                <label>Salvage Number</label>
+                                                <div class="info-value-ultra-compact" data-field="salvagePartNumber">
+                                                </div>
+                                            </div>
+                                            <div class="info-item-ultra-compact">
+                                                <label>Salvage Prefix</label>
+                                                <div class="info-value-ultra-compact" data-field="salvagePartPrefix">
+                                                </div>
+                                            </div>
+                                            <div class="info-item-ultra-compact">
+                                                <label>Tariff Code</label>
+                                                <div class="info-value-ultra-compact" data-field="exciseTariffCode">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="info-row-ultra-compact">
+                                            <div class="info-item-ultra-compact">
+                                                <label>Disposition</label>
+                                                <div class="info-value-ultra-compact" data-field="partsDisposition">
+                                                </div>
+                                            </div>
+                                            <div class="info-item-ultra-compact">
+                                                <label>Dimension</label>
+                                                <div class="info-value-ultra-compact" data-field="dimension"></div>
+                                            </div>
+                                            <div class="info-item-ultra-compact">
+                                                <label>Supersession</label>
+                                                <div class="info-value-ultra-compact" data-field="supersessionDetails">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+            <!-- Stock Details Tab -->
+            <div class="tab-pane fade" id="stock" role="tabpanel">
+                <!-- Modern Stock Summary Cards -->
+                <div class="stock-summary-cards mb-3">
+                    <div class="row g-2">
+                        <div class="col-md-3">
+                            <div class="stock-summary-card">
+                                <div class="summary-icon bg-primary">
+                                    <i class="material-icons">inventory</i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-value" id="totalStockValue">0</div>
+                                    <div class="summary-label">Total Stock</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stock-summary-card">
+                                <div class="summary-icon bg-success">
+                                    <i class="material-icons">check_circle</i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-value" id="availableStockValue">0</div>
+                                    <div class="summary-label">Available</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stock-summary-card">
+                                <div class="summary-icon bg-warning">
+                                    <i class="material-icons">warning</i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-value" id="damagedStockValue">0</div>
+                                    <div class="summary-label">Damaged</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stock-summary-card">
+                                <div class="summary-icon bg-info">
+                                    <i class="material-icons">location_on</i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-value" id="locationsCount">0</div>
+                                    <div class="summary-label">Locations</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-card-ultra-compact">
+                    <!-- Modern Compact Header -->
+                    <div class="stock-header-modern">
+                        <div class="stock-header-content">
+                            <div class="stock-title-section">
+                                <h6 class="stock-title">
+                                    <i class="material-icons me-2">inventory_2</i>Stock Details
+                                </h6>
+                                <div class="stock-subtitle">Manage inventory across all locations</div>
+                            </div>
+
+                            <!-- Compact Action Bar -->
+                            <div class="stock-actions-bar">
+                                <!-- Quick Search -->
+                                <div class="search-compact">
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-text">
+                                            <i class="material-icons">search</i>
+                                        </span>
+                                        <input type="text" class="form-control" id="stockSearch"
+                                            placeholder="Search locations...">
+                                    </div>
+                                </div>
+
+                                <!-- Smart Filters -->
+                                <div class="filters-compact">
+                                    <button class="btn btn-outline-secondary btn-sm filter-toggle" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#stockFilters">
+                                        <i class="material-icons me-1">tune</i>Smart Filters
+                                        <span class="filter-count" id="activeFiltersCount" style="display: none;">0</span>
+                                    </button>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="action-buttons-compact">
+                                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#stockEntryModal" title="Add Stock Entry">
+                                        <i class="material-icons">add</i>
+                                    </button>
+                                    <button class="btn btn-outline-danger btn-sm" id="deleteStockEntry"
+                                        title="Delete Selected" style="display: none;">
+                                        <i class="material-icons">delete</i>
+                                    </button>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="table" title="Table View">
+                                            <i class="material-icons">table_view</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn active"
+                                            data-view="grid" title="Grid View">
+                                            <i class="material-icons">grid_view</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="list" title="List View">
+                                            <i class="material-icons">list</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="cards" title="Bootstrap Cards">
+                                            <i class="material-icons">view_module</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="tiles" title="Tile View">
+                                            <i class="material-icons">dashboard</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="compact" title="Compact View">
+                                            <i class="material-icons">view_agenda</i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Collapsible Advanced Filters -->
+                        <div class="collapse" id="stockFilters">
+                            <div class="filters-panel">
+                                <div class="row g-2">
+                                    <div class="col-md-3">
+                                        <label class="filter-label">Stock Status</label>
+                                        <select class="form-select form-select-sm" id="stockStatusFilter">
+                                            <option value="all">All Status</option>
+                                            <option value="inStock">In Stock</option>
+                                            <option value="outOfStock">Out of Stock</option>
+                                            <option value="lowStock">Low Stock</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="filter-label">Condition</label>
+                                        <select class="form-select form-select-sm" id="damagedStatusFilter">
+                                            <option value="all">All Conditions</option>
+                                            <option value="good">Good</option>
+                                            <option value="damaged">Damaged</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="filter-label">Date From</label>
+                                        <input type="date" class="form-control form-control-sm" id="stockCheckDateStart">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="filter-label">Date To</label>
+                                        <input type="date" class="form-control form-control-sm" id="stockCheckDateEnd">
+                                    </div>
+                                </div>
+                                <div class="filter-actions mt-2">
+                                    <button class="btn btn-primary btn-sm" id="applyFilters">
+                                        <i class="material-icons me-1">filter_alt</i>Apply
+                                    </button>
+                                    <button class="btn btn-outline-secondary btn-sm" id="clearFilters">
+                                        <i class="material-icons me-1">clear</i>Clear
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modern Stock Content -->
+                    <div class="stock-content-modern">
+                        <!-- Selection Controls -->
+                        <div class="selection-controls-stock" id="stockSelectionControls" style="display: none;">
+                            <div class="selection-info">
+                                <span id="selectedStockCount">0</span> items selected
+                            </div>
+                            <div class="selection-actions">
+                                <button class="btn btn-outline-light btn-sm" onclick="clearStockSelection()">
+                                    <i class="material-icons me-1">clear</i>Clear
+                                </button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteSelectedStock()">
+                                    <i class="material-icons me-1">delete</i>Delete Selected
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Loading State -->
+                        <div class="loading-state" id="stockLoading" style="display: none;">
+                            <div class="loading-content">
+                                <div class="spinner-border text-primary" role="status"></div>
+                                <div class="loading-text">Loading stock data...</div>
+                            </div>
+                        </div>
+
+                        <!-- Stock Views Container -->
+                        <div id="stockViewContainer" class="stock-views">
+                            <!-- Table View -->
+                            <div class="stock-view stock-table-view" style="display: none;">
+                                <div class="table-responsive-modern">
+                                    <table class="table table-modern table-hover align-middle">
+                                        <thead class="table-header-modern sticky-top">
+                                            <tr>
+                                                <th class="select-column">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="selectAllStock">
+                                                    </div>
+                                                </th>
+                                                <th class="location-col" data-sort="branchName">
+                                                    <div class="th-content">
+                                                        <span>Branch Name</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="location-col" data-sort="warehouse">
+                                                    <div class="th-content">
+                                                        <span>Warehouse</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="location-col" data-sort="binLocation">
+                                                    <div class="th-content">
+                                                        <span>Bin Location</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="number-col" data-sort="availableStock">
+                                                    <div class="th-content">
+                                                        <span>Available Stock</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="number-col" data-sort="totalStock">
+                                                    <div class="th-content">
+                                                        <span>Total Stock</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="number-col" data-sort="damagedQuantity">
+                                                    <div class="th-content">
+                                                        <span>Damaged Qty</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="text-col" data-sort="serialNumber">
+                                                    <div class="th-content">
+                                                        <span>Serial #</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="date-col" data-sort="lastStockCheckDate">
+                                                    <div class="th-content">
+                                                        <span>Last Check Date</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="actions-col">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="stockDetailsTableBody" class="table-body-modern">
+                                            <!-- Stock details will be populated by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Grid View (Default) -->
+                            <div class="stock-view stock-grid-view" style="display: block;">
+                                <div id="stockGridView" class="stock-grid-modern">
+                                    <!-- Stock details will be populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- List View -->
+                            <div class="stock-view stock-list-view" style="display: none;">
+                                <div id="stockListView" class="stock-list-modern">
+                                    <!-- Stock details will be populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- Bootstrap Cards View -->
+                            <div class="stock-view stock-cards-view" style="display: none;">
+                                <div id="stockCardsView" class="stock-bootstrap-cards">
+                                    <!-- Stock details will be populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- Tiles View -->
+                            <div class="stock-view stock-tiles-view" style="display: none;">
+                                <div id="stockTilesView" class="stock-tiles-modern">
+                                    <!-- Stock details will be populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- Compact View -->
+                            <div class="stock-view stock-compact-view" style="display: none;">
+                                <div id="stockCompactView" class="stock-compact-modern">
+                                    <!-- Stock details will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modern Pagination -->
+                        <div class="pagination-modern" id="stockPaginationContainer">
+                            <div class="pagination-info">
+                                <span id="stockTableInfo" class="info-text">Showing 0 of 0 entries</span>
+                            </div>
+                            <nav class="pagination-nav">
+                                <ul class="pagination pagination-sm mb-0" id="stockPagination"></ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modern Stock Entry Modal -->
+            <div class="modal fade" id="stockEntryModal" tabindex="-1" aria-labelledby="stockEntryModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content modal-modern">
+                        <div class="modal-header modal-header-modern">
+                            <div class="modal-title-section">
+                                <h5 class="modal-title" id="stockEntryModalLabel">
+                                    <i class="material-icons me-2">add_box</i>Add Stock Entry
+                                </h5>
+                                <p class="modal-subtitle">Add new stock location for this part</p>
+                            </div>
+                            <button type="button" class="btn-close btn-close-modern" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body modal-body-modern">
+                            <form id="stockEntryForm" class="stock-form-modern">
+                                <input type="hidden" id="stockEntryId">
+
+                                <!-- Location Information -->
+                                <div class="form-section">
+                                    <h6 class="section-title">
+                                        <i class="material-icons me-2">location_on</i>Location Information
+                                    </h6>
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <div class="form-group-modern">
+                                                <label for="branchName" class="form-label-modern">Branch Name *</label>
+                                                <input type="text" class="form-control form-control-modern"
+                                                    id="branchName" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group-modern">
+                                                <label for="warehouse" class="form-label-modern">Warehouse</label>
+                                                <input type="text" class="form-control form-control-modern"
+                                                    id="warehouse">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group-modern">
+                                                <label for="binLocation" class="form-label-modern">Bin Location</label>
+                                                <input type="text" class="form-control form-control-modern"
+                                                    id="binLocation">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Stock Quantities -->
+                                <div class="form-section">
+                                    <h6 class="section-title">
+                                        <i class="material-icons me-2">inventory</i>Stock Quantities
+                                    </h6>
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <div class="form-group-modern">
+                                                <label for="availableStock" class="form-label-modern">Available Stock *</label>
+                                                <input type="number" step="0.01" class="form-control form-control-modern"
+                                                    id="availableStock" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group-modern">
+                                                <label for="totalStock" class="form-label-modern">Total Stock</label>
+                                                <input type="number" step="0.01" class="form-control form-control-modern"
+                                                    id="totalStock">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group-modern">
+                                                <label for="damagedQuantity" class="form-label-modern">Damaged Quantity</label>
+                                                <input type="number" step="0.01" class="form-control form-control-modern"
+                                                    id="damagedQuantity">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Additional Details -->
+                                <div class="form-section">
+                                    <h6 class="section-title">
+                                        <i class="material-icons me-2">info</i>Additional Details
+                                    </h6>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="form-group-modern">
+                                                <label for="serialNumber" class="form-label-modern">Serial Number</label>
+                                                <input type="number" class="form-control form-control-modern"
+                                                    id="serialNumber">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group-modern">
+                                                <label for="lastStockCheckDate" class="form-label-modern">Last Stock Check</label>
+                                                <input type="date" class="form-control form-control-modern"
+                                                    id="lastStockCheckDate">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer modal-footer-modern">
+                            <button type="button" class="btn btn-outline-secondary btn-modern"
+                                data-bs-dismiss="modal">
+                                <i class="material-icons me-1">close</i>Cancel
+                            </button>
+                            <button type="button" class="btn btn-primary btn-modern" id="saveStockEntry">
+                                <i class="material-icons me-1">save</i>Save Entry
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="competitor-price" role="tabpanel">
+                <!-- Modern Competitor Price Summary Cards -->
+                <div class="competitor-summary-cards mb-3">
+                    <div class="row g-2">
+                        <div class="col-md-3">
+                            <div class="competitor-summary-card">
+                                <div class="summary-icon bg-primary">
+                                    <i class="material-icons">trending_down</i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-value" id="totalCompetitorsValue">0</div>
+                                    <div class="summary-label">Total Competitors</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="competitor-summary-card">
+                                <div class="summary-icon bg-success">
+                                    <i class="material-icons">price_check</i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-value" id="bestPriceValue">$0.00</div>
+                                    <div class="summary-label">Best Price</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="competitor-summary-card">
+                                <div class="summary-icon bg-warning">
+                                    <i class="material-icons">schedule</i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-value" id="recentUpdatesValue">0</div>
+                                    <div class="summary-label">Recent Updates</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="competitor-summary-card">
+                                <div class="summary-icon bg-info">
+                                    <i class="material-icons">analytics</i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-value" id="avgPriceValue">$0.00</div>
+                                    <div class="summary-label">Average Price</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-card-ultra-compact">
+                    <!-- Modern Compact Header -->
+                    <div class="competitor-header-modern">
+                        <div class="competitor-header-content">
+                            <div class="competitor-title-section">
+                                <h6 class="competitor-title">
+                                    <i class="material-icons me-2">trending_down</i>Competitor Price Details
+                                </h6>
+                                <div class="competitor-subtitle">Track and analyze competitor pricing information</div>
+                            </div>
+
+                            <!-- Compact Action Bar -->
+                            <div class="competitor-actions-bar">
+                                <!-- Quick Search -->
+                                <div class="search-compact">
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-text">
+                                            <i class="material-icons">search</i>
+                                        </span>
+                                        <input type="text" class="form-control" id="competitorSearch"
+                                            placeholder="Search competitors...">
+                                    </div>
+                                </div>
+
+                                <!-- Smart Filters -->
+                                <div class="filters-compact">
+                                    <button class="btn btn-outline-secondary btn-sm filter-toggle" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#competitorFilters">
+                                        <i class="material-icons me-1">tune</i>Smart Filters
+                                        <span class="filter-count" id="activeCompetitorFiltersCount" style="display: none;">0</span>
+                                    </button>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="action-buttons-compact">
+                                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#competitorEntryModal" title="Add Competitor Price">
+                                        <i class="material-icons">add</i>
+                                    </button>
+                                    <button class="btn btn-outline-danger btn-sm" id="deleteCompetitorEntry"
+                                        title="Delete Selected" style="display: none;">
+                                        <i class="material-icons">delete</i>
+                                    </button>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="table" title="Table View">
+                                            <i class="material-icons">table_view</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn active"
+                                            data-view="grid" title="Grid View">
+                                            <i class="material-icons">grid_view</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="list" title="List View">
+                                            <i class="material-icons">list</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="cards" title="Bootstrap Cards">
+                                            <i class="material-icons">view_module</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="tiles" title="Tile View">
+                                            <i class="material-icons">dashboard</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="compact" title="Compact View">
+                                            <i class="material-icons">view_agenda</i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Collapsible Advanced Filters -->
+                        <div class="collapse" id="competitorFilters">
+                            <div class="filters-panel">
+                                <div class="row g-2">
+                                    <div class="col-md-3">
+                                        <label class="filter-label">Price Range</label>
+                                        <select class="form-select form-select-sm" id="competitorPriceRangeFilter">
+                                            <option value="all">All Ranges</option>
+                                            <option value="0-100">$0 - $100</option>
+                                            <option value="100-500">$100 - $500</option>
+                                            <option value="500+">$500+</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="filter-label">Competitor</label>
+                                        <input type="text" class="form-control form-control-sm" id="competitorNameFilter" placeholder="Filter by competitor">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="filter-label">Date From</label>
+                                        <input type="date" class="form-control form-control-sm" id="competitorDateStart">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="filter-label">Date To</label>
+                                        <input type="date" class="form-control form-control-sm" id="competitorDateEnd">
+                                    </div>
+                                </div>
+                                <div class="filter-actions mt-2">
+                                    <button class="btn btn-primary btn-sm" id="applyCompetitorFilters">
+                                        <i class="material-icons me-1">filter_alt</i>Apply
+                                    </button>
+                                    <button class="btn btn-outline-secondary btn-sm" id="clearCompetitorFilters">
+                                        <i class="material-icons me-1">clear</i>Clear
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modern Competitor Content -->
+                    <div class="competitor-content-modern">
+                        <!-- Selection Controls -->
+                        <div class="selection-controls-competitor" id="competitorSelectionControls" style="display: none;">
+                            <div class="selection-info">
+                                <span id="selectedCompetitorCount">0</span> items selected
+                            </div>
+                            <div class="selection-actions">
+                                <button class="btn btn-outline-light btn-sm" onclick="clearCompetitorSelection()">
+                                    <i class="material-icons me-1">clear</i>Clear
+                                </button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteSelectedCompetitor()">
+                                    <i class="material-icons me-1">delete</i>Delete Selected
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Loading State -->
+                        <div class="loading-state" id="competitorLoading" style="display: none;">
+                            <div class="loading-content">
+                                <div class="spinner-border text-primary" role="status"></div>
+                                <div class="loading-text">Loading competitor data...</div>
+                            </div>
+                        </div>
+
+                        <!-- Competitor Views Container -->
+                        <div id="competitorViewContainer" class="competitor-views">
+                            <!-- Table View -->
+                            <div class="competitor-view competitor-table-view" style="display: none;">
+                                <div class="table-responsive-modern">
+                                    <table class="table table-modern table-hover align-middle">
+                                        <thead class="table-header-modern sticky-top">
+                                            <tr>
+                                                <th class="select-column">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="selectAllCompetitor">
+                                                    </div>
+                                                </th>
+                                                <th class="sortable text-col" data-sort="competitorName">
+                                                    <div class="th-content">
+                                                        <span>Competitor Name</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="sortable price-col" data-sort="netRate">
+                                                    <div class="th-content">
+                                                        <span>Net Rate</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="sortable price-col" data-sort="costPrice">
+                                                    <div class="th-content">
+                                                        <span>Cost Price</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="sortable date-col" data-sort="effectiveFrom">
+                                                    <div class="th-content">
+                                                        <span>Effective From</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="sortable text-col" data-sort="remarks">
+                                                    <div class="th-content">
+                                                        <span>Remarks</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="sortable text-col" data-sort="modifiedBy">
+                                                    <div class="th-content">
+                                                        <span>Modified By</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="actions-col">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="competitorDetailsTableBody" class="table-body-modern">
+                                            <!-- Competitor details will be populated by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Grid View (Default) -->
+                            <div class="competitor-view competitor-grid-view" style="display: block;">
+                                <div id="competitorGridView" class="competitor-grid-modern">
+                                    <!-- Competitor details will be populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- List View -->
+                            <div class="competitor-view competitor-list-view" style="display: none;">
+                                <div id="competitorListView" class="competitor-list-modern">
+                                    <!-- Competitor details will be populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- Bootstrap Cards View -->
+                            <div class="competitor-view competitor-cards-view" style="display: none;">
+                                <div id="competitorCardsView" class="competitor-bootstrap-cards">
+                                    <!-- Competitor details will be populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- Tiles View -->
+                            <div class="competitor-view competitor-tiles-view" style="display: none;">
+                                <div id="competitorTilesView" class="competitor-tiles-modern">
+                                    <!-- Competitor details will be populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- Compact View -->
+                            <div class="competitor-view competitor-compact-view" style="display: none;">
+                                <div id="competitorCompactView" class="competitor-compact-modern">
+                                    <!-- Competitor details will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modern Pagination -->
+                        <div class="pagination-modern" id="competitorPaginationContainer">
+                            <div class="pagination-info">
+                                <span id="competitorTableInfo" class="info-text">Showing 0 of 0 entries</span>
+                            </div>
+                            <nav class="pagination-nav">
+                                <ul class="pagination pagination-sm mb-0" id="competitorPagination"></ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pricing Tab -->
+            <div class="tab-pane fade" id="pricing" role="tabpanel">
+                <!-- Modern Pricing Summary Cards -->
+                <div class="pricing-summary-cards mb-3">
+                    <div class="row g-2">
+                        <div class="col-md-3">
+                            <div class="pricing-summary-card">
+                                <div class="summary-icon bg-primary">
+                                    <i class="material-icons">attach_money</i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-value" id="totalPricesValue">0</div>
+                                    <div class="summary-label">Total Prices</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="pricing-summary-card">
+                                <div class="summary-icon bg-success">
+                                    <i class="material-icons">trending_up</i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-value" id="currentPriceValue">$0.00</div>
+                                    <div class="summary-label">Current Price</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="pricing-summary-card">
+                                <div class="summary-icon bg-warning">
+                                    <i class="material-icons">schedule</i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-value" id="pendingPricesValue">0</div>
+                                    <div class="summary-label">Pending</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="pricing-summary-card">
+                                <div class="summary-icon bg-info">
+                                    <i class="material-icons">currency_exchange</i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-value" id="currenciesCount">0</div>
+                                    <div class="summary-label">Currencies</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-card-ultra-compact">
+                    <!-- Modern Compact Header -->
+                    <div class="pricing-header-modern">
+                        <div class="pricing-header-content">
+                            <div class="pricing-title-section">
+                                <h6 class="pricing-title">
+                                    <i class="material-icons me-2">attach_money</i>Price Details
+                                </h6>
+                                <div class="pricing-subtitle">Manage pricing across all currencies and customers</div>
+                            </div>
+
+                            <!-- Compact Action Bar -->
+                            <div class="pricing-actions-bar">
+                                <!-- Quick Search -->
+                                <div class="search-compact">
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-text">
+                                            <i class="material-icons">search</i>
+                                        </span>
+                                        <input type="text" class="form-control" id="pricingSearch"
+                                            placeholder="Search prices...">
+                                    </div>
+                                </div>
+
+                                <!-- Smart Filters -->
+                                <div class="filters-compact">
+                                    <button class="btn btn-outline-secondary btn-sm filter-toggle" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#pricingFilters">
+                                        <i class="material-icons me-1">tune</i>Smart Filters
+                                        <span class="filter-count" id="activePricingFiltersCount" style="display: none;">0</span>
+                                    </button>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="action-buttons-compact">
+                                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#pricingEntryModal" title="Add Price Entry">
+                                        <i class="material-icons">add</i>
+                                    </button>
+                                    <button class="btn btn-outline-danger btn-sm" id="deletePricingEntry"
+                                        title="Delete Selected" style="display: none;">
+                                        <i class="material-icons">delete</i>
+                                    </button>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="table" title="Table View">
+                                            <i class="material-icons">table_view</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn active"
+                                            data-view="grid" title="Grid View">
+                                            <i class="material-icons">grid_view</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="list" title="List View">
+                                            <i class="material-icons">list</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="cards" title="Bootstrap Cards">
+                                            <i class="material-icons">view_module</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="tiles" title="Tile View">
+                                            <i class="material-icons">dashboard</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="compact" title="Compact View">
+                                            <i class="material-icons">view_agenda</i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Collapsible Advanced Filters -->
+                        <div class="collapse" id="pricingFilters">
+                            <div class="filters-panel">
+                                <div class="row g-2">
+                                    <div class="col-md-3">
+                                        <label class="filter-label">Currency</label>
+                                        <select class="form-select form-select-sm" id="currencyFilter">
+                                            <option value="all">All Currencies</option>
+                                            <option value="USD">USD</option>
+                                            <option value="EUR">EUR</option>
+                                            <option value="CAD">CAD</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="filter-label">Price Range</label>
+                                        <select class="form-select form-select-sm" id="priceRangeFilter">
+                                            <option value="all">All Ranges</option>
+                                            <option value="0-100">$0 - $100</option>
+                                            <option value="100-500">$100 - $500</option>
+                                            <option value="500+">$500+</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="filter-label">Date From</label>
+                                        <input type="date" class="form-control form-control-sm" id="pricingDateStart">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="filter-label">Date To</label>
+                                        <input type="date" class="form-control form-control-sm" id="pricingDateEnd">
+                                    </div>
+                                </div>
+                                <div class="filter-actions mt-2">
+                                    <button class="btn btn-primary btn-sm" id="applyPricingFilters">
+                                        <i class="material-icons me-1">filter_alt</i>Apply
+                                    </button>
+                                    <button class="btn btn-outline-secondary btn-sm" id="clearPricingFilters">
+                                        <i class="material-icons me-1">clear</i>Clear
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modern Pricing Content -->
+                    <div class="pricing-content-modern">
+                        <!-- Selection Controls -->
+                        <div class="selection-controls-pricing" id="pricingSelectionControls" style="display: none;">
+                            <div class="selection-info">
+                                <span id="selectedPricingCount">0</span> items selected
+                            </div>
+                            <div class="selection-actions">
+                                <button class="btn btn-outline-light btn-sm" onclick="clearPricingSelection()">
+                                    <i class="material-icons me-1">clear</i>Clear
+                                </button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteSelectedPricing()">
+                                    <i class="material-icons me-1">delete</i>Delete Selected
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Loading State -->
+                        <div class="loading-state" id="pricingLoading" style="display: none;">
+                            <div class="loading-content">
+                                <div class="spinner-border text-primary" role="status"></div>
+                                <div class="loading-text">Loading pricing data...</div>
+                            </div>
+                        </div>
+
+                        <!-- Pricing Views Container -->
+                        <div id="pricingViewContainer" class="pricing-views">
+                            <!-- Table View -->
+                            <div class="pricing-view pricing-table-view" style="display: none;">
+                                <div class="table-responsive-modern">
+                                    <table class="table table-modern table-hover align-middle">
+                                        <thead class="table-header-modern sticky-top">
+                                            <tr>
+                                                <th class="select-column">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="selectAllPricing">
+                                                    </div>
+                                                </th>
+                                                <th class="sortable price-col" data-sort="listPrice">
+                                                    <div class="th-content">
+                                                        <span>List Price</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="sortable price-col" data-sort="costPrice">
+                                                    <div class="th-content">
+                                                        <span>Cost Price</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="sortable date-col" data-sort="effectiveFrom">
+                                                    <div class="th-content">
+                                                        <span>Effective From</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="sortable text-col" data-sort="customerWarranty">
+                                                    <div class="th-content">
+                                                        <span>Customer/Warranty</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="sortable text-col" data-sort="buyingCurrency">
+                                                    <div class="th-content">
+                                                        <span>Currency</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="actions-col">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="pricingDetailsTableBody" class="table-body-modern">
+                                            <!-- Pricing details will be populated by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Grid View (Default) -->
+                            <div class="pricing-view pricing-grid-view" style="display: block;">
+                                <div id="pricingGridView" class="pricing-grid-modern">
+                                    <!-- Pricing details will be populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- List View -->
+                            <div class="pricing-view pricing-list-view" style="display: none;">
+                                <div id="pricingListView" class="pricing-list-modern">
+                                    <!-- Pricing details will be populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- Bootstrap Cards View -->
+                            <div class="pricing-view pricing-cards-view" style="display: none;">
+                                <div id="pricingCardsView" class="pricing-bootstrap-cards">
+                                    <!-- Pricing details will be populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- Tiles View -->
+                            <div class="pricing-view pricing-tiles-view" style="display: none;">
+                                <div id="pricingTilesView" class="pricing-tiles-modern">
+                                    <!-- Pricing details will be populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- Compact View -->
+                            <div class="pricing-view pricing-compact-view" style="display: none;">
+                                <div id="pricingCompactView" class="pricing-compact-modern">
+                                    <!-- Pricing details will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modern Pagination -->
+                        <div class="pagination-modern" id="pricingPaginationContainer">
+                            <div class="pagination-info">
+                                <span id="pricingTableInfo" class="info-text">Showing 0 of 0 entries</span>
+                            </div>
+                            <nav class="pagination-nav">
+                                <ul class="pagination pagination-sm mb-0" id="pricingPagination"></ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manufacturer Tab -->
+            <div class="tab-pane fade" id="manufacturer" role="tabpanel">
+                <!-- Modern Manufacturer Summary Cards -->
+                <div class="manufacturer-summary-cards mb-3">
+                    <div class="row g-2">
+                        <div class="col-md-3">
+                            <div class="manufacturer-summary-card">
+                                <div class="summary-icon bg-primary">
+                                    <i class="material-icons">business</i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-value" id="totalManufacturersValue">0</div>
+                                    <div class="summary-label">Total Manufacturers</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="manufacturer-summary-card">
+                                <div class="summary-icon bg-success">
+                                    <i class="material-icons">verified</i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-value" id="activeManufacturersValue">0</div>
+                                    <div class="summary-label">Active</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="manufacturer-summary-card">
+                                <div class="summary-icon bg-warning">
+                                    <i class="material-icons">schedule</i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-value" id="pendingOrdersValue">0</div>
+                                    <div class="summary-label">Pending Orders</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="manufacturer-summary-card">
+                                <div class="summary-icon bg-info">
+                                    <i class="material-icons">inventory_2</i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-value" id="totalPartsValue">0</div>
+                                    <div class="summary-label">Total Parts</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-card-ultra-compact">
+                    <!-- Modern Compact Header -->
+                    <div class="manufacturer-header-modern">
+                        <div class="manufacturer-header-content">
+                            <div class="manufacturer-title-section">
+                                <h6 class="manufacturer-title">
+                                    <i class="material-icons me-2">business</i>Manufacturer Details
+                                </h6>
+                                <div class="manufacturer-subtitle">Manage manufacturer information and relationships</div>
+                            </div>
+
+                            <!-- Compact Action Bar -->
+                            <div class="manufacturer-actions-bar">
+                                <!-- Quick Search -->
+                                <div class="search-compact">
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-text">
+                                            <i class="material-icons">search</i>
+                                        </span>
+                                        <input type="text" class="form-control" id="manufacturerSearch"
+                                            placeholder="Search manufacturers...">
+                                    </div>
+                                </div>
+
+                                <!-- Smart Filters -->
+                                <div class="filters-compact">
+                                    <button class="btn btn-outline-secondary btn-sm filter-toggle" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#manufacturerFilters">
+                                        <i class="material-icons me-1">tune</i>Smart Filters
+                                        <span class="filter-count" id="activeManufacturerFiltersCount" style="display: none;">0</span>
+                                    </button>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="action-buttons-compact">
+                                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#manufacturerEntryModal" title="Add Manufacturer">
+                                        <i class="material-icons">add</i>
+                                    </button>
+                                    <button class="btn btn-outline-danger btn-sm" id="deleteManufacturerEntry"
+                                        title="Delete Selected" style="display: none;">
+                                        <i class="material-icons">delete</i>
+                                    </button>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="table" title="Table View">
+                                            <i class="material-icons">table_view</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn active"
+                                            data-view="grid" title="Grid View">
+                                            <i class="material-icons">grid_view</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="list" title="List View">
+                                            <i class="material-icons">list</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="cards" title="Bootstrap Cards">
+                                            <i class="material-icons">view_module</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="tiles" title="Tile View">
+                                            <i class="material-icons">dashboard</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="compact" title="Compact View">
+                                            <i class="material-icons">view_agenda</i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Collapsible Advanced Filters -->
+                        <div class="collapse" id="manufacturerFilters">
+                            <div class="filters-panel">
+                                <div class="row g-2">
+                                    <div class="col-md-3">
+                                        <label class="filter-label">Status</label>
+                                        <select class="form-select form-select-sm" id="manufacturerStatusFilter">
+                                            <option value="all">All Status</option>
+                                            <option value="active">Active</option>
+                                            <option value="inactive">Inactive</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="filter-label">Currency</label>
+                                        <select class="form-select form-select-sm" id="manufacturerCurrencyFilter">
+                                            <option value="all">All Currencies</option>
+                                            <option value="USD">USD</option>
+                                            <option value="EUR">EUR</option>
+                                            <option value="CAD">CAD</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="filter-label">Date From</label>
+                                        <input type="date" class="form-control form-control-sm" id="manufacturerDateStart">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="filter-label">Date To</label>
+                                        <input type="date" class="form-control form-control-sm" id="manufacturerDateEnd">
+                                    </div>
+                                </div>
+                                <div class="filter-actions mt-2">
+                                    <button class="btn btn-primary btn-sm" id="applyManufacturerFilters">
+                                        <i class="material-icons me-1">filter_alt</i>Apply
+                                    </button>
+                                    <button class="btn btn-outline-secondary btn-sm" id="clearManufacturerFilters">
+                                        <i class="material-icons me-1">clear</i>Clear
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modern Manufacturer Content -->
+                    <div class="manufacturer-content-modern">
+                        <!-- Selection Controls -->
+                        <div class="selection-controls-manufacturer" id="manufacturerSelectionControls" style="display: none;">
+                            <div class="selection-info">
+                                <span id="selectedManufacturerCount">0</span> items selected
+                            </div>
+                            <div class="selection-actions">
+                                <button class="btn btn-outline-light btn-sm" onclick="clearManufacturerSelection()">
+                                    <i class="material-icons me-1">clear</i>Clear
+                                </button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteSelectedManufacturer()">
+                                    <i class="material-icons me-1">delete</i>Delete Selected
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Loading State -->
+                        <div class="loading-state" id="manufacturerLoading" style="display: none;">
+                            <div class="loading-content">
+                                <div class="spinner-border text-primary" role="status"></div>
+                                <div class="loading-text">Loading manufacturer data...</div>
+                            </div>
+                        </div>
+
+                        <!-- Manufacturer Views Container -->
+                        <div id="manufacturerViewContainer" class="manufacturer-views">
+                            <!-- Table View -->
+                            <div class="manufacturer-view manufacturer-table-view" style="display: none;">
+                                <div class="table-responsive-modern">
+                                    <table class="table table-modern table-hover align-middle">
+                                        <thead class="table-header-modern sticky-top">
+                                            <tr>
+                                                <th class="select-column">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="selectAllManufacturer">
+                                                    </div>
+                                                </th>
+                                                <th class="sortable text-col" data-sort="manufacturer">
+                                                    <div class="th-content">
+                                                        <span>Manufacturer</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="sortable text-col" data-sort="prefix">
+                                                    <div class="th-content">
+                                                        <span>Prefix</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="sortable text-col" data-sort="manufacturerPart">
+                                                    <div class="th-content">
+                                                        <span>Manufacturer Part</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="sortable text-col" data-sort="buyingCurrency">
+                                                    <div class="th-content">
+                                                        <span>Currency</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="sortable number-col" data-sort="stdPackQty">
+                                                    <div class="th-content">
+                                                        <span>Pack Qty</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="sortable price-col" data-sort="partnerNetPrice">
+                                                    <div class="th-content">
+                                                        <span>Net Price</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="sortable date-col" data-sort="lastInvoiceDate">
+                                                    <div class="th-content">
+                                                        <span>Last Invoice</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="actions-col">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="manufacturerDetailsTableBody" class="table-body-modern">
+                                            <!-- Manufacturer details will be populated by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Grid View (Default) -->
+                            <div class="manufacturer-view manufacturer-grid-view" style="display: block;">
+                                <div id="manufacturerGridView" class="manufacturer-grid-modern">
+                                    <!-- Manufacturer details will be populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- List View -->
+                            <div class="manufacturer-view manufacturer-list-view" style="display: none;">
+                                <div id="manufacturerListView" class="manufacturer-list-modern">
+                                    <!-- Manufacturer details will be populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- Bootstrap Cards View -->
+                            <div class="manufacturer-view manufacturer-cards-view" style="display: none;">
+                                <div id="manufacturerCardsView" class="manufacturer-bootstrap-cards">
+                                    <!-- Manufacturer details will be populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- Tiles View -->
+                            <div class="manufacturer-view manufacturer-tiles-view" style="display: none;">
+                                <div id="manufacturerTilesView" class="manufacturer-tiles-modern">
+                                    <!-- Manufacturer details will be populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- Compact View -->
+                            <div class="manufacturer-view manufacturer-compact-view" style="display: none;">
+                                <div id="manufacturerCompactView" class="manufacturer-compact-modern">
+                                    <!-- Manufacturer details will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modern Pagination -->
+                        <div class="pagination-modern" id="manufacturerPaginationContainer">
+                            <div class="pagination-info">
+                                <span id="manufacturerTableInfo" class="info-text">Showing 0 of 0 entries</span>
+                            </div>
+                            <nav class="pagination-nav">
+                                <ul class="pagination pagination-sm mb-0" id="manufacturerPagination"></ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assets Tab -->
+            <div class="tab-pane fade" id="assets" role="tabpanel">
+                <!-- Modern Assets Summary Cards -->
+                <div class="assets-summary-cards mb-3">
+                    <div class="row g-2">
+                        <div class="col-md-3">
+                            <div class="assets-summary-card">
+                                <div class="summary-icon bg-primary">
+                                    <i class="material-icons">precision_manufacturing</i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-value" id="totalAssetsValue">0</div>
+                                    <div class="summary-label">Total Assets</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="assets-summary-card">
+                                <div class="summary-icon bg-success">
+                                    <i class="material-icons">verified</i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-value" id="activeBrandsValue">0</div>
+                                    <div class="summary-label">Active Brands</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="assets-summary-card">
+                                <div class="summary-icon bg-warning">
+                                    <i class="material-icons">directions_bus</i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-value" id="assetTypesValue">0</div>
+                                    <div class="summary-label">Asset Types</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="assets-summary-card">
+                                <div class="summary-icon bg-info">
+                                    <i class="material-icons">model_training</i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-value" id="modelsCount">0</div>
+                                    <div class="summary-label">Models</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-card-ultra-compact">
+                    <!-- Modern Compact Header -->
+                    <div class="assets-header-modern">
+                        <div class="assets-header-content">
+                            <div class="assets-title-section">
+                                <h6 class="assets-title">
+                                    <i class="material-icons me-2">precision_manufacturing</i>Asset Details
+                                </h6>
+                                <div class="assets-subtitle">Manage asset compatibility and specifications</div>
+                            </div>
+
+                            <!-- Compact Action Bar -->
+                            <div class="assets-actions-bar">
+                                <!-- Quick Search -->
+                                <div class="search-compact">
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-text">
+                                            <i class="material-icons">search</i>
+                                        </span>
+                                        <input type="text" class="form-control" id="assetsSearch"
+                                            placeholder="Search assets...">
+                                    </div>
+                                </div>
+
+                                <!-- Smart Filters -->
+                                <div class="filters-compact">
+                                    <button class="btn btn-outline-secondary btn-sm filter-toggle" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#assetsFilters">
+                                        <i class="material-icons me-1">tune</i>Smart Filters
+                                        <span class="filter-count" id="activeAssetsFiltersCount" style="display: none;">0</span>
+                                    </button>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="action-buttons-compact">
+                                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#assetsEntryModal" title="Add Asset">
+                                        <i class="material-icons">add</i>
+                                    </button>
+                                    <button class="btn btn-outline-danger btn-sm" id="deleteAssetsEntry"
+                                        title="Delete Selected" style="display: none;">
+                                        <i class="material-icons">delete</i>
+                                    </button>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="table" title="Table View">
+                                            <i class="material-icons">table_view</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn active"
+                                            data-view="grid" title="Grid View">
+                                            <i class="material-icons">grid_view</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="list" title="List View">
+                                            <i class="material-icons">list</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="cards" title="Bootstrap Cards">
+                                            <i class="material-icons">view_module</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="tiles" title="Tile View">
+                                            <i class="material-icons">dashboard</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="compact" title="Compact View">
+                                            <i class="material-icons">view_agenda</i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Collapsible Advanced Filters -->
+                        <div class="collapse" id="assetsFilters">
+                            <div class="filters-panel">
+                                <div class="row g-2">
+                                    <div class="col-md-3">
+                                        <label class="filter-label">Brand</label>
+                                        <select class="form-select form-select-sm" id="brandFilter">
+                                            <option value="all">All Brands</option>
+                                            <option value="brand1">Brand 1</option>
+                                            <option value="brand2">Brand 2</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="filter-label">Asset Type</label>
+                                        <select class="form-select form-select-sm" id="assetTypeFilter">
+                                            <option value="all">All Types</option>
+                                            <option value="bus">Bus</option>
+                                            <option value="truck">Truck</option>
+                                            <option value="van">Van</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="filter-label">Model</label>
+                                        <input type="text" class="form-control form-control-sm" id="modelFilter" placeholder="Filter by model">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="filter-label">VIN Range</label>
+                                        <select class="form-select form-select-sm" id="vinRangeFilter">
+                                            <option value="all">All VIN Ranges</option>
+                                            <option value="with-vin">With VIN</option>
+                                            <option value="without-vin">Without VIN</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="filter-actions mt-2">
+                                    <button class="btn btn-primary btn-sm" id="applyAssetsFilters">
+                                        <i class="material-icons me-1">filter_alt</i>Apply
+                                    </button>
+                                    <button class="btn btn-outline-secondary btn-sm" id="clearAssetsFilters">
+                                        <i class="material-icons me-1">clear</i>Clear
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modern Assets Content -->
+                    <div class="assets-content-modern">
+                        <!-- Selection Controls -->
+                        <div class="selection-controls-assets" id="assetsSelectionControls" style="display: none;">
+                            <div class="selection-info">
+                                <span id="selectedAssetsCount">0</span> items selected
+                            </div>
+                            <div class="selection-actions">
+                                <button class="btn btn-outline-light btn-sm" onclick="clearAssetsSelection()">
+                                    <i class="material-icons me-1">clear</i>Clear
+                                </button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteSelectedAssets()">
+                                    <i class="material-icons me-1">delete</i>Delete Selected
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Loading State -->
+                        <div class="loading-state" id="assetsLoading" style="display: none;">
+                            <div class="loading-content">
+                                <div class="spinner-border text-primary" role="status"></div>
+                                <div class="loading-text">Loading assets data...</div>
+                            </div>
+                        </div>
+
+                        <!-- Assets Views Container -->
+                        <div id="assetsViewContainer" class="assets-views">
+                            <!-- Table View -->
+                            <div class="assets-view assets-table-view" style="display: none;">
+                                <div class="table-responsive-modern">
+                                    <table class="table table-modern table-hover align-middle">
+                                        <thead class="table-header-modern sticky-top">
+                                            <tr>
+                                                <th class="select-column">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="selectAllAssets">
+                                                    </div>
+                                                </th>
+                                                <th class="sortable text-col" data-sort="brand">
+                                                    <div class="th-content">
+                                                        <span>Brand</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="sortable text-col" data-sort="assetType">
+                                                    <div class="th-content">
+                                                        <span>Asset Type</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="sortable text-col" data-sort="model">
+                                                    <div class="th-content">
+                                                        <span>Model</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="sortable text-col" data-sort="fromVin">
+                                                    <div class="th-content">
+                                                        <span>From VIN #</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="sortable text-col" data-sort="toVin">
+                                                    <div class="th-content">
+                                                        <span>To VIN #</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="actions-col">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="assetsDetailsTableBody" class="table-body-modern">
+                                            <!-- Assets details will be populated by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Grid View (Default) -->
+                            <div class="assets-view assets-grid-view" style="display: block;">
+                                <div id="assetsGridView" class="assets-grid-modern">
+                                    <!-- Assets details will be populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- List View -->
+                            <div class="assets-view assets-list-view" style="display: none;">
+                                <div id="assetsListView" class="assets-list-modern">
+                                    <!-- Assets details will be populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- Bootstrap Cards View -->
+                            <div class="assets-view assets-cards-view" style="display: none;">
+                                <div id="assetsCardsView" class="assets-bootstrap-cards">
+                                    <!-- Assets details will be populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- Tiles View -->
+                            <div class="assets-view assets-tiles-view" style="display: none;">
+                                <div id="assetsTilesView" class="assets-tiles-modern">
+                                    <!-- Assets details will be populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- Compact View -->
+                            <div class="assets-view assets-compact-view" style="display: none;">
+                                <div id="assetsCompactView" class="assets-compact-modern">
+                                    <!-- Assets details will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modern Pagination -->
+                        <div class="pagination-modern" id="assetsPaginationContainer">
+                            <div class="pagination-info">
+                                <span id="assetsTableInfo" class="info-text">Showing 0 of 0 entries</span>
+                            </div>
+                            <nav class="pagination-nav">
+                                <ul class="pagination pagination-sm mb-0" id="assetsPagination"></ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attachments Tab -->
+            <div class="tab-pane fade" id="attachments" role="tabpanel">
+                <!-- Modern Files Summary Cards -->
+                <div class="files-summary-cards mb-3">
+                    <div class="row g-2">
+                        <div class="col-md-3">
+                            <div class="files-summary-card">
+                                <div class="summary-icon bg-primary">
+                                    <i class="material-icons">attach_file</i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-value" id="totalFilesValue">0</div>
+                                    <div class="summary-label">Total Files</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="files-summary-card">
+                                <div class="summary-icon bg-success">
+                                    <i class="material-icons">image</i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-value" id="imagesCountValue">0</div>
+                                    <div class="summary-label">Images</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="files-summary-card">
+                                <div class="summary-icon bg-warning">
+                                    <i class="material-icons">description</i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-value" id="documentsCountValue">0</div>
+                                    <div class="summary-label">Documents</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="files-summary-card">
+                                <div class="summary-icon bg-info">
+                                    <i class="material-icons">storage</i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-value" id="totalSizeValue">0 MB</div>
+                                    <div class="summary-label">Total Size</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-card-ultra-compact">
+                    <!-- Modern Compact Header -->
+                    <div class="files-header-modern">
+                        <div class="files-header-content">
+                            <div class="files-title-section">
+                                <h6 class="files-title">
+                                    <i class="material-icons me-2">attach_file</i>File Attachments
+                                </h6>
+                                <div class="files-subtitle">Manage documents, images, and other file attachments</div>
+                            </div>
+
+                            <!-- Compact Action Bar -->
+                            <div class="files-actions-bar">
+                                <!-- Quick Search -->
+                                <div class="search-compact">
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-text">
+                                            <i class="material-icons">search</i>
+                                        </span>
+                                        <input type="text" class="form-control" id="filesSearch"
+                                            placeholder="Search files...">
+                                    </div>
+                                </div>
+
+                                <!-- Smart Filters -->
+                                <div class="filters-compact">
+                                    <button class="btn btn-outline-secondary btn-sm filter-toggle" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#filesFilters">
+                                        <i class="material-icons me-1">tune</i>Smart Filters
+                                        <span class="filter-count" id="activeFilesFiltersCount" style="display: none;">0</span>
+                                    </button>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="action-buttons-compact">
+                                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#filesUploadModal" title="Upload File">
+                                        <i class="material-icons">upload</i>
+                                    </button>
+                                    <button class="btn btn-outline-danger btn-sm" id="deleteFilesEntry"
+                                        title="Delete Selected" style="display: none;">
+                                        <i class="material-icons">delete</i>
+                                    </button>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="table" title="Table View">
+                                            <i class="material-icons">table_view</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn active"
+                                            data-view="grid" title="Grid View">
+                                            <i class="material-icons">grid_view</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="list" title="List View">
+                                            <i class="material-icons">list</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="cards" title="Bootstrap Cards">
+                                            <i class="material-icons">view_module</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="tiles" title="Tile View">
+                                            <i class="material-icons">dashboard</i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm view-btn"
+                                            data-view="compact" title="Compact View">
+                                            <i class="material-icons">view_agenda</i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Collapsible Advanced Filters -->
+                        <div class="collapse" id="filesFilters">
+                            <div class="filters-panel">
+                                <div class="row g-2">
+                                    <div class="col-md-3">
+                                        <label class="filter-label">File Type</label>
+                                        <select class="form-select form-select-sm" id="fileTypeFilter">
+                                            <option value="all">All Types</option>
+                                            <option value="image">Images</option>
+                                            <option value="document">Documents</option>
+                                            <option value="pdf">PDF</option>
+                                            <option value="video">Videos</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="filter-label">Size Range</label>
+                                        <select class="form-select form-select-sm" id="fileSizeFilter">
+                                            <option value="all">All Sizes</option>
+                                            <option value="small">< 1 MB</option>
+                                            <option value="medium">1-10 MB</option>
+                                            <option value="large">> 10 MB</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="filter-label">Date From</label>
+                                        <input type="date" class="form-control form-control-sm" id="filesDateStart">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="filter-label">Date To</label>
+                                        <input type="date" class="form-control form-control-sm" id="filesDateEnd">
+                                    </div>
+                                </div>
+                                <div class="filter-actions mt-2">
+                                    <button class="btn btn-primary btn-sm" id="applyFilesFilters">
+                                        <i class="material-icons me-1">filter_alt</i>Apply
+                                    </button>
+                                    <button class="btn btn-outline-secondary btn-sm" id="clearFilesFilters">
+                                        <i class="material-icons me-1">clear</i>Clear
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modern Files Content -->
+                    <div class="files-content-modern">
+                        <!-- Selection Controls -->
+                        <div class="selection-controls-files" id="filesSelectionControls" style="display: none;">
+                            <div class="selection-info">
+                                <span id="selectedFilesCount">0</span> items selected
+                            </div>
+                            <div class="selection-actions">
+                                <button class="btn btn-outline-light btn-sm" onclick="clearFilesSelection()">
+                                    <i class="material-icons me-1">clear</i>Clear
+                                </button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteSelectedFiles()">
+                                    <i class="material-icons me-1">delete</i>Delete Selected
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Loading State -->
+                        <div class="loading-state" id="filesLoading" style="display: none;">
+                            <div class="loading-content">
+                                <div class="spinner-border text-primary" role="status"></div>
+                                <div class="loading-text">Loading files data...</div>
+                            </div>
+                        </div>
+
+                        <!-- Files Views Container -->
+                        <div id="filesViewContainer" class="files-views">
+                            <!-- Table View -->
+                            <div class="files-view files-table-view" style="display: none;">
+                                <div class="table-responsive-modern">
+                                    <table class="table table-modern table-hover align-middle">
+                                        <thead class="table-header-modern sticky-top">
+                                            <tr>
+                                                <th class="select-column">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="selectAllFiles">
+                                                    </div>
+                                                </th>
+                                                <th class="sortable text-col" data-sort="fileName">
+                                                    <div class="th-content">
+                                                        <span>File Name</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="sortable text-col" data-sort="fileType">
+                                                    <div class="th-content">
+                                                        <span>Type</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="sortable number-col" data-sort="fileSize">
+                                                    <div class="th-content">
+                                                        <span>Size</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="sortable text-col" data-sort="uploadedBy">
+                                                    <div class="th-content">
+                                                        <span>Uploaded By</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="sortable date-col" data-sort="uploadDate">
+                                                    <div class="th-content">
+                                                        <span>Upload Date</span>
+                                                        <i class="material-icons sort-icon">sort</i>
+                                                    </div>
+                                                </th>
+                                                <th class="actions-col">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="filesDetailsTableBody" class="table-body-modern">
+                                            <!-- Files details will be populated by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Grid View (Default) -->
+                            <div class="files-view files-grid-view" style="display: block;">
+                                <div id="filesGridView" class="files-grid-modern">
+                                    <!-- Files details will be populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- List View -->
+                            <div class="files-view files-list-view" style="display: none;">
+                                <div id="filesListView" class="files-list-modern">
+                                    <!-- Files details will be populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- Bootstrap Cards View -->
+                            <div class="files-view files-cards-view" style="display: none;">
+                                <div id="filesCardsView" class="files-bootstrap-cards">
+                                    <!-- Files details will be populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- Tiles View -->
+                            <div class="files-view files-tiles-view" style="display: none;">
+                                <div id="filesTilesView" class="files-tiles-modern">
+                                    <!-- Files details will be populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- Compact View -->
+                            <div class="files-view files-compact-view" style="display: none;">
+                                <div id="filesCompactView" class="files-compact-modern">
+                                    <!-- Files details will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modern Pagination -->
+                        <div class="pagination-modern" id="filesPaginationContainer">
+                            <div class="pagination-info">
+                                <span id="filesTableInfo" class="info-text">Showing 0 of 0 entries</span>
+                            </div>
+                            <nav class="pagination-nav">
+                                <ul class="pagination pagination-sm mb-0" id="filesPagination"></ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Upload Modal -->
+    <div class="modal fade" id="uploadImageModal" tabindex="-1" aria-labelledby="uploadImageModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadImageModalLabel">
+                        <i class="material-icons me-2">add_photo_alternate</i>Upload Part Images
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="upload-area">
+                        <div class="upload-zone" id="uploadZone">
+                            <div class="upload-icon">
+                                <i class="material-icons">cloud_upload</i>
+                            </div>
+                            <h6>Drag & Drop Images Here</h6>
+                            <p class="text-muted">or click to browse files</p>
+                            <input type="file" id="imageUpload" multiple accept="image/*" class="d-none">
+                            <button type="button" class="btn btn-outline-primary"
+                                onclick="document.getElementById('imageUpload').click()">
+                                <i class="material-icons me-1">folder_open</i>Browse Files
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="upload-options mt-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="imageCategory" class="form-label">Image Category</label>
+                                <select class="form-select" id="imageCategory">
+                                    <option value="front">Front View</option>
+                                    <option value="back">Back View</option>
+                                    <option value="side">Side View</option>
+                                    <option value="detail">Detail View</option>
+                                    <option value="technical">Technical Drawing</option>
+                                    <option value="packaging">Packaging</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="imageDescription" class="form-label">Description</label>
+                                <input type="text" class="form-control" id="imageDescription"
+                                    placeholder="Optional description">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="upload-preview mt-4" id="uploadPreview" style="display: none;">
+                        <h6>Preview</h6>
+                        <div class="preview-images" id="previewImages"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="uploadButton">
+                        <i class="material-icons me-1">upload</i>Upload Images
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Zoom Modal -->
+    <div class="modal fade" id="imageZoomModal" tabindex="-1" aria-labelledby="imageZoomModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content bg-dark">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title text-white" id="imageZoomModalLabel">
+                        <i class="material-icons me-2">zoom_in</i>Image Viewer
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex align-items-center justify-content-center p-0">
+                    <div class="zoom-container">
+                        <img id="zoomedImage" src="" alt="Zoomed Part Image" class="zoom-image">
+                        <div class="zoom-controls">
+                            <button class="btn btn-light btn-sm" onclick="zoomIn()">
+                                <i class="material-icons">zoom_in</i>
+                            </button>
+                            <button class="btn btn-light btn-sm" onclick="zoomOut()">
+                                <i class="material-icons">zoom_out</i>
+                            </button>
+                            <button class="btn btn-light btn-sm" onclick="resetZoom()">
+                                <i class="material-icons">center_focus_strong</i>
+                            </button>
+                            <button class="btn btn-light btn-sm" onclick="rotateImage()">
+                                <i class="material-icons">rotate_right</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="uniform-tabs.js"></script>
+    <script src="part-details.js"></script>
+</body>
+
+</html>

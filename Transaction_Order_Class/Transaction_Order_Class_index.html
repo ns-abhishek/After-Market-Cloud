@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction Order Class - Modern UI</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Material Design Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="Transaction_Order_Class_styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="page-title">
+                    <span class="material-icons">assignment</span>
+                    Transaction Order Class
+                </h1>
+                <div class="header-actions">
+                    <button class="btn btn-icon" id="refreshBtn" title="Refresh">
+                        <span class="material-icons">refresh</span>
+                    </button>
+                    <button class="btn btn-icon" id="exportBtn" title="Export">
+                        <span class="material-icons">download</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Layout -->
+        <div class="main-layout">
+            <!-- Left Panel - Filters and Search -->
+            <aside class="left-panel">
+                <!-- Action Bar -->
+                <section class="action-bar">
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" id="addBtn">
+                            <span class="material-icons">add</span>
+                            Add
+                        </button>
+                        <button class="btn btn-danger" id="deleteBtn" disabled>
+                            <span class="material-icons">delete</span>
+                            Delete
+                        </button>
+                        <button class="btn btn-secondary" id="saveBtn">
+                            <span class="material-icons">save</span>
+                            Save
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Filter Section -->
+                <section class="filter-section">
+                    <div class="filter-card">
+                        <div class="filter-group">
+                            <label for="orderType" class="filter-label">Order Type</label>
+                            <div class="drag-drop-container" id="dragDropContainer">
+                                <!-- Available Items Panel -->
+                                <div class="available-panel">
+                                    <div class="panel-header">
+                                        <h4 class="panel-title">Available Order Types</h4>
+                                        <div class="panel-controls">
+                                            <button class="btn btn-sm btn-secondary toggle-select-btn" id="toggleSelectBtn" title="Select All">
+                                                <span class="material-icons" id="toggleSelectIcon">select_all</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="panel-search">
+                                        <div class="search-wrapper">
+                                            <span class="material-icons search-icon">search</span>
+                                            <input type="text" id="orderTypeSearchInput" class="search-field" placeholder="Search order types...">
+                                        </div>
+                                    </div>
+                                    <div class="items-list" id="availableItems">
+                                        <div class="draggable-item" data-value="asm-intimation" draggable="true">
+                                            <span class="item-text">ASM Intimation</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="case-registration" draggable="true">
+                                            <span class="item-text">Case Registration</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="counter-sales" draggable="true">
+                                            <span class="item-text">Counter Sales</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="credit-note" draggable="true">
+                                            <span class="item-text">Credit Note</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="customer-feedback" draggable="true">
+                                            <span class="item-text">Customer Feedback</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="customer-warranty-claim" draggable="true">
+                                            <span class="item-text">Customer Warranty Claim</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="dealer-intimation" draggable="true">
+                                            <span class="item-text">Dealer Intimation</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="deallocation-rerunallocation" draggable="true">
+                                            <span class="item-text">Deallocation & Rerunallocation</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="debit-note" draggable="true">
+                                            <span class="item-text">Debit Note</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="defective-parts-disposal" draggable="true">
+                                            <span class="item-text">Defective Parts Disposal</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="delivery-note-return" draggable="true">
+                                            <span class="item-text">Delivery Note Return</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="employee-eligible-incentive" draggable="true">
+                                            <span class="item-text">Employee Eligible For Incentive</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="employee-not-eligible-incentive" draggable="true">
+                                            <span class="item-text">Employee Not Eligible For Incentive</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="gate-pass" draggable="true">
+                                            <span class="item-text">Gate Pass</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="gdr-settlement" draggable="true">
+                                            <span class="item-text">GDR Settlement</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="job-card-issue" draggable="true">
+                                            <span class="item-text">Job Card Issue</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="job-card-oem-approval" draggable="true">
+                                            <span class="item-text">Job Card OEM Approval</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="job-card-parts-return" draggable="true">
+                                            <span class="item-text">Job Card Parts Return</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="job-progress-dashboard" draggable="true">
+                                            <span class="item-text">Job Progress Dashboard</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="oem-intimation-report" draggable="true">
+                                            <span class="item-text">OEM Intimation Report</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="packing-list" draggable="true">
+                                            <span class="item-text">Packing List</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="parts-order" draggable="true">
+                                            <span class="item-text">Parts Order</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="parts-order-cancellation" draggable="true">
+                                            <span class="item-text">Parts Order Cancellation</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="parts-quotation" draggable="true">
+                                            <span class="item-text">Parts Quotation</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="parts-quotation-archived" draggable="true">
+                                            <span class="item-text">Parts Quotation Archived</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="pick-list-confirmation" draggable="true">
+                                            <span class="item-text">Pick List Confirmation</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="purchase-grn" draggable="true">
+                                            <span class="item-text">Purchase GRN</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="purchase-invoice" draggable="true">
+                                            <span class="item-text">Purchase Invoice</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="purchase-order" draggable="true">
+                                            <span class="item-text">Purchase Order</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="purchase-order-cancellation" draggable="true">
+                                            <span class="item-text">Purchase Order Cancellation</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="re-open-work-order" draggable="true">
+                                            <span class="item-text">Re-Open Work Order</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="reallocation" draggable="true">
+                                            <span class="item-text">Reallocation</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="receipt" draggable="true">
+                                            <span class="item-text">Receipt</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="request-for-quotation" draggable="true">
+                                            <span class="item-text">Request For Quotation</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="resolution-time-slot-report" draggable="true">
+                                            <span class="item-text">Resolution Time Slot Report</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="sales-invoice" draggable="true">
+                                            <span class="item-text">Sales Invoice</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="sales-invoice-return" draggable="true">
+                                            <span class="item-text">Sales Invoice Return</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="sap-invoice-errors" draggable="true">
+                                            <span class="item-text">SAP Invoice Errors</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                        <div class="draggable-item" data-value="service-internal-invoice" draggable="true">
+                                            <span class="item-text">Service Internal Invoice</span>
+                                            <span class="material-icons drag-handle">drag_indicator</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Selected Items Panel -->
+                                <div class="selected-panel">
+                                    <div class="panel-header">
+                                        <h4 class="panel-title">Selected Order Types</h4>
+                                        <div class="selected-count" id="selectedCount">0 selected</div>
+                                    </div>
+                                    <div class="items-list drop-zone" id="selectedItems">
+                                        <div class="empty-state" id="emptyState">
+                                            <span class="material-icons">drag_handle</span>
+                                            <p>Drag order types here to select them</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <label for="searchInput" class="filter-label">Search</label>
+                            <div class="search-wrapper-inline">
+                                <div class="search-input-wrapper">
+                                    <span class="material-icons search-icon">search</span>
+                                    <input type="text" id="searchInput" class="search-field" placeholder="Search order class...">
+                                </div>
+                                <button class="btn btn-secondary advanced-search-btn-icon" id="advancedSearchBtn" title="Advanced Search">
+                                    <span class="material-icons">tune</span>
+                                </button>
+                                <div class="search-results-info" id="searchResultsInfo" style="display: none;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </aside>
+
+            <!-- Right Panel - Table and Actions -->
+            <main class="right-panel">
+                <!-- Data Table Section -->
+        <section class="table-section">
+            <div class="table-card">
+                <div class="table-header">
+                    <h3 class="table-title">Order Classes</h3>
+                    <div class="table-header-actions">
+                        <div class="view-toggle-container">
+                            <button class="btn btn-icon view-toggle-btn active" id="gridViewBtn" data-view="grid" title="Grid View">
+                                <span class="material-icons">view_list</span>
+                            </button>
+                            <button class="btn btn-icon view-toggle-btn" id="cardViewBtn" data-view="card" title="Card View">
+                                <span class="material-icons">view_module</span>
+                            </button>
+                        </div>
+                        <div class="table-info">
+                            <span class="record-count">View 1-8 of 25</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Summary Cards Section -->
+                <div class="summary-cards-container">
+                    <div class="summary-card" id="totalCard" data-filter="all">
+                        <div class="summary-card-icon">
+                            <span class="material-icons">inventory</span>
+                        </div>
+                        <div class="summary-card-content">
+                            <div class="summary-card-number" id="totalCount">0</div>
+                            <div class="summary-card-label">Total</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-card" id="activeCard" data-filter="active">
+                        <div class="summary-card-icon">
+                            <span class="material-icons">check_circle</span>
+                        </div>
+                        <div class="summary-card-content">
+                            <div class="summary-card-number" id="activeCount">0</div>
+                            <div class="summary-card-label">Active</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-card" id="inactiveCard" data-filter="inactive">
+                        <div class="summary-card-icon">
+                            <span class="material-icons">cancel</span>
+                        </div>
+                        <div class="summary-card-content">
+                            <div class="summary-card-number" id="inactiveCount">0</div>
+                            <div class="summary-card-label">Inactive</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-container" id="tableContainer">
+                    <table class="data-table" id="orderTable">
+                        <thead>
+                            <tr>
+                                <th class="checkbox-column">
+                                    <label class="checkbox-wrapper">
+                                        <input type="checkbox" id="selectAll">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </th>
+                                <th class="action-column">
+                                    <span class="material-icons">settings</span>
+                                </th>
+                                <th class="sortable" data-sort="orderClass">
+                                    Order Class
+                                    <span class="material-icons sort-icon">unfold_more</span>
+                                </th>
+                                <th class="sortable" data-sort="object">
+                                    Object
+                                    <span class="material-icons sort-icon">unfold_more</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Table rows will be dynamically generated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Card View Container -->
+                <div class="card-container" id="cardContainer" style="display: none;">
+                    <div class="cards-grid" id="cardsGrid">
+                        <!-- Cards will be dynamically generated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination-container">
+                    <div class="pagination-info">
+                        <span>Page</span>
+                        <div class="custom-select pagination-select" id="pageSelect">
+                            <div class="custom-select-trigger" id="pageTrigger">
+                                <span class="placeholder">1</span>
+                                <span class="material-icons select-arrow">expand_more</span>
+                            </div>
+                            <div class="custom-select-dropdown" id="pageDropdown">
+                                <div class="custom-select-search" id="pageSearch" style="display: none;">
+                                    <input type="text" placeholder="Search pages..." id="pageSearchInput">
+                                </div>
+                                <div class="custom-select-options" id="pageOptions">
+                                    <div class="custom-select-option selected" data-value="1">1</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span>of 4</span>
+                    </div>
+                    <div class="pagination-controls">
+                        <button class="btn btn-icon" id="firstPageBtn" disabled>
+                            <span class="material-icons">first_page</span>
+                        </button>
+                        <button class="btn btn-icon" id="prevPageBtn" disabled>
+                            <span class="material-icons">chevron_left</span>
+                        </button>
+                        <button class="btn btn-icon" id="nextPageBtn" disabled>
+                            <span class="material-icons">chevron_right</span>
+                        </button>
+                        <button class="btn btn-icon" id="lastPageBtn" disabled>
+                            <span class="material-icons">last_page</span>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal for Add/Edit -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Add Order Class</h3>
+                <button class="btn btn-icon modal-close" id="modalClose">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="orderForm">
+                    <div class="form-group">
+                        <label for="orderClassInput" class="form-label">Order Class</label>
+                        <input type="text" id="orderClassInput" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="objectSelect" class="form-label">Object</label>
+                        <div class="custom-select" id="objectSelect">
+                            <div class="custom-select-trigger" id="objectTrigger">
+                                <span class="placeholder">--Select Object--</span>
+                                <span class="material-icons select-arrow">expand_more</span>
+                            </div>
+                            <div class="custom-select-dropdown" id="objectDropdown">
+                                <div class="custom-select-search" id="objectSearch" style="display: none;">
+                                    <input type="text" placeholder="Search objects..." id="objectSearchInput">
+                                </div>
+                                <div class="custom-select-options" id="objectOptions">
+                                    <div class="custom-select-option" data-value="">--Select Object--</div>
+                                    <div class="custom-select-option" data-value="parts-order">Parts Order</div>
+                                    <div class="custom-select-option" data-value="service-job-card">Service Job Card</div>
+                                    <div class="custom-select-option" data-value="purchase-order">Purchase Order</div>
+                                    <div class="custom-select-option" data-value="customer-invoice">Customer Invoice</div>
+                                    <div class="custom-select-option" data-value="goods-receipt-note">Goods Receipt Note</div>
+                                    <div class="custom-select-option" data-value="customer-credit">Customer Credit</div>
+                                    <div class="custom-select-option" data-value="sales-order">Sales Order</div>
+                                    <div class="custom-select-option" data-value="delivery-note">Delivery Note</div>
+                                    <div class="custom-select-option" data-value="quotation">Quotation</div>
+                                    <div class="custom-select-option" data-value="work-order">Work Order</div>
+                                    <div class="custom-select-option" data-value="service-contract">Service Contract</div>
+                                    <div class="custom-select-option" data-value="warranty-claim">Warranty Claim</div>
+                                    <div class="custom-select-option" data-value="return-order">Return Order</div>
+                                    <div class="custom-select-option" data-value="credit-memo">Credit Memo</div>
+                                    <div class="custom-select-option" data-value="debit-memo">Debit Memo</div>
+                                    <div class="custom-select-option" data-value="payment-voucher">Payment Voucher</div>
+                                    <div class="custom-select-option" data-value="receipt-voucher">Receipt Voucher</div>
+                                    <div class="custom-select-option" data-value="journal-entry">Journal Entry</div>
+                                    <div class="custom-select-option" data-value="inventory-adjustment">Inventory Adjustment</div>
+                                    <div class="custom-select-option" data-value="stock-transfer">Stock Transfer</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <div class="radio-group">
+                            <label class="radio-wrapper status-radio">
+                                <input type="radio" id="statusActive" name="status" value="active">
+                                <span class="radio-mark"></span>
+                                <span class="radio-label">Active</span>
+                            </label>
+                            <label class="radio-wrapper status-radio">
+                                <input type="radio" id="statusInactive" name="status" value="inactive">
+                                <span class="radio-mark"></span>
+                                <span class="radio-label">Inactive</span>
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="modalCancel">Cancel</button>
+                <button class="btn btn-primary" id="modalSave">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Advanced Search Modal -->
+    <div class="modal-overlay" id="advancedSearchModal">
+        <div class="modal advanced-search-modal">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <span class="material-icons">search</span>
+                    Advanced Search
+                </h3>
+                <button class="btn btn-icon modal-close" id="advancedSearchClose">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="advancedSearchForm">
+                    <!-- Search Criteria Section -->
+                    <div class="search-section">
+                        <h4 class="section-title">
+                            <span class="material-icons">filter_list</span>
+                            Search Criteria
+                        </h4>
+
+                        <!-- Text Search -->
+                        <div class="search-row">
+                            <div class="form-group">
+                                <label class="form-label">Order Class</label>
+                                <div class="search-input-group">
+                                    <select class="form-select" id="orderClassOperator">
+                                        <option value="contains">Contains</option>
+                                        <option value="equals">Equals</option>
+                                        <option value="starts">Starts with</option>
+                                        <option value="ends">Ends with</option>
+                                        <option value="not_contains">Does not contain</option>
+                                    </select>
+                                    <input type="text" class="form-input" id="orderClassSearch" placeholder="Enter order class...">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Object</label>
+                                <div class="search-input-group">
+                                    <select class="form-select" id="objectOperator">
+                                        <option value="contains">Contains</option>
+                                        <option value="equals">Equals</option>
+                                        <option value="starts">Starts with</option>
+                                        <option value="ends">Ends with</option>
+                                        <option value="not_contains">Does not contain</option>
+                                    </select>
+                                    <input type="text" class="form-input" id="objectSearch" placeholder="Enter object...">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Status Filter -->
+                        <div class="search-row">
+                            <div class="form-group">
+                                <label class="form-label">Status</label>
+                                <div class="checkbox-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="advStatusActive" checked>
+                                        <span class="checkmark"></span>
+                                        <span class="status-badge active">Active</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="advStatusInactive" checked>
+                                        <span class="checkmark"></span>
+                                        <span class="status-badge inactive">Inactive</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Date Range (Future Enhancement) -->
+                        <div class="search-row">
+                            <div class="form-group">
+                                <label class="form-label">Created Date Range</label>
+                                <div class="date-range-group">
+                                    <input type="date" class="form-input" id="dateFrom" placeholder="From">
+                                    <span class="date-separator">to</span>
+                                    <input type="date" class="form-input" id="dateTo" placeholder="To">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Filters Section -->
+                    <div class="search-section">
+                        <h4 class="section-title">
+                            <span class="material-icons">speed</span>
+                            Quick Filters
+                        </h4>
+                        <div class="quick-filters">
+                            <button type="button" class="quick-filter-btn" data-filter="active">
+                                <span class="material-icons">check_circle</span>
+                                Active Only
+                            </button>
+                            <button type="button" class="quick-filter-btn" data-filter="inactive">
+                                <span class="material-icons">cancel</span>
+                                Inactive Only
+                            </button>
+                            <button type="button" class="quick-filter-btn" data-filter="job-card">
+                                <span class="material-icons">work</span>
+                                Job Cards
+                            </button>
+                            <button type="button" class="quick-filter-btn" data-filter="orders">
+                                <span class="material-icons">shopping_cart</span>
+                                Orders
+                            </button>
+                            <button type="button" class="quick-filter-btn" data-filter="invoices">
+                                <span class="material-icons">receipt</span>
+                                Invoices
+                            </button>
+                            <button type="button" class="quick-filter-btn" data-filter="recent">
+                                <span class="material-icons">schedule</span>
+                                Recently Added
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Saved Searches Section -->
+                    <div class="search-section">
+                        <h4 class="section-title">
+                            <span class="material-icons">bookmark</span>
+                            Saved Searches
+                        </h4>
+                        <div class="saved-searches">
+                            <div class="saved-search-item">
+                                <span class="saved-search-name">Active Job Cards</span>
+                                <div class="saved-search-actions">
+                                    <button type="button" class="btn btn-sm btn-secondary" data-action="load">
+                                        <span class="material-icons">play_arrow</span>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-danger" data-action="delete">
+                                        <span class="material-icons">delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="saved-search-item">
+                                <span class="saved-search-name">Inactive Orders</span>
+                                <div class="saved-search-actions">
+                                    <button type="button" class="btn btn-sm btn-secondary" data-action="load">
+                                        <span class="material-icons">play_arrow</span>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-danger" data-action="delete">
+                                        <span class="material-icons">delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline" id="saveSearchBtn">
+                            <span class="material-icons">bookmark_add</span>
+                            Save Current Search
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="search-results-preview">
+                    <span id="searchPreviewCount">0 results found</span>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="advancedSearchClear">
+                        <span class="material-icons">clear</span>
+                        Clear All
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="advancedSearchCancel">
+                        Cancel
+                    </button>
+                    <button type="button" class="btn btn-primary" id="advancedSearchApply">
+                        <span class="material-icons">search</span>
+                        Apply Search
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="Transaction_Order_Class_script.js"></script>
+</body>
+</html>

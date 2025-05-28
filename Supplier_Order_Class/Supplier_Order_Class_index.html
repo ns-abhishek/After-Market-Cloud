@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OEM Order Class Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="Supplier_Order_Class_styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="page-title">
+                    <span class="material-icons">inventory_2</span>
+                    OEM Order Class
+                </h1>
+                <div class="header-actions">
+                    <button class="btn btn-primary" id="newOrderBtn">
+                        <span class="material-icons">add</span>
+                        New
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Summary Dashboard -->
+        <div class="summary-dashboard">
+            <div class="dashboard-card" id="demandCard" data-filter="demand">
+                <div class="card-icon">
+                    <span class="material-icons">trending_up</span>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Consider For Demand</div>
+                    <div class="card-stats">
+                        <div class="stat-item clickable" data-filter="demand" data-value="yes">
+                            <span class="stat-number" id="demandYesCount">0</span>
+                            <span class="stat-label">Yes</span>
+                        </div>
+                        <span class="stat-divider">|</span>
+                        <div class="stat-item clickable" data-filter="demand" data-value="no">
+                            <span class="stat-number" id="demandNoCount">0</span>
+                            <span class="stat-label">No</span>
+                        </div>
+                    </div>
+                    <div class="card-percentage" id="demandPercentage">0%</div>
+                </div>
+            </div>
+
+            <div class="dashboard-card" id="validateCard" data-filter="validate">
+                <div class="card-icon">
+                    <span class="material-icons">verified</span>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Asset Validate</div>
+                    <div class="card-stats">
+                        <div class="stat-item clickable" data-filter="validate" data-value="yes">
+                            <span class="stat-number" id="validateYesCount">0</span>
+                            <span class="stat-label">Yes</span>
+                        </div>
+                        <span class="stat-divider">|</span>
+                        <div class="stat-item clickable" data-filter="validate" data-value="no">
+                            <span class="stat-number" id="validateNoCount">0</span>
+                            <span class="stat-label">No</span>
+                        </div>
+                    </div>
+                    <div class="card-percentage" id="validatePercentage">0%</div>
+                </div>
+            </div>
+
+            <div class="dashboard-card" id="activeCard" data-filter="active">
+                <div class="card-icon">
+                    <span class="material-icons">check_circle</span>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Is Active</div>
+                    <div class="card-stats">
+                        <div class="stat-item clickable" data-filter="active" data-value="yes">
+                            <span class="stat-number" id="activeYesCount">0</span>
+                            <span class="stat-label">Yes</span>
+                        </div>
+                        <span class="stat-divider">|</span>
+                        <div class="stat-item clickable" data-filter="active" data-value="no">
+                            <span class="stat-number" id="activeNoCount">0</span>
+                            <span class="stat-label">No</span>
+                        </div>
+                    </div>
+                    <div class="card-percentage" id="activePercentage">0%</div>
+                </div>
+            </div>
+
+            <div class="dashboard-card" id="totalCard" data-filter="total">
+                <div class="card-icon">
+                    <span class="material-icons">inventory</span>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Total Records</div>
+                    <div class="card-stats">
+                        <div class="stat-item">
+                            <span class="stat-number large" id="totalCount">0</span>
+                            <span class="stat-label">Items</span>
+                        </div>
+                    </div>
+                    <div class="card-percentage" id="totalPages">0 Pages</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="action-bar">
+            <div class="action-group">
+                <button class="btn btn-secondary" id="deleteBtn">
+                    <span class="material-icons">delete</span>
+                    Delete
+                </button>
+                <button class="btn btn-secondary" id="advanceSearchBtn">
+                    <span class="material-icons">search</span>
+                    Advance Search
+                </button>
+                <button class="btn btn-secondary" id="exportBtn">
+                    <span class="material-icons">file_download</span>
+                    Export
+                </button>
+                <button class="btn btn-secondary" id="refreshBtn">
+                    <span class="material-icons">refresh</span>
+                    Refresh
+                </button>
+            </div>
+            <div class="view-options">
+                <span class="view-count">View 1 - 8 of 8</span>
+                <select class="page-size-select">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Modern Card-Based Data Display -->
+        <div class="data-container">
+            <!-- Header Controls -->
+            <div class="data-header">
+                <div class="header-controls">
+                    <div class="select-all-container">
+                        <input type="checkbox" id="selectAll" class="checkbox">
+                        <label for="selectAll">Select All</label>
+                    </div>
+                    <div class="sort-controls" id="sortControls">
+                        <span class="material-icons sort-icon">sort</span>
+                        <span id="sortLabel">Sort by Description</span>
+                        <span class="material-icons sort-icon dropdown-arrow" id="sortDropdownArrow">arrow_drop_down</span>
+                        <div class="sort-dropdown" id="sortDropdown">
+                            <div class="sort-option" data-sort="asc">
+                                <span class="material-icons">sort_by_alpha</span>
+                                A to Z
+                            </div>
+                            <div class="sort-option" data-sort="desc">
+                                <span class="material-icons">sort_by_alpha desc</span>
+                                Z to A
+                            </div>
+                            <div class="sort-option" data-sort="none">
+                                <span class="material-icons">clear</span>
+                                Clear Sort
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Cards Container -->
+            <div class="cards-container" id="cardsContainer">
+                <!-- Data cards will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            <button class="pagination-btn" id="firstPageBtn">
+                <span class="material-icons">first_page</span>
+            </button>
+            <button class="pagination-btn" id="prevPageBtn">
+                <span class="material-icons">chevron_left</span>
+            </button>
+            <span class="pagination-info" id="paginationInfo">Page 1 of 1</span>
+            <button class="pagination-btn" id="nextPageBtn">
+                <span class="material-icons">chevron_right</span>
+            </button>
+            <button class="pagination-btn" id="lastPageBtn">
+                <span class="material-icons">last_page</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal for Add/Edit Order Class -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add OEM Order Class</h2>
+                <button class="modal-close" id="modalClose">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="orderClassForm">
+                    <div class="form-group">
+                        <label for="description">Description:</label>
+                        <input type="text" id="description" name="description" class="form-input" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="considerForDemand" name="considerForDemand" class="checkbox">
+                            <label for="considerForDemand">Is Consider For Demand?</label>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="assetValidate" name="assetValidate" class="checkbox">
+                            <label for="assetValidate">Is Asset Validate?</label>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="isActive" name="isActive" class="checkbox" checked>
+                            <label for="isActive">Is Active?</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="modalCancel">Exit</button>
+                <button type="submit" form="orderClassForm" class="btn btn-primary" id="modalSave">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Details Modal -->
+    <div class="modal-overlay" id="viewModalOverlay">
+        <div class="modal view-modal">
+            <div class="modal-header">
+                <h2 id="viewModalTitle">Class A</h2>
+                <button class="modal-close" id="viewModalClose">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="view-modal-content">
+                    <!-- Left Side: Order Class Details -->
+                    <div class="view-left-section">
+                        <div class="view-details-card">
+                            <div class="detail-card-header">
+                                <h4>Order Class Details</h4>
+                            </div>
+                            <div class="detail-card-content">
+                                <!-- View Mode -->
+                                <div id="viewModeContent">
+                                    <div class="detail-item">
+                                        <label>Description:</label>
+                                        <span id="viewDescription" class="detail-value">Class A</span>
+                                    </div>
+                                    <div class="detail-status-row">
+                                        <div class="detail-status-item">
+                                            <label>Consider For Demand:</label>
+                                            <span id="viewConsiderDemand" class="status-badge">No</span>
+                                        </div>
+                                        <div class="detail-status-item">
+                                            <label>Asset Validate:</label>
+                                            <span id="viewAssetValidate" class="status-badge">No</span>
+                                        </div>
+                                        <div class="detail-status-item">
+                                            <label>Is Active:</label>
+                                            <span id="viewIsActive" class="status-badge">No</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Edit Mode -->
+                                <div id="editModeContent" style="display: none;">
+                                    <form id="viewEditForm">
+                                        <div class="detail-item">
+                                            <label for="editDescription">Description:</label>
+                                            <input type="text" id="editDescription" name="description" class="form-input" required>
+                                        </div>
+                                        <div class="detail-status-row">
+                                            <div class="detail-status-item">
+                                                <div class="checkbox-group">
+                                                    <input type="checkbox" id="editConsiderDemand" name="considerForDemand" class="checkbox">
+                                                    <label for="editConsiderDemand">Consider For Demand</label>
+                                                </div>
+                                            </div>
+                                            <div class="detail-status-item">
+                                                <div class="checkbox-group">
+                                                    <input type="checkbox" id="editAssetValidate" name="assetValidate" class="checkbox">
+                                                    <label for="editAssetValidate">Asset Validate</label>
+                                                </div>
+                                            </div>
+                                            <div class="detail-status-item">
+                                                <div class="checkbox-group">
+                                                    <input type="checkbox" id="editIsActive" name="isActive" class="checkbox">
+                                                    <label for="editIsActive">Is Active</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Side: Manufacturer Specific Section -->
+                    <div class="view-right-section">
+                        <div class="manufacturer-section">
+                            <div class="section-header">
+                                <h3>
+                                    <span class="material-icons">expand_more</span>
+                                    Manufacturer Specific
+                                </h3>
+                                <div class="section-header-controls">
+                                    <div class="search-container">
+                                        <span class="material-icons search-icon">search</span>
+                                        <input type="text" id="manufacturerViewSearch" class="search-input" placeholder="Search manufacturers...">
+                                    </div>
+                                    <button class="btn btn-primary btn-sm" id="addManufacturerBtn">
+                                        <span class="material-icons">add</span>
+                                        Add Manufacturer
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="manufacturer-cards-container" id="manufacturerCardsContainer">
+                                <!-- Manufacturer cards will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!-- View Mode Buttons -->
+                <div id="viewModeButtons">
+                    <button type="button" class="btn btn-secondary" id="viewModalEdit">Edit</button>
+                    <button type="button" class="btn btn-secondary" id="viewModalExit">Exit</button>
+                </div>
+
+                <!-- Edit Mode Buttons -->
+                <div id="editModeButtons" style="display: none;">
+                    <button type="button" class="btn btn-secondary" id="viewModalCancel">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="viewModalSave">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Advanced Search Modal -->
+    <div class="modal-overlay" id="advancedSearchModalOverlay">
+        <div class="modal advanced-search-modal">
+            <div class="modal-header">
+                <h2>Advanced Search</h2>
+                <button class="modal-close" id="advancedSearchModalClose">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="advancedSearchForm">
+                    <!-- Search Criteria Section -->
+                    <div class="search-section search-criteria-section">
+                        <h3 class="search-section-title">
+                            <span class="material-icons">search</span>
+                            Search Criteria
+                        </h3>
+                        <div class="search-grid">
+                            <div class="form-group">
+                                <label for="searchDescription">Description:</label>
+                                <input type="text" id="searchDescription" class="form-input" placeholder="Enter description...">
+                            </div>
+                            <div class="form-group">
+                                <label for="searchOperator">Search Type:</label>
+                                <select id="searchOperator" class="form-select">
+                                    <option value="contains">Contains</option>
+                                    <option value="startsWith">Starts With</option>
+                                    <option value="endsWith">Ends With</option>
+                                    <option value="exact">Exact Match</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Status Filters Section -->
+                    <div class="search-section status-filters-section">
+                        <h3 class="search-section-title">
+                            <span class="material-icons">filter_list</span>
+                            Status Filters
+                        </h3>
+                        <div class="filter-grid">
+                            <div class="filter-group">
+                                <label class="filter-label">Consider For Demand:</label>
+                                <div class="radio-group">
+                                    <label class="radio-option">
+                                        <input type="radio" name="demandFilter" value="all" checked>
+                                        <span class="radio-custom"></span>
+                                        All
+                                    </label>
+                                    <label class="radio-option">
+                                        <input type="radio" name="demandFilter" value="yes">
+                                        <span class="radio-custom"></span>
+                                        Yes
+                                    </label>
+                                    <label class="radio-option">
+                                        <input type="radio" name="demandFilter" value="no">
+                                        <span class="radio-custom"></span>
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="filter-group">
+                                <label class="filter-label">Asset Validate:</label>
+                                <div class="radio-group">
+                                    <label class="radio-option">
+                                        <input type="radio" name="validateFilter" value="all" checked>
+                                        <span class="radio-custom"></span>
+                                        All
+                                    </label>
+                                    <label class="radio-option">
+                                        <input type="radio" name="validateFilter" value="yes">
+                                        <span class="radio-custom"></span>
+                                        Yes
+                                    </label>
+                                    <label class="radio-option">
+                                        <input type="radio" name="validateFilter" value="no">
+                                        <span class="radio-custom"></span>
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="filter-group">
+                                <label class="filter-label">Is Active:</label>
+                                <div class="radio-group">
+                                    <label class="radio-option">
+                                        <input type="radio" name="activeFilter" value="all" checked>
+                                        <span class="radio-custom"></span>
+                                        All
+                                    </label>
+                                    <label class="radio-option">
+                                        <input type="radio" name="activeFilter" value="yes">
+                                        <span class="radio-custom"></span>
+                                        Yes
+                                    </label>
+                                    <label class="radio-option">
+                                        <input type="radio" name="activeFilter" value="no">
+                                        <span class="radio-custom"></span>
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Filters Section -->
+                    <div class="search-section quick-filters-section">
+                        <h3 class="search-section-title">
+                            <span class="material-icons">speed</span>
+                            Quick Filters
+                        </h3>
+                        <div class="quick-filters">
+                            <button type="button" class="quick-filter-btn" data-filter="active">
+                                <span class="material-icons">check_circle</span>
+                                Active Only
+                            </button>
+                            <button type="button" class="quick-filter-btn" data-filter="demand">
+                                <span class="material-icons">trending_up</span>
+                                Demand Items
+                            </button>
+                            <button type="button" class="quick-filter-btn" data-filter="validate">
+                                <span class="material-icons">verified</span>
+                                Validated Items
+                            </button>
+                            <button type="button" class="quick-filter-btn" data-filter="inactive">
+                                <span class="material-icons">cancel</span>
+                                Inactive Items
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Search Results Preview -->
+                    <div class="search-section results-preview-section">
+                        <h3 class="search-section-title">
+                            <span class="material-icons">preview</span>
+                            Results Preview
+                        </h3>
+                        <div class="results-preview">
+                            <div class="preview-stats">
+                                <span class="stat-item">
+                                    <span class="stat-number" id="previewCount">0</span>
+                                    <span class="stat-label">items found</span>
+                                </span>
+                                <span class="stat-item">
+                                    <span class="stat-number" id="previewPages">0</span>
+                                    <span class="stat-label">pages</span>
+                                </span>
+                            </div>
+                            <div class="preview-message" id="previewMessage">
+                                Enter search criteria to see results preview
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="clearSearchBtn">
+                    <span class="material-icons">clear</span>
+                    Clear All
+                </button>
+                <button type="button" class="btn btn-secondary" id="advancedSearchCancel">Cancel</button>
+                <button type="button" class="btn btn-primary" id="applySearchBtn">
+                    <span class="material-icons">search</span>
+                    Apply Search
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Manufacturer Modal -->
+    <div class="modal-overlay" id="manufacturerModalOverlay">
+        <div class="modal manufacturer-modal">
+            <div class="modal-header">
+                <h2 id="manufacturerModalTitle">Add Manufacturer</h2>
+                <button class="modal-close" id="manufacturerModalClose">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="manufacturerForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="manufacturerSelect">Manufacturer:</label>
+                            <div class="searchable-select-container">
+                                <input type="text" id="manufacturerSearch" class="searchable-select-input" placeholder="Search and select manufacturer..." readonly>
+                                <span class="material-icons searchable-select-icon">expand_more</span>
+                                <div class="searchable-select-dropdown" id="manufacturerDropdown">
+                                    <input type="text" class="dropdown-search" placeholder="Search manufacturers...">
+                                    <div class="dropdown-options" id="manufacturerOptions">
+                                        <div class="dropdown-option" data-value="">--Select--</div>
+                                        <div class="dropdown-option" data-value="Customer 26218">Customer 26218</div>
+                                        <div class="dropdown-option" data-value="UR">UR</div>
+                                        <div class="dropdown-option" data-value="Toyota Motors">Toyota Motors</div>
+                                        <div class="dropdown-option" data-value="Honda Corp">Honda Corp</div>
+                                        <div class="dropdown-option" data-value="Ford Motors">Ford Motors</div>
+                                        <div class="dropdown-option" data-value="BMW Group">BMW Group</div>
+                                        <div class="dropdown-option" data-value="Mercedes-Benz">Mercedes-Benz</div>
+                                        <div class="dropdown-option" data-value="Audi AG">Audi AG</div>
+                                        <div class="dropdown-option" data-value="Volkswagen">Volkswagen</div>
+                                        <div class="dropdown-option" data-value="Nissan Motors">Nissan Motors</div>
+                                        <div class="dropdown-option" data-value="Hyundai Motors">Hyundai Motors</div>
+                                        <div class="dropdown-option" data-value="Kia Motors">Kia Motors</div>
+                                        <div class="dropdown-option" data-value="Mazda Corporation">Mazda Corporation</div>
+                                        <div class="dropdown-option" data-value="Subaru Corporation">Subaru Corporation</div>
+                                        <div class="dropdown-option" data-value="Mitsubishi Motors">Mitsubishi Motors</div>
+                                        <div class="dropdown-option" data-value="Lexus Division">Lexus Division</div>
+                                        <div class="dropdown-option" data-value="Infiniti Motors">Infiniti Motors</div>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="manufacturerSelect" name="manufacturer" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="priceTypeSelect">Price Type:</label>
+                            <div class="searchable-select-container">
+                                <input type="text" id="priceTypeSearch" class="searchable-select-input" placeholder="Search and select price type..." readonly>
+                                <span class="material-icons searchable-select-icon">expand_more</span>
+                                <div class="searchable-select-dropdown" id="priceTypeDropdown">
+                                    <input type="text" class="dropdown-search" placeholder="Search price types...">
+                                    <div class="dropdown-options" id="priceTypeOptions">
+                                        <div class="dropdown-option" data-value="">--Select--</div>
+                                        <div class="dropdown-option" data-value="Replenishment Order(YTA)">Replenishment Order(YTA)</div>
+                                        <div class="dropdown-option" data-value="Rush Order(YSO)">Rush Order(YSO)</div>
+                                        <div class="dropdown-option" data-value="Stock Order(YEA)">Stock Order(YEA)</div>
+                                        <div class="dropdown-option" data-value="Standard">Standard</div>
+                                        <div class="dropdown-option" data-value="Premium">Premium</div>
+                                        <div class="dropdown-option" data-value="Economy">Economy</div>
+                                        <div class="dropdown-option" data-value="Luxury">Luxury</div>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="priceTypeSelect" name="priceType" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="leadTimeInput">Lead Time (days):</label>
+                            <input type="number" id="leadTimeInput" name="leadTime" class="form-input" min="1" max="365" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="discountInput">Discount (%):</label>
+                            <input type="number" id="discountInput" name="discount" class="form-input" min="0" max="100" step="0.1" required>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="manufacturerModalCancel">Cancel</button>
+                <button type="button" class="btn btn-primary" id="manufacturerModalSave">Save Manufacturer</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="Supplier_Order_Class_script.js"></script>
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parts Rate Contract Management</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Material Design Components -->
+    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <span class="material-icons">description</span>
+                <h1>Parts Rate Contract</h1>
+            </div>
+            <div class="header-actions">
+                <button class="header-icon-btn" id="themeToggle" title="Toggle Dark/Light Mode">
+                    <span class="material-icons theme-icon">dark_mode</span>
+                </button>
+                <button class="header-icon-btn" id="languageBtn" title="Language Settings">
+                    <span class="material-icons">translate</span>
+                </button>
+                <button class="header-icon-btn" id="notificationsBtn" title="Notifications">
+                    <span class="material-icons">notifications</span>
+                </button>
+                <button class="header-icon-btn" id="settingsBtn" title="Settings">
+                    <span class="material-icons">settings</span>
+                </button>
+                <button class="header-icon-btn" id="profileBtn" title="Profile">
+                    <span class="material-icons">account_circle</span>
+                </button>
+                <button class="header-icon-btn" id="logoutBtn" title="Logout">
+                    <span class="material-icons">logout</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Upload Section -->
+        <section class="upload-section">
+            <div class="upload-container">
+                <div class="upload-tabs">
+                    <button class="tab-button active" data-tab="upload">
+                        <span class="material-icons">cloud_upload</span>
+                        Upload File
+                    </button>
+                    <button class="tab-button" data-tab="manual">
+                        <span class="material-icons">edit</span>
+                        Manual Entry
+                    </button>
+                </div>
+
+                <!-- Upload Tab Content -->
+                <div class="tab-content active" id="upload-tab">
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-icon">
+                            <span class="material-icons">cloud_upload</span>
+                        </div>
+                        <h3>Upload Parts Rate Contract</h3>
+                        <p>Drag and drop your file here or click to browse</p>
+                        <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" hidden>
+                        <button class="mdc-button mdc-button--outlined" onclick="document.getElementById('fileInput').click()">
+                            Choose File
+                        </button>
+                    </div>
+
+                    <div class="upload-options">
+                        <div class="date-range">
+                            <div class="form-field">
+                                <label class="field-label">Effective From</label>
+                                <div class="date-wrapper">
+                                    <input type="date" class="modern-date" id="effectiveFrom">
+                                    <span class="date-icon">
+                                        <span class="material-icons">calendar_today</span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="field-label">Effective To</label>
+                                <div class="date-wrapper">
+                                    <input type="date" class="modern-date" id="effectiveTo">
+                                    <span class="date-icon">
+                                        <span class="material-icons">calendar_today</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="template-download">
+                            <button class="mdc-button mdc-button--outlined" id="downloadTemplate">
+                                <span class="material-icons">download</span>
+                                Download Template
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manual Entry Tab Content -->
+                <div class="tab-content" id="manual-tab">
+                    <form class="manual-entry-form" id="manualEntryForm">
+                        <div class="form-grid">
+                            <div class="form-field">
+                                <label class="field-label">Customer#</label>
+                                <div class="input-wrapper">
+                                    <input type="text" class="modern-input" id="customerId" required placeholder="Enter customer number">
+                                </div>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="field-label">Customer Name</label>
+                                <div class="input-wrapper">
+                                    <input type="text" class="modern-input" id="customerName" required placeholder="Enter customer name">
+                                </div>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="field-label">Prefix</label>
+                                <div class="input-wrapper">
+                                    <input type="text" class="modern-input" id="prefix" placeholder="Enter prefix">
+                                </div>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="field-label">Part Number</label>
+                                <div class="input-wrapper">
+                                    <input type="text" class="modern-input" id="partNumber" required placeholder="Enter part number">
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <label class="field-label">Part Description</label>
+                                <div class="input-wrapper">
+                                    <textarea class="modern-textarea" id="partDescription" required placeholder="Enter detailed part description" rows="0" style="height: 50px;"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <label class="field-label">Scale</label>
+                                <div class="input-wrapper">
+                                    <input type="number" class="modern-input" id="scale" step="0.01" placeholder="Enter scale">
+                                </div>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="field-label">Price</label>
+                                <div class="input-wrapper">
+                                    <input type="number" class="modern-input" id="price" step="0.01" required placeholder="Enter price">
+                                </div>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="field-label">Currency</label>
+                                <div class="select-wrapper">
+                                    <select class="modern-select" id="currency">
+                                        <option value="USD">USD</option>
+                                        <option value="EUR">EUR</option>
+                                        <option value="GBP">GBP</option>
+                                    </select>
+                                    <span class="select-arrow">
+                                        <span class="material-icons">expand_more</span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="field-label">Effective From</label>
+                                <div class="date-wrapper">
+                                    <input type="date" class="modern-date" id="manualEffectiveFrom" required>
+                                    <span class="date-icon">
+                                        <span class="material-icons">calendar_today</span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="field-label">Effective To</label>
+                                <div class="date-wrapper">
+                                    <input type="date" class="modern-date" id="manualEffectiveTo" required>
+                                    <span class="date-icon">
+                                        <span class="material-icons">calendar_today</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Part Description - Full Width -->
+                        <!-- <div class="form-field full-width-field">
+                            <label class="field-label">Part Description</label>
+                            <div class="input-wrapper">
+                                <textarea class="modern-textarea" id="partDescription" required placeholder="Enter detailed part description" rows="3"></textarea>
+                            </div>
+                        </div> -->
+
+                        <div class="form-actions">
+                            <button type="button" class="mdc-button mdc-button--outlined" id="clearForm">
+                                <span class="material-icons">clear</span>
+                                Clear
+                            </button>
+                            <button type="button" class="mdc-button mdc-button--outlined" id="addAndContinue">
+                                <span class="material-icons">add</span>
+                                Add & Continue
+                            </button>
+                            <button type="submit" class="mdc-button mdc-button--raised">
+                                <span class="material-icons">save</span>
+                                Add Entry
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Pending Entries Section -->
+                    <div class="pending-entries" id="pendingEntriesSection" style="display: none;">
+                        <div class="pending-header">
+                            <h3>Pending Entries (<span id="pendingCount">0</span>)</h3>
+                            <div class="pending-actions">
+                                <button type="button" class="mdc-button mdc-button--outlined" id="clearAllPending">
+                                    <span class="material-icons">delete_sweep</span>
+                                    Clear All
+                                </button>
+                                <button type="button" class="mdc-button mdc-button--raised" id="submitAllEntries">
+                                    <span class="material-icons">upload</span>
+                                    Submit All Entries
+                                </button>
+                            </div>
+                        </div>
+                        <div class="pending-list" id="pendingList">
+                            <!-- Pending entries will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contracts List Section -->
+        <section class="contracts-section">
+            <div class="section-header">
+                <h2>Upload Parts Rate Contract</h2>
+                <div class="section-actions">
+                    <button class="mdc-button mdc-button--outlined" id="exportGridBtn">
+                        <span class="material-icons">grid_on</span>
+                        Export Grid
+                    </button>
+                    <div class="search-filter">
+                        <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-leading-icon">
+                            <span class="material-icons mdc-text-field__icon mdc-text-field__icon--leading">search</span>
+                            <input type="text" class="mdc-text-field__input" id="searchInput" placeholder="Search contracts...">
+                            <div class="mdc-notched-outline">
+                                <div class="mdc-notched-outline__leading"></div>
+                                <div class="mdc-notched-outline__notch"></div>
+                                <div class="mdc-notched-outline__trailing"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contracts-table-container">
+                <table class="contracts-table" id="contractsTable">
+                    <thead>
+                        <tr>
+                            <th>View</th>
+                            <th>Export</th>
+                            <th>Upload Date</th>
+                            <th>Uploaded By</th>
+                            <th>Upload Count</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contractsTableBody">
+                        <!-- Sample data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Contract View Modal -->
+    <div class="modal-overlay" id="contractModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Customer Rate Contract</h2>
+                <div class="modal-header-actions">
+                    <button class="modal-icon-btn" id="exportModalBtn" title="Export Contract">
+                        <span class="material-icons">download</span>
+                    </button>
+                    <button class="modal-close" id="closeModal">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <!-- Highlighted Company and Branch Information -->
+                <div class="highlighted-info">
+                    <div class="highlight-item">
+                        <label>Company Name:</label>
+                        <span id="modalCompanyName" class="highlight-value">-</span>
+                    </div>
+                    <div class="highlight-item">
+                        <label>Branch Name:</label>
+                        <span id="modalBranchName" class="highlight-value">-</span>
+                    </div>
+                </div>
+
+                <!-- Contract Details Grid -->
+                <div class="contract-details-grid">
+                    <div class="detail-item">
+                        <label>Customer#:</label>
+                        <span id="modalCustomerId">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Customer Name:</label>
+                        <span id="modalCustomerName">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Prefix:</label>
+                        <span id="modalPrefix">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Part Number:</label>
+                        <span id="modalPartNumber">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Part Description:</label>
+                        <span id="modalPartDescription">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Scale:</label>
+                        <span id="modalScale">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Price:</label>
+                        <span id="modalPrice">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Currency:</label>
+                        <span id="modalCurrency">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Effective From:</label>
+                        <span id="modalEffectiveFrom">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Effective To:</label>
+                        <span id="modalEffectiveTo">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Upload Date:</label>
+                        <span id="modalUploadDate">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Uploaded By:</label>
+                        <span id="modalUploadedBy">-</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="mdc-button mdc-button--outlined" id="exportContractBtn">
+                    <span class="material-icons">download</span>
+                    Export
+                </button>
+                <button class="mdc-button mdc-button--raised" id="closeModalBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,1094 @@
+
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SLA Management UI - Grayscale - Fixed Graphs - Bold Links - Updated Settings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <style>
+        /* Optional: Adjust container styles if needed to accommodate fixed canvas sizes */
+        /* For example, to center a fixed-size chart: */
+        /* .chart-container { text-align: center; } */
+    </style>
+</head>
+<body class="bg-gray-50 font-sans flex">
+    <aside class="w-64 bg-gray-200 text-gray-800 h-screen p-4 fixed">
+        <h1 class="text-2xl font-bold mb-6">SLA Management</h1>
+        <nav>
+            <a href="#dashboard" class="block py-2 px-4 hover:bg-gray-300 rounded font-bold" aria-label="Navigate to Dashboard">Dashboard</a>
+            <a href="#sla-definition" class="block py-2 px-4 hover:bg-gray-300 rounded font-bold" onclick="openSLADefinitionModal()" aria-label="Navigate to SLA Definition">SLA Definition</a>
+            <a href="#alerts" class="block py-2 px-4 hover:bg-gray-300 rounded font-bold" onclick="openAlertRulesModal()" aria-label="Navigate to Alerts">Alerts</a>
+            <a href="#reports" class="block py-2 px-4 hover:bg-gray-300 rounded font-bold" onclick="openReportModal()" aria-label="Navigate to Reports">Reports</a>
+            <a href="#enforcement" class="block py-2 px-4 hover:bg-gray-300 rounded font-bold" onclick="openEscalationRulesModal()" aria-label="Navigate to Enforcement">Enforcement</a>
+            <a href="#user-portal" class="block py-2 px-4 hover:bg-gray-300 rounded font-bold" onclick="openCustomerPortalModal()" aria-label="Navigate to User Portal">User Portal</a>
+            <a href="#integrations" class="block py-2 px-4 hover:bg-gray-300 rounded font-bold" onclick="openIntegrationsModal()" aria-label="Navigate to Integrations">Integrations</a>
+            <a href="#settings" class="block py-2 px-4 hover:bg-gray-300 rounded font-bold" onclick="openSettingsModal()" aria-label="Navigate to Settings">Settings</a>
+            <a href="#attachments" class="block py-2 px-4 hover:bg-gray-300 rounded font-bold" onclick="openAttachmentModal()" aria-label="Navigate to Attachments">Attachments</a>
+        </nav>
+    </aside>
+
+    <main class="ml-64 p-6 w-full">
+        <header class="bg-gray-800 text-white p-4 mb-6 flex justify-between items-center">
+            <h1 class="text-2xl font-bold">SLA Management Dashboard</h1>
+            <button onclick="openGraphModal()" aria-label="View SLA metric graphs">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 13v-7m4 7v-3m4 3v-7m-8 8h8"></path>
+                </svg>
+            </button>
+        </header>
+
+        <section id="dashboard" class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Monitoring Dashboard</h2>
+            <div class="mb-4 flex space-x-4">
+                <select class="border border-gray-300 p-2 rounded bg-white text-gray-800" aria-label="Filter by customer">
+                    <option>All Customers</option>
+                    <option>Customer A</option>
+                    <option>Customer B</option>
+                </select>
+                <select class="border border-gray-300 p-2 rounded bg-white text-gray-800" aria-label="Filter by SLA tier">
+                    <option>All Tiers</option>
+                    <option>Premium</option>
+                    <option>Standard</option>
+                </select>
+                <input type="date" class="border border-gray-300 p-2 rounded bg-white text-gray-800" aria-label="Select date range">
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h3 class="text-sm font-semibold text-gray-700">Uptime</h3>
+                    <p class="text-2xl font-bold text-black">99.98%</p>
+                    <p class="text-xs text-gray-600" title="Target uptime is 99.95%">Target: 99.95%</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h3 class="text-sm font-semibold text-gray-700">Response Time</h3>
+                    <p class="text-2xl font-bold text-gray-800">150ms</p>
+                    <p class="text-xs text-gray-600" title="Target response time is under 200ms">Target: < 200ms</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h3 class="text-sm font-semibold text-gray-700">Breaches</h3>
+                    <p class="text-2xl font-bold text-gray-900">2</p>
+                    <p class="text-xs text-gray-600" title="Number of SLA breaches this month">This Month</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h3 class="text-sm font-semibold text-gray-700">Compliance</h3>
+                    <p class="text-2xl font-bold text-black">98%</p>
+                    <p class="text-xs text-gray-600" title="Percentage of SLAs meeting targets">Overall</p>
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h3 class="text-sm font-semibold mb-2 text-gray-700">SLA Performance Trends</h3>
+                <canvas id="slaTrendChart" aria-label="SLA performance trends over time" width="600" height="300"></canvas>
+            </div>
+        </section>
+
+        <section id="alerts" class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Alerting & Notification Center</h2>
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h3 class="text-sm font-semibold mb-2 text-gray-700">Recent Alerts</h3>
+                <ul id="alertList" class="space-y-2 text-gray-800">
+                    <li class="border-l-4 border-gray-600 pl-4">
+                        <p class="font-semibold">SLA Breach: Response Time</p>
+                        <p class="text-xs text-gray-700">Exceeded 200ms at 2025-05-13 10:15</p>
+                    </li>
+                    <li class="border-l-4 border-gray-500 pl-4">
+                        <p class="font-semibold">Warning: Uptime Dropping</p>
+                        <p class="text-xs text-gray-700">Uptime at 99.90% at 2025-05-13 09:45</p>
+                    </li>
+                </ul>
+                <button class="mt-4 text-gray-700 hover:underline font-bold" onclick="openAlertRulesModal()" aria-label="Configure alert rules">Configure Alert Rules</button>
+            </div>
+        </section>
+
+        <section id="enforcement" class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Enforcement & Escalation</h2>
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h3 class="text-sm font-semibold mb-2 text-gray-700">Escalation Rules</h3>
+                <ul id="escalationList" class="space-y-2 text-gray-800"></ul>
+                <button class="mt-2 text-gray-700 hover:underline font-bold" onclick="openEscalationRulesModal()" aria-label="Configure escalation rules">Configure Rules</button>
+            </div>
+        </section>
+
+        <section id="user-portal" class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Customer Portal</h2>
+            <div class="bg-white p-4 rounded-lg shadow-md text-gray-800">
+                <p class="text-sm">View assigned SLAs and track support tickets with SLA timers.</p>
+                <button class="mt-2 text-gray-700 hover:underline font-bold" onclick="openCustomerPortalModal()" aria-label="View customer portal">View Portal</button>
+            </div>
+        </section>
+
+        <section id="integrations" class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Integrations</h2>
+            <div class="bg-white p-4 rounded-lg shadow-md text-gray-800">
+                <p class="text-sm">Configure API tokens, webhooks, and integrations with Zendesk, Jira, etc.</p>
+                <button class="mt-2 text-gray-700 hover:underline font-bold" onclick="openIntegrationsModal()" aria-label="Configure integrations">Configure Integrations</button>
+            </div>
+        </section>
+
+        <section id="settings" class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Settings</h2>
+            <div class="bg-white p-4 rounded-lg shadow-md text-gray-800">
+                <p class="text-sm">Manage role-based access, audit logs, and language/timezone settings.</p>
+                <button type="button" class="mt-2 text-gray-700 hover:underline font-bold" onclick="viewAuditLogs()" aria-label="View audit logs">View Audit Logs</button>
+            </div>
+        </section>
+
+        <section id="attachments" class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Attachments</h2>
+            <div class="bg-white p-4 rounded-lg shadow-md text-gray-800">
+                <p class="text-sm">Upload and manage SLA-related documents.</p>
+                <button class="mt-2 text-gray-700 hover:underline font-bold" onclick="openAttachmentModal()" aria-label="Manage attachments">Manage Attachments</button>
+            </div>
+        </section>
+    </main>
+
+    <div id="slaDefinitionModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden" role="dialog" aria-labelledby="slaModalTitle" aria-modal="true" aria-hidden="true">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg text-gray-800">
+            <h2 id="slaModalTitle" class="text-xl font-bold mb-4">Create SLA Template</h2>
+            <form id="slaDefinitionForm">
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="sla-name">SLA Name</label>
+                    <input id="sla-name" type="text" class="w-full border border-gray-300 p-2 rounded" placeholder="e.g., Premium Support SLA" aria-required="true">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="metric">Metric</label>
+                    <select id="metric" class="w-full border border-gray-300 p-2 rounded" aria-required="true">
+                        <option>Uptime</option>
+                        <option>Response Time</option>
+                        <option>Incident Resolution</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="threshold">Threshold</label>
+                    <input id="threshold" type="text" class="w-full border border-gray-300 p-2 rounded" placeholder="e.g., 99.95%" aria-required="true">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="severity">Severity Level</label>
+                    <select id="severity" class="w-full border border-gray-300 p-2 rounded" aria-required="true">
+                        <option>P1</option>
+                        <option>P2</option>
+                        <option>P3</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="customer">Assign to Customer</label>
+                    <select id="customer" class="w-full border border-gray-300 p-2 rounded" aria-required="true">
+                        <option>Customer A</option>
+                        <option>Customer B</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="terms">Terms & Conditions</label>
+                    <textarea id="terms" class="w-full border border-gray-300 p-2 rounded" rows="4" placeholder="Enter SLA terms..." aria-required="true"></textarea>
+                </div>
+                <div id="slaMessage" class="text-green-600 hidden mb-4">SLA saved successfully!</div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400" onclick="closeSLADefinitionModal()" aria-label="Cancel SLA creation">Cancel</button>
+                    <button type="submit" class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800" aria-label="Save SLA template">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="alertRulesModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden" role="dialog" aria-labelledby="alertRulesModalTitle" aria-modal="true" aria-hidden="true">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg text-gray-800">
+            <h2 id="alertRulesModalTitle" class="text-xl font-bold mb-4">Configure Alert Rules</h2>
+            <form id="alertRulesForm">
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="alert-metric">Metric</label>
+                    <select id="alert-metric" class="w-full border border-gray-300 p-2 rounded" aria-required="true">
+                        <option>Uptime</option>
+                        <option>Response Time</option>
+                        <option>Incident Resolution</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="alert-threshold">Threshold</label>
+                    <input id="alert-threshold" type="text" class="w-full border border-gray-300 p-2 rounded" placeholder="e.g., < 99.9%" aria-required="true">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1">Notification Channels</label>
+                    <div class="space-y-2">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-2" name="channels" value="email" aria-label="Enable email notifications"> Email
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-2" name="channels" value="in-app" aria-label="Enable in-app notifications"> In-App
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-2" name="channels" value="sms" aria-label="Enable SMS notifications"> SMS
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-2" name="channels" value="webhook" aria-label="Enable webhook notifications"> Webhook
+                        </label>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="recipients">Recipients</label>
+                    <input id="recipients" type="text" class="w-full border border-gray-300 p-2 rounded" placeholder="e.g., team@company.com" aria-required="true">
+                </div>
+                <div id="alertMessage" class="text-green-600 hidden mb-4">Alert rule saved successfully!</div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400" onclick="closeAlertRulesModal()" aria-label="Cancel alert rules configuration">Cancel</button>
+                    <button type="submit" class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800" aria-label="Save alert rules">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="escalationRulesModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden" role="dialog" aria-labelledby="escalationRulesModalTitle" aria-modal="true" aria-hidden="true">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg text-gray-800">
+            <h2 id="escalationRulesModalTitle" class="text-xl font-bold mb-4">Configure Escalation Rules</h2>
+            <form id="escalationRulesForm">
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="escalation-metric">Metric</label>
+                    <select id="escalation-metric" class="w-full border border-gray-300 p-2 rounded" aria-required="true">
+                        <option>Uptime</option>
+                        <option>Response Time</option>
+                        <option>Incident Resolution</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="escalation-time">Escalation Time</label>
+                    <input id="escalation-time" type="text" class="w-full border border-gray-300 p-2 rounded" placeholder="e.g., 1 hour" aria-required="true">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="escalation-action">Action</label>
+                    <select id="escalation-action" class="w-full border border-gray-300 p-2 rounded" aria-required="true">
+                        <option>Create Ticket</option>
+                        <option>Notify Manager</option>
+                        <option>Escalate to Director</option>
+                    </select>
+                </div>
+                <div id="escalationMessage" class="text-green-600 hidden mb-4">Escalation rule saved successfully!</div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400" onclick="closeEscalationRulesModal()" aria-label="Cancel escalation rules configuration">Cancel</button>
+                    <button type="submit" class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800" aria-label="Save escalation rules">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="customerPortalModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden" role="dialog" aria-labelledby="customerPortalModalTitle" aria-modal="true" aria-hidden="true">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg text-gray-800">
+            <h2 id="customerPortalModalTitle" class="text-xl font-bold mb-4">Customer Portal</h2>
+
+            <form id="assignSlaForm" class="mb-6">
+                <h3 class="text-sm font-semibold mb-2 text-gray-700">Assign SLA</h3>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="assign-sla-select">Assign SLA</label>
+                    <select id="assign-sla-select" class="w-full border border-gray-300 p-2 rounded" aria-required="true">
+                        <option value="">Select SLA</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="assign-customer-select">Assign to Customer</label>
+                    <select id="assign-customer-select" class="w-full border border-gray-300 p-2 rounded" aria-required="true">
+                        <option value="">Select Customer</option>
+                        <option value="Customer A">Customer A</option>
+                        <option value="Customer B">Customer B</option>
+                        <option value="Customer C">Customer C</option>
+                    </select>
+                </div>
+                <div id="assignmentMessage" class="text-green-600 hidden mb-4">SLA assigned successfully!</div>
+                <div class="flex justify-end">
+                    <button type="submit" class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800 font-bold" aria-label="Assign SLA">Assign SLA</button>
+                </div>
+            </form>
+            <div class="mb-4">
+                <h3 class="text-sm font-semibold text-gray-700">Assigned SLAs</h3>
+                <ul id="slaList" class="space-y-2">
+                    <li class="border-l-4 border-gray-600 pl-4">
+                        <p class="font-semibold">Premium Support SLA</p>
+                        <p class="text-xs text-gray-700">Uptime: 99.98% (Target: 99.95%)</p>
+                    </li>
+                </ul>
+            </div>
+            <div class="mb-4">
+                <h3 class="text-sm font-semibold text-gray-700">Support Tickets</h3>
+                <ul id="ticketList" class="space-y-2">
+                    <li class="border-l-4 border-gray-500 pl-4">
+                        <p class="font-semibold">Ticket #1234</p>
+                        <p class="text-xs text-gray-700">Time to Breach: 2h 15m</p>
+                    </li>
+                </ul>
+            </div>
+            <div class="flex justify-end space-x-2">
+                <button class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800 font-bold" onclick="refreshCustomerPortal()" aria-label="Refresh customer portal data">Refresh</button>
+                <button class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 font-bold" onclick="closeCustomerPortalModal()" aria-label="Close customer portal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="integrationsModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden" role="dialog" aria-labelledby="integrationsModalTitle" aria-modal="true" aria-hidden="true">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg text-gray-800">
+            <h2 id="integrationsModalTitle" class="text-xl font-bold mb-4">Configure Integrations</h2>
+            <form id="integrationsForm">
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="api-token">API Token</label>
+                    <input id="api-token" type="text" class="w-full border border-gray-300 p-2 rounded" placeholder="Enter API token" aria-required="true">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="webhook-url">Webhook URL</label>
+                    <input id="webhook-url" type="text" class="w-full border border-gray-300 p-2 rounded" placeholder="e.g., https://example.com/webhook" aria-required="true">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="ticketing-system">Ticketing System</label>
+                    <select id="ticketing-system" class="w-full border border-gray-300 p-2 rounded" aria-required="true">
+                        <option>Zendesk</option>
+                        <option>Jira</option>
+                        <option>ServiceNow</option>
+                    </select>
+                </div>
+                <div id="integrationMessage" class="text-green-600 hidden mb-4">Integration saved successfully!</div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400" onclick="closeIntegrationsModal()" aria-label="Cancel integrations configuration">Cancel</button>
+                    <button type="submit" class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800" aria-label="Save integrations">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="settingsModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden" role="dialog" aria-labelledby="settingsModalTitle" aria-modal="true" aria-hidden="true">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg text-gray-800">
+            <h2 id="settingsModalTitle" class="text-xl font-bold mb-4">Settings</h2>
+            <form id="settingsForm">
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="user-role">User Role</label>
+                    <select id="user-role" class="w-full border border-gray-300 p-2 rounded" aria-required="true">
+                        <option>Admin</option>
+                        <option>Support Agent</option>
+                        <option>Customer</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="timezone">Timezone</label>
+                    <select id="timezone" class="w-full border border-gray-300 p-2 rounded" aria-required="true">
+                        <option>UTC</option>
+                        <option>PST</option>
+                        <option>EST</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1" for="language">Language</label>
+                    <select id="language" class="w-full border border-gray-300 p-2 rounded" aria-required="true">
+                        <option>English</option>
+                        <option>Spanish</option>
+                        <option>French</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <button type="button" class="text-gray-700 hover:underline font-bold" onclick="viewAuditLogs()" aria-label="View audit logs">View Audit Logs</button>
+                </div>
+                <div id="settingsMessage" class="text-green-600 hidden mb-4">Settings saved successfully!</div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400" onclick="closeSettingsModal()" aria-label="Cancel settings configuration">Cancel</button>
+                    <button type="submit" class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800" aria-label="Save settings">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="reportModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden" role="dialog" aria-labelledby="reportModalTitle" aria-modal="true" aria-hidden="true">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl text-gray-800">
+            <h2 id="reportModalTitle" class="text-xl font-bold mb-4">SLA Compliance Report</h2>
+            <div class="mb-4">
+                <label class="block text-sm font-semibold mb-1" for="report-range">Date Range</label>
+                <select id="report-range" class="border border-gray-300 p-2 rounded bg-white text-gray-800" aria-label="Select report date range">
+                    <option>Daily</option>
+                    <option>Weekly</option>
+                    <option>Monthly</option>
+                </select>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow-md mb-4">
+                <h3 class="text-sm font-semibold mb-2 text-gray-700">Compliance Trend</h3>
+                <canvas id="reportChart" aria-label="SLA compliance trend over time" width="600" height="300"></canvas>
+            </div>
+            <div class="flex justify-end space-x-2">
+                <button class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800 font-bold" onclick="downloadReport('pdf')" aria-label="Download report as PDF">Download PDF</button>
+                <button class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800 font-bold" onclick="downloadReport('csv')" aria-label="Download report as CSV">Download CSV</button>
+                <button class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 font-bold" onclick="closeReportModal()" aria-label="Close report modal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="graphModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden" role="dialog" aria-labelledby="graphModalTitle" aria-modal="true" aria-hidden="true">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl text-gray-800">
+            <h2 id="graphModalTitle" class="text-xl font-bold mb-4">SLA Metrics Graphs</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-700">Uptime (%)</h3>
+                    <canvas id="uptimeGraph" aria-label="Line graph of uptime percentages" width="250" height="150"></canvas>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-700">Response Time (ms)</h3>
+                    <canvas id="responseTimeGraph" aria-label="Line graph of response times" width="250" height="150"></canvas>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-700">Compliance (%)</h3>
+                    <canvas id="complianceGraph" aria-label="Line graph of compliance percentages" width="250" height="150"></canvas>
+                </div>
+            </div>
+            <div class="flex justify-end mt-4">
+                <button class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 font-bold" onclick="closeGraphModal()" aria-label="Close graph modal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="attachmentModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden" role="dialog" aria-labelledby="attachmentModalTitle" aria-modal="true" aria-hidden="true">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl text-gray-800">
+            <h2 id="attachmentModalTitle" class="text-xl font-bold mb-4">Manage Attachments</h2>
+            <form id="attachmentForm" class="grid grid-cols-1 md:grid-cols-1 gap-4 mb-6">
+                <div>
+                    <label class="block text-sm font-semibold mb-1" for="attachment-file">Upload File (Max 10MB)</label>
+                    <input id="attachment-file" type="file" class="w-full border border-gray-300 p-2 rounded" accept=".pdf,.docx,.jpg,.png" aria-required="true">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1" for="attachment-description">Description</label>
+                    <textarea id="attachment-description" class="w-full border border-gray-300 p-2 rounded" rows="3" placeholder="Describe the attachment..." aria-required="true"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1" for="upload-datetime">Upload Date & Time</label>
+                    <input id="upload-datetime" type="datetime-local" class="w-full border border-gray-300 p-2 rounded" aria-required="true">
+                </div>
+                <div class="flex items-end">
+                    <button type="submit" class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800 font-bold" aria-label="Submit attachment">Submit</button>
+                </div>
+            </form>
+            <div id="attachmentMessage" class="text-green-600 hidden mb-4">Attachment added successfully!</div>
+            <h3 class="text-sm font-semibold mb-2 text-gray-700">Uploaded Attachments</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-800">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">File Name</th>
+                            <th scope="col" class="px-6 py-3">Type</th>
+                            <th scope="col" class="px-6 py-3">Description</th>
+                            <th scope="col" class="px-6 py-3">Uploaded By</th>
+                            <th scope="col" class="px-6 py-3">Date & Time</th>
+                            <th scope="col" class="px-6 py-3">Size</th>
+                            <th scope="col" class="px-6 py-3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attachmentList">
+                        <tr class="bg-white border-b hover:bg-gray-50">
+                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">example.pdf</td>
+                            <td class="px-6 py-4">PDF</td>
+                            <td class="px-6 py-4">Initial SLA Document</td>
+                            <td class="px-6 py-4">Admin</td>
+                            <td class="px-6 py-4">5/14/2025, 12:00:00 PM</td>
+                            <td class="px-6 py-4">150.50 KB</td>
+                            <td class="px-6 py-4 flex space-x-2">
+                                <button class="text-gray-700 hover:underline font-bold" onclick="viewAttachment(1)" aria-label="View attachment example.pdf">View</button>
+                                <button class="text-gray-700 hover:underline font-bold" onclick="downloadAttachment(1)" aria-label="Download attachment example.pdf">Download</button>
+                                <button class="text-gray-700 hover:underline font-bold" onclick="deleteAttachment(1)" aria-label="Delete attachment example.pdf">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="flex justify-end mt-4">
+                <button class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 font-bold" onclick="closeAttachmentModal()" aria-label="Close attachment modal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="auditLogsModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden" role="dialog" aria-labelledby="auditLogsModalTitle" aria-modal="true" aria-hidden="true">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-xl text-gray-800">
+            <h2 id="auditLogsModalTitle" class="text-xl font-bold mb-4">Audit Logs</h2>
+            <div class="mb-4 h-96 overflow-y-auto border border-gray-300 rounded p-2">
+                <ul id="auditLogList" class="space-y-2 text-sm">
+                </ul>
+            </div>
+            <div class="flex justify-end mt-4">
+                <button class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 font-bold" onclick="closeAuditLogsModal()" aria-label="Close audit logs modal">Close</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // Mock data storage using JavaScript arrays
+        let slas = []; // Stores defined SLA templates
+        let alertRules = [];
+        let escalationRules = [];
+        let integrations = [];
+        let settings = {}; // Store user settings
+        // Added a mock initial attachment for display
+        let attachments = [{
+            id: 1,
+            fileName: 'example.pdf',
+            fileType: 'PDF',
+            description: 'Initial SLA Document',
+            uploadedBy: 'Admin',
+            uploadDateTime: '2025-05-14T12:00:00', // ISO format
+            fileSize: '150.50 KB',
+            file: new File(["dummy content"], "example.pdf", { type: "application/pdf" }) // Dummy file object
+        }];
+
+        // Mock data for audit logs
+        let auditLogs = [
+            { timestamp: '2025-05-14 12:00:00', user: 'Admin', action: 'Updated Settings' },
+            { timestamp: '2025-05-14 11:30:00', user: 'Support Agent', action: 'Viewed Customer Portal' },
+            { timestamp: '2025-05-13 15:00:00', user: 'Admin', action: 'Created SLA: Premium' },
+            { timestamp: '2025-05-13 10:15:00', user: 'System', action: 'SLA Breach: Response Time Exceeded' },
+            { timestamp: '2025-05-12 09:00:00', user: 'Admin', action: 'Configured Integration: Zendesk' },
+            { timestamp: '2025-05-11 14:00:00', user: 'Admin', action: 'Defined Alert Rule: Uptime Drop' },
+            // Add more mock data as needed
+        ];
+
+
+        // Ensure DOM is fully loaded before running scripts
+        window.addEventListener('DOMContentLoaded', () => {
+            try {
+                // Initialize Chart instances and store them to manage updates/destruction
+                let slaTrendChartInstance = null;
+                let reportChartInstance = null;
+                let uptimeChartInstance = null;
+                let responseTimeChartInstance = null;
+                let complianceChartInstance = null;
+
+                // Function to create the main SLA Trend Chart
+                function createSlaTrendChart() {
+                    const slaTrendCtx = document.getElementById('slaTrendChart');
+                    if (!slaTrendCtx) {
+                        console.error('SLA trend chart canvas not found.');
+                        return null; // Return null if canvas is missing
+                    }
+                    // Destroy existing chart instance if it exists
+                    if (slaTrendChartInstance) {
+                        slaTrendChartInstance.destroy();
+                    }
+
+                    // Create a new Chart instance with grayscale colors and disabled responsiveness
+                    slaTrendChartInstance = new Chart(slaTrendCtx.getContext('2d'), {
+                        type: 'line',
+                        data: {
+                            labels: ['2025-05-01', '2025-05-02', '2025-05-03', '2025-05-04', '2025-05-05'], // Example dates
+                            datasets: [
+                                {
+                                    label: 'Uptime (%)',
+                                    data: [99.95, 99.96, 99.94, 99.90, 99.98], // Example data
+                                    borderColor: 'rgba(0, 0, 0, 0.8)', // Dark gray/black line
+                                    backgroundColor: 'rgba(0, 0, 0, 0.2)', // Light gray fill below line
+                                    fill: false, // Set to true if you want area fill
+                                    tension: 0.1 // Smoothness of the line
+                                },
+                                {
+                                    label: 'Response Time (ms)',
+                                    data: [120, 130, 140, 160, 150], // Example data
+                                    borderColor: 'rgba(100, 100, 100, 0.8)', // Medium gray line
+                                    backgroundColor: 'rgba(100, 100, 100, 0.2)', // Light gray fill below line
+                                    fill: false, // Set to true if you want area fill
+                                    tension: 0.1
+                                },
+                            ],
+                        },
+                        options: {
+                            responsive: false, // Disable responsiveness
+                            maintainAspectRatio: false, // Do not maintain aspect ratio
+                            scales: {
+                                y: {
+                                    beginAtZero: false,
+                                    title: {
+                                        display: true,
+                                        text: 'Value',
+                                        color: '#333' // Grayscale text color
+                                    },
+                                    ticks: { color: '#333' }, // Grayscale tick labels
+                                    grid: { color: 'rgba(0, 0, 0, 0.1)' } // Light grayscale grid lines
+                                },
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Date',
+                                        color: '#333' // Grayscale text color
+                                    },
+                                    ticks: { color: '#333' }, // Grayscale tick labels
+                                    grid: { color: 'rgba(0, 0, 0, 0.1)' } // Light grayscale grid lines
+                                },
+                            },
+                            plugins: {
+                                legend: {
+                                    labels: {
+                                        color: '#333' // Grayscale legend text color
+                                    }
+                                }
+                            }
+                        },
+                    });
+                    return slaTrendChartInstance;
+                }
+
+                // Function to create the Report Chart
+                function renderReportChart() {
+                    const reportCtx = document.getElementById('reportChart');
+                    if (!reportCtx) {
+                        console.error('Report chart canvas not found.');
+                        return null;
+                    }
+
+                    // Destroy previous chart instance if it exists
+                    if (reportChartInstance) {
+                        reportChartInstance.destroy();
+                    }
+
+                    // Create a new Chart instance with grayscale colors and disabled responsiveness
+                    reportChartInstance = new Chart(reportCtx.getContext('2d'), {
+                        type: 'line',
+                        data: {
+                            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'], // Example labels for a weekly report
+                            datasets: [{
+                                label: 'Compliance (%)',
+                                data: [98, 97, 96, 99], // Example compliance data
+                                borderColor: 'rgba(0, 0, 0, 0.8)', // Dark gray/black line
+                                backgroundColor: 'rgba(0, 0, 0, 0.2)', // Light gray fill below line
+                                fill: false, // Set to true if you want area fill
+                                tension: 0.1
+                            }],
+                        },
+                        options: {
+                            responsive: false, // Disable responsiveness
+                            maintainAspectRatio: false, // Do not maintain aspect ratio
+                            scales: {
+                                y: {
+                                    beginAtZero: false,
+                                    title: { display: true, text: 'Compliance (%)', color: '#333' },
+                                    ticks: { color: '#333' },
+                                    grid: { color: 'rgba(0, 0, 0, 0.1)' }
+                                },
+                                x: {
+                                    title: { display: true, text: 'Time Period', color: '#333' },
+                                    ticks: { color: '#333' },
+                                    grid: { color: 'rgba(0, 0, 0, 0.1)' }
+                                },
+                            },
+                            plugins: {
+                                legend: {
+                                    labels: {
+                                        color: '#333'
+                                    }
+                                }
+                            }
+                        },
+                    });
+                    return reportChartInstance;
+                }
+
+                // Function to create the Graph Modal Charts
+                function renderGraphCharts() {
+                    const uptimeCtx = document.getElementById('uptimeGraph');
+                    const responseTimeCtx = document.getElementById('responseTimeGraph');
+                    const complianceCtx = document.getElementById('complianceGraph');
+
+                    if (!uptimeCtx || !responseTimeCtx || !complianceCtx) {
+                        console.error('One or more graph canvases not found');
+                        return; // Exit if canvases are missing
+                    }
+
+                    // Destroy previous chart instances if they exist
+                    if (uptimeChartInstance) uptimeChartInstance.destroy();
+                    if (responseTimeChartInstance) responseTimeChartInstance.destroy();
+                    if (complianceChartInstance) complianceChartInstance.destroy();
+
+                    // Create new Chart instances for each graph with grayscale colors and disabled responsiveness
+                    uptimeChartInstance = new Chart(uptimeCtx.getContext('2d'), {
+                        type: 'line',
+                        data: {
+                            labels: ['2025-05-01', '2025-05-02', '2025-05-03', '2025-05-04', '2025-05-05'],
+                            datasets: [{
+                                label: 'Uptime (%)',
+                                data: [99.95, 99.96, 99.94, 99.90, 99.98],
+                                borderColor: 'rgba(0, 0, 0, 0.8)', // Dark gray/black line
+                                backgroundColor: 'rgba(0, 0, 0, 0.2)', // Light gray fill below line
+                                fill: false,
+                                tension: 0.1
+                            }],
+                        },
+                        options: {
+                            responsive: false, // Disable responsiveness
+                            maintainAspectRatio: false, // Do not maintain aspect ratio
+                            scales: {
+                                y: { beginAtZero: false, title: { display: true, text: 'Uptime (%)', color: '#333' }, ticks: { color: '#333' }, grid: { color: 'rgba(0, 0, 0, 0.1)' } },
+                                x: { title: { display: true, text: 'Date', color: '#333' }, ticks: { color: '#333' }, grid: { color: 'rgba(0, 0, 0, 0.1)' } },
+                            },
+                            plugins: { legend: { display: false } } // Hide legend for small charts
+                        },
+                    });
+
+                    responseTimeChartInstance = new Chart(responseTimeCtx.getContext('2d'), {
+                        type: 'line',
+                        data: {
+                            labels: ['2025-05-01', '2025-05-02', '2025-05-03', '2025-05-04', '2025-05-05'],
+                            datasets: [{
+                                label: 'Response Time (ms)',
+                                data: [120, 130, 140, 160, 150],
+                                borderColor: 'rgba(100, 100, 100, 0.8)', // Medium gray line
+                                backgroundColor: 'rgba(100, 100, 100, 0.2)', // Light gray fill below line
+                                fill: false,
+                                tension: 0.1
+                            }],
+                        },
+                        options: {
+                            responsive: false, // Disable responsiveness
+                            maintainAspectRatio: false, // Do not maintain aspect ratio
+                            scales: {
+                                y: { beginAtZero: false, title: { display: true, text: 'Response Time (ms)', color: '#333' }, ticks: { color: '#333' }, grid: { color: 'rgba(0, 0, 0, 0.1)' } },
+                                x: { title: { display: true, text: 'Date', color: '#333' }, ticks: { color: '#333' }, grid: { color: 'rgba(0, 0, 0, 0.1)' } },
+                            },
+                            plugins: { legend: { display: false } } // Hide legend for small charts
+                        },
+                    });
+
+                    complianceChartInstance = new Chart(complianceCtx.getContext('2d'), {
+                        type: 'line',
+                        data: {
+                            labels: ['2025-05-01', '2025-05-02', '2025-05-03', '2025-05-04', '2025-05-05'],
+                            datasets: [{
+                                label: 'Compliance (%)',
+                                data: [98, 97, 96, 99, 98],
+                                borderColor: 'rgba(150, 150, 150, 0.8)', // Light gray line
+                                backgroundColor: 'rgba(150, 150, 150, 0.2)', // Very light gray fill below line
+                                fill: false,
+                                tension: 0.1
+                            }],
+                        },
+                        options: {
+                            responsive: false, // Disable responsiveness
+                            maintainAspectRatio: false, // Do not maintain aspect ratio
+                            scales: {
+                                y: { beginAtZero: false, title: { display: true, text: 'Compliance (%)', color: '#333' }, ticks: { color: '#333' }, grid: { color: 'rgba(0, 0, 0, 0.1)' } },
+                                x: { title: { display: true, text: 'Date', color: '#333' }, ticks: { color: '#333' }, grid: { color: 'rgba(0, 0, 0, 0.1)' } },
+                            },
+                            plugins: { legend: { display: false } } // Hide legend for small charts
+                        },
+                    });
+                }
+
+                // Call the function to create the main chart on page load
+                createSlaTrendChart();
+
+                // Modal Functions - Toggle visibility and update ARIA attributes
+                window.openSLADefinitionModal = function () {
+                    const modal = document.getElementById('slaDefinitionModal');
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                        modal.setAttribute('aria-hidden', 'false');
+                    }
+                };
+
+                window.closeSLADefinitionModal = function () {
+                    const modal = document.getElementById('slaDefinitionModal');
+                    if (modal) {
+                        modal.classList.add('hidden');
+                        modal.setAttribute('aria-hidden', 'true');
+                    }
+                    // Reset form and hide message on close
+                    document.getElementById('slaDefinitionForm').reset();
+                    document.getElementById('slaMessage').classList.add('hidden');
+                };
+
+                window.openAlertRulesModal = function () {
+                    const modal = document.getElementById('alertRulesModal');
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                        modal.setAttribute('aria-hidden', 'false');
+                    }
+                };
+
+                window.closeAlertRulesModal = function () {
+                    const modal = document.getElementById('alertRulesModal');
+                    if (modal) {
+                        modal.classList.add('hidden');
+                        modal.setAttribute('aria-hidden', 'true');
+                    }
+                    // Reset form and hide message on close
+                    document.getElementById('alertRulesForm').reset();
+                    document.getElementById('alertMessage').classList.add('hidden');
+                };
+
+                window.openEscalationRulesModal = function () {
+                    const modal = document.getElementById('escalationRulesModal');
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                        modal.setAttribute('aria-hidden', 'false');
+                    }
+                };
+
+                window.closeEscalationRulesModal = function () {
+                    const modal = document.getElementById('escalationRulesModal');
+                    if (modal) {
+                        modal.classList.add('hidden');
+                        modal.setAttribute('aria-hidden', 'true');
+                    }
+                    // Reset form and hide message on close
+                    document.getElementById('escalationRulesForm').reset();
+                    document.getElementById('escalationMessage').classList.add('hidden');
+                };
+
+                // Modified function to handle Customer Portal modal opening and dropdown population
+                window.openCustomerPortalModal = function () {
+                    const modal = document.getElementById('customerPortalModal');
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                        modal.setAttribute('aria-hidden', 'false');
+
+                        // Populate SLA dropdown with defined SLA names
+                        const assignSlaSelect = document.getElementById('assign-sla-select');
+                        assignSlaSelect.innerHTML = '<option value="">Select SLA</option>' + slas.map(sla => `<option value="${sla.name}">${sla.name}</option>`).join('');
+
+                        // Populate Customer dropdown (hardcoded options for now)
+                        const assignCustomerSelect = document.getElementById('assign-customer-select');
+                        // Check if options are already present to avoid duplicates if modal is opened multiple times
+                        if (assignCustomerSelect.options.length <= 1) { // Only add if "Select Customer" is the only option
+                            assignCustomerSelect.innerHTML += '<option value="Customer A">Customer A</option><option value="Customer B">Customer B</option><option value="Customer C">Customer C</option>';
+                        }
+
+
+                        refreshCustomerPortal(); // Refresh displayed assigned SLAs and tickets
+                        // Hide assignment message
+                        document.getElementById('assignmentMessage').classList.add('hidden');
+                        // Reset the assignment form
+                        document.getElementById('assignSlaForm').reset();
+                    }
+                };
+
+                window.closeCustomerPortalModal = function () {
+                    const modal = document.getElementById('customerPortalModal');
+                    if (modal) {
+                        modal.classList.add('hidden');
+                        modal.setAttribute('aria-hidden', 'true');
+                    }
+                };
+
+                window.openIntegrationsModal = function () {
+                    const modal = document.getElementById('integrationsModal');
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                        modal.setAttribute('aria-hidden', 'false');
+                    }
+                };
+
+                window.closeIntegrationsModal = function () {
+                    const modal = document.getElementById('integrationsModal');
+                    if (modal) {
+                        modal.classList.add('hidden');
+                        modal.setAttribute('aria-hidden', 'true');
+                    }
+                    // Reset form and hide message on close
+                    document.getElementById('integrationsForm').reset();
+                    document.getElementById('integrationMessage').classList.add('hidden');
+                };
+
+                window.openSettingsModal = function () {
+                    const modal = document.getElementById('settingsModal');
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                        modal.setAttribute('aria-hidden', 'false');
+                    }
+                };
+
+                window.closeSettingsModal = function () {
+                    const modal = document.getElementById('settingsModal');
+                    if (modal) {
+                        modal.classList.add('hidden');
+                        modal.setAttribute('aria-hidden', 'true');
+                    }
+                    // Reset form and hide message on close
+                    document.getElementById('settingsForm').reset();
+                    document.getElementById('settingsMessage').classList.add('hidden');
+                };
+
+                window.openReportModal = function () {
+                    const modal = document.getElementById('reportModal');
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                        modal.setAttribute('aria-hidden', 'false');
+                        renderReportChart(); // Render chart when opened
+                        // No explicit resize needed with responsive: false and fixed attributes
+                    }
+                };
+
+                window.closeReportModal = function () {
+                    const modal = document.getElementById('reportModal');
+                    if (modal) {
+                        modal.classList.add('hidden');
+                        modal.setAttribute('aria-hidden', 'true');
+                    }
+                };
+
+                // Modified function to handle graph modal opening (removed resize timeout as responsive is false)
+                window.openGraphModal = function () {
+                    const modal = document.getElementById('graphModal');
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                        modal.setAttribute('aria-hidden', 'false');
+                        // Render charts immediately
+                        renderGraphCharts();
+                        // No explicit resize needed with responsive: false and fixed attributes
+                        console.log('Graph modal opened and charts rendered with fixed size.');
+                    }
+                };
+
+                window.closeGraphModal = function () {
+                    const modal = document.getElementById('graphModal');
+                    if (modal) {
+                        modal.classList.add('hidden');
+                        modal.setAttribute('aria-hidden', 'true');
+                    }
+                };
+
+                window.openAttachmentModal = function () {
+                    const modal = document.getElementById('attachmentModal');
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                        modal.setAttribute('aria-hidden', 'false');
+                        renderAttachmentList(); // Render list when opened
+                        // Set default datetime to current time upon opening
+                        const now = new Date().toISOString().slice(0, 16);
+                        document.getElementById('upload-datetime').value = now;
+                    }
+                };
+
+                window.closeAttachmentModal = function () {
+                    const modal = document.getElementById('attachmentModal');
+                    if (modal) {
+                        modal.classList.add('hidden');
+                        modal.setAttribute('aria-hidden', 'true');
+                    }
+                    // Reset form and hide message on close
+                    document.getElementById('attachmentForm').reset();
+                    document.getElementById('attachmentMessage').classList.add('hidden');
+                };
+
+                // Add form submission handler for the new assignment form in Customer Portal modal
+                document.getElementById('assignSlaForm').addEventListener('submit', (e) => {
+                    e.preventDefault(); // Prevent default form submission
+
+                    const selectedSlaName = document.getElementById('assign-sla-select').value;
+                    const selectedCustomer = document.getElementById('assign-customer-select').value;
+
+                    if (!selectedSlaName || !selectedCustomer) {
+                        alert('Please select both an SLA and a Customer.');
+                        return;
+                    }
+
+                    // Find the selected SLA from the mock data
+                    const selectedSla = slas.find(sla => sla.name === selectedSlaName);
+
+                    if (selectedSla) {
+                        console.log(`Attempting to assign SLA "${selectedSla.name}" to Customer "${selectedCustomer}"`);
+                        // In a real application, you would perform the actual assignment logic here,
+                        // likely involving backend API calls to link the SLA template and customer.
+
+                        // For this mock example, we'll just simulate success and log the action.
+                        document.getElementById('assignmentMessage').classList.remove('hidden'); // Show success message
+
+                        // In a real app, you would update the data structure that tracks
+                        // which SLAs are assigned to which customers and then refresh
+                        // the "Assigned SLAs" list in the modal.
+                        // For this mock:
+                        // slas[slas.findIndex(sla => sla.name === selectedSlaName)].assignedTo = selectedCustomer;
+                        // refreshCustomerPortal(); // Call this if you implement assignment tracking
+
+
+                        // Reset the form after simulated successful assignment
+                        document.getElementById('assignSlaForm').reset();
+                        // Re-populate SLA dropdown just in case new SLAs were added while modal was open
+                        document.getElementById('assign-sla-select').innerHTML = '<option value="">Select SLA</option>' + slas.map(sla => `<option value="${sla.name}">${sla.name}</option>`).join('');
+
+
+                        setTimeout(() => document.getElementById('assignmentMessage').classList.add('hidden'), 2000); // Hide message after delay
+
+                    } else {
+                        console.error(`SLA template "${selectedSlaName}" not found in mock data.`);
+                        alert(`Error: SLA template "${selectedSlaName}" not found.`);
+                    }
+                });
+
+                // Mock data for audit logs
+                let auditLogs = [
+                    { timestamp: '2025-05-14 12:00:00', user: 'Admin', action: 'Updated Settings' },
+                    { timestamp: '2025-05-14 11:30:00', user: 'Support Agent', action: 'Viewed Customer Portal' },
+                    { timestamp: '2025-05-13 15:00:00', user: 'Admin', action: 'Created SLA: Premium' },
+                    { timestamp: '2025-05-13 10:15:00', user: 'System', action: 'SLA Breach: Response Time Exceeded' },
+                    { timestamp: '2025-05-12 09:00:00', user: 'Admin', action: 'Configured Integration: Zendesk' },
+                    { timestamp: '2025-05-11 14:00:00', user: 'Admin', action: 'Defined Alert Rule: Uptime Drop' },
+                    // Add more mock data as needed
+                ];
+
+                // Function to open the Audit Logs Modal
+                window.openAuditLogsModal = function () {
+                    const modal = document.getElementById('auditLogsModal');
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                        modal.setAttribute('aria-hidden', 'false');
+                        renderAuditLogs(); // Populate the log list when the modal opens
+                    }
+                };
+
+                // Function to close the Audit Logs Modal
+                window.closeAuditLogsModal = function () {
+                    const modal = document.getElementById('auditLogsModal');
+                    if (modal) {
+                        modal.classList.add('hidden');
+                        modal.setAttribute('aria-hidden', 'true');
+                    }
+                };
+
+                // Function to render the audit log entries in the modal
+                function renderAuditLogs() {
+                    const auditLogList = document.getElementById('auditLogList');
+                    if (!auditLogList) {
+                        console.error('Audit log list element not found.');
+                        return;
+                    }
+                    // Generate list items from the auditLogs array
+                    auditLogList.innerHTML = auditLogs.map(log => `
+                             <li class="border-b border-gray-200 pb-2 last:border-b-0">
+                                 <p class="text-xs text-gray-600">${log.timestamp} - ${log.user}</p>
+                                 <p>${log.action}</p>
+                             </li>
+                         `).join('');
+                }
+
+
+                // Modify the existing viewAuditLogs function to open the new modal
+                window.viewAuditLogs = function () {
+                    console.log('Opening Audit Logs modal.');
+                    // Call the new function to open the modal
+                    openAuditLogsModal();
+                    // Removed the alert and console log action from here
+                };
+
+                // Update the Escape key listener to close the new modal
+                document.addEventListener('keydown', (event) => {
+                    if (event.key === 'Escape') {
+                        // Close all modals if any are currently open
+                        closeSLADefinitionModal();
+                        closeAlertRulesModal();
+                        closeEscalationRulesModal();
+                        closeCustomerPortalModal();
+                        closeIntegrationsModal();
+                        closeSettingsModal();
+                        closeReportModal();
+                        closeGraphModal();
+                        closeAttachmentModal();
+                        closeAuditLogsModal(); // Add closing the audit logs modal
+                    }
+                });
+
+                // Initial render of attachment list when the page loads
+                renderAttachmentList();
+
+
+            } catch (error) {
+                console.error('Error initializing UI:', error);
+            }
+        });
+    </script>
+</body>
+</html>
+apps-fileview.texmex_20250501.00_p3
+SLA.html
+Displaying SLA.html. 

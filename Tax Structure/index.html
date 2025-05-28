@@ -1,0 +1,1947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Management System</title>
+    <!-- Google Material Design Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Google Fonts - Roboto (Material Design Standard) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Material Design CSS Framework -->
+    <link rel="stylesheet" href="material-design.css">
+    <link rel="stylesheet" href="modern-theme.css">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Material Design Navigation Drawer -->
+        <nav class="sidebar md-navigation-drawer">
+            <div class="sidebar-header">
+                <h2 class="md-title-large">
+                    <span class="material-icons" style="vertical-align: middle; margin-right: 8px;">receipt_long</span>
+                    Tax Structure
+                </h2>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item md-navigation-item active" data-page="dashboard" tabindex="0">
+                    <div class="nav-item-content">
+                        <span class="nav-icon material-icons">dashboard</span>
+                        <span class="nav-text">Dashboard</span>
+                    </div>
+                </li>
+                <li class="nav-item md-navigation-item" data-page="invoices" tabindex="0">
+                    <div class="nav-item-content">
+                        <span class="nav-icon material-icons">receipt</span>
+                        <span class="nav-text">Tax Management</span>
+                    </div>
+                </li>
+                <li class="nav-item md-navigation-item" data-page="tax-config" tabindex="0">
+                    <div class="nav-item-content">
+                        <span class="nav-icon material-icons">settings</span>
+                        <span class="nav-text">Tax Structure</span>
+                    </div>
+                </li>
+                <li class="nav-item md-navigation-item" data-page="products" tabindex="0">
+                    <div class="nav-item-content">
+                        <span class="nav-icon material-icons">inventory_2</span>
+                        <span class="nav-text">Product Tax Mapping</span>
+                    </div>
+                </li>
+                <li class="nav-item md-navigation-item" data-page="reports" tabindex="0">
+                    <div class="nav-item-content">
+                        <span class="nav-icon material-icons">analytics</span>
+                        <span class="nav-text">Reports</span>
+                    </div>
+                </li>
+                <li class="nav-item md-navigation-item" data-page="compliance" tabindex="0">
+                    <div class="nav-item-content">
+                        <span class="nav-icon material-icons">verified_user</span>
+                        <span class="nav-text">Compliance</span>
+                    </div>
+                </li>
+                <li class="nav-item md-navigation-item" data-page="settings" tabindex="0">
+                    <div class="nav-item-content">
+                        <span class="nav-icon material-icons">tune</span>
+                        <span class="nav-text">Settings</span>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1 id="page-title">Dashboard</h1>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search...">
+                    </div>
+                    <div class="theme-switcher">
+                        <button class="theme-btn" onclick="toggleThemeMenu()" title="Change Theme">
+                            <i class="fas fa-palette"></i>
+                        </button>
+                        <div class="theme-menu" id="theme-menu">
+                            <div class="theme-section">
+                                <h4>Classic Themes</h4>
+                                <div class="theme-grid">
+                                    <div class="theme-option" onclick="changeTheme('default')" data-theme="default">
+                                        <div class="theme-preview default-theme"></div>
+                                        <span>Default</span>
+                                    </div>
+                                    <div class="theme-option" onclick="changeTheme('dark')" data-theme="dark">
+                                        <div class="theme-preview dark-theme"></div>
+                                        <span>Dark</span>
+                                    </div>
+                                    <div class="theme-option" onclick="changeTheme('light')" data-theme="light">
+                                        <div class="theme-preview light-theme"></div>
+                                        <span>Light</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="theme-section">
+                                <h4>Color Themes</h4>
+                                <div class="theme-grid">
+                                    <div class="theme-option active" onclick="changeTheme('blue')" data-theme="blue">
+                                        <div class="theme-preview blue-theme"></div>
+                                        <span>Blue</span>
+                                    </div>
+                                    <div class="theme-option" onclick="changeTheme('green')" data-theme="green">
+                                        <div class="theme-preview green-theme"></div>
+                                        <span>Green</span>
+                                    </div>
+                                    <div class="theme-option" onclick="changeTheme('purple')" data-theme="purple">
+                                        <div class="theme-preview purple-theme"></div>
+                                        <span>Purple</span>
+                                    </div>
+                                    <div class="theme-option" onclick="changeTheme('orange')" data-theme="orange">
+                                        <div class="theme-preview orange-theme"></div>
+                                        <span>Orange</span>
+                                    </div>
+                                    <div class="theme-option" onclick="changeTheme('red')" data-theme="red">
+                                        <div class="theme-preview red-theme"></div>
+                                        <span>Red</span>
+                                    </div>
+                                    <div class="theme-option" onclick="changeTheme('pink')" data-theme="pink">
+                                        <div class="theme-preview pink-theme"></div>
+                                        <span>Pink</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="theme-section">
+                                <h4>Professional Themes</h4>
+                                <div class="theme-grid">
+                                    <div class="theme-option" onclick="changeTheme('corporate')" data-theme="corporate">
+                                        <div class="theme-preview corporate-theme"></div>
+                                        <span>Corporate</span>
+                                    </div>
+                                    <div class="theme-option" onclick="changeTheme('midnight')" data-theme="midnight">
+                                        <div class="theme-preview midnight-theme"></div>
+                                        <span>Midnight</span>
+                                    </div>
+                                    <div class="theme-option" onclick="changeTheme('ocean')" data-theme="ocean">
+                                        <div class="theme-preview ocean-theme"></div>
+                                        <span>Ocean</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="theme-section">
+                                <h4>Nature Themes</h4>
+                                <div class="theme-grid">
+                                    <div class="theme-option" onclick="changeTheme('forest')" data-theme="forest">
+                                        <div class="theme-preview forest-theme"></div>
+                                        <span>Forest</span>
+                                    </div>
+                                    <div class="theme-option" onclick="changeTheme('sunset')" data-theme="sunset">
+                                        <div class="theme-preview sunset-theme"></div>
+                                        <span>Sunset</span>
+                                    </div>
+                                    <div class="theme-option" onclick="changeTheme('autumn')" data-theme="autumn">
+                                        <div class="theme-preview autumn-theme"></div>
+                                        <span>Autumn</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="theme-section">
+                                <h4>Modern Themes</h4>
+                                <div class="theme-grid">
+                                    <div class="theme-option" onclick="changeTheme('neon')" data-theme="neon">
+                                        <div class="theme-preview neon-theme"></div>
+                                        <span>Neon</span>
+                                    </div>
+                                    <div class="theme-option" onclick="changeTheme('cyber')" data-theme="cyber">
+                                        <div class="theme-preview cyber-theme"></div>
+                                        <span>Cyber</span>
+                                    </div>
+                                    <div class="theme-option" onclick="changeTheme('galaxy')" data-theme="galaxy">
+                                        <div class="theme-preview galaxy-theme"></div>
+                                        <span>Galaxy</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-menu">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Admin</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <!-- Dashboard Page -->
+                <div id="dashboard" class="page active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="active-tax-count">8</h3>
+                                <p>Active Tax Structures</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="jurisdiction-count">5</h3>
+                                <p>Jurisdictions Covered</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="avg-tax-rate">15.2%</h3>
+                                <p>Average Tax Rate</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-content">
+                        <div class="dashboard-grid">
+                            <!-- Tax Structure Overview -->
+                            <div class="tax-structure-overview">
+                                <div class="table-header">
+                                    <h2>Tax Structure Overview</h2>
+                                </div>
+                                <div class="tax-structure-grid">
+                                    <div class="tax-type-section">
+                                        <h3><i class="fas fa-tag"></i> GST Structures</h3>
+                                        <div class="tax-items" id="gst-items">
+                                            <!-- Populated by JavaScript -->
+                                        </div>
+                                    </div>
+                                    <div class="tax-type-section">
+                                        <h3><i class="fas fa-exchange-alt"></i> IGST Structures</h3>
+                                        <div class="tax-items" id="igst-items">
+                                            <!-- Populated by JavaScript -->
+                                        </div>
+                                    </div>
+                                    <div class="tax-type-section">
+                                        <h3><i class="fas fa-dollar-sign"></i> Sales Tax</h3>
+                                        <div class="tax-items" id="sales-tax-items">
+                                            <!-- Populated by JavaScript -->
+                                        </div>
+                                    </div>
+                                    <div class="tax-type-section">
+                                        <h3><i class="fas fa-euro-sign"></i> VAT Structures</h3>
+                                        <div class="tax-items" id="vat-items">
+                                            <!-- Populated by JavaScript -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Quick Actions -->
+                            <div class="quick-actions-panel">
+                                <div class="panel-header">
+                                    <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+                                </div>
+                                <div class="action-buttons">
+                                    <button class="action-card" onclick="addTaxStructure()">
+                                        <i class="fas fa-plus-circle"></i>
+                                        <span>Add Tax Structure</span>
+                                    </button>
+                                    <button class="action-card" onclick="addTaxRate()">
+                                        <i class="fas fa-cog"></i>
+                                        <span>Add Tax Rate</span>
+                                    </button>
+                                    <button class="action-card" onclick="navigateToReports()">
+                                        <i class="fas fa-chart-bar"></i>
+                                        <span>View Reports</span>
+                                    </button>
+                                    <button class="action-card" onclick="navigateToCompliance()">
+                                        <i class="fas fa-shield-alt"></i>
+                                        <span>Compliance Check</span>
+                                    </button>
+                                    <button class="action-card" onclick="exportTaxData()">
+                                        <i class="fas fa-download"></i>
+                                        <span>Export Data</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Recent Activity -->
+                            <div class="recent-activity-panel">
+                                <div class="panel-header">
+                                    <h3><i class="fas fa-history"></i> Recent Activity</h3>
+                                </div>
+                                <div class="activity-list" id="activity-list">
+                                    <!-- Populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <!-- Tax Rate Summary -->
+                            <div class="tax-rate-summary">
+                                <div class="panel-header">
+                                    <h3><i class="fas fa-calculator"></i> Tax Rate Summary</h3>
+                                </div>
+                                <div class="rate-breakdown">
+                                    <div class="rate-item">
+                                        <span class="rate-label">Highest Rate:</span>
+                                        <span class="rate-value" id="highest-rate">20% (VAT)</span>
+                                    </div>
+                                    <div class="rate-item">
+                                        <span class="rate-label">Lowest Rate:</span>
+                                        <span class="rate-value" id="lowest-rate">5% (GST)</span>
+                                    </div>
+                                    <div class="rate-item">
+                                        <span class="rate-label">Most Common:</span>
+                                        <span class="rate-value" id="common-rate">18% (GST/IGST)</span>
+                                    </div>
+                                    <div class="rate-item">
+                                        <span class="rate-label">Total Structures:</span>
+                                        <span class="rate-value" id="total-structures">10</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tax Management Page -->
+                <div id="invoices" class="page">
+                    <div class="page-header">
+                        <h2>Tax Management</h2>
+                        <button class="btn btn-primary md-button md-button-filled" onclick="addTaxStructure()" title="Add New Tax Structure" tabindex="0">
+                            <span class="material-icons">add</span>
+                            Add Tax Structure
+                        </button>
+                    </div>
+                    <div class="invoice-form-container">
+                        <div class="invoice-calculator">
+                            <h3>Tax Calculator</h3>
+                            <div class="calc-form">
+                                <div class="form-group">
+                                    <label>Product/Service</label>
+                                    <select id="product-select">
+                                        <option value="">Select Product</option>
+                                        <option value="brake-pad">Brake Pad - Auto Parts</option>
+                                        <option value="oil-filter">Oil Filter - Auto Parts</option>
+                                        <option value="service">Maintenance Service</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Customer Location</label>
+                                    <select id="location-select">
+                                        <option value="">Select Location</option>
+                                        <option value="ca-us">California, US</option>
+                                        <option value="ny-us">New York, US</option>
+                                        <option value="in">India</option>
+                                        <option value="uk">United Kingdom</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Base Amount</label>
+                                    <input type="number" id="base-amount" placeholder="0.00">
+                                </div>
+                                <div class="form-group">
+                                    <label>Customer Type</label>
+                                    <select id="customer-type">
+                                        <option value="b2c">B2C (Individual)</option>
+                                        <option value="b2b">B2B (Business)</option>
+                                        <option value="exempt">Tax Exempt</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary" onclick="calculateTax()">Calculate Tax</button>
+                            </div>
+                            <div class="tax-breakdown" id="tax-breakdown">
+                                <!-- Tax calculation results will appear here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tax Structure Page -->
+                <div id="tax-config" class="page">
+                    <div class="page-header">
+                        <h2>Tax Structure</h2>
+                    </div>
+                    <div class="config-tabs">
+                        <div class="tab-buttons md-tabs">
+                            <button class="tab-btn md-tab active" data-tab="tax-structures" tabindex="0">
+                                <span class="material-icons" style="font-size: 18px; margin-right: 4px;">account_tree</span>
+                                Tax Structures
+                            </button>
+                            <button class="tab-btn md-tab" data-tab="jurisdictions" tabindex="0">
+                                <span class="material-icons" style="font-size: 18px; margin-right: 4px;">public</span>
+                                Jurisdictions
+                            </button>
+                            <button class="tab-btn md-tab" data-tab="tax-rates" tabindex="0">
+                                <span class="material-icons" style="font-size: 18px; margin-right: 4px;">percent</span>
+                                Tax Rates
+                            </button>
+                            <button class="tab-btn md-tab" data-tab="tax-rules" tabindex="0">
+                                <span class="material-icons" style="font-size: 18px; margin-right: 4px;">rule</span>
+                                Tax Rules
+                            </button>
+                        </div>
+                        <div class="tab-content">
+                            <div id="tax-structures" class="tab-pane active">
+                                <div class="tax-structures-header">
+                                    <div class="header-left">
+                                        <h3>Tax Structure Management</h3>
+                                    </div>
+                                    <div class="header-right">
+                                        <div class="view-switcher">
+                                            <button class="view-btn active" data-view="table" data-target="tax-structures" title="Table View">
+                                                <span class="material-icons">table_view</span>
+                                            </button>
+                                            <button class="view-btn" data-view="cards" data-target="tax-structures" title="Card View">
+                                                <span class="material-icons">view_module</span>
+                                            </button>
+                                            <button class="view-btn" data-view="list" data-target="tax-structures" title="List View">
+                                                <span class="material-icons">view_list</span>
+                                            </button>
+                                            <button class="view-btn" data-view="grid" data-target="tax-structures" title="Grid View">
+                                                <span class="material-icons">grid_view</span>
+                                            </button>
+                                        </div>
+                                        <button class="btn btn-primary md-button md-button-filled" onclick="addTaxStructure()" tabindex="0">
+                                            <span class="material-icons">add</span>
+                                            Add Tax Structure
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Table View -->
+                                <div class="view-container" id="tax-structures-table-view">
+                                    <table class="config-table" id="tax-structures-table">
+                                        <thead>
+                                            <tr id="tax-structures-header">
+                                                <th draggable="true" data-column="name" class="draggable-header">
+                                                    <span class="header-content">
+                                                        <span class="material-icons drag-handle">drag_indicator</span>
+                                                        Tax Structure Name
+                                                    </span>
+                                                </th>
+                                                <th draggable="true" data-column="type" class="draggable-header">
+                                                    <span class="header-content">
+                                                        <span class="material-icons drag-handle">drag_indicator</span>
+                                                        Tax Type
+                                                    </span>
+                                                </th>
+                                                <th draggable="true" data-column="rate" class="draggable-header">
+                                                    <span class="header-content">
+                                                        <span class="material-icons drag-handle">drag_indicator</span>
+                                                        Rate (%)
+                                                    </span>
+                                                </th>
+                                                <th draggable="true" data-column="applicable" class="draggable-header">
+                                                    <span class="header-content">
+                                                        <span class="material-icons drag-handle">drag_indicator</span>
+                                                        Applicable For
+                                                    </span>
+                                                </th>
+                                                <th draggable="true" data-column="status" class="draggable-header">
+                                                    <span class="header-content">
+                                                        <span class="material-icons drag-handle">drag_indicator</span>
+                                                        Status
+                                                    </span>
+                                                </th>
+                                                <th data-column="actions" class="non-draggable-header">
+                                                    <span class="header-content">
+                                                        Actions
+                                                    </span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tax-structures-tbody">
+                                            <!-- Populated by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Cards View -->
+                                <div class="view-container" id="tax-structures-cards-view" style="display: none;">
+                                    <div class="cards-grid" id="tax-structures-cards">
+                                        <!-- Populated by JavaScript -->
+                                    </div>
+                                </div>
+
+                                <!-- List View -->
+                                <div class="view-container" id="tax-structures-list-view" style="display: none;">
+                                    <div class="list-container" id="tax-structures-list">
+                                        <!-- Populated by JavaScript -->
+                                    </div>
+                                </div>
+
+                                <!-- Grid View -->
+                                <div class="view-container" id="tax-structures-grid-view" style="display: none;">
+                                    <div class="grid-container" id="tax-structures-grid">
+                                        <!-- Populated by JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="jurisdictions" class="tab-pane">
+                                <div class="jurisdictions-header">
+                                    <div class="header-left">
+                                        <h3>Jurisdictions Management</h3>
+                                    </div>
+                                    <div class="header-right">
+                                        <div class="view-switcher">
+                                            <button class="view-btn active" data-view="table" data-target="jurisdictions" title="Table View">
+                                                <span class="material-icons">table_view</span>
+                                            </button>
+                                            <button class="view-btn" data-view="cards" data-target="jurisdictions" title="Card View">
+                                                <span class="material-icons">view_module</span>
+                                            </button>
+                                            <button class="view-btn" data-view="list" data-target="jurisdictions" title="List View">
+                                                <span class="material-icons">view_list</span>
+                                            </button>
+                                            <button class="view-btn" data-view="grid" data-target="jurisdictions" title="Grid View">
+                                                <span class="material-icons">grid_view</span>
+                                            </button>
+                                        </div>
+                                        <button class="btn btn-primary md-button md-button-filled" onclick="addJurisdiction()" tabindex="0">
+                                            <span class="material-icons">add</span>
+                                            Add Jurisdiction
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Table View -->
+                                <div class="view-container" id="jurisdictions-table-view">
+                                    <table class="config-table" id="jurisdictions-table">
+                                        <thead>
+                                            <tr id="jurisdictions-header">
+                                                <th draggable="true" data-column="country" class="draggable-header">
+                                                    <span class="header-content">
+                                                        <span class="material-icons drag-handle">drag_indicator</span>
+                                                        Country/Region
+                                                    </span>
+                                                </th>
+                                                <th draggable="true" data-column="state" class="draggable-header">
+                                                    <span class="header-content">
+                                                        <span class="material-icons drag-handle">drag_indicator</span>
+                                                        State/Province
+                                                    </span>
+                                                </th>
+                                                <th draggable="true" data-column="taxtype" class="draggable-header">
+                                                    <span class="header-content">
+                                                        <span class="material-icons drag-handle">drag_indicator</span>
+                                                        Tax Type
+                                                    </span>
+                                                </th>
+                                                <th draggable="true" data-column="rate" class="draggable-header">
+                                                    <span class="header-content">
+                                                        <span class="material-icons drag-handle">drag_indicator</span>
+                                                        Rate (%)
+                                                    </span>
+                                                </th>
+                                                <th draggable="true" data-column="status" class="draggable-header">
+                                                    <span class="header-content">
+                                                        <span class="material-icons drag-handle">drag_indicator</span>
+                                                        Status
+                                                    </span>
+                                                </th>
+                                                <th data-column="actions" class="non-draggable-header">
+                                                    <span class="header-content">
+                                                        Actions
+                                                    </span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="jurisdictions-tbody">
+                                            <!-- Populated by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Cards View -->
+                                <div class="view-container" id="jurisdictions-cards-view" style="display: none;">
+                                    <div class="cards-grid" id="jurisdictions-cards">
+                                        <!-- Populated by JavaScript -->
+                                    </div>
+                                </div>
+
+                                <!-- List View -->
+                                <div class="view-container" id="jurisdictions-list-view" style="display: none;">
+                                    <div class="list-container" id="jurisdictions-list">
+                                        <!-- Populated by JavaScript -->
+                                    </div>
+                                </div>
+
+                                <!-- Grid View -->
+                                <div class="view-container" id="jurisdictions-grid-view" style="display: none;">
+                                    <div class="grid-container" id="jurisdictions-grid">
+                                        <!-- Populated by JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="tax-rates" class="tab-pane">
+                                <div class="tax-rates-header">
+                                    <h3>Tax Rate Management</h3>
+                                    <button class="btn btn-primary md-button md-button-filled" onclick="addTaxRate()" tabindex="0">
+                                        <span class="material-icons">add</span>
+                                        Add Tax Rate
+                                    </button>
+                                </div>
+
+                                <!-- Tax Rate Configuration Form -->
+                                <div class="rate-config-form" id="rate-config-form" style="display: none;">
+                                    <div class="form-section">
+                                        <h4>Configure New Tax Rate</h4>
+                                        <form id="tax-rate-form">
+                                            <div class="form-row">
+                                                <div class="form-group">
+                                                    <label for="rate-jurisdiction">Jurisdiction *</label>
+                                                    <select id="rate-jurisdiction" name="jurisdiction" required>
+                                                        <option value="">Select Jurisdiction</option>
+                                                        <option value="california-us">California, US</option>
+                                                        <option value="newyork-us">New York, US</option>
+                                                        <option value="texas-us">Texas, US</option>
+                                                        <option value="maharashtra-in">Maharashtra, India</option>
+                                                        <option value="delhi-in">Delhi, India</option>
+                                                        <option value="karnataka-in">Karnataka, India</option>
+                                                        <option value="england-uk">England, UK</option>
+                                                        <option value="ontario-ca">Ontario, Canada</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="rate-tax-type">Tax Type *</label>
+                                                    <select id="rate-tax-type" name="taxType" required>
+                                                        <option value="">Select Tax Type</option>
+                                                        <option value="Sales Tax">Sales Tax</option>
+                                                        <option value="VAT">VAT (Value Added Tax)</option>
+                                                        <option value="GST">GST (Goods and Services Tax)</option>
+                                                        <option value="IGST">IGST (Integrated GST)</option>
+                                                        <option value="HST">HST (Harmonized Sales Tax)</option>
+                                                        <option value="Excise Tax">Excise Tax</option>
+                                                        <option value="Custom Duty">Custom Duty</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="rate-percentage">Rate (%) *</label>
+                                                    <input type="number" id="rate-percentage" name="rate" step="0.01" min="0" max="100" required placeholder="0.00">
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group">
+                                                    <label for="rate-category">Category</label>
+                                                    <select id="rate-category" name="category">
+                                                        <option value="">Select Category</option>
+                                                        <option value="Standard">Standard Rate</option>
+                                                        <option value="Reduced">Reduced Rate</option>
+                                                        <option value="Zero">Zero Rate</option>
+                                                        <option value="Exempt">Exempt</option>
+                                                        <option value="Luxury">Luxury Rate</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="rate-effective-date">Effective Date</label>
+                                                    <input type="date" id="rate-effective-date" name="effectiveDate">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="rate-currency">Currency</label>
+                                                    <select id="rate-currency" name="currency">
+                                                        <option value="USD">USD - US Dollar</option>
+                                                        <option value="INR">INR - Indian Rupee</option>
+                                                        <option value="GBP">GBP - British Pound</option>
+                                                        <option value="EUR">EUR - Euro</option>
+                                                        <option value="CAD">CAD - Canadian Dollar</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="rate-description">Description</label>
+                                                <textarea id="rate-description" name="description" rows="2" placeholder="Optional description for this tax rate..."></textarea>
+                                            </div>
+                                            <div class="form-actions">
+                                                <button type="button" class="btn btn-secondary" onclick="cancelTaxRate()" title="Cancel Tax Rate Configuration">Cancel</button>
+                                                <button type="button" class="btn btn-primary" onclick="saveTaxRate()" title="Save Tax Rate Configuration">Save Tax Rate</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <!-- Tax Rates Table -->
+                                <div class="tax-rates-table">
+                                    <table class="config-table" id="tax-rates-table">
+                                        <thead>
+                                            <tr id="tax-rates-header">
+                                                <th draggable="true" data-column="jurisdiction" class="draggable-header">
+                                                    <span class="header-content">
+                                                        <span class="material-icons drag-handle">drag_indicator</span>
+                                                        Jurisdiction
+                                                    </span>
+                                                </th>
+                                                <th draggable="true" data-column="taxtype" class="draggable-header">
+                                                    <span class="header-content">
+                                                        <span class="material-icons drag-handle">drag_indicator</span>
+                                                        Tax Type
+                                                    </span>
+                                                </th>
+                                                <th draggable="true" data-column="rate" class="draggable-header">
+                                                    <span class="header-content">
+                                                        <span class="material-icons drag-handle">drag_indicator</span>
+                                                        Rate (%)
+                                                    </span>
+                                                </th>
+                                                <th draggable="true" data-column="category" class="draggable-header">
+                                                    <span class="header-content">
+                                                        <span class="material-icons drag-handle">drag_indicator</span>
+                                                        Category
+                                                    </span>
+                                                </th>
+                                                <th draggable="true" data-column="currency" class="draggable-header">
+                                                    <span class="header-content">
+                                                        <span class="material-icons drag-handle">drag_indicator</span>
+                                                        Currency
+                                                    </span>
+                                                </th>
+                                                <th draggable="true" data-column="effectivedate" class="draggable-header">
+                                                    <span class="header-content">
+                                                        <span class="material-icons drag-handle">drag_indicator</span>
+                                                        Effective Date
+                                                    </span>
+                                                </th>
+                                                <th draggable="true" data-column="status" class="draggable-header">
+                                                    <span class="header-content">
+                                                        <span class="material-icons drag-handle">drag_indicator</span>
+                                                        Status
+                                                    </span>
+                                                </th>
+                                                <th data-column="actions" class="non-draggable-header">
+                                                    <span class="header-content">
+                                                        Actions
+                                                    </span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tax-rates-tbody">
+                                            <!-- Populated by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div id="tax-rules" class="tab-pane">
+                                <div class="page-header">
+                                    <h2>Tax Rules Management</h2>
+                                    <button class="btn btn-primary md-button md-button-filled" onclick="addTaxRule()" tabindex="0">
+                                        <span class="material-icons">add</span>
+                                        Add Tax Rule
+                                    </button>
+                                </div>
+
+                                <!-- Tax Rules Table -->
+                                <div class="tax-rules-table">
+                                    <table class="config-table" id="tax-rules-table">
+                                        <thead>
+                                            <tr id="tax-rules-header">
+                                                <th draggable="true" data-column="rulename" class="draggable-header">
+                                                    <span class="header-content">
+                                                        <span class="material-icons drag-handle">drag_indicator</span>
+                                                        Rule Name
+                                                    </span>
+                                                </th>
+                                                <th draggable="true" data-column="country" class="draggable-header">
+                                                    <span class="header-content">
+                                                        <span class="material-icons drag-handle">drag_indicator</span>
+                                                        Country/Region
+                                                    </span>
+                                                </th>
+                                                <th draggable="true" data-column="taxtype" class="draggable-header">
+                                                    <span class="header-content">
+                                                        <span class="material-icons drag-handle">drag_indicator</span>
+                                                        Tax Type
+                                                    </span>
+                                                </th>
+                                                <th draggable="true" data-column="rate" class="draggable-header">
+                                                    <span class="header-content">
+                                                        <span class="material-icons drag-handle">drag_indicator</span>
+                                                        Rate (%)
+                                                    </span>
+                                                </th>
+                                                <th draggable="true" data-column="priority" class="draggable-header">
+                                                    <span class="header-content">
+                                                        <span class="material-icons drag-handle">drag_indicator</span>
+                                                        Priority
+                                                    </span>
+                                                </th>
+                                                <th draggable="true" data-column="effectivedate" class="draggable-header">
+                                                    <span class="header-content">
+                                                        <span class="material-icons drag-handle">drag_indicator</span>
+                                                        Effective Date
+                                                    </span>
+                                                </th>
+                                                <th draggable="true" data-column="status" class="draggable-header">
+                                                    <span class="header-content">
+                                                        <span class="material-icons drag-handle">drag_indicator</span>
+                                                        Status
+                                                    </span>
+                                                </th>
+                                                <th data-column="actions" class="non-draggable-header">
+                                                    <span class="header-content">
+                                                        Actions
+                                                    </span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tax-rules-tbody">
+                                            <!-- Populated by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Tax Mapping Page -->
+                <div id="products" class="page">
+                    <div class="page-header">
+                        <h2>Product Tax Mapping</h2>
+                        <button class="btn btn-primary md-button md-button-filled" onclick="addProductMapping()" tabindex="0">
+                            <span class="material-icons">add</span>
+                            Add Product Mapping
+                        </button>
+                    </div>
+                    <div class="product-mapping">
+                        <table class="mapping-table">
+                            <thead>
+                                <tr>
+                                    <th>Product Code</th>
+                                    <th>Product Name</th>
+                                    <th>Category</th>
+                                    <th>HSN/SAC Code</th>
+                                    <th>Tax Class</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="products-tbody">
+                                <!-- Populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Reports Page -->
+                <div id="reports" class="page">
+                    <div class="page-header">
+                        <h2>Tax Reports</h2>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-download"></i> Export Report
+                        </button>
+                    </div>
+                    <div class="reports-grid">
+                        <div class="report-card">
+                            <h3>GST Summary</h3>
+                            <p>Monthly GST collection and filing status</p>
+                            <button class="btn btn-secondary" onclick="generateGSTReport()">Generate</button>
+                        </div>
+                        <div class="report-card">
+                            <h3>Sales Tax Report</h3>
+                            <p>State-wise sales tax breakdown</p>
+                            <button class="btn btn-secondary" onclick="generateSalesTaxReport()">Generate</button>
+                        </div>
+                        <div class="report-card">
+                            <h3>VAT Returns</h3>
+                            <p>EU VAT filing and compliance report</p>
+                            <button class="btn btn-secondary" onclick="generateVATReport()">Generate</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Compliance Page -->
+                <div id="compliance" class="page">
+                    <div class="page-header">
+                        <h2>Tax Compliance</h2>
+                    </div>
+                    <div class="compliance-dashboard">
+                        <div class="compliance-alerts">
+                            <h3>Compliance Alerts</h3>
+                            <div class="alert warning">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span>GST filing due in 3 days</span>
+                            </div>
+                            <div class="alert info">
+                                <i class="fas fa-info-circle"></i>
+                                <span>New tax rate update available</span>
+                            </div>
+                        </div>
+                        <div class="filing-status">
+                            <h3>Filing Status</h3>
+                            <div class="status-grid">
+                                <div class="status-item">
+                                    <span>GST (India)</span>
+                                    <span class="status filed">Filed</span>
+                                </div>
+                                <div class="status-item">
+                                    <span>Sales Tax (CA)</span>
+                                    <span class="status pending">Pending</span>
+                                </div>
+                                <div class="status-item">
+                                    <span>VAT (UK)</span>
+                                    <span class="status filed">Filed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Page -->
+                <div id="settings" class="page">
+                    <div class="page-header">
+                        <h2>System Settings</h2>
+                    </div>
+                    <div class="settings-content">
+                        <div class="settings-section">
+                            <h3>Theme Settings</h3>
+                            <div class="setting-item">
+                                <label>Application Theme</label>
+                                <select id="theme-selector" onchange="changeTheme(this.value)">
+                                    <option value="navy" selected>Navy Blue & White Theme (Default)</option>
+                                    <option value="black">Black Theme</option>
+                                    <option value="white">White Theme</option>
+                                    <option value="blue">Blue Theme</option>
+                                    <option value="green">Green Theme</option>
+                                    <option value="purple">Purple Theme</option>
+                                    <option value="orange">Orange Theme</option>
+                                    <option value="red">Red Theme</option>
+                                    <option value="dark">Dark Theme</option>
+                                    <option value="light">Light Theme</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label>Dark Mode</label>
+                                <input type="checkbox" id="dark-mode-toggle" onchange="toggleDarkMode(this.checked)">
+                            </div>
+                            <div class="setting-item">
+                                <label>High Contrast Mode</label>
+                                <input type="checkbox" id="high-contrast-toggle" onchange="toggleHighContrast(this.checked)">
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>Display Settings</h3>
+                            <div class="setting-item">
+                                <label>Sidebar Width</label>
+                                <select id="sidebar-width" onchange="changeSidebarWidth(this.value)">
+                                    <option value="narrow">Narrow (200px)</option>
+                                    <option value="normal" selected>Normal (250px)</option>
+                                    <option value="wide">Wide (300px)</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label>Content Density</label>
+                                <select id="content-density" onchange="changeContentDensity(this.value)">
+                                    <option value="compact">Compact</option>
+                                    <option value="normal" selected>Normal</option>
+                                    <option value="comfortable">Comfortable</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label>Show Animations</label>
+                                <input type="checkbox" id="animations-toggle" checked onchange="toggleAnimations(this.checked)">
+                            </div>
+                            <div class="setting-item">
+                                <label>Table Row Height</label>
+                                <select id="table-row-height" onchange="changeTableRowHeight(this.value)">
+                                    <option value="compact">Compact</option>
+                                    <option value="normal" selected>Normal</option>
+                                    <option value="large">Large</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>Font Settings</h3>
+                            <div class="setting-item">
+                                <label>Font Family</label>
+                                <select id="font-family" onchange="changeFontFamily(this.value)">
+                                    <option value="system" selected>System Default</option>
+                                    <option value="inter">Inter</option>
+                                    <option value="roboto">Roboto</option>
+                                    <option value="open-sans">Open Sans</option>
+                                    <option value="lato">Lato</option>
+                                    <option value="source-sans">Source Sans Pro</option>
+                                    <option value="arial">Arial</option>
+                                    <option value="helvetica">Helvetica</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label>Font Size</label>
+                                <select id="font-size" onchange="changeFontSize(this.value)">
+                                    <option value="small">Small (12px)</option>
+                                    <option value="normal" selected>Normal (14px)</option>
+                                    <option value="medium">Medium (16px)</option>
+                                    <option value="large">Large (18px)</option>
+                                    <option value="extra-large">Extra Large (20px)</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label>Font Weight</label>
+                                <select id="font-weight" onchange="changeFontWeight(this.value)">
+                                    <option value="light">Light (300)</option>
+                                    <option value="normal" selected>Normal (400)</option>
+                                    <option value="medium">Medium (500)</option>
+                                    <option value="semi-bold">Semi Bold (600)</option>
+                                    <option value="bold">Bold (700)</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label>Line Height</label>
+                                <select id="line-height" onchange="changeLineHeight(this.value)">
+                                    <option value="tight">Tight (1.2)</option>
+                                    <option value="normal" selected>Normal (1.5)</option>
+                                    <option value="relaxed">Relaxed (1.7)</option>
+                                    <option value="loose">Loose (2.0)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>Tax Engine Configuration</h3>
+                            <p class="section-description">Configure how tax calculations are performed and managed in your system.</p>
+
+                            <div class="setting-item">
+                                <label>Default Tax Engine</label>
+                                <select id="tax-engine-select" onchange="updateTaxEngineInfo(this.value)">
+                                    <option value="internal">Internal Engine - Built-in tax calculation</option>
+                                    <option value="avalara">Avalara - Cloud-based tax compliance</option>
+                                    <option value="taxjar">TaxJar - Automated sales tax solution</option>
+                                    <option value="vertex">Vertex - Enterprise tax technology</option>
+                                    <option value="sovos">Sovos - Global tax compliance</option>
+                                </select>
+                                <div id="tax-engine-info" class="setting-info">
+                                    <small>Internal Engine: Uses local tax rules and rates. Best for simple tax scenarios.</small>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label>Tax Calculation Mode</label>
+                                <select id="tax-calc-mode">
+                                    <option value="real-time">Real-time Calculation</option>
+                                    <option value="batch">Batch Processing</option>
+                                    <option value="hybrid">Hybrid Mode</option>
+                                </select>
+                                <div class="setting-info">
+                                    <small>Real-time: Calculate taxes instantly. Batch: Process in scheduled intervals. Hybrid: Combine both methods.</small>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label>Auto-update Tax Rates</label>
+                                <input type="checkbox" id="auto-update-rates" checked onchange="toggleAutoUpdate(this.checked)">
+                                <span class="checkbox-label">Automatically download latest tax rates</span>
+                                <div class="setting-info">
+                                    <small>When enabled, tax rates will be updated automatically from official sources. Recommended for compliance.</small>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label>Update Frequency</label>
+                                <select id="update-frequency">
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly" selected>Weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="quarterly">Quarterly</option>
+                                </select>
+                                <div class="setting-info">
+                                    <small>How often to check for tax rate updates. Weekly is recommended for most businesses.</small>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label>Tax Rounding Method</label>
+                                <select id="rounding-method">
+                                    <option value="round">Round to nearest cent</option>
+                                    <option value="floor">Round down (floor)</option>
+                                    <option value="ceil">Round up (ceiling)</option>
+                                    <option value="truncate">Truncate decimals</option>
+                                </select>
+                                <div class="setting-info">
+                                    <small>Method used for rounding tax calculations. Check local regulations for requirements.</small>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label>Multi-jurisdiction Support</label>
+                                <input type="checkbox" id="multi-jurisdiction" checked>
+                                <span class="checkbox-label">Enable calculations across multiple tax jurisdictions</span>
+                                <div class="setting-info">
+                                    <small>Required for businesses operating in multiple states, countries, or tax zones.</small>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label>Reverse Charge Mechanism</label>
+                                <input type="checkbox" id="reverse-charge">
+                                <span class="checkbox-label">Enable reverse charge for B2B transactions</span>
+                                <div class="setting-info">
+                                    <small>Used in VAT systems where the buyer is responsible for paying tax instead of the seller.</small>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label>Tax Exemption Handling</label>
+                                <select id="exemption-handling">
+                                    <option value="manual">Manual Review Required</option>
+                                    <option value="automatic">Automatic Processing</option>
+                                    <option value="hybrid">Hybrid Approach</option>
+                                </select>
+                                <div class="setting-info">
+                                    <small>How to handle tax exemption certificates and claims.</small>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label>Audit Trail</label>
+                                <input type="checkbox" id="audit-trail" checked>
+                                <span class="checkbox-label">Maintain detailed audit logs for tax calculations</span>
+                                <div class="setting-info">
+                                    <small>Essential for compliance and tax audits. Records all tax calculation details and changes.</small>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label>API Rate Limiting</label>
+                                <select id="api-rate-limit">
+                                    <option value="conservative">Conservative (100 calls/min)</option>
+                                    <option value="moderate" selected>Moderate (500 calls/min)</option>
+                                    <option value="aggressive">Aggressive (1000 calls/min)</option>
+                                    <option value="unlimited">Unlimited</option>
+                                </select>
+                                <div class="setting-info">
+                                    <small>Rate limiting for external tax engine API calls. Higher rates may incur additional costs.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>Regional Settings</h3>
+                            <div class="setting-item">
+                                <label>Default Currency</label>
+                                <select>
+                                    <option>USD</option>
+                                    <option>EUR</option>
+                                    <option>INR</option>
+                                    <option>GBP</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label>Date Format</label>
+                                <select>
+                                    <option>MM/DD/YYYY</option>
+                                    <option>DD/MM/YYYY</option>
+                                    <option>YYYY-MM-DD</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label>Time Zone</label>
+                                <select>
+                                    <option>UTC</option>
+                                    <option>EST (Eastern)</option>
+                                    <option>PST (Pacific)</option>
+                                    <option>IST (India)</option>
+                                    <option>GMT (London)</option>
+                                    <option>CET (Central Europe)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>Actions</h3>
+                            <div class="setting-actions">
+                                <button class="btn btn-primary" onclick="saveSettings()">
+                                    <i class="fas fa-save"></i> Save Settings
+                                </button>
+                                <button class="btn btn-secondary" onclick="resetSettings()">
+                                    <i class="fas fa-undo"></i> Reset to Defaults
+                                </button>
+                                <button class="btn btn-secondary" onclick="exportSettings()">
+                                    <i class="fas fa-download"></i> Export Settings
+                                </button>
+                                <button class="btn btn-secondary" onclick="importSettings()">
+                                    <i class="fas fa-upload"></i> Import Settings
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Create Invoice Modal -->
+    <div id="invoice-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>New Tax Structure</h2>
+                <span class="close" onclick="closeInvoiceModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="invoice-form">
+                    <div class="form-section">
+                        <h3>Customer Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="customer-name">Customer Name *</label>
+                                <input type="text" id="customer-name" name="customerName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="customer-email">Email</label>
+                                <input type="email" id="customer-email" name="customerEmail">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="customer-phone">Phone</label>
+                                <input type="tel" id="customer-phone" name="customerPhone">
+                            </div>
+                            <div class="form-group">
+                                <label for="customer-type-modal">Customer Type *</label>
+                                <select id="customer-type-modal" name="customerType" required>
+                                    <option value="">Select Type</option>
+                                    <option value="b2c">B2C (Individual)</option>
+                                    <option value="b2b">B2B (Business)</option>
+                                    <option value="exempt">Tax Exempt</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="billing-address">Billing Address *</label>
+                            <textarea id="billing-address" name="billingAddress" rows="3" required></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="customer-state">State/Province *</label>
+                                <select id="customer-state" name="customerState" required>
+                                    <option value="">Select State</option>
+                                    <option value="ca-us">California, US</option>
+                                    <option value="ny-us">New York, US</option>
+                                    <option value="mh-in">Maharashtra, India</option>
+                                    <option value="dl-in">Delhi, India</option>
+                                    <option value="uk">United Kingdom</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="tax-id">Tax ID/GSTIN</label>
+                                <input type="text" id="tax-id" name="taxId">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Invoice Details</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="invoice-date">Invoice Date *</label>
+                                <input type="date" id="invoice-date" name="invoiceDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="due-date">Due Date *</label>
+                                <input type="date" id="due-date" name="dueDate" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="currency">Currency *</label>
+                                <select id="currency" name="currency" required>
+                                    <option value="USD">USD - US Dollar</option>
+                                    <option value="INR">INR - Indian Rupee</option>
+                                    <option value="GBP">GBP - British Pound</option>
+                                    <option value="EUR">EUR - Euro</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="payment-terms">Payment Terms</label>
+                                <select id="payment-terms" name="paymentTerms">
+                                    <option value="net-30">Net 30</option>
+                                    <option value="net-15">Net 15</option>
+                                    <option value="due-on-receipt">Due on Receipt</option>
+                                    <option value="net-60">Net 60</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Line Items</h3>
+                        <div id="line-items-container">
+                            <div class="line-item">
+                                <div class="line-item-row">
+                                    <div class="form-group">
+                                        <label>Product/Service *</label>
+                                        <select name="product" required>
+                                            <option value="">Select Product</option>
+                                            <option value="brake-pad">Brake Pad Set - Auto Parts</option>
+                                            <option value="oil-filter">Oil Filter - Auto Parts</option>
+                                            <option value="tire-set">Tire Set - Auto Parts</option>
+                                            <option value="battery">Car Battery - Auto Parts</option>
+                                            <option value="service">Maintenance Service</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Quantity *</label>
+                                        <input type="number" name="quantity" min="1" value="1" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Unit Price *</label>
+                                        <input type="number" name="unitPrice" step="0.01" min="0" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Tax Structure *</label>
+                                        <select name="taxStructure" required>
+                                            <option value="">Select Tax</option>
+                                            <option value="gst-18">GST 18%</option>
+                                            <option value="gst-12">GST 12%</option>
+                                            <option value="igst-18">IGST 18%</option>
+                                            <option value="igst-12">IGST 12%</option>
+                                            <option value="sales-tax-7.25">Sales Tax 7.25%</option>
+                                            <option value="vat-20">VAT 20%</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Amount</label>
+                                        <input type="text" name="lineAmount" readonly>
+                                    </div>
+                                    <div class="line-item-actions">
+                                        <button type="button" class="btn-remove-line" onclick="removeLineItem(this)" title="Remove Line Item">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" onclick="addLineItem()">
+                            <i class="fas fa-plus"></i> Add Line Item
+                        </button>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Invoice Summary</h3>
+                        <div class="invoice-summary">
+                            <div class="summary-line">
+                                <span>Subtotal:</span>
+                                <span id="subtotal-amount">$0.00</span>
+                            </div>
+                            <div class="summary-line">
+                                <span>Total Tax:</span>
+                                <span id="total-tax-amount">$0.00</span>
+                            </div>
+                            <div class="summary-line total">
+                                <span>Total Amount:</span>
+                                <span id="total-amount">$0.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Additional Information</h3>
+                        <div class="form-group">
+                            <label for="notes">Notes</label>
+                            <textarea id="notes" name="notes" rows="3" placeholder="Additional notes or terms..."></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeInvoiceModal()" title="Cancel and Close">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveInvoice()" title="Save Invoice">Save Invoice</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Tax Structure Modal -->
+    <div id="tax-structure-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Tax Structure</h2>
+                <span class="close" onclick="closeTaxStructureModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="tax-structure-form">
+                    <div class="form-section">
+                        <h3>Tax Structure Details</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="tax-structure-name">Tax Structure Name *</label>
+                                <input type="text" id="tax-structure-name" name="taxStructureName" required
+                                       placeholder="e.g., GST 18%, IGST 12%">
+                            </div>
+                            <div class="form-group">
+                                <label for="tax-type">Tax Type *</label>
+                                <select id="tax-type" name="taxType" required>
+                                    <option value="">Select Tax Type</option>
+                                    <option value="GST">GST (Goods and Services Tax)</option>
+                                    <option value="IGST">IGST (Integrated GST)</option>
+                                    <option value="CGST">CGST (Central GST)</option>
+                                    <option value="SGST">SGST (State GST)</option>
+                                    <option value="Sales Tax">Sales Tax</option>
+                                    <option value="VAT">VAT (Value Added Tax)</option>
+                                    <option value="HST">HST (Harmonized Sales Tax)</option>
+                                    <option value="Custom">Custom Tax</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="tax-rate">Tax Rate (%) *</label>
+                                <input type="number" id="tax-rate" name="taxRate" step="0.01" min="0" max="100" required
+                                       placeholder="0.00">
+                            </div>
+                            <div class="form-group">
+                                <label for="applicable-for">Applicable For *</label>
+                                <select id="applicable-for" name="applicableFor" required>
+                                    <option value="">Select Category</option>
+                                    <option value="Standard Goods">Standard Goods</option>
+                                    <option value="Essential Goods">Essential Goods</option>
+                                    <option value="Basic Necessities">Basic Necessities</option>
+                                    <option value="Luxury Items">Luxury Items</option>
+                                    <option value="Services">Services</option>
+                                    <option value="Inter-state Standard">Inter-state Standard</option>
+                                    <option value="Inter-state Essential">Inter-state Essential</option>
+                                    <option value="Inter-state Basic">Inter-state Basic</option>
+                                    <option value="Export Sales">Export Sales</option>
+                                    <option value="Import Goods">Import Goods</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="jurisdiction">Jurisdiction</label>
+                                <select id="jurisdiction" name="jurisdiction">
+                                    <option value="">Select Jurisdiction</option>
+                                    <option value="national">National</option>
+                                    <option value="state">State Level</option>
+                                    <option value="city">City Level</option>
+                                    <option value="international">International</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="effective-date">Effective Date</label>
+                                <input type="date" id="effective-date" name="effectiveDate">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="tax-description">Description</label>
+                            <textarea id="tax-description" name="taxDescription" rows="3"
+                                      placeholder="Enter description for this tax structure..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="is-active" name="isActive" checked>
+                                <span class="checkmark"></span>
+                                Set as Active
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeTaxStructureModal()" title="Cancel and Close">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveTaxStructure()" title="Save Tax Structure">Save Tax Structure</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Tax Rule Modal -->
+    <div id="tax-rule-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Tax Rule</h2>
+                <span class="close" onclick="closeTaxRuleModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="tax-rule-form">
+                    <div class="form-section">
+                        <h3>Tax Rule Configuration</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="rule-name">Rule Name *</label>
+                                <input type="text" id="rule-name" name="ruleName" required
+                                       placeholder="e.g., Auto Parts Standard Rate">
+                            </div>
+                            <div class="form-group">
+                                <label for="rule-country">Country/Region *</label>
+                                <select id="rule-country" name="ruleCountry" required>
+                                    <option value="">Select Country</option>
+                                    <option value="US">United States</option>
+                                    <option value="IN">India</option>
+                                    <option value="UK">United Kingdom</option>
+                                    <option value="CA">Canada</option>
+                                    <option value="AU">Australia</option>
+                                    <option value="DE">Germany</option>
+                                    <option value="FR">France</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="rule-state">State/Province</label>
+                                <select id="rule-state" name="ruleState">
+                                    <option value="">Select State</option>
+                                    <option value="CA">California</option>
+                                    <option value="NY">New York</option>
+                                    <option value="TX">Texas</option>
+                                    <option value="MH">Maharashtra</option>
+                                    <option value="DL">Delhi</option>
+                                    <option value="KA">Karnataka</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="rule-tax-type">Tax Type *</label>
+                                <select id="rule-tax-type" name="ruleTaxType" required>
+                                    <option value="">Select Tax Type</option>
+                                    <option value="Sales Tax">Sales Tax</option>
+                                    <option value="VAT">VAT</option>
+                                    <option value="GST">GST</option>
+                                    <option value="HST">HST</option>
+                                    <option value="Excise">Excise Tax</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="rule-rate">Tax Rate (%) *</label>
+                                <input type="number" id="rule-rate" name="ruleRate" step="0.01" min="0" max="100" required
+                                       placeholder="0.00">
+                            </div>
+                            <div class="form-group">
+                                <label for="rule-currency">Currency *</label>
+                                <select id="rule-currency" name="ruleCurrency" required>
+                                    <option value="">Select Currency</option>
+                                    <option value="USD">USD - US Dollar</option>
+                                    <option value="INR">INR - Indian Rupee</option>
+                                    <option value="GBP">GBP - British Pound</option>
+                                    <option value="EUR">EUR - Euro</option>
+                                    <option value="CAD">CAD - Canadian Dollar</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="rule-priority">Priority Level</label>
+                                <select id="rule-priority" name="rulePriority">
+                                    <option value="1">High (1)</option>
+                                    <option value="2">Medium (2)</option>
+                                    <option value="3">Low (3)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="rule-effective-date">Effective Date</label>
+                                <input type="date" id="rule-effective-date" name="ruleEffectiveDate">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="rule-conditions">Rule Conditions</label>
+                            <textarea id="rule-conditions" name="ruleConditions" rows="3"
+                                      placeholder="Enter conditions when this rule applies..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="rule-is-active" name="ruleIsActive" checked>
+                                <span class="checkmark"></span>
+                                Set as Active
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeTaxRuleModal()" title="Cancel and Close">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveTaxRule()" title="Save Tax Rule">Save Tax Rule</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Jurisdiction Modal -->
+    <div id="jurisdiction-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Jurisdiction</h2>
+                <span class="close" onclick="closeJurisdictionModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="jurisdiction-form">
+                    <div class="form-section">
+                        <h3>Jurisdiction Details</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="jurisdiction-country">Country/Region *</label>
+                                <select id="jurisdiction-country" name="jurisdictionCountry" required>
+                                    <option value="">Select Country</option>
+                                    <option value="United States">United States</option>
+                                    <option value="India">India</option>
+                                    <option value="United Kingdom">United Kingdom</option>
+                                    <option value="Canada">Canada</option>
+                                    <option value="Australia">Australia</option>
+                                    <option value="Germany">Germany</option>
+                                    <option value="France">France</option>
+                                    <option value="Japan">Japan</option>
+                                    <option value="Singapore">Singapore</option>
+                                    <option value="Brazil">Brazil</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="jurisdiction-state">State/Province</label>
+                                <input type="text" id="jurisdiction-state" name="jurisdictionState"
+                                       placeholder="e.g., California, Maharashtra">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="jurisdiction-tax-type">Tax Type *</label>
+                                <select id="jurisdiction-tax-type" name="jurisdictionTaxType" required>
+                                    <option value="">Select Tax Type</option>
+                                    <option value="Sales Tax">Sales Tax</option>
+                                    <option value="VAT">VAT (Value Added Tax)</option>
+                                    <option value="GST">GST (Goods and Services Tax)</option>
+                                    <option value="IGST">IGST (Integrated GST)</option>
+                                    <option value="CGST">CGST (Central GST)</option>
+                                    <option value="SGST">SGST (State GST)</option>
+                                    <option value="HST">HST (Harmonized Sales Tax)</option>
+                                    <option value="Excise Tax">Excise Tax</option>
+                                    <option value="Custom Duty">Custom Duty</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="jurisdiction-rate">Tax Rate (%) *</label>
+                                <input type="number" id="jurisdiction-rate" name="jurisdictionRate"
+                                       step="0.01" min="0" max="100" required placeholder="0.00">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="jurisdiction-effective-date">Effective Date</label>
+                                <input type="date" id="jurisdiction-effective-date" name="jurisdictionEffectiveDate">
+                            </div>
+                            <div class="form-group">
+                                <label for="jurisdiction-currency">Currency</label>
+                                <select id="jurisdiction-currency" name="jurisdictionCurrency">
+                                    <option value="USD">USD - US Dollar</option>
+                                    <option value="INR">INR - Indian Rupee</option>
+                                    <option value="GBP">GBP - British Pound</option>
+                                    <option value="EUR">EUR - Euro</option>
+                                    <option value="CAD">CAD - Canadian Dollar</option>
+                                    <option value="AUD">AUD - Australian Dollar</option>
+                                    <option value="JPY">JPY - Japanese Yen</option>
+                                    <option value="SGD">SGD - Singapore Dollar</option>
+                                    <option value="BRL">BRL - Brazilian Real</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="jurisdiction-description">Description</label>
+                            <textarea id="jurisdiction-description" name="jurisdictionDescription" rows="3"
+                                      placeholder="Enter description for this jurisdiction..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="jurisdiction-is-active" name="jurisdictionIsActive" checked>
+                                <span class="checkmark"></span>
+                                Set as Active
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeJurisdictionModal()" title="Cancel and Close">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveJurisdiction()" title="Save Jurisdiction">Save Jurisdiction</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Material Design Floating Action Button -->
+    <button class="md-fab" onclick="addTaxRate()" title="Quick Add Tax Rate (Ctrl+N)" tabindex="0">
+        <span class="material-icons">add</span>
+    </button>
+
+    <!-- Add Tax Rate Modal -->
+    <div id="tax-rate-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Configure New Tax Rate</h2>
+                <span class="close" onclick="closeTaxRateModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="tax-rate-modal-form">
+                    <div class="form-section">
+                        <h3>Tax Rate Details</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="modal-rate-jurisdiction">Jurisdiction *</label>
+                                <select id="modal-rate-jurisdiction" name="jurisdiction" required>
+                                    <option value="">Select Jurisdiction</option>
+                                    <option value="california-us">California, US</option>
+                                    <option value="newyork-us">New York, US</option>
+                                    <option value="texas-us">Texas, US</option>
+                                    <option value="maharashtra-in">Maharashtra, India</option>
+                                    <option value="delhi-in">Delhi, India</option>
+                                    <option value="karnataka-in">Karnataka, India</option>
+                                    <option value="england-uk">England, UK</option>
+                                    <option value="ontario-ca">Ontario, Canada</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="modal-rate-tax-type">Tax Type *</label>
+                                <select id="modal-rate-tax-type" name="taxType" required>
+                                    <option value="">Select Tax Type</option>
+                                    <option value="Sales Tax">Sales Tax</option>
+                                    <option value="VAT">VAT (Value Added Tax)</option>
+                                    <option value="GST">GST (Goods and Services Tax)</option>
+                                    <option value="IGST">IGST (Integrated GST)</option>
+                                    <option value="HST">HST (Harmonized Sales Tax)</option>
+                                    <option value="Excise Tax">Excise Tax</option>
+                                    <option value="Custom Duty">Custom Duty</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="modal-rate-percentage">Rate (%) *</label>
+                                <input type="number" id="modal-rate-percentage" name="rate" step="0.01" min="0" max="100" required placeholder="0.00">
+                            </div>
+                            <div class="form-group">
+                                <label for="modal-rate-category">Category</label>
+                                <select id="modal-rate-category" name="category">
+                                    <option value="">Select Category</option>
+                                    <option value="Standard">Standard Rate</option>
+                                    <option value="Reduced">Reduced Rate</option>
+                                    <option value="Zero">Zero Rate</option>
+                                    <option value="Exempt">Exempt</option>
+                                    <option value="Luxury">Luxury Rate</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="modal-rate-effective-date">Effective Date</label>
+                                <input type="date" id="modal-rate-effective-date" name="effectiveDate">
+                            </div>
+                            <div class="form-group">
+                                <label for="modal-rate-currency">Currency</label>
+                                <select id="modal-rate-currency" name="currency">
+                                    <option value="USD">USD - US Dollar</option>
+                                    <option value="INR">INR - Indian Rupee</option>
+                                    <option value="GBP">GBP - British Pound</option>
+                                    <option value="EUR">EUR - Euro</option>
+                                    <option value="CAD">CAD - Canadian Dollar</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="modal-rate-description">Description</label>
+                            <textarea id="modal-rate-description" name="description" rows="3" placeholder="Optional description for this tax rate..."></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary md-button md-button-outlined" onclick="closeTaxRateModal()" title="Cancel and Close" tabindex="0">
+                    <span class="material-icons">close</span>
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-primary md-button md-button-filled" onclick="saveTaxRateModal()" title="Save Tax Rate" tabindex="0">
+                    <span class="material-icons">save</span>
+                    Save Tax Rate
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Product Mapping Modal -->
+    <div id="product-mapping-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Product Mapping</h2>
+                <span class="close" onclick="closeProductMappingModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="product-mapping-form">
+                    <div class="form-section">
+                        <h3>Product Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="product-code">Product Code *</label>
+                                <input type="text" id="product-code" name="productCode" required placeholder="e.g., BP001">
+                            </div>
+                            <div class="form-group">
+                                <label for="product-name">Product Name *</label>
+                                <input type="text" id="product-name" name="productName" required placeholder="e.g., Brake Pad Set">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="product-category">Category *</label>
+                                <select id="product-category" name="productCategory" required>
+                                    <option value="">Select Category</option>
+                                    <option value="Auto Parts">Auto Parts</option>
+                                    <option value="Services">Services</option>
+                                    <option value="Electronics">Electronics</option>
+                                    <option value="Accessories">Accessories</option>
+                                    <option value="Tools">Tools</option>
+                                    <option value="Consumables">Consumables</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="hsn-sac-code">HSN/SAC Code *</label>
+                                <input type="text" id="hsn-sac-code" name="hsnSacCode" required placeholder="e.g., 87083010">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="tax-class">Tax Class *</label>
+                                <select id="tax-class" name="taxClass" required>
+                                    <option value="">Select Tax Class</option>
+                                    <option value="Standard">Standard Rate</option>
+                                    <option value="Reduced">Reduced Rate</option>
+                                    <option value="Zero">Zero Rate</option>
+                                    <option value="Exempt">Exempt</option>
+                                    <option value="Luxury">Luxury Rate</option>
+                                    <option value="Service">Service Rate</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="unit-of-measure">Unit of Measure</label>
+                                <select id="unit-of-measure" name="unitOfMeasure">
+                                    <option value="">Select Unit</option>
+                                    <option value="PCS">Pieces (PCS)</option>
+                                    <option value="SET">Set (SET)</option>
+                                    <option value="KG">Kilogram (KG)</option>
+                                    <option value="LTR">Liter (LTR)</option>
+                                    <option value="MTR">Meter (MTR)</option>
+                                    <option value="HR">Hour (HR)</option>
+                                    <option value="SVC">Service (SVC)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="product-description">Description</label>
+                            <textarea id="product-description" name="productDescription" rows="3" placeholder="Optional product description..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Tax Configuration</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="default-tax-rate">Default Tax Rate (%)</label>
+                                <input type="number" id="default-tax-rate" name="defaultTaxRate" step="0.01" min="0" max="100" placeholder="18.00">
+                            </div>
+                            <div class="form-group">
+                                <label for="tax-exemption">Tax Exemption</label>
+                                <select id="tax-exemption" name="taxExemption">
+                                    <option value="No">No Exemption</option>
+                                    <option value="Partial">Partial Exemption</option>
+                                    <option value="Full">Full Exemption</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="applicable-jurisdictions">Applicable Jurisdictions</label>
+                                <div class="jurisdiction-selector">
+                                    <div class="jurisdiction-search-container">
+                                        <input type="text" id="jurisdiction-search" placeholder="Search jurisdictions..." autocomplete="off">
+                                        <div class="jurisdiction-dropdown" id="jurisdiction-dropdown">
+                                            <div class="jurisdiction-option" data-value="US">
+                                                <input type="checkbox" id="jurisdiction-US" value="US">
+                                                <label for="jurisdiction-US">United States</label>
+                                            </div>
+                                            <div class="jurisdiction-option" data-value="IN">
+                                                <input type="checkbox" id="jurisdiction-IN" value="IN">
+                                                <label for="jurisdiction-IN">India</label>
+                                            </div>
+                                            <div class="jurisdiction-option" data-value="UK">
+                                                <input type="checkbox" id="jurisdiction-UK" value="UK">
+                                                <label for="jurisdiction-UK">United Kingdom</label>
+                                            </div>
+                                            <div class="jurisdiction-option" data-value="CA">
+                                                <input type="checkbox" id="jurisdiction-CA" value="CA">
+                                                <label for="jurisdiction-CA">Canada</label>
+                                            </div>
+                                            <div class="jurisdiction-option" data-value="AU">
+                                                <input type="checkbox" id="jurisdiction-AU" value="AU">
+                                                <label for="jurisdiction-AU">Australia</label>
+                                            </div>
+                                            <div class="jurisdiction-option" data-value="DE">
+                                                <input type="checkbox" id="jurisdiction-DE" value="DE">
+                                                <label for="jurisdiction-DE">Germany</label>
+                                            </div>
+                                            <div class="jurisdiction-option" data-value="FR">
+                                                <input type="checkbox" id="jurisdiction-FR" value="FR">
+                                                <label for="jurisdiction-FR">France</label>
+                                            </div>
+                                            <div class="jurisdiction-option" data-value="JP">
+                                                <input type="checkbox" id="jurisdiction-JP" value="JP">
+                                                <label for="jurisdiction-JP">Japan</label>
+                                            </div>
+                                            <div class="jurisdiction-option" data-value="SG">
+                                                <input type="checkbox" id="jurisdiction-SG" value="SG">
+                                                <label for="jurisdiction-SG">Singapore</label>
+                                            </div>
+                                            <div class="jurisdiction-option" data-value="BR">
+                                                <input type="checkbox" id="jurisdiction-BR" value="BR">
+                                                <label for="jurisdiction-BR">Brazil</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="selected-jurisdictions" id="selected-jurisdictions">
+                                        <span class="placeholder-text">No jurisdictions selected</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="effective-from">Effective From</label>
+                                <input type="date" id="effective-from" name="effectiveFrom">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary md-button md-button-outlined" onclick="closeProductMappingModal()" tabindex="0">
+                    <span class="material-icons">close</span>
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-primary md-button md-button-filled" onclick="saveProductMapping()" tabindex="0">
+                    <span class="material-icons">save</span>
+                    Save Product Mapping
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
