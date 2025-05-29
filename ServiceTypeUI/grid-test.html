@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid Layout Test</title>
+    <style>
+        body {
+            margin: 20px;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+        
+        .services-grid {
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 20px;
+            margin-bottom: 40px;
+            width: 100%;
+        }
+        
+        .service-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            width: 100% !important;
+            min-height: 320px;
+            display: flex !important;
+            flex-direction: column !important;
+            max-width: none !important;
+            flex: none !important;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+        
+        .service-card__header {
+            padding: 20px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .service-card__title {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .service-code {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        .service-card__content {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .service-card__description {
+            margin: 0 0 15px 0;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        .service-card__meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-active {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+        
+        .status-draft {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+        
+        .status-inactive {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .services-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="color: white; text-align: center; margin-bottom: 30px;">Grid Layout Test - 3 Cards Per Row</h1>
+        
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-card__header">
+                    <div>
+                        <h3 class="service-card__title">Web Development</h3>
+                        <div class="service-code">WEB001</div>
+                    </div>
+                    <span class="status-badge status-active">Active</span>
+                </div>
+                <div class="service-card__content">
+                    <p class="service-card__description">Full-stack web application development using modern frameworks and technologies.</p>
+                    <div class="service-card__meta">
+                        <span>Development</span>
+                        <span><strong>$150/hour</strong></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-card__header">
+                    <div>
+                        <h3 class="service-card__title">Mobile App Development</h3>
+                        <div class="service-code">MOB001</div>
+                    </div>
+                    <span class="status-badge status-active">Active</span>
+                </div>
+                <div class="service-card__content">
+                    <p class="service-card__description">Native and cross-platform mobile application development for iOS and Android.</p>
+                    <div class="service-card__meta">
+                        <span>Development</span>
+                        <span><strong>$175/hour</strong></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-card__header">
+                    <div>
+                        <h3 class="service-card__title">Strategic Consulting</h3>
+                        <div class="service-code">CON001</div>
+                    </div>
+                    <span class="status-badge status-draft">Draft</span>
+                </div>
+                <div class="service-card__content">
+                    <p class="service-card__description">High-level strategic consulting and business transformation services.</p>
+                    <div class="service-card__meta">
+                        <span>Consulting</span>
+                        <span><strong>$1200/day</strong></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-card__header">
+                    <div>
+                        <h3 class="service-card__title">Cloud Infrastructure</h3>
+                        <div class="service-code">CLD001</div>
+                    </div>
+                    <span class="status-badge status-active">Active</span>
+                </div>
+                <div class="service-card__content">
+                    <p class="service-card__description">Scalable cloud infrastructure solutions and DevOps implementation.</p>
+                    <div class="service-card__meta">
+                        <span>Infrastructure</span>
+                        <span><strong>$200/hour</strong></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-card__header">
+                    <div>
+                        <h3 class="service-card__title">Data Analytics</h3>
+                        <div class="service-code">DAT001</div>
+                    </div>
+                    <span class="status-badge status-active">Active</span>
+                </div>
+                <div class="service-card__content">
+                    <p class="service-card__description">Advanced data analytics, machine learning, and business intelligence solutions.</p>
+                    <div class="service-card__meta">
+                        <span>Analytics</span>
+                        <span><strong>$180/hour</strong></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-card__header">
+                    <div>
+                        <h3 class="service-card__title">UI/UX Design</h3>
+                        <div class="service-code">UXD001</div>
+                    </div>
+                    <span class="status-badge status-inactive">Inactive</span>
+                </div>
+                <div class="service-card__content">
+                    <p class="service-card__description">Modern user interface and user experience design for web and mobile applications.</p>
+                    <div class="service-card__meta">
+                        <span>Design</span>
+                        <span><strong>$120/hour</strong></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="color: white; text-align: center; margin-top: 30px;">
+            <p><strong>Expected Result:</strong> 3 cards per row on desktop, 2 on tablet, 1 on mobile</p>
+            <p><strong>Current Screen Width:</strong> <span id="screen-width"></span>px</p>
+        </div>
+    </div>
+
+    <script>
+        // Display current screen width
+        function updateScreenWidth() {
+            document.getElementById('screen-width').textContent = window.innerWidth;
+        }
+        
+        updateScreenWidth();
+        window.addEventListener('resize', updateScreenWidth);
+        
+        // Log grid information
+        console.log('Grid container:', document.querySelector('.services-grid'));
+        console.log('Grid computed style:', window.getComputedStyle(document.querySelector('.services-grid')));
+        console.log('Number of cards:', document.querySelectorAll('.service-card').length);
+    </script>
+</body>
+</html>

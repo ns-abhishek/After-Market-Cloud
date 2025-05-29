@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knowledge Base Tree Structure</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>Knowledge Base</h1>
+                <div class="search-container">
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="search-input" placeholder="Search files and folders...">
+                        <button id="clear-search" class="clear-search hidden">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="sidebar">
+                <div class="tree-container">
+                    <div class="tree-header">
+                        <h2>Document Structure</h2>
+                        <div class="tree-controls">
+                            <button id="expand-all" class="btn-icon" title="Expand All">
+                                <i class="fas fa-expand-alt"></i>
+                            </button>
+                            <button id="collapse-all" class="btn-icon" title="Collapse All">
+                                <i class="fas fa-compress-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="tree-actions">
+                        <button id="add-root-folder" class="btn btn-primary">
+                            <i class="fas fa-folder-plus"></i> Add Root Folder
+                        </button>
+                    </div>
+                    <div class="tree-view-container">
+                        <ul id="tree-root" class="tree">
+                            <!-- Tree structure will be generated here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+                <div id="breadcrumb" class="breadcrumb">
+                    <ul id="breadcrumb-list">
+                        <li><a href="#" data-id="home"><i class="fas fa-home"></i> Home</a></li>
+                    </ul>
+                </div>
+
+                <div id="content-view">
+                    <div class="empty-state">
+                        <i class="fas fa-folder-open fa-4x"></i>
+                        <h3>Select a folder or file to view its contents</h3>
+                    </div>
+                </div>
+
+                <div id="file-upload-container" class="hidden">
+                    <div class="form-header">
+                        <h3>Upload File</h3>
+                        <button type="button" id="close-file-form" class="btn-icon">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <form id="file-upload-form">
+                        <div class="form-group">
+                            <label for="file-name">File Name:</label>
+                            <input type="text" id="file-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="file-upload">Select File:</label>
+                            <div class="file-upload-area">
+                                <input type="file" id="file-upload" class="file-input">
+                                <div class="file-drop-area">
+                                    <i class="fas fa-cloud-upload-alt fa-2x"></i>
+                                    <p>Drag & drop files here or click to browse</p>
+                                </div>
+                                <div id="file-preview" class="file-preview hidden"></div>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Upload</button>
+                            <button type="button" id="cancel-upload" class="btn btn-secondary">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Folder form will be in a modal -->
+            </div>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <p>&copy; 2023 Knowledge Base System</p>
+                <div class="footer-actions">
+                    <button id="toggle-theme" class="btn-icon" title="Toggle Dark/Light Mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button id="help-button" class="btn-icon" title="Help">
+                        <i class="fas fa-question-circle"></i>
+                    </button>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modal for confirmations -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Confirmation</h3>
+                <button id="modal-close" class="btn-icon">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="modal-message">Are you sure you want to proceed?</p>
+            </div>
+            <div class="modal-actions">
+                <button id="modal-confirm" class="btn btn-danger">Confirm</button>
+                <button id="modal-cancel" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Context menu -->
+    <div id="context-menu" class="context-menu hidden">
+        <ul>
+            <li id="ctx-open"><i class="fas fa-folder-open"></i> Open</li>
+            <li id="ctx-add-folder"><i class="fas fa-folder-plus"></i> Add Folder</li>
+            <li id="ctx-add-file"><i class="fas fa-file-upload"></i> Add File</li>
+            <li id="ctx-rename"><i class="fas fa-edit"></i> Rename</li>
+            <li id="ctx-delete" class="danger"><i class="fas fa-trash"></i> Delete</li>
+        </ul>
+    </div>
+
+    <!-- Help modal -->
+    <div id="help-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Knowledge Base Help</h3>
+                <button id="help-modal-close" class="btn-icon">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4>Keyboard Shortcuts</h4>
+                <ul class="shortcut-list">
+                    <li><span class="key">F</span> - Search files and folders</li>
+                    <li><span class="key">Esc</span> - Close dialogs</li>
+                    <li><span class="key">Del</span> - Delete selected item</li>
+                    <li><span class="key">N</span> - New folder</li>
+                    <li><span class="key">U</span> - Upload file</li>
+                </ul>
+
+                <h4>Tips</h4>
+                <ul>
+                    <li>Right-click on items for quick actions</li>
+                    <li>Drag and drop to reorganize folders and files</li>
+                    <li>Use the search box to quickly find items</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Folder form modal -->
+    <div id="folder-form-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="folder-form-title">Add New Folder</h3>
+                <button id="close-folder-form" class="btn-icon">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="folder-form">
+                    <div class="form-group">
+                        <label for="folder-name">Folder Name:</label>
+                        <input type="text" id="folder-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="folder-color">Folder Color (optional):</label>
+                        <input type="color" id="folder-color" value="#aaaaaa">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" id="cancel-folder" class="btn btn-secondary">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification container -->
+    <div id="notification-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

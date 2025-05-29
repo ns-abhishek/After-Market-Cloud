@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup - Currencies, Rates & Formatting</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: #3c4043;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .widget {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .table th,
+        .table td {
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 0.875rem;
+        }
+
+        .table th {
+            font-weight: 500;
+            color: #5f6368;
+            background-color: #f8f9fa;
+        }
+
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 9999px;
+            color: #5f6368;
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+        }
+
+        .nav-link:hover {
+            background-color: #e8f0fe;
+            color: #1967d2;
+        }
+
+        .nav-link.active {
+            background-color: #e8f0fe;
+            color: #1967d2;
+            font-weight: 500;
+        }
+
+        .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Toggle Switch CSS - Google-like */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #bdc1c6;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        input[type="checkbox"]:checked+.slider {
+            background-color: #1a73e8;
+        }
+
+        input[type="checkbox"]:checked+.slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Custom Button - Google style */
+        .btn {
+            padding: 9px 18px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background-color .3s, box-shadow .3s;
+            border: 1px solid transparent;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        .btn-primary {
+            background-color: #1a73e8;
+            color: white;
+            box-shadow: 0 1px 2px 0 rgba(26, 115, 232, 0.4);
+        }
+
+        .btn-primary:hover {
+            background-color: #185abc;
+            box-shadow: 0 2px 4px 0 rgba(26, 115, 232, 0.5);
+        }
+
+        .btn-secondary {
+            background-color: #e8eaed;
+            color: #3c4043;
+            border: 1px solid #dadce0;
+        }
+
+        .btn-secondary:hover {
+            background-color: #dadce0;
+            border-color: #c6c9ce;
+        }
+
+        /* Modal Styles - Consistent with Google's dialogs */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: auto;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            width: 90%;
+            max-width: 480px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 16px;
+            margin-bottom: 16px;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        .close-button {
+            color: #5f6368;
+            font-size: 24px;
+            font-weight: normal;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 4px;
+        }
+
+        .close-button:hover {
+            color: #3c4043;
+        }
+
+        .form-input,
+        .form-select,
+        .form-number-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            box-sizing: border-box;
+            background-color: #fff;
+            font-size: 0.875rem;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-number-input:focus {
+            border-color: #1a73e8;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #5f6368;
+            font-size: 0.875rem;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding-top: 16px;
+            border-top: 1px solid #e0e0e0;
+            margin-top: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        /* Radio Button Group Styling - Google style */
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 8px;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            cursor: pointer;
+            font-size: 0.875rem;
+            border-radius: 4px;
+        }
+
+        .radio-group input[type="radio"] {
+            margin-right: 8px;
+            width: 18px;
+            height: 18px;
+            accent-color: #1a73e8;
+        }
+
+        .radio-group input[type="radio"]:focus-visible {
+            outline: 2px solid #1a73e8;
+            outline-offset: 2px;
+        }
+
+        .radio-group label:hover span {
+            color: #1a73e8;
+        }
+
+        .widget-title-header {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: #202124;
+            margin-bottom: 4px;
+        }
+
+        .widget-subtitle {
+            font-size: 0.875rem;
+            color: #5f6368;
+            margin-top: 0;
+        }
+
+        .format-preview-box {
+            background-color: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+            text-align: center;
+        }
+
+        .format-preview-box p {
+            font-size: 1.25rem;
+            /* 20px */
+            font-weight: 500;
+            color: #1a73e8;
+            /* Google Blue */
+            margin: 0;
+        }
+
+        .format-preview-box .label {
+            font-size: 0.75rem;
+            /* 12px */
+            color: #5f6368;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100">
+
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <span class="text-2xl font-bold text-blue-600">Admin<span
+                                class="text-gray-700">Panel</span></span>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-2">
+                        <a href="dashboard.html" class="nav-link">
+                            <i class="fas fa-tachometer-alt"></i>Dashboard
+                        </a>
+                        <a href="platformSetup.html" class="nav-link active">
+                            <i class="fas fa-cogs"></i>Platform Setup
+                        </a>
+                        <a href="companySetup.html" class="nav-link">
+                            <i class="fas fa-building"></i>Company Setup
+                        </a>
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-bell"></i>Notifications
+                            <span
+                                class="ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">3</span>
+                        </a>
+                        <a href="exchangeRate.html"
+                            class="text-sm font-medium text-white bg-blue-400 hover:bg-gray-800 px-3 py-2 rounded-md edit-btn">
+                            Exchange Rate Management
+                        </a>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-4 flex items-center md:ml-6">
+                        <button
+                            class="p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-500">
+                            <i class="fas fa-user-circle text-2xl"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" id="mobile-menu-button"
+                        class="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+                        aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="dashboard.html" class="nav-link active block">
+                    <i class="fas fa-tachometer-alt"></i>Dashboard
+                </a>
+                <a href="platformSetup.html" class="nav-link active">
+                    <i class="fas fa-cogs"></i>Platform Setup
+                </a>
+                <a href="companySetup.html" class="nav-link">
+                    <i class="fas fa-building"></i>Company Setup
+                </a>
+                <a href="#" class="nav-link block"><i class="fas fa-bell"></i>Notifications
+                    <span
+                        class="ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">3</span>
+                </a>
+                <a href="exchangeRate.html"
+                    class="text-sm font-medium text-white bg-blue-400 hover:bg-gray-800 px-3 py-2 rounded-md edit-btn">
+                    Exchange Rate Management
+                </a>
+            </div>
+            <div class="pt-4 pb-3 border-t border-gray-200">
+                <div class="flex items-center px-5">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-user-circle text-3xl text-gray-400"></i>
+                    </div>
+                    <div class="ml-3">
+                        <div class="text-base font-medium leading-none text-gray-800">Admin User</div>
+                        <div class="text-sm font-medium leading-none text-gray-500">admin@example.com</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <header class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Platform Setup</h1>
+            <p class="text-sm text-gray-600 mt-1">Manage global settings for currencies, exchange rates, and formatting.
+            </p>
+        </header>
+
+        <div class="widget">
+            <div class="flex flex-col md:flex-row md:items-center mb-5">
+                <div class="flex-shrink-0 mb-3 md:mb-0 md:mr-4">
+                    <h2 class="widget-title-header">Master Currency List</h2>
+                    <p class="widget-subtitle">Enable or disable currencies your platform will support.</p>
+                </div>
+                <div class="w-full md:flex-grow mb-3 md:mb-0 md:mx-4">
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-search text-gray-400"></i>
+                        </span>
+                        <input type="text" id="currencySearch" placeholder="Search by currency or code..."
+                            class="w-full pl-10 pr-3 py-2 form-input">
+                    </div>
+                </div>
+                <div class="w-full md:w-auto flex-shrink-0">
+                    <button id="addNewCurrencyBtn" class="btn btn-primary w-full md:w-auto">
+                        <i class="fas fa-plus mr-2"></i>Add New Currency
+                    </button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full table" id="currencyTable">
+                    <thead>
+                        <tr>
+                            <th>Currency</th>
+                            <th>ISO Code</th>
+                            <th>Symbol</th>
+                            <th>Country/Region</th>
+                            <th>Date Added</th>
+                            <th>Usage</th>
+                            <th>Status</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="currency-list-body">
+                    </tbody>
+                </table>
+                <div id="no-results" class="text-center py-8 text-gray-500 hidden">
+                    <i class="fas fa-search fa-2x mb-2"></i>
+                    <p>No currencies found matching your search.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="widget">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-5">
+                    <div>
+                        <h2 class="widget-title-header">Exchange Rate Services</h2>
+                        <p class="widget-subtitle">Configure API providers and update frequency.</p>
+                    </div>
+                    <button id="saveExchangeRateSettingsBtn" class="btn btn-primary mt-3 sm:mt-0">
+                        <i class="fas fa-save mr-2"></i>Save Settings
+                    </button>
+                </div>
+
+                <form id="exchangeRateSettingsForm">
+                    <div class="form-group">
+                        <span class="form-label">Primary Rate Provider:</span>
+                        <div class="radio-group" id="primaryProviderGroup">
+                            <label><input type="radio" name="primaryProvider" value="openExchangeRates"> <span>Open
+                                    Exchange Rates</span></label>
+                            <label><input type="radio" name="primaryProvider" value="currencyLayer">
+                                <span>CurrencyLayer</span></label>
+                            <label><input type="radio" name="primaryProvider" value="customBankFeed"> <span>Custom Bank
+                                    Feed</span></label>
+                            <label><input type="radio" name="primaryProvider" value="manual" checked> <span>Manual
+                                    Only</span></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="primaryApiKey" class="form-label">Primary API Key:</label>
+                        <input type="password" id="primaryApiKey" name="primaryApiKey" class="form-input"
+                            placeholder="Enter API Key" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <span class="form-label">Fallback Rate Provider:</span>
+                        <div class="radio-group" id="fallbackProviderGroup">
+                            <label><input type="radio" name="fallbackProvider" value="" checked> <span>None
+                                    (Optional)</span></label>
+                            <label><input type="radio" name="fallbackProvider" value="openExchangeRates"> <span>Open
+                                    Exchange Rates</span></label>
+                            <label><input type="radio" name="fallbackProvider" value="currencyLayer">
+                                <span>CurrencyLayer</span></label>
+                            <label><input type="radio" name="fallbackProvider" value="customBankFeed"> <span>Custom Bank
+                                    Feed</span></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="fallbackApiKey" class="form-label">Fallback API Key:</label>
+                        <input type="password" id="fallbackApiKey" name="fallbackApiKey" class="form-input"
+                            placeholder="Enter API Key" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="updateFrequency" class="form-label">Rate Update Frequency:</label>
+                        <select id="updateFrequency" name="updateFrequency" class="form-select">
+                            <option value="hourly">Hourly</option>
+                            <option value="every_4_hours">Every 4 Hours</option>
+                            <option value="every_12_hours">Every 12 Hours</option>
+                            <option value="daily" selected>Daily (at 00:00 UTC)</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="quarterly">Quarterly</option>
+                            <option value="half_yearly">Half-Yearly</option>
+                            <option value="yearly">Yearly</option>
+                            <option value="manual_only_no_auto">Manual Updates Only</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+
+            <div class="widget">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-5">
+                    <div>
+                        <h2 class="widget-title-header">Default Formatting Rules</h2>
+                        <p class="widget-subtitle">Set platform-wide default formats.</p>
+                    </div>
+                    <button id="saveFormattingRulesBtn" class="btn btn-primary mt-3 sm:mt-0">
+                        <i class="fas fa-save mr-2"></i>Save Rules
+                    </button>
+                </div>
+                <form id="formattingRulesForm">
+                    <div class="form-group">
+                        <span class="form-label">Currency Symbol Position:</span>
+                        <div class="radio-group" id="symbolPositionGroup">
+                            <label><input type="radio" name="symbolPosition" value="before" checked> <span>Before (e.g.,
+                                    $100)</span></label>
+                            <label><input type="radio" name="symbolPosition" value="after"> <span>After (e.g.,
+                                    100$)</span></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <span class="form-label">Decimal Separator:</span>
+                        <div class="radio-group" id="decimalSeparatorGroup">
+                            <label><input type="radio" name="decimalSeparator" value="." checked> <span>Dot (e.g.,
+                                    100.00)</span></label>
+                            <label><input type="radio" name="decimalSeparator" value=","> <span>Comma (e.g.,
+                                    100,00)</span></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <span class="form-label">Thousand Separator:</span>
+                        <div class="radio-group" id="thousandSeparatorGroup">
+                            <label><input type="radio" name="thousandSeparator" value="," checked> <span>Comma (e.g.,
+                                    1,000)</span></label>
+                            <label><input type="radio" name="thousandSeparator" value="."> <span>Dot (e.g.,
+                                    1.000)</span></label>
+                            <label><input type="radio" name="thousandSeparator" value="space"> <span>Space (e.g., 1
+                                    000)</span></label>
+                            <label><input type="radio" name="thousandSeparator" value="none"> <span>None (e.g.,
+                                    1000)</span></label>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label for="decimalPlacesCalc" class="form-label">Decimals (Calc):</label>
+                            <input type="number" id="decimalPlacesCalc" name="decimalPlacesCalc"
+                                class="form-number-input" value="4" min="0" max="8">
+                        </div>
+                        <div class="form-group">
+                            <label for="decimalPlacesDisplay" class="form-label">Decimals (Display):</label>
+                            <input type="number" id="decimalPlacesDisplay" name="decimalPlacesDisplay"
+                                class="form-number-input" value="2" min="0" max="8">
+                        </div>
+                    </div>
+
+                    <div class="format-preview-box">
+                        <div class="label">Format Preview</div>
+                        <p id="formatPreviewText">$12,345.68</p>
+                    </div>
+
+                    <div class="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                        <p class="text-xs text-blue-700"><i class="fas fa-info-circle mr-1"></i>Platform defaults.
+                            Companies may override.</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <div id="addCurrencyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add New Currency</h2>
+                <button type="button" class="close-button" id="closeModalBtn" aria-label="Close modal">&times;</button>
+            </div>
+            <form id="addCurrencyForm">
+                <div class="form-group">
+                    <label for="currencyName" class="form-label">Currency Name:</label>
+                    <input type="text" id="currencyName" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="currencyCode" class="form-label">ISO Code (e.g., USD):</label>
+                    <input type="text" id="currencyCode" class="form-input" required maxlength="3" pattern="[A-Z]{3}">
+                </div>
+                <div class="form-group">
+                    <label for="currencySymbol" class="form-label">Symbol (e.g., $):</label>
+                    <input type="text" id="currencySymbol" class="form-input" required maxlength="5">
+                </div>
+                <div class="form-group">
+                    <label for="currencyCountry" class="form-label">Country/Region:</label>
+                    <input type="text" id="currencyCountry" class="form-input">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="cancelAddCurrencyBtn" class="btn btn-secondary">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Currency</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="bg-white border-t border-gray-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-500">
+            &copy; <span id="currentYear"></span> HCLSoftware. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Elements for Master Currency List ---
+            const currencyListBody = document.getElementById('currency-list-body');
+            const currencySearch = document.getElementById('currencySearch');
+            const noResults = document.getElementById('no-results');
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const addCurrencyModal = document.getElementById('addCurrencyModal');
+            const addNewCurrencyBtn = document.getElementById('addNewCurrencyBtn');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const cancelAddCurrencyBtn = document.getElementById('cancelAddCurrencyBtn');
+            const addCurrencyForm = document.getElementById('addCurrencyForm');
+            const currencyNameInput = document.getElementById('currencyName');
+            const currencyCodeInput = document.getElementById('currencyCode');
+            const currencySymbolInput = document.getElementById('currencySymbol');
+            const currencyCountryInput = document.getElementById('currencyCountry');
+
+            let masterCurrencies = [
+                { name: 'US Dollar', code: 'USD', symbol: '$', country: 'United States', dateAdded: '2023-01-15', usage: 'High', enabled: true, id: 'USD' },
+                { name: 'Euro', code: 'EUR', symbol: '€', country: 'Eurozone', dateAdded: '2023-01-20', usage: 'High', enabled: true, id: 'EUR' },
+                { name: 'Japanese Yen', code: 'JPY', symbol: '¥', country: 'Japan', dateAdded: '2023-02-01', usage: 'Medium', enabled: true, id: 'JPY' },
+                { name: 'British Pound', code: 'GBP', symbol: '£', country: 'United Kingdom', dateAdded: '2023-02-10', usage: 'Medium', enabled: true, id: 'GBP' },
+                { name: 'Canadian Dollar', code: 'CAD', symbol: 'C$', country: 'Canada', dateAdded: '2023-03-01', usage: 'Low', enabled: false, id: 'CAD' },
+            ];
+
+            // --- Elements for Exchange Rate Section ---
+            const primaryApiKeyInput = document.getElementById('primaryApiKey');
+            const fallbackApiKeyInput = document.getElementById('fallbackApiKey');
+            const saveExchangeRateSettingsBtn = document.getElementById('saveExchangeRateSettingsBtn');
+            const updateFrequencySelect = document.getElementById('updateFrequency');
+            const primaryProviderRadios = document.querySelectorAll('input[name="primaryProvider"]');
+            const fallbackProviderRadios = document.querySelectorAll('input[name="fallbackProvider"]');
+
+
+            // --- Elements for Default Formatting Rules Section ---
+            const saveFormattingRulesBtn = document.getElementById('saveFormattingRulesBtn');
+            const decimalPlacesCalcInput = document.getElementById('decimalPlacesCalc');
+            const decimalPlacesDisplayInput = document.getElementById('decimalPlacesDisplay');
+            const formatPreviewText = document.getElementById('formatPreviewText');
+            const formattingInputs = document.querySelectorAll('#formattingRulesForm input[type="radio"], #formattingRulesForm input[type="number"]');
+
+
+            // --- Functions for Master Currency List ---
+            const renderMasterCurrencyTable = (filter = '') => {
+                if (!currencyListBody) return;
+                currencyListBody.innerHTML = '';
+                const searchTerm = filter.toLowerCase();
+                const filteredCurrencies = masterCurrencies.filter(c =>
+                    c.name.toLowerCase().includes(searchTerm) ||
+                    c.code.toLowerCase().includes(searchTerm) ||
+                    (c.country && c.country.toLowerCase().includes(searchTerm)) ||
+                    (c.usage && c.usage.toLowerCase().includes(searchTerm))
+                );
+
+                if (filteredCurrencies.length === 0 && searchTerm !== '') {
+                    noResults.classList.remove('hidden');
+                    noResults.querySelector('p').textContent = 'No currencies found matching your search.';
+                } else {
+                    noResults.classList.add('hidden');
+                }
+                if (filteredCurrencies.length === 0 && searchTerm === '' && masterCurrencies.length === 0) {
+                    noResults.innerHTML = '<i class="fas fa-coins fa-2x mb-2"></i><p>No currencies configured yet. Click "Add New Currency" to start.</p>';
+                    noResults.classList.remove('hidden');
+                }
+
+                filteredCurrencies.sort((a, b) => a.name.localeCompare(b.name));
+
+                filteredCurrencies.forEach(currency => {
+                    const row = document.createElement('tr');
+                    row.setAttribute('data-currency-code', currency.code);
+                    const statusBadge = currency.enabled
+                        ? '<span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-700">Enabled</span>'
+                        : '<span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-700">Disabled</span>';
+
+                    let usageClass = '';
+                    if (currency.usage === 'High') usageClass = 'text-green-600 font-medium';
+                    else if (currency.usage === 'Medium') usageClass = 'text-yellow-600 font-medium';
+                    else if (currency.usage === 'Low') usageClass = 'text-red-600 font-medium';
+
+                    row.innerHTML = `
+                        <td class="font-medium text-gray-900">${currency.name}</td>
+                        <td class="text-gray-600">${currency.code}</td>
+                        <td class="text-gray-600 font-bold text-lg">${currency.symbol}</td>
+                        <td class="text-gray-600">${currency.country || 'N/A'}</td>
+                        <td class="text-gray-600">${currency.dateAdded}</td>
+                        <td class="${usageClass}">${currency.usage || 'N/A'}</td>
+                        <td>${statusBadge}</td>
+                        <td class="text-center">
+                            <label class="toggle-switch">
+                                <input type="checkbox" class="currency-toggle" data-code="${currency.code}" ${currency.enabled ? 'checked' : ''}>
+                                <span class="slider"></span>
+                            </label>
+                        </td>
+                    `;
+                    currencyListBody.appendChild(row);
+                });
+            };
+
+            if (currencySearch) {
+                currencySearch.addEventListener('keyup', (e) => renderMasterCurrencyTable(e.target.value));
+            }
+
+            if (currencyListBody) {
+                currencyListBody.addEventListener('change', (event) => {
+                    if (event.target.classList.contains('currency-toggle')) {
+                        const currencyCode = event.target.dataset.code;
+                        const currency = masterCurrencies.find(c => c.code === currencyCode);
+                        if (currency) {
+                            currency.enabled = event.target.checked;
+                            renderMasterCurrencyTable(currencySearch.value);
+                        }
+                    }
+                });
+            }
+
+            if (addNewCurrencyBtn) addNewCurrencyBtn.onclick = () => { addCurrencyModal.style.display = "flex"; addCurrencyForm.reset(); }
+            if (closeModalBtn) closeModalBtn.onclick = () => addCurrencyModal.style.display = "none";
+            if (cancelAddCurrencyBtn) cancelAddCurrencyBtn.onclick = () => addCurrencyModal.style.display = "none";
+
+            if (addCurrencyForm) {
+                addCurrencyForm.addEventListener('submit', (event) => {
+                    event.preventDefault();
+                    const name = currencyNameInput.value.trim();
+                    const code = currencyCodeInput.value.trim().toUpperCase();
+                    const symbol = currencySymbolInput.value.trim();
+                    const country = currencyCountryInput.value.trim();
+                    const currentDate = new Date().toISOString().split('T')[0];
+
+                    if (!name || !code || !symbol) { alert("Currency Name, ISO Code, and Symbol are required."); return; }
+                    if (code.length !== 3 || !/^[A-Z]+$/.test(code)) { alert("ISO Code must be 3 uppercase letters (e.g., USD)."); return; }
+                    if (masterCurrencies.some(c => c.code === code)) { alert(`Currency with code ${code} already exists.`); return; }
+
+                    masterCurrencies.push({
+                        name,
+                        code,
+                        symbol,
+                        country: country || 'N/A',
+                        dateAdded: currentDate,
+                        usage: 'Low', // Default usage for new currencies
+                        enabled: true,
+                        id: code
+                    });
+                    addCurrencyModal.style.display = "none";
+                    renderMasterCurrencyTable(currencySearch.value);
+                });
+            }
+
+            // --- JS for Exchange Rate Section ---
+            const handleProviderChange = (radios, apiKeyInput) => {
+                let selectedProviderValue = '';
+                radios.forEach(radio => {
+                    if (radio.checked) {
+                        selectedProviderValue = radio.value;
+                    }
+                });
+
+                const needsApiKey = selectedProviderValue && selectedProviderValue !== 'manual' && selectedProviderValue !== 'customBankFeed' && selectedProviderValue !== '';
+                apiKeyInput.disabled = !needsApiKey;
+                const apiKeyFormGroup = apiKeyInput.parentElement;
+                if (apiKeyFormGroup) {
+                    apiKeyFormGroup.style.opacity = needsApiKey ? '1' : '0.5';
+                }
+                if (!needsApiKey) {
+                    apiKeyInput.value = '';
+                }
+            };
+
+            primaryProviderRadios.forEach(radio => {
+                radio.addEventListener('change', () => handleProviderChange(primaryProviderRadios, primaryApiKeyInput));
+            });
+
+            fallbackProviderRadios.forEach(radio => {
+                radio.addEventListener('change', () => handleProviderChange(fallbackProviderRadios, fallbackApiKeyInput));
+            });
+
+            // Initial check for API key fields
+            handleProviderChange(primaryProviderRadios, primaryApiKeyInput);
+            handleProviderChange(fallbackProviderRadios, fallbackApiKeyInput);
+
+
+            if (saveExchangeRateSettingsBtn) {
+                saveExchangeRateSettingsBtn.addEventListener('click', () => {
+                    const primaryProviderValue = document.querySelector('input[name="primaryProvider"]:checked')?.value || '';
+                    const fallbackProviderValue = document.querySelector('input[name="fallbackProvider"]:checked')?.value || '';
+
+                    console.log('Exchange rate settings saved (simulated).');
+                    const settings = {
+                        primaryProvider: primaryProviderValue,
+                        primaryApiKey: !primaryApiKeyInput.disabled ? primaryApiKeyInput.value : null,
+                        fallbackProvider: fallbackProviderValue,
+                        fallbackApiKey: !fallbackApiKeyInput.disabled ? fallbackApiKeyInput.value : null,
+                        updateFrequency: updateFrequencySelect.value,
+                    };
+                    console.log("Collected Exchange Rate Settings:", settings);
+                });
+            }
+
+            // --- JS for Default Formatting Rules Section ---
+            const updateFormatPreview = () => {
+                if (!formatPreviewText || !decimalPlacesDisplayInput) return;
+
+                const sampleNumber = 12345.6789;
+                const symbol = "$";
+
+                const symbolPosition = document.querySelector('input[name="symbolPosition"]:checked').value;
+                const decimalSeparator = document.querySelector('input[name="decimalSeparator"]:checked').value;
+                const thousandSeparatorValue = document.querySelector('input[name="thousandSeparator"]:checked').value;
+
+                let displayDecimals = parseInt(decimalPlacesDisplayInput.value, 10);
+                if (isNaN(displayDecimals) || displayDecimals < 0) {
+                    displayDecimals = 2;
+                } else if (displayDecimals > 8) {
+                    displayDecimals = 8;
+                }
+
+
+                let thousandSeparatorChar = '';
+                if (thousandSeparatorValue === ',') thousandSeparatorChar = ',';
+                else if (thousandSeparatorValue === '.') thousandSeparatorChar = '.';
+                else if (thousandSeparatorValue === 'space') thousandSeparatorChar = ' ';
+
+                let formattedNumber = sampleNumber.toFixed(displayDecimals);
+
+                let parts = formattedNumber.split('.');
+                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparatorChar === 'none' ? '' : thousandSeparatorChar);
+
+                formattedNumber = parts.join(decimalSeparator);
+
+                if (symbolPosition === 'before') {
+                    formatPreviewText.textContent = symbol + formattedNumber;
+                } else {
+                    formatPreviewText.textContent = formattedNumber + symbol;
+                }
+            };
+
+            formattingInputs.forEach(input => {
+                input.addEventListener('change', updateFormatPreview);
+                input.addEventListener('input', updateFormatPreview);
+            });
+
+
+            if (saveFormattingRulesBtn) {
+                saveFormattingRulesBtn.addEventListener('click', () => {
+                    const symbolPosition = document.querySelector('input[name="symbolPosition"]:checked').value;
+                    const decimalSeparator = document.querySelector('input[name="decimalSeparator"]:checked').value;
+                    const thousandSeparator = document.querySelector('input[name="thousandSeparator"]:checked').value;
+
+                    console.log('Default formatting rules saved (simulated).');
+                    const formattingRules = {
+                        symbolPosition: symbolPosition,
+                        decimalSeparator: decimalSeparator,
+                        thousandSeparator: thousandSeparator,
+                        decimalPlacesCalc: parseInt(decimalPlacesCalcInput.value, 10),
+                        decimalPlacesDisplay: parseInt(decimalPlacesDisplayInput.value, 10)
+                    };
+                    console.log("Collected Formatting Rules:", formattingRules);
+                });
+            }
+
+            // --- Mobile Menu Toggle ---
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', () => {
+                    const expanded = mobileMenuButton.getAttribute('aria-expanded') === 'true' || false;
+                    mobileMenuButton.setAttribute('aria-expanded', !expanded);
+                    mobileMenu.classList.toggle('hidden');
+                    mobileMenuButton.innerHTML = !expanded ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+                });
+            }
+
+            // Close Add Currency modal if user clicks outside of it
+            window.onclick = (event) => {
+                if (event.target == addCurrencyModal) {
+                    addCurrencyModal.style.display = "none";
+                }
+            }
+
+            // Initial Renders
+            renderMasterCurrencyTable();
+            updateFormatPreview();
+
+            // Footer year
+            const currentYearSpan = document.getElementById('currentYear');
+            if (currentYearSpan) {
+                currentYearSpan.textContent = new Date().getFullYear();
+            }
+        });
+    </script>
+</body>
+
+</html>

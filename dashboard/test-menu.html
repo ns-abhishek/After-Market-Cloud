@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .test-results {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            border-left: 4px solid #007bff;
+        }
+        .success {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .info {
+            color: #17a2b8;
+        }
+        .menu-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .menu-item-test {
+            padding: 8px 12px;
+            background: #e9ecef;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 12px;
+        }
+        .menu-item-test.working {
+            background: #d4edda;
+            color: #155724;
+        }
+        .menu-item-test.broken {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Dashboard Menu System Test</h1>
+        <p>This page helps test and debug the dashboard menu system.</p>
+        
+        <div class="test-buttons">
+            <button class="test-button" onclick="openDashboard()">Open Dashboard</button>
+            <button class="test-button" onclick="testAllMenus()">Test All Menus</button>
+            <button class="test-button" onclick="debugMenus()">Debug Menus</button>
+            <button class="test-button" onclick="refreshMenus()">Refresh Menu System</button>
+        </div>
+
+        <div class="menu-list">
+            <div class="menu-item-test" id="helpdesk-status">HELPDESK</div>
+            <div class="menu-item-test" id="parts-status">PARTS</div>
+            <div class="menu-item-test" id="service-status">SERVICE</div>
+            <div class="menu-item-test" id="tams-status">TAMS</div>
+            <div class="menu-item-test" id="bay-scheduler-status">BAY SCHEDULER</div>
+            <div class="menu-item-test" id="core-status">CORE</div>
+            <div class="menu-item-test" id="dashboard-status">DASHBOARD</div>
+            <div class="menu-item-test" id="kpi-status">KPI</div>
+            <div class="menu-item-test" id="reports-status">REPORTS</div>
+            <div class="menu-item-test" id="more-status">MORE</div>
+        </div>
+
+        <div class="test-results" id="test-results">
+            <h3>Test Results</h3>
+            <p>Click the test buttons above to check menu functionality.</p>
+        </div>
+    </div>
+
+    <script>
+        function openDashboard() {
+            window.open('index.html', '_blank');
+        }
+
+        function testAllMenus() {
+            const results = document.getElementById('test-results');
+            results.innerHTML = '<h3>Testing All Menus...</h3>';
+            
+            // Open dashboard in iframe to test
+            const iframe = document.createElement('iframe');
+            iframe.src = 'index.html';
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+            
+            iframe.onload = function() {
+                const dashboardWindow = iframe.contentWindow;
+                const dashboardDoc = iframe.contentDocument;
+                
+                if (!dashboardDoc) {
+                    results.innerHTML += '<p class="error">Cannot access dashboard document</p>';
+                    return;
+                }
+                
+                const menus = ['helpdesk', 'parts', 'service', 'tams', 'bay-scheduler', 'core', 'dashboard', 'kpi', 'reports', 'more'];
+                let testResults = '<h3>Menu Test Results</h3>';
+                
+                menus.forEach(menuName => {
+                    const button = dashboardDoc.querySelector(`button[data-dropdown="${menuName}"]`);
+                    const menuItem = button ? button.closest('.menu-item') : null;
+                    const dropdownMenu = menuItem ? menuItem.querySelector('.dropdown-menu') : null;
+                    
+                    const status = button && menuItem && dropdownMenu ? 'working' : 'broken';
+                    const statusText = status === 'working' ? '✓ Working' : '✗ Broken';
+                    
+                    testResults += `<p class="${status}">${menuName.toUpperCase()}: ${statusText}</p>`;
+                    
+                    // Update visual status
+                    const statusElement = document.getElementById(`${menuName}-status`);
+                    if (statusElement) {
+                        statusElement.className = `menu-item-test ${status}`;
+                        statusElement.textContent = `${menuName.toUpperCase()} ${statusText}`;
+                    }
+                });
+                
+                results.innerHTML = testResults;
+                document.body.removeChild(iframe);
+            };
+        }
+
+        function debugMenus() {
+            const results = document.getElementById('test-results');
+            results.innerHTML = '<h3>Opening Dashboard for Debug...</h3><p>Check browser console for debug information.</p>';
+            
+            const dashboardWindow = window.open('index.html', '_blank');
+            
+            setTimeout(() => {
+                if (dashboardWindow && dashboardWindow.debugDropdowns) {
+                    dashboardWindow.debugDropdowns();
+                    results.innerHTML += '<p class="info">Debug function called. Check console in dashboard window.</p>';
+                } else {
+                    results.innerHTML += '<p class="error">Could not access debug functions.</p>';
+                }
+            }, 2000);
+        }
+
+        function refreshMenus() {
+            const results = document.getElementById('test-results');
+            results.innerHTML = '<h3>Refreshing Menu System...</h3>';
+            
+            const dashboardWindow = window.open('index.html', '_blank');
+            
+            setTimeout(() => {
+                if (dashboardWindow && dashboardWindow.refreshMenuSystem) {
+                    dashboardWindow.refreshMenuSystem();
+                    results.innerHTML += '<p class="success">Menu system refreshed successfully.</p>';
+                } else {
+                    results.innerHTML += '<p class="error">Could not access refresh function.</p>';
+                }
+            }, 2000);
+        }
+
+        // Auto-test on page load
+        setTimeout(testAllMenus, 1000);
+    </script>
+</body>
+</html>

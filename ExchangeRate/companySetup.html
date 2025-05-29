@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Currency Setup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: #3c4043;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .widget {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 9999px;
+            color: #5f6368;
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+        }
+
+        .nav-link:hover {
+            background-color: #e8f0fe;
+            color: #1967d2;
+        }
+
+        .nav-link.active {
+            background-color: #e8f0fe;
+            color: #1967d2;
+            font-weight: 500;
+        }
+
+        .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .btn {
+            padding: 9px 18px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background-color .3s, box-shadow .3s;
+            border: 1px solid transparent;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        .btn-primary {
+            background-color: #1a73e8;
+            color: white;
+            box-shadow: 0 1px 2px 0 rgba(26, 115, 232, 0.4);
+        }
+
+        .btn-primary:hover {
+            background-color: #185abc;
+            box-shadow: 0 2px 4px 0 rgba(26, 115, 232, 0.5);
+        }
+
+        .form-input,
+        .form-select,
+        .form-number-input,
+        .form-checkbox,
+        .form-radio {
+            padding: 10px 12px;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            box-sizing: border-box;
+            background-color: #fff;
+            font-size: 0.875rem;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-number-input:focus {
+            border-color: #1a73e8;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+        }
+
+        .form-input[disabled],
+        .form-select[disabled],
+        .form-checkbox[disabled]+span {
+            background-color: #f8f9fa;
+            color: #70757a;
+            cursor: not-allowed;
+        }
+
+        .form-checkbox[disabled] {
+            cursor: not-allowed;
+            border-color: #e0e0e0;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #5f6368;
+            font-size: 0.875rem;
+        }
+
+        .form-group {
+            margin-bottom: 0.75rem;
+        }
+
+        .form-section {
+            padding-top: 1rem;
+            margin-top: 1rem;
+            border-top: 1px solid #e8eaed;
+        }
+
+        .form-section-title {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #3c4043;
+            margin-bottom: 0.75rem;
+        }
+
+        .radio-group,
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .radio-group label,
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            padding: 6px 0;
+            cursor: pointer;
+            font-size: 0.875rem;
+            margin-right: 10px;
+        }
+
+        .radio-group label:last-child,
+        .checkbox-group label:last-child {
+            margin-right: 0;
+        }
+
+        .radio-group input[type="radio"],
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 6px;
+            width: 18px;
+            height: 18px;
+            accent-color: #1a73e8;
+        }
+
+        .widget-title-header {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: #202124;
+            margin-bottom: 4px;
+        }
+
+        .widget-subtitle {
+            font-size: 0.875rem;
+            color: #5f6368;
+            margin-top: 0;
+        }
+
+        .toggle-switch-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+            margin-right: 10px;
+        }
+
+        .toggle-switch input {
+            display: none;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: #1a73e8;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(20px);
+        }
+
+        #allowedCurrenciesList {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 8px 0;
+        }
+
+        #allowedCurrenciesList label {
+            margin-right: 15px;
+        }
+
+        #branchSelectionContainer {
+            margin-top: 1rem;
+            padding: 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+
+        #branchCheckboxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 20px;
+            /* row-gap column-gap */
+        }
+
+        #branchCheckboxes label {
+            font-size: 0.875rem;
+        }
+
+
+        .company-search-container {
+            position: relative;
+            width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .company-search-container {
+                width: 50%;
+            }
+        }
+
+        #searchCompanyInput {
+            padding-right: 30px;
+        }
+
+        .autocomplete-arrow {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #5f6368;
+            pointer-events: none;
+        }
+
+        .company-suggestions {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 100%;
+            border: 1px solid #dadce0;
+            border-top: none;
+            max-height: 180px;
+            overflow-y: auto;
+            background-color: white;
+            border-radius: 0 0 8px 8px;
+            z-index: 10;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .suggestion-item {
+            padding: 10px 12px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-item:hover {
+            background-color: #e8f0fe;
+            color: #1967d2;
+        }
+
+        .suggestion-item.active {
+            background-color: #d2e3fc;
+            color: #174ea6;
+        }
+
+        .conditional-settings {}
+
+        .api-key-group {}
+
+        .format-preview-box {
+            background-color: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+            text-align: center;
+        }
+
+        .format-preview-box p {
+            font-size: 1.25rem;
+            /* 20px */
+            font-weight: 500;
+            color: #1a73e8;
+            /* Google Blue */
+            margin: 0;
+        }
+
+        .format-preview-box .label {
+            font-size: 0.75rem;
+            /* 12px */
+            color: #5f6368;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100">
+
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <span class="text-2xl font-bold text-blue-600">Admin<span
+                                class="text-gray-700">Panel</span></span>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-2">
+                        <a href="dashboard.html" class="nav-link">
+                            <i class="fas fa-tachometer-alt"></i>Dashboard
+                        </a>
+                        <a href="platformSetup.html" class="nav-link">
+                            <i class="fas fa-cogs"></i>Platform Setup
+                        </a>
+                        <a href="companySetup.html" class="nav-link active">
+                            <i class="fas fa-building"></i>Company Setup
+                        </a>
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-bell"></i>Notifications
+                            <span
+                                class="ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">3</span>
+                        </a>
+                        <a href="exchangeRate.html"
+                            class="text-sm font-medium text-white bg-blue-400 hover:bg-gray-800 px-3 py-2 rounded-md edit-btn">
+                            Exchange Rate Management
+                        </a>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-4 flex items-center md:ml-6">
+                        <button
+                            class="p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-500">
+                            <i class="fas fa-user-circle text-2xl"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" id="mobile-menu-button"
+                        class="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400"
+                        aria-controls="mobile-menu" aria-expanded="false">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="dashboard.html" class="nav-link block"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+                <a href="platformSetup.html" class="nav-link block"><i class="fas fa-cogs"></i>Platform Setup</a>
+                <a href="companySetup.html" class="nav-link active block"><i class="fas fa-building"></i>Company Setup</a>
+                <a href="#" class="nav-link block"><i class="fas fa-bell"></i>Notifications</a>
+                <a href="exchangeRate.html"
+                    class="text-sm font-medium text-white bg-blue-400 hover:bg-gray-800 px-3 py-2 rounded-md edit-btn">
+                    Exchange Rate Management
+                </a>
+            </div>
+            <div class="pt-4 pb-3 border-t border-gray-200">
+                <div class="flex items-center px-5">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-user-circle text-3xl text-gray-400"></i>
+                    </div>
+                    <div class="ml-3">
+                        <div class="text-base font-medium leading-none text-gray-800">Admin User</div>
+                        <div class="text-sm font-medium leading-none text-gray-500">admin@example.com</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <header class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Company Currency Configuration</h1>
+            <p class="text-sm text-gray-600 mt-1">Manage currency settings for individual companies.</p>
+        </header>
+
+        <div class="widget">
+            <div class="form-group">
+                <label for="searchCompanyInput" class="form-label">1. Select Company:</label>
+                <div class="company-search-container">
+                    <input type="text" id="searchCompanyInput" class="form-input w-full"
+                        placeholder="Type or click to select a company...">
+                    <i class="fas fa-chevron-down autocomplete-arrow"></i>
+                    <div id="companySuggestions" class="company-suggestions hidden">
+                    </div>
+                </div>
+                <p id="selectedCompanyDisplay" class="mt-2 text-sm text-gray-600 hidden">Selected: <span
+                        class="font-medium"></span></p>
+            </div>
+
+            <div id="branchSelectionContainer" class="hidden">
+                <h3 class="form-section-title text-sm font-medium text-gray-700 mb-2">1b. Select Branches to Apply
+                    Settings:</h3>
+                <div class="form-group">
+                    <label class="flex items-center text-sm">
+                        <input type="checkbox" id="selectAllBranches" class="form-checkbox mr-2">
+                        <span>Select All Branches (including Head Office)</span>
+                    </label>
+                </div>
+                <div id="branchCheckboxes" class="checkbox-group">
+                </div>
+            </div>
+
+
+            <div id="companyConfigFormContainer" class="hidden">
+                <form id="companyConfigForm">
+                    <div class="form-section">
+                        <h3 class="form-section-title">2. Base Currency & Supported Currencies</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+                            <div class="form-group"> <label for="companyBaseCurrency" class="form-label">Base Currency
+                                    (for accounting):</label>
+                                <select id="companyBaseCurrency" name="companyBaseCurrency" class="form-select">
+                                </select>
+                            </div>
+                            <div class="form-group"> <label class="form-label">Currencies They Need (Transaction
+                                    Currencies):</label>
+                                <div class="mb-2">
+                                    <label class="flex items-center text-sm">
+                                        <input type="checkbox" id="allowAllCurrencies" class="form-checkbox mr-2">
+                                        <span>Allow all platform-supported currencies</span>
+                                    </label>
+                                </div>
+                                <div id="allowedCurrenciesList">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="form-section-title">3. Configure Exchange Rate Integration</h3>
+                        <div class="form-group">
+                            <span class="form-label">Rate Provider:</span>
+                            <div class="radio-group" id="rateProviderGroup">
+                                <label><input type="radio" name="rateProvider" value="openExchangeRates"> <span>Open
+                                        Exchange Rates</span></label>
+                                <label><input type="radio" name="rateProvider" value="currencyLayer">
+                                    <span>CurrencyLayer</span></label>
+                                <label><input type="radio" name="rateProvider" value="customBankFeed"> <span>Custom Bank
+                                        Feed</span></label>
+                                <label><input type="radio" name="rateProvider" value="manualOnly" checked> <span>Manual
+                                        Only</span></label>
+                            </div>
+                        </div>
+
+                        <div id="apiKeySection" class="form-group api-key-group hidden">
+                            <label for="providerApiKey" class="form-label">Provider API Key:</label>
+                            <input type="password" id="providerApiKey" name="providerApiKey" class="form-input md:w-2/3"
+                                placeholder="Enter API Key">
+                        </div>
+                        <div id="customApiUrlSection" class="form-group hidden">
+                            <label for="companyFeedUrl" class="form-label">Custom API Feed URL:</label>
+                            <input type="url" id="companyFeedUrl" name="companyFeedUrl" class="form-input md:w-2/3"
+                                placeholder="https://api.example.com/rates">
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 items-end">
+                            <div class="form-group">
+                                <label for="updateFrequency" class="form-label">Update Frequency:</label>
+                                <select id="updateFrequency" name="updateFrequency" class="form-select">
+                                    <option value="manual_only">Manual Updates Only</option>
+                                    <option value="hourly">Hourly</option>
+                                    <option value="daily" selected>Daily</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="quarterly">Quarterly</option>
+                                    <option value="half_yearly">Half-Yearly</option>
+                                    <option value="yearly">Yearly</option>
+                                </select>
+                            </div>
+                            <div id="markupSection" class="form-group hidden">
+                                <label for="exchangeRateMarkup" class="form-label">Exchange Rate Markup (%):</label>
+                                <input type="number" id="exchangeRateMarkup" name="exchangeRateMarkup"
+                                    class="form-number-input" placeholder="e.g., 0.5" step="0.01">
+                            </div>
+                        </div>
+                        <div id="realTimeStatsSection" class="form-group toggle-switch-container mt-3 hidden">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="enableRealTimeStatsToggle">
+                                <span class="slider"></span>
+                            </label>
+                            <span>Enable Real-time Stats on Company Dashboard</span>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="form-section-title">4. Default Transaction Currency</h3>
+                        <div class="form-group md:flex md:items-center">
+                            <label for="defaultTransactionCurrency" class="form-label md:w-1/3 md:mb-0 md:pr-2">Default
+                                for New Transactions:</label>
+                            <select id="defaultTransactionCurrency" name="defaultTransactionCurrency"
+                                class="form-select md:w-2/3">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="form-section-title">5. Currency Formatting (Company Override)</h3>
+                        <div class="form-group toggle-switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="overrideFormatting">
+                                <span class="slider"></span>
+                            </label>
+                            <span>Override Platform Default Formatting</span>
+                        </div>
+                        <div id="companyFormattingSettings" class="hidden ml-0 md:ml-6">
+                            <div class="form-group">
+                                <span class="form-label">Currency Symbol Position:</span>
+                                <div class="radio-group">
+                                    <label><input type="radio" name="companySymbolPosition" value="before"> <span>Before
+                                            (e.g., $100)</span></label>
+                                    <label><input type="radio" name="companySymbolPosition" value="after"> <span>After
+                                            (e.g., 100$)</span></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <span class="form-label">Decimal Separator:</span>
+                                <div class="radio-group">
+                                    <label><input type="radio" name="companyDecimalSeparator" value="."> <span>Dot
+                                            (e.g., 100.00)</span></label>
+                                    <label><input type="radio" name="companyDecimalSeparator" value=","> <span>Comma
+                                            (e.g., 100,00)</span></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <span class="form-label">Thousand Separator:</span>
+                                <div class="radio-group">
+                                    <label><input type="radio" name="companyThousandSeparator" value=","> <span>Comma
+                                            (e.g., 1,000)</span></label>
+                                    <label><input type="radio" name="companyThousandSeparator" value="."> <span>Dot
+                                            (e.g., 1.000)</span></label>
+                                    <label><input type="radio" name="companyThousandSeparator" value="space">
+                                        <span>Space (e.g., 1 000)</span></label>
+                                    <label><input type="radio" name="companyThousandSeparator" value="none"> <span>None
+                                            (e.g., 1000)</span></label>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
+                                <div class="form-group">
+                                    <label for="companyDecimalCalc" class="form-label">Decimals (Calc):</label>
+                                    <input type="number" id="companyDecimalCalc" name="companyDecimalCalc"
+                                        class="form-number-input" min="0" max="8">
+                                </div>
+                                <div class="form-group">
+                                    <label for="companyDecimalDisplay" class="form-label">Decimals (Display):</label>
+                                    <input type="number" id="companyDecimalDisplay" name="companyDecimalDisplay"
+                                        class="form-number-input" min="0" max="8">
+                                </div>
+                            </div>
+                            <div class="format-preview-box mt-4">
+                                <div class="label">Format Preview</div>
+                                <p id="companyFormatPreviewText">$12,345.68</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 text-right">
+                        <button type="submit" class="btn btn-primary">Save Company Configuration</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-500">
+            &copy; <span id="currentYear"></span> HCLSoftware. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchCompanyInput = document.getElementById('searchCompanyInput');
+            const companySuggestionsDiv = document.getElementById('companySuggestions');
+            const selectedCompanyDisplay = document.getElementById('selectedCompanyDisplay');
+            const selectedCompanySpan = selectedCompanyDisplay.querySelector('span');
+            let currentSelectedCompanyId = null;
+
+            const companyConfigFormContainer = document.getElementById('companyConfigFormContainer');
+            const companyConfigForm = document.getElementById('companyConfigForm');
+
+            const branchSelectionContainer = document.getElementById('branchSelectionContainer');
+            const selectAllBranchesCheckbox = document.getElementById('selectAllBranches');
+            const branchCheckboxesDiv = document.getElementById('branchCheckboxes');
+
+            const companyBaseCurrencySelect = document.getElementById('companyBaseCurrency');
+            const allowAllCurrenciesCheckbox = document.getElementById('allowAllCurrencies');
+            const allowedCurrenciesListDiv = document.getElementById('allowedCurrenciesList');
+            const defaultTransactionCurrencySelect = document.getElementById('defaultTransactionCurrency');
+
+            const rateProviderRadios = document.querySelectorAll('input[name="rateProvider"]');
+            const apiKeySection = document.getElementById('apiKeySection');
+            const providerApiKeyInput = document.getElementById('providerApiKey');
+            const customApiUrlSection = document.getElementById('customApiUrlSection');
+            const companyFeedUrlInput = document.getElementById('companyFeedUrl');
+
+            const updateFrequencySelect = document.getElementById('updateFrequency');
+            const markupSection = document.getElementById('markupSection');
+            const exchangeRateMarkupInput = document.getElementById('exchangeRateMarkup');
+            const realTimeStatsSection = document.getElementById('realTimeStatsSection');
+            const enableRealTimeStatsToggle = document.getElementById('enableRealTimeStatsToggle');
+
+            const overrideFormattingCheckbox = document.getElementById('overrideFormatting');
+            const companyFormattingSettingsDiv = document.getElementById('companyFormattingSettings');
+            const companyFormatPreviewText = document.getElementById('companyFormatPreviewText');
+            const companyFormattingInputs = document.querySelectorAll('#companyFormattingSettings input[type="radio"], #companyFormattingSettings input[type="number"]');
+
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            const mockCompanies = [
+                {
+                    id: 'comp1',
+                    name: 'Innovatech Solutions',
+                    branches: [{ id: 'ho_c1', name: 'Head Office (London)' }, { id: 'ber_c1', name: 'Berlin R&D' }, { id: 'sg_c1', name: 'Singapore Sales' }, { id: 'ny_c1', name: 'New York Office' }],
+                    config: { baseCurrency: 'GBP', allowed: ['GBP', 'USD', 'EUR'], defaultTxn: 'GBP', rateProvider: 'manualOnly', updateFreq: 'monthly', markup: null, overrideFormat: false, selectedBranches: ['ho_c1'], enableStats: false }
+                },
+                {
+                    id: 'comp2',
+                    name: 'GreenLeaf Organics',
+                    branches: [{ id: 'ho_c2', name: 'Head Office (USA)' }, { id: 'cali_c2', name: 'California Farm' }, { id: 'colo_c2', name: 'Colorado Distribution' }],
+                    config: { baseCurrency: 'USD', allowed: ['USD'], defaultTxn: 'USD', rateProvider: 'customBankFeed', feedUrl: 'https://api.greenleaf.com/rates', updateFreq: 'daily', markup: 0.25, overrideFormat: true, symbolPos: 'after', decSep: ',', thouSep: '.', decCalc: 4, decDisp: 2, selectedBranches: ['ho_c2'], enableStats: false }
+                },
+                {
+                    id: 'comp3',
+                    name: 'Quantum Leap AI',
+                    branches: [{ id: 'ho_c3', name: 'Head Office (Germany)' }, { id: 'sf_c3', name: 'San Francisco Lab' }, { id: 'tokyo_c3', name: 'Tokyo Research' }],
+                    config: { baseCurrency: 'EUR', allowed: ['EUR', 'USD'], defaultTxn: 'EUR', rateProvider: 'openExchangeRates', apiKey: 'dummykey123', updateFreq: 'hourly', markup: null, overrideFormat: false, selectedBranches: ['ho_c3', 'sf_c3'], enableStats: true }
+                },
+                {
+                    id: 'comp4',
+                    name: 'Starlight Studios',
+                    branches: [{ id: 'ho_c4', name: 'Head Office (Canada)' }, { id: 'van_c4', name: 'Vancouver Animation' }, { id: 'lon_c4', name: 'London VFX' }],
+                    config: { baseCurrency: 'CAD', allowed: ['CAD', 'USD', 'GBP'], defaultTxn: 'CAD', rateProvider: 'manualOnly', updateFreq: 'quarterly', markup: null, overrideFormat: false, selectedBranches: ['ho_c4', 'van_c4'], enableStats: false }
+                },
+                {
+                    id: 'comp5',
+                    name: 'Apex Dynamics',
+                    branches: [{ id: 'ho_c5', name: 'Head Office (Global)' }, { id: 'mun_c5', name: 'Munich Engineering' }, { id: 'sh_c5', name: 'Shanghai Manufacturing' }],
+                    config: { baseCurrency: 'USD', allowed: ['USD', 'EUR', 'CNY'], defaultTxn: 'USD', rateProvider: 'currencyLayer', apiKey: 'anotherKey789', updateFreq: 'daily', markup: 0.1, overrideFormat: false, selectedBranches: ['ho_c5'], enableStats: true }
+                }
+            ];
+
+            const platformSupportedCurrencies = [
+                { code: 'USD', name: 'US Dollar' }, { code: 'EUR', name: 'Euro' }, { code: 'GBP', name: 'British Pound' },
+                { code: 'JPY', name: 'Japanese Yen' }, { code: 'AUD', name: 'Australian Dollar' }, { code: 'CAD', name: 'Canadian Dollar' },
+                { code: 'CHF', name: 'Swiss Franc' }, { code: 'INR', name: 'Indian Rupee' }, { code: 'CNY', name: 'Chinese Yuan' }
+            ];
+
+            const platformDefaultFormatting = { symbolPos: 'before', decSep: '.', thouSep: ',', decCalc: 4, decDisp: 2 };
+
+            function populateCurrencyOptions() {
+                [companyBaseCurrencySelect, defaultTransactionCurrencySelect].forEach(selectEl => {
+                    selectEl.innerHTML = '<option value="">-- Select --</option>';
+                    platformSupportedCurrencies.forEach(curr => {
+                        const option = document.createElement('option');
+                        option.value = curr.code;
+                        option.textContent = `${curr.name} (${curr.code})`;
+                        selectEl.appendChild(option.cloneNode(true));
+                    });
+                });
+
+                allowedCurrenciesListDiv.innerHTML = '';
+                platformSupportedCurrencies.forEach(curr => {
+                    const label = document.createElement('label');
+                    label.className = 'flex items-center text-sm';
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'allowedCurrencies';
+                    checkbox.value = curr.code;
+                    checkbox.className = 'form-checkbox mr-2 allowed-currency-checkbox';
+                    checkbox.addEventListener('change', updateDefaultTxnCurrencyOptions);
+                    label.appendChild(checkbox);
+                    label.appendChild(document.createTextNode(`${curr.name} (${curr.code})`));
+                    allowedCurrenciesListDiv.appendChild(label);
+                });
+            }
+            populateCurrencyOptions();
+
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                    mobileMenuButton.innerHTML = mobileMenu.classList.contains('hidden') ? '<i class="fas fa-bars"></i>' : '<i class="fas fa-times"></i>';
+                });
+            }
+
+            function displaySuggestions(searchTerm) {
+                companySuggestionsDiv.innerHTML = '';
+                if (searchTerm.length === 0 && document.activeElement !== searchCompanyInput) {
+                    companySuggestionsDiv.classList.add('hidden');
+                    return;
+                }
+
+                const filteredCompanies = mockCompanies.filter(comp =>
+                    comp.name.toLowerCase().includes(searchTerm) || searchTerm.length === 0
+                );
+
+                if (filteredCompanies.length > 0) {
+                    filteredCompanies.forEach(comp => {
+                        const item = document.createElement('div');
+                        item.classList.add('suggestion-item');
+                        item.textContent = comp.name;
+                        item.dataset.companyId = comp.id;
+                        item.addEventListener('click', function () {
+                            searchCompanyInput.value = this.textContent;
+                            currentSelectedCompanyId = this.dataset.companyId;
+                            selectedCompanySpan.textContent = this.textContent;
+                            selectedCompanyDisplay.classList.remove('hidden');
+                            companySuggestionsDiv.classList.add('hidden');
+                            companyConfigFormContainer.classList.remove('hidden');
+                            branchSelectionContainer.classList.remove('hidden');
+                            loadCompanyConfig(this.dataset.companyId);
+                        });
+                        companySuggestionsDiv.appendChild(item);
+                    });
+                    companySuggestionsDiv.classList.remove('hidden');
+                } else {
+                    companySuggestionsDiv.classList.add('hidden');
+                }
+            }
+
+            searchCompanyInput.addEventListener('input', function () {
+                displaySuggestions(this.value.toLowerCase());
+            });
+            searchCompanyInput.addEventListener('focus', function () {
+                displaySuggestions(this.value.toLowerCase());
+            });
+
+            document.addEventListener('click', function (event) {
+                if (!searchCompanyInput.parentElement.contains(event.target)) {
+                    companySuggestionsDiv.classList.add('hidden');
+                }
+            });
+
+            selectAllBranchesCheckbox.addEventListener('change', function () {
+                document.querySelectorAll('.branch-checkbox').forEach(cb => {
+                    cb.checked = this.checked;
+                });
+            });
+
+
+            allowAllCurrenciesCheckbox.addEventListener('change', function () {
+                const baseCurrencyCode = companyBaseCurrencySelect.value;
+                document.querySelectorAll('.allowed-currency-checkbox').forEach(cb => {
+                    if (cb.value !== baseCurrencyCode) {
+                        cb.checked = this.checked;
+                        cb.disabled = this.checked;
+                    }
+                });
+                updateDefaultTxnCurrencyOptions();
+            });
+
+            rateProviderRadios.forEach(radio => {
+                radio.addEventListener('change', function () {
+                    const selectedProvider = this.value;
+                    const needsApiKey = selectedProvider === 'openExchangeRates' || selectedProvider === 'currencyLayer';
+
+                    apiKeySection.classList.toggle('hidden', !needsApiKey);
+                    providerApiKeyInput.disabled = !needsApiKey;
+                    if (!needsApiKey) providerApiKeyInput.value = '';
+
+                    customApiUrlSection.classList.toggle('hidden', selectedProvider !== 'customBankFeed');
+                    if (selectedProvider !== 'customBankFeed') companyFeedUrlInput.value = '';
+
+                    const isAutomatic = selectedProvider !== 'manualOnly';
+                    markupSection.classList.toggle('hidden', !isAutomatic);
+                    realTimeStatsSection.classList.toggle('hidden', !isAutomatic);
+
+                    // Update frequency is always visible, but default might change
+                    if (selectedProvider === 'manualOnly') {
+                        updateFrequencySelect.value = 'manual_only';
+                        exchangeRateMarkupInput.value = ''; // Clear markup for manual
+                        enableRealTimeStatsToggle.checked = false; // Disable stats for manual
+                    } else {
+                        // Keep current or default to daily if coming from manual
+                        if (updateFrequencySelect.value === 'manual_only') {
+                            updateFrequencySelect.value = 'daily';
+                        }
+                    }
+                });
+            });
+
+            companyBaseCurrencySelect.addEventListener('change', function () {
+                const selectedBase = this.value;
+                document.querySelectorAll('.allowed-currency-checkbox').forEach(cb => {
+                    if (cb.value === selectedBase) {
+                        cb.checked = true;
+                        cb.disabled = true;
+                    } else {
+                        if (!allowAllCurrenciesCheckbox.checked) {
+                            cb.disabled = false;
+                        }
+                    }
+                });
+                updateDefaultTxnCurrencyOptions();
+            });
+
+            overrideFormattingCheckbox.addEventListener('change', function () {
+                companyFormattingSettingsDiv.classList.toggle('hidden', !this.checked);
+                if (!this.checked) {
+                    loadFormattingRules(platformDefaultFormatting, 'company');
+                } else {
+                    const company = mockCompanies.find(c => c.id === currentSelectedCompanyId);
+                    if (company && company.config.overrideFormat) {
+                        loadFormattingRules(company.config, 'company');
+                    } else {
+                        loadFormattingRules(platformDefaultFormatting, 'company');
+                    }
+                }
+                updateCompanyFormatPreview();
+            });
+
+            companyFormattingInputs.forEach(input => {
+                input.addEventListener('change', updateCompanyFormatPreview);
+                input.addEventListener('input', updateCompanyFormatPreview);
+            });
+
+            companyConfigForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                saveCompanyConfig();
+            });
+
+            function populateBranchCheckboxes(companyId) {
+                const company = mockCompanies.find(c => c.id === companyId);
+                branchCheckboxesDiv.innerHTML = '';
+                selectAllBranchesCheckbox.checked = false;
+
+                if (company && company.branches) {
+                    company.branches.forEach(branch => {
+                        const label = document.createElement('label');
+                        label.className = 'flex items-center text-sm';
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.name = 'selectedBranches';
+                        checkbox.value = branch.id;
+                        checkbox.className = 'form-checkbox mr-2 branch-checkbox';
+                        if (company.config && company.config.selectedBranches && company.config.selectedBranches.includes(branch.id)) {
+                            checkbox.checked = true;
+                        }
+                        label.appendChild(checkbox);
+                        label.appendChild(document.createTextNode(branch.name));
+                        branchCheckboxesDiv.appendChild(label);
+                    });
+                }
+            }
+
+
+            function loadCompanyConfig(companyId) {
+                currentSelectedCompanyId = companyId;
+                const company = mockCompanies.find(c => c.id === companyId);
+                if (!company) return;
+                const config = company.config;
+
+                populateBranchCheckboxes(companyId);
+
+                companyBaseCurrencySelect.value = config.baseCurrency || "";
+                companyBaseCurrencySelect.disabled = false;
+                companyBaseCurrencySelect.dispatchEvent(new Event('change'));
+
+                const allowedCheckboxes = document.querySelectorAll('.allowed-currency-checkbox');
+                let allAreAllowedByConfig = config.allowed && config.allowed.length === platformSupportedCurrencies.length;
+
+                if (config.allowed && config.allowed.length > 0 && !allAreAllowedByConfig) {
+                    allowAllCurrenciesCheckbox.checked = false;
+                    allowedCheckboxes.forEach(cb => {
+                        if (cb.value !== config.baseCurrency) {
+                            cb.checked = config.allowed.includes(cb.value);
+                            cb.disabled = false;
+                        }
+                    });
+                } else if (allAreAllowedByConfig) {
+                    allowAllCurrenciesCheckbox.checked = true;
+                    allowedCheckboxes.forEach(cb => {
+                        if (cb.value !== config.baseCurrency) {
+                            cb.checked = true;
+                            cb.disabled = true;
+                        }
+                    });
+                } else {
+                    allowAllCurrenciesCheckbox.checked = false;
+                    allowedCheckboxes.forEach(cb => {
+                        if (cb.value !== config.baseCurrency) {
+                            cb.checked = false;
+                            cb.disabled = false;
+                        }
+                    });
+                }
+                updateDefaultTxnCurrencyOptions();
+                defaultTransactionCurrencySelect.value = config.defaultTxn || "";
+
+                const currentRateProvider = config.rateProvider || 'manualOnly';
+                const radioToSelect = document.querySelector(`input[name="rateProvider"][value="${currentRateProvider}"]`);
+                if (radioToSelect) {
+                    radioToSelect.checked = true;
+                }
+
+                rateProviderRadios.forEach(r => {
+                    if (r.value === currentRateProvider) r.dispatchEvent(new Event('change'));
+                });
+
+                providerApiKeyInput.value = config.apiKey || '';
+                companyFeedUrlInput.value = (currentRateProvider === 'customBankFeed' && config.feedUrl) ? config.feedUrl : '';
+                updateFrequencySelect.value = config.updateFreq || (currentRateProvider === 'manualOnly' ? 'manual_only' : 'daily');
+                exchangeRateMarkupInput.value = config.markup !== null ? config.markup : '';
+                enableRealTimeStatsToggle.checked = config.enableStats || false;
+
+
+                overrideFormattingCheckbox.checked = config.overrideFormat || false;
+                companyFormattingSettingsDiv.classList.toggle('hidden', !(config.overrideFormat || false));
+                if (config.overrideFormat) {
+                    loadFormattingRules(config, 'company');
+                } else {
+                    loadFormattingRules(platformDefaultFormatting, 'company');
+                }
+                updateCompanyFormatPreview();
+            }
+
+            function loadFormattingRules(rules, prefix) {
+                const symbolPosRadio = document.querySelector(`input[name="${prefix}SymbolPosition"][value="${rules.symbolPos || 'before'}"]`);
+                if (symbolPosRadio) symbolPosRadio.checked = true;
+
+                const decSepRadio = document.querySelector(`input[name="${prefix}DecimalSeparator"][value="${rules.decSep || '.'}"]`);
+                if (decSepRadio) decSepRadio.checked = true;
+
+                const thouSepRadio = document.querySelector(`input[name="${prefix}ThousandSeparator"][value="${rules.thouSep || ','}"]`);
+                if (thouSepRadio) thouSepRadio.checked = true;
+
+                document.getElementById(`${prefix}DecimalCalc`).value = rules.decCalc !== undefined ? rules.decCalc : 4;
+                document.getElementById(`${prefix}DecimalDisplay`).value = rules.decDisp !== undefined ? rules.decDisp : 2;
+            }
+
+            function updateDefaultTxnCurrencyOptions() {
+                if (!currentSelectedCompanyId) return;
+
+                const company = mockCompanies.find(c => c.id === currentSelectedCompanyId);
+                const currentDefaultInConfig = company?.config?.defaultTxn;
+                const currentSelectedValueInDropdown = defaultTransactionCurrencySelect.value;
+
+                let valueToPreserve = currentSelectedValueInDropdown;
+                if (currentDefaultInConfig && document.querySelector(`.allowed-currency-checkbox[value="${currentDefaultInConfig}"]:checked`)) {
+                    valueToPreserve = currentDefaultInConfig;
+                }
+
+                defaultTransactionCurrencySelect.innerHTML = '<option value="">-- Select --</option>';
+                const allowed = [];
+                document.querySelectorAll('.allowed-currency-checkbox:checked').forEach(cb => {
+                    allowed.push(cb.value);
+                });
+
+                const baseCurrency = companyBaseCurrencySelect.value;
+                if (baseCurrency && !allowed.includes(baseCurrency)) {
+                    allowed.push(baseCurrency);
+                }
+
+
+                platformSupportedCurrencies.forEach(curr => {
+                    if (allowed.includes(curr.code)) {
+                        const option = document.createElement('option');
+                        option.value = curr.code;
+                        option.textContent = `${curr.name} (${curr.code})`;
+                        defaultTransactionCurrencySelect.appendChild(option);
+                    }
+                });
+                if (allowed.includes(valueToPreserve)) {
+                    defaultTransactionCurrencySelect.value = valueToPreserve;
+                } else if (allowed.length > 0) {
+                    defaultTransactionCurrencySelect.value = allowed[0];
+                }
+            }
+
+            function updateCompanyFormatPreview() {
+                if (!companyFormatPreviewText || !document.getElementById('companyDecimalDisplay')) return;
+
+                const sampleNumber = 12345.6789;
+                const symbol = "$";
+
+                const symbolPosition = document.querySelector('input[name="companySymbolPosition"]:checked')?.value || platformDefaultFormatting.symbolPos;
+                const decimalSeparator = document.querySelector('input[name="companyDecimalSeparator"]:checked')?.value || platformDefaultFormatting.decSep;
+                const thousandSeparatorValue = document.querySelector('input[name="companyThousandSeparator"]:checked')?.value || platformDefaultFormatting.thouSep;
+
+                let displayDecimals = parseInt(document.getElementById('companyDecimalDisplay').value, 10);
+                if (isNaN(displayDecimals) || displayDecimals < 0) {
+                    displayDecimals = platformDefaultFormatting.decDisp;
+                } else if (displayDecimals > 8) {
+                    displayDecimals = 8;
+                }
+
+                let thousandSeparatorChar = '';
+                if (thousandSeparatorValue === ',') thousandSeparatorChar = ',';
+                else if (thousandSeparatorValue === '.') thousandSeparatorChar = '.';
+                else if (thousandSeparatorValue === 'space') thousandSeparatorChar = ' ';
+
+                let formattedNumber = sampleNumber.toFixed(displayDecimals);
+
+                let parts = formattedNumber.split('.');
+                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparatorChar === 'none' ? '' : thousandSeparatorChar);
+
+                formattedNumber = parts.join(decimalSeparator);
+
+                if (symbolPosition === 'before') {
+                    companyFormatPreviewText.textContent = symbol + formattedNumber;
+                } else {
+                    companyFormatPreviewText.textContent = formattedNumber + symbol;
+                }
+            }
+
+
+            function saveCompanyConfig() {
+                if (!currentSelectedCompanyId) {
+                    alert("Please select a company first.");
+                    return;
+                }
+                const allowedCurrencies = [];
+                if (allowAllCurrenciesCheckbox.checked) {
+                    platformSupportedCurrencies.forEach(curr => {
+                        if (curr.code !== companyBaseCurrencySelect.value) {
+                            allowedCurrencies.push(curr.code);
+                        }
+                    });
+                } else {
+                    document.querySelectorAll('.allowed-currency-checkbox:checked').forEach(cb => {
+                        if (cb.value !== companyBaseCurrencySelect.value) {
+                            allowedCurrencies.push(cb.value);
+                        }
+                    });
+                }
+                if (companyBaseCurrencySelect.value && !allowedCurrencies.includes(companyBaseCurrencySelect.value)) {
+                    allowedCurrencies.unshift(companyBaseCurrencySelect.value);
+                }
+
+                const selectedBranches = [];
+                document.querySelectorAll('.branch-checkbox:checked').forEach(cb => {
+                    selectedBranches.push(cb.value);
+                });
+
+
+                const selectedRateProvider = document.querySelector('input[name="rateProvider"]:checked').value;
+
+                const configData = {
+                    companyId: currentSelectedCompanyId,
+                    selectedBranches: selectedBranches,
+                    baseCurrency: companyBaseCurrencySelect.value,
+                    allowed: allowedCurrencies,
+                    defaultTxn: defaultTransactionCurrencySelect.value,
+                    rateProvider: selectedRateProvider,
+                    overrideFormat: overrideFormattingCheckbox.checked,
+                };
+
+                if (selectedRateProvider !== 'manualOnly') {
+                    configData.apiKey = providerApiKeyInput.value;
+                    configData.enableStats = enableRealTimeStatsToggle.checked;
+                    configData.markup = parseFloat(exchangeRateMarkupInput.value) || null;
+                    if (selectedRateProvider === 'customBankFeed') {
+                        configData.feedUrl = companyFeedUrlInput.value;
+                    } else {
+                        configData.feedUrl = null;
+                    }
+                } else { // For manualOnly
+                    configData.apiKey = null;
+                    configData.enableStats = false;
+                    configData.markup = null;
+                    configData.feedUrl = null;
+                }
+                configData.updateFreq = updateFrequencySelect.value; // Save frequency for all providers
+
+
+                if (configData.overrideFormat) {
+                    const companySymbolPosition = document.querySelector('input[name="companySymbolPosition"]:checked');
+                    if (companySymbolPosition) configData.symbolPos = companySymbolPosition.value;
+
+                    const companyDecimalSeparator = document.querySelector('input[name="companyDecimalSeparator"]:checked');
+                    if (companyDecimalSeparator) configData.decSep = companyDecimalSeparator.value;
+
+                    const companyThousandSeparator = document.querySelector('input[name="companyThousandSeparator"]:checked');
+                    if (companyThousandSeparator) configData.thouSep = companyThousandSeparator.value;
+
+                    configData.decCalc = parseInt(document.getElementById('companyDecimalCalc').value, 10);
+                    configData.decDisp = parseInt(document.getElementById('companyDecimalDisplay').value, 10);
+                }
+
+                console.log("Saving configuration for " + currentSelectedCompanyId + ":", configData);
+                alert("Company configuration saved! (Check console for details)");
+                const companyIndex = mockCompanies.findIndex(c => c.id === currentSelectedCompanyId);
+                if (companyIndex > -1) {
+                    mockCompanies[companyIndex].config = configData;
+                }
+            }
+
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+
+        });
+    </script>
+</body>
+
+</html>

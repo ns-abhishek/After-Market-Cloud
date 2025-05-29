@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Global Search Demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .demo-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .demo-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .demo-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .search-demo-container {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            padding: 0.75rem 1.5rem 0.75rem 3rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(8px);
+        }
+
+        .search-container:focus-within {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+            pointer-events: none;
+        }
+
+        .search-input {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            width: 100%;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .demo-content {
+            padding: 3rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #2d3748;
+        }
+
+        .feature-description {
+            color: #718096;
+            line-height: 1.6;
+        }
+
+        .demo-instructions {
+            background: #e6fffa;
+            border: 1px solid #81e6d9;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .demo-instructions h3 {
+            color: #234e52;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .demo-instructions ul {
+            color: #2d3748;
+            padding-left: 1.5rem;
+        }
+
+        .demo-instructions li {
+            margin-bottom: 0.5rem;
+        }
+
+        .keyboard-shortcut {
+            background: #4a5568;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1><i class="fas fa-search"></i> Enhanced Global Search</h1>
+            <p>Comprehensive search functionality for your web application</p>
+            
+            <div class="search-demo-container">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Try searching for 'company', 'calendar', or 'core'...">
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-content">
+            <div class="demo-instructions">
+                <h3><i class="fas fa-info-circle"></i> How to Use the Enhanced Search</h3>
+                <ul>
+                    <li>Type in the search box above or press <span class="keyboard-shortcut">Ctrl+K</span> to focus</li>
+                    <li>Search across all menu items, dropdown options, and bookmarks</li>
+                    <li>Use the filter buttons to narrow down results by category</li>
+                    <li>Navigate results with <span class="keyboard-shortcut">↑</span> <span class="keyboard-shortcut">↓</span> arrow keys</li>
+                    <li>Press <span class="keyboard-shortcut">Enter</span> to select or <span class="keyboard-shortcut">Esc</span> to close</li>
+                    <li>Recent searches are automatically saved and suggested</li>
+                </ul>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div class="feature-title">Universal Search</div>
+                    <div class="feature-description">
+                        Search across all menu items, dropdown options, sidebar bookmarks, and action buttons in one unified interface.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-filter"></i>
+                    </div>
+                    <div class="feature-title">Smart Filtering</div>
+                    <div class="feature-description">
+                        Filter results by category (Menus, Items, Bookmarks, Actions) to quickly find what you're looking for.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-keyboard"></i>
+                    </div>
+                    <div class="feature-title">Keyboard Navigation</div>
+                    <div class="feature-description">
+                        Full keyboard support with Ctrl+K shortcut, arrow key navigation, and Enter/Escape controls.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <div class="feature-title">Recent Searches</div>
+                    <div class="feature-description">
+                        Automatically saves and suggests your recent searches for faster access to frequently used items.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                    <div class="feature-title">Fuzzy Matching</div>
+                    <div class="feature-description">
+                        Advanced search algorithm with fuzzy matching, exact matches, and intelligent scoring for relevant results.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="feature-title">Mobile Responsive</div>
+                    <div class="feature-description">
+                        Fully responsive design that works seamlessly on desktop, tablet, and mobile devices.
+                    </div>
+                </div>
+            </div>
+
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i>
+                Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Simple demo search functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.querySelector('.search-input');
+            
+            // Demo search suggestions
+            const demoItems = [
+                'Company Management',
+                'Company Calendar', 
+                'Company Financial Year',
+                'Core Settings',
+                'User Management',
+                'Reports Dashboard',
+                'Inventory Management',
+                'Sales Analytics'
+            ];
+
+            // Keyboard shortcut
+            document.addEventListener('keydown', (e) => {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                    e.preventDefault();
+                    searchInput.focus();
+                    searchInput.select();
+                }
+            });
+
+            // Demo search functionality
+            searchInput.addEventListener('input', function(e) {
+                const query = e.target.value.toLowerCase();
+                if (query.length > 0) {
+                    const matches = demoItems.filter(item => 
+                        item.toLowerCase().includes(query)
+                    );
+                    console.log('Search results for "' + query + '":', matches);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

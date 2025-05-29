@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            /* Light grey background */
+            color: #3c4043;
+            /* Darker text color */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .widget {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .widget-title {
+            font-size: 1.125rem;
+            /* 18px */
+            font-weight: 600;
+            color: #3c4043;
+            margin-bottom: 16px;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            /* 32px */
+            font-weight: 600;
+            color: #1a73e8;
+            /* Google blue */
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            /* 14px */
+            color: #5f6368;
+            /* Secondary text color */
+        }
+
+        .table th,
+        .table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .table th {
+            font-weight: 500;
+            color: #5f6368;
+            background-color: #f8f9fa;
+        }
+
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 9999px;
+            color: #5f6368;
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+        }
+
+        .nav-link:hover {
+            background-color: #e8f0fe;
+            color: #1967d2;
+        }
+
+        .nav-link.active {
+            background-color: #e8f0fe;
+            color: #1967d2;
+            font-weight: 500;
+        }
+
+        .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        /* Exchange Rate Matrix Styles */
+        .rate-matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+
+        .rate-matrix-table th,
+        .rate-matrix-table td {
+            border: 1px solid #e0e0e0;
+            padding: 6px;
+            /* Reduced padding for more content */
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .rate-matrix-table th {
+            background-color: #f8f9fa;
+            font-weight: 500;
+            padding: 8px 6px;
+        }
+
+        .rate-matrix-table td.base-currency-label {
+            text-align: left;
+            font-weight: 500;
+            background-color: #f8f9fa;
+        }
+
+        .rate-matrix-table td.highlight-rate {
+            background-color: #e8f0fe;
+            font-weight: 500;
+        }
+
+        .currency-flag {
+            width: 18px;
+            /* Slightly smaller flags */
+            height: 13px;
+            margin-right: 4px;
+            vertical-align: middle;
+            border: 1px solid #ccc;
+        }
+
+        .updated-timestamp {
+            font-size: 0.75rem;
+            color: #5f6368;
+            margin-top: 12px;
+            text-align: right;
+        }
+
+        .rate-value {
+            display: block;
+            /* Rate on its own line */
+            font-weight: 500;
+            font-size: 0.9em;
+        }
+
+        .rate-change {
+            display: block;
+            /* Change on its own line */
+            font-size: 0.75em;
+            /* Smaller font for change */
+            margin-top: 2px;
+        }
+
+        .rate-up {
+            color: #34a853;
+        }
+
+        /* Google green */
+        .rate-down {
+            color: #ea4335;
+        }
+
+        /* Google red */
+        .rate-neutral {
+            color: #70757a;
+        }
+
+        /* Google grey for neutral */
+        .rate-change-icon {
+            margin-left: 2px;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100">
+
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <span class="text-2xl font-bold text-blue-600">Admin<span
+                                class="text-gray-700">Panel</span></span>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-2">
+                        <a href="dashboard.html" class="nav-link active">
+                            <i class="fas fa-tachometer-alt"></i>Dashboard
+                        </a>
+                        <a href="platformSetup.html" class="nav-link">
+                            <i class="fas fa-cogs"></i>Platform Setup
+                        </a>
+                        <a href="companySetup.html" class="nav-link">
+                            <i class="fas fa-building"></i>Company Setup
+                        </a>
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-bell"></i>Notifications
+                            <span
+                                class="ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">3</span>
+                        </a>
+                        <a href="exchangeRate.html"
+                            class="text-sm font-medium text-white bg-blue-400 hover:bg-gray-800 px-3 py-2 rounded-md edit-btn">
+                            Exchange Rate Management
+                        </a>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-4 flex items-center md:ml-6">
+                        <button
+                            class="p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-500">
+                            <span class="sr-only">View notifications</span>
+                            <i class="fas fa-user-circle text-2xl"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" id="mobile-menu-button"
+                        class="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+                        aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="dashboard.html" class="nav-link active block">
+                    <i class="fas fa-tachometer-alt"></i>Dashboard
+                </a>
+                <a href="platformSetup.html" class="nav-link block">
+                    <i class="fas fa-cogs"></i>Platform Setup
+                </a>
+                <a href="companySetup.html" class="nav-link block">
+                    <i class="fas fa-building"></i>Company Setup
+                </a>
+                <a href="#" class="nav-link block"><i class="fas fa-bell"></i>Notifications
+                    <span
+                        class="ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">3</span>
+                </a>
+                <a href="exchangeRate.html"
+                    class="text-sm font-medium text-white bg-blue-400 hover:bg-gray-800 px-3 py-2 rounded-md edit-btn">
+                    Exchange Rate Management
+                </a>
+            </div>
+            <div class="pt-4 pb-3 border-t border-gray-200">
+                <div class="flex items-center px-5">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-user-circle text-3xl text-gray-400"></i>
+                    </div>
+                    <div class="ml-3">
+                        <div class="text-base font-medium leading-none text-gray-800">Admin User</div>
+                        <div class="text-sm font-medium leading-none text-gray-500">admin@example.com</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <header class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Dashboard</h1>
+            <p class="text-gray-600">Overview of platform health and activity.</p>
+        </header>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <div class="widget">
+                <h2 class="widget-title">Active Companies</h2>
+                <p class="metric-value" id="active-companies-metric">0</p>
+                <p class="metric-label">Total operational companies</p>
+            </div>
+            <div class="widget">
+                <h2 class="widget-title">Total Txn. Volume</h2>
+                <p class="metric-value" id="txn-volume-metric">$0.00</p>
+                <p class="metric-label">Across all companies (USD)</p>
+            </div>
+            <div class="widget">
+                <h2 class="widget-title">Most Used Currency</h2>
+                <p class="metric-value" id="most-used-currency-metric">N/A</p>
+                <p class="metric-label">Primary base currency</p>
+            </div>
+            <div class="widget">
+                <h2 class="widget-title">Preferred Update Freq.</h2>
+                <p class="metric-value" id="preferred-frequency-metric">N/A</p>
+                <p class="metric-label">Exchange rate updates</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <div class="widget">
+                <h2 class="widget-title">Live Exchange Rate Matrix</h2>
+                <div id="live-rate-matrix-container" class="overflow-x-auto">
+                </div>
+                <div id="rate-matrix-timestamp" class="updated-timestamp"></div>
+            </div>
+            <div class="widget">
+                <h2 class="widget-title">Currency Usage Distribution</h2>
+                <div class="chart-container">
+                    <canvas id="currencyUsageChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="widget">
+                <h2 class="widget-title">Transaction Volume Over Time</h2>
+                <div class="chart-container">
+                    <canvas id="transactionVolumeChart"></canvas>
+                </div>
+            </div>
+            <div class="widget">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="widget-title mb-0">New Companies</h2>
+                    <button class="text-sm text-blue-600 hover:text-blue-800 font-medium">View All <i
+                            class="fas fa-arrow-right ml-1"></i></button>
+                </div>
+                <div class="overflow-x-auto max-h-80 overflow-y-auto">
+                    <table class="w-full table">
+                        <thead>
+                            <tr>
+                                <th>Company Name</th>
+                                <th>Status</th>
+                                <th>Join Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="new-companies-list">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-500">
+            &copy; <span id="currentYear"></span> HCLSoftware. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // --- Mobile Menu Toggle ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton) {
+            mobileMenuButton.addEventListener('click', () => {
+                const expanded = mobileMenuButton.getAttribute('aria-expanded') === 'true' || false;
+                mobileMenuButton.setAttribute('aria-expanded', !expanded);
+                mobileMenu.classList.toggle('hidden');
+                mobileMenuButton.innerHTML = !expanded ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+            });
+        }
+
+        // --- Dynamic Data for Widgets ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // New Companies Data
+            const newCompaniesList = document.getElementById('new-companies-list');
+            const companiesData = [
+                { name: "Innovatech Solutions", status: "Setup Complete", joinDate: "2024-05-15", logo: "https://placehold.co/32x32/7c3aed/ffffff?text=IS" },
+                { name: "GreenLeaf Organics", status: "Pending Configuration", joinDate: "2024-05-20", logo: "https://placehold.co/32x32/16a34a/ffffff?text=GO" },
+                { name: "Quantum Leap AI", status: "Setup Complete", joinDate: "2024-04-28", logo: "https://placehold.co/32x32/0284c7/ffffff?text=QL" },
+                { name: "Starlight Studios", status: "Trial Active", joinDate: "2024-05-22", logo: "https://placehold.co/32x32/db2777/ffffff?text=SS" },
+                { name: "Apex Dynamics", status: "Setup Complete", joinDate: "2024-03-10", logo: "https://placehold.co/32x32/f97316/ffffff?text=AD" }
+            ];
+
+            if (newCompaniesList) {
+                companiesData.forEach(company => {
+                    const row = document.createElement('tr');
+                    let statusBadgeClass = '';
+                    if (company.status === 'Setup Complete') statusBadgeClass = 'bg-green-100 text-green-700';
+                    else if (company.status === 'Pending Configuration') statusBadgeClass = 'bg-yellow-100 text-yellow-700';
+                    else statusBadgeClass = 'bg-blue-100 text-blue-700';
+
+                    row.innerHTML = `
+                        <td class="whitespace-nowrap">
+                            <div class="flex items-center">
+                                <img src="${company.logo}" alt="${company.name} logo" class="w-8 h-8 rounded-full mr-3" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');">
+                                <div class="w-8 h-8 rounded-full mr-3 flex items-center justify-center bg-gray-200 text-gray-500 font-semibold hidden">${company.name.substring(0, 1)}${company.name.split(' ').length > 1 ? company.name.split(' ')[1].substring(0, 1) : ''}</div>
+                                <span class="font-medium text-gray-900">${company.name}</span>
+                            </div>
+                        </td>
+                        <td class="whitespace-nowrap">
+                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusBadgeClass}">
+                                ${company.status}
+                            </span>
+                        </td>
+                        <td class="text-gray-600 whitespace-nowrap">${company.joinDate}</td>
+                        `;
+                    newCompaniesList.appendChild(row);
+                });
+                if (companiesData.length === 0) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td colspan="3" class="text-center text-gray-500 py-4">No new companies recently.</td>`;
+                    newCompaniesList.appendChild(row);
+                }
+            }
+
+            // Platform Metrics Data
+            const activeCompaniesMetric = document.getElementById('active-companies-metric');
+            const txnVolumeMetric = document.getElementById('txn-volume-metric');
+            const mostUsedCurrencyMetric = document.getElementById('most-used-currency-metric');
+            const preferredFrequencyMetric = document.getElementById('preferred-frequency-metric');
+
+            if (activeCompaniesMetric) activeCompaniesMetric.textContent = "1,287";
+            if (txnVolumeMetric) txnVolumeMetric.textContent = "$1.45M";
+            if (mostUsedCurrencyMetric) mostUsedCurrencyMetric.textContent = "USD";
+            if (preferredFrequencyMetric) preferredFrequencyMetric.textContent = "Yearly";
+
+            // Live Exchange Rate Matrix
+            const rateMatrixContainer = document.getElementById('live-rate-matrix-container');
+            const rateMatrixTimestamp = document.getElementById('rate-matrix-timestamp');
+            const matrixCurrencies = ['EUR', 'USD', 'GBP', 'JPY', 'AUD'];
+
+            let rateMatrixData = {};
+            const initialRates = {
+                'EUR': { 'USD': 1.0850, 'GBP': 0.8520, 'JPY': 169.50, 'AUD': 1.6320, 'EUR': 1 },
+                'USD': { 'EUR': 0.9217, 'GBP': 0.7853, 'JPY': 156.23, 'AUD': 1.5041, 'USD': 1 },
+                'GBP': { 'EUR': 1.1737, 'USD': 1.2734, 'JPY': 199.00, 'AUD': 1.9183, 'GBP': 1 },
+                'JPY': { 'EUR': 0.0059, 'USD': 0.0064, 'GBP': 0.0050, 'AUD': 0.0092, 'JPY': 1 },
+                'AUD': { 'EUR': 0.6127, 'USD': 0.6648, 'GBP': 0.5213, 'JPY': 108.95, 'AUD': 1 }
+            };
+
+            matrixCurrencies.forEach(r => {
+                rateMatrixData[r] = {};
+                matrixCurrencies.forEach(c => {
+                    rateMatrixData[r][c] = {
+                        current: initialRates[r]?.[c] !== undefined ? initialRates[r][c] : (r === c ? 1 : 0),
+                        previous: initialRates[r]?.[c] !== undefined ? initialRates[r][c] : (r === c ? 1 : 0)
+                    };
+                });
+            });
+
+            const currencyFlags = {
+                'EUR': 'https://placehold.co/20x15/003399/FFFFFF?text=EU',
+                'USD': 'https://placehold.co/20x15/BF0A30/FFFFFF?text=US',
+                'GBP': 'https://placehold.co/20x15/012169/FFFFFF?text=GB',
+                'JPY': 'https://placehold.co/20x15/BC002D/FFFFFF?text=JP',
+                'AUD': 'https://placehold.co/20x15/00008B/FFFFFF?text=AU'
+            };
+
+
+            function renderRateMatrix() {
+                if (!rateMatrixContainer || !rateMatrixTimestamp) return;
+
+                let tableHTML = '<table class="rate-matrix-table">';
+                tableHTML += '<thead><tr><th></th>';
+                matrixCurrencies.forEach(colCurrency => {
+                    tableHTML += `<th><img src="${currencyFlags[colCurrency] || 'https://placehold.co/20x15/cccccc/000000?text=??'}" alt="${colCurrency}" class="currency-flag inline-block mr-1">${colCurrency}</th>`;
+                });
+                tableHTML += '</tr></thead>';
+
+                tableHTML += '<tbody>';
+                matrixCurrencies.forEach(rowCurrency => {
+                    tableHTML += `<tr><td class="base-currency-label"><img src="${currencyFlags[rowCurrency] || 'https://placehold.co/20x15/cccccc/000000?text=??'}" alt="${rowCurrency}" class="currency-flag inline-block mr-1">1 ${rowCurrency} =</td>`;
+                    matrixCurrencies.forEach(colCurrency => {
+                        const rateData = rateMatrixData[rowCurrency][colCurrency];
+                        const rate = rateData.current;
+                        const change = rate - rateData.previous;
+
+                        let cellClass = '';
+                        let changeClass = 'rate-neutral';
+                        let changeIcon = '<i class="fas fa-minus rate-change-icon"></i>';
+                        const changeThreshold = 0.00001;
+
+                        if (rowCurrency === colCurrency) {
+                            cellClass = 'highlight-rate';
+                            changeIcon = '';
+                        } else if (Math.abs(change) > changeThreshold) {
+                            if (change > 0) {
+                                changeClass = 'rate-up';
+                                changeIcon = '<i class="fas fa-arrow-up rate-change-icon"></i>';
+                            } else {
+                                changeClass = 'rate-down';
+                                changeIcon = '<i class="fas fa-arrow-down rate-change-icon"></i>';
+                            }
+                        }
+
+                        const changeText = (rowCurrency !== colCurrency && Math.abs(change) > changeThreshold)
+                            ? `(${change > 0 ? '+' : ''}${change.toFixed(4)})`
+                            : (rowCurrency !== colCurrency ? '(0.0000)' : '');
+
+
+                        tableHTML += `<td class="${cellClass}">
+                                        <span class="rate-value">${rate.toFixed(4)}</span>
+                                        <span class="rate-change ${changeClass}">${changeText} ${rowCurrency !== colCurrency ? changeIcon : ''}</span>
+                                      </td>`;
+                    });
+                    tableHTML += '</tr>';
+                });
+                tableHTML += '</tbody></table>';
+                rateMatrixContainer.innerHTML = tableHTML;
+
+                const now = new Date();
+                rateMatrixTimestamp.textContent = `Updated: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
+            }
+
+            function simulateMatrixRateChanges() {
+                matrixCurrencies.forEach(r => {
+                    matrixCurrencies.forEach(c => {
+                        if (r === c) return;
+
+                        const currentPairData = rateMatrixData[r][c];
+                        const oldRate = currentPairData.current;
+
+                        const randomFactor = (Math.random() - 0.5) * 0.001;
+                        const newRate = oldRate * (1 + randomFactor);
+
+                        currentPairData.previous = oldRate;
+                        currentPairData.current = newRate;
+
+                        if (rateMatrixData[c] && rateMatrixData[c][r]) {
+                            rateMatrixData[c][r].previous = 1 / oldRate;
+                            rateMatrixData[c][r].current = 1 / newRate;
+                        }
+                    });
+                });
+                renderRateMatrix();
+            }
+
+            if (rateMatrixContainer) {
+                renderRateMatrix();
+                setInterval(simulateMatrixRateChanges, 3000);
+            }
+
+
+            // Chart.js Configurations
+            const commonChartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            font: { family: 'Inter', size: 12 },
+                            color: '#5f6368'
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            font: { family: 'Inter', size: 12 },
+                            color: '#5f6368'
+                        },
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            font: { family: 'Inter', size: 12 },
+                            color: '#5f6368',
+                            callback: function (value) {
+                                if (value >= 1000000) return (value / 1000000) + 'M';
+                                if (value >= 1000) return (value / 1000) + 'K';
+                                return value;
+                            }
+                        },
+                        grid: {
+                            color: '#e0e0e0',
+                            borderDash: [2, 4]
+                        }
+                    }
+                }
+            };
+
+            const tvCtx = document.getElementById('transactionVolumeChart');
+            if (tvCtx) {
+                new Chart(tvCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                        datasets: [{
+                            label: 'Transaction Volume ($K)',
+                            data: [65, 59, 80, 81, 56, 55, 90],
+                            fill: true,
+                            borderColor: '#1a73e8',
+                            backgroundColor: 'rgba(26, 115, 232, 0.1)',
+                            tension: 0.3,
+                            pointBackgroundColor: '#1a73e8',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: '#1a73e8'
+                        }]
+                    },
+                    options: commonChartOptions
+                });
+            }
+
+            const cuCtx = document.getElementById('currencyUsageChart');
+            if (cuCtx) {
+                new Chart(cuCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['USD', 'EUR', 'GBP', 'JPY', 'Other'],
+                        datasets: [{
+                            label: 'Currency Usage',
+                            data: [55, 25, 10, 5, 5],
+                            backgroundColor: [
+                                '#1a73e8',
+                                '#34a853',
+                                '#fbbc05',
+                                '#ea4335',
+                                '#9aa0a6'
+                            ],
+                            hoverOffset: 4,
+                            borderColor: '#fff',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    font: { family: 'Inter', size: 12 },
+                                    color: '#5f6368',
+                                    padding: 20
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        let label = context.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed !== null) {
+                                            label += context.parsed + '%';
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+
+            const currentYearSpan = document.getElementById('currentYear');
+            if (currentYearSpan) {
+                currentYearSpan.textContent = new Date().getFullYear();
+            }
+        });
+    </script>
+</body>
+
+</html>

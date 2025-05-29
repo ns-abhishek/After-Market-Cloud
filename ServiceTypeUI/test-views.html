@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test View Switching</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+        
+        .view-toggle {
+            display: flex;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 20px;
+            gap: 4px;
+        }
+        
+        .view-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            border: none;
+            background: transparent;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .view-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .view-btn.active {
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .view-content {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 300px;
+            display: none;
+        }
+        
+        .view-content.active {
+            display: block;
+        }
+        
+        .service-item {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+        }
+        
+        .list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background: #f5f5f5;
+            font-weight: 600;
+        }
+        
+        .kanban-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+        }
+        
+        .kanban-column {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        
+        .kanban-header {
+            font-weight: 600;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #6366f1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="color: white; text-align: center;">Modern View Switching Test</h1>
+        
+        <!-- View Toggle -->
+        <div class="view-toggle">
+            <button class="view-btn active" data-view="grid">
+                <i class="material-icons">grid_view</i>
+                <span>Grid</span>
+            </button>
+            <button class="view-btn" data-view="list">
+                <i class="material-icons">view_list</i>
+                <span>List</span>
+            </button>
+            <button class="view-btn" data-view="table">
+                <i class="material-icons">table_chart</i>
+                <span>Table</span>
+            </button>
+            <button class="view-btn" data-view="kanban">
+                <i class="material-icons">view_kanban</i>
+                <span>Kanban</span>
+            </button>
+        </div>
+        
+        <!-- Grid View -->
+        <div class="view-content active" id="grid-view">
+            <h2>Grid View</h2>
+            <div class="grid-container">
+                <div class="service-item">
+                    <h3>Web Development</h3>
+                    <p>Full-stack web application development</p>
+                    <span style="color: #6366f1; font-weight: 600;">$150/hour</span>
+                </div>
+                <div class="service-item">
+                    <h3>Mobile App Development</h3>
+                    <p>Native and cross-platform mobile apps</p>
+                    <span style="color: #6366f1; font-weight: 600;">$175/hour</span>
+                </div>
+                <div class="service-item">
+                    <h3>Strategic Consulting</h3>
+                    <p>High-level strategic consulting</p>
+                    <span style="color: #6366f1; font-weight: 600;">$1200/day</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- List View -->
+        <div class="view-content" id="list-view">
+            <h2>List View</h2>
+            <div class="list-container">
+                <div class="service-item">
+                    <strong>Web Development</strong> - Full-stack web application development - <span style="color: #6366f1;">$150/hour</span>
+                </div>
+                <div class="service-item">
+                    <strong>Mobile App Development</strong> - Native and cross-platform mobile apps - <span style="color: #6366f1;">$175/hour</span>
+                </div>
+                <div class="service-item">
+                    <strong>Strategic Consulting</strong> - High-level strategic consulting - <span style="color: #6366f1;">$1200/day</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Table View -->
+        <div class="view-content" id="table-view">
+            <h2>Table View</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Service Name</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Web Development</td>
+                            <td>Full-stack web application development</td>
+                            <td>$150/hour</td>
+                            <td>Active</td>
+                        </tr>
+                        <tr>
+                            <td>Mobile App Development</td>
+                            <td>Native and cross-platform mobile apps</td>
+                            <td>$175/hour</td>
+                            <td>Active</td>
+                        </tr>
+                        <tr>
+                            <td>Strategic Consulting</td>
+                            <td>High-level strategic consulting</td>
+                            <td>$1200/day</td>
+                            <td>Active</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Kanban View -->
+        <div class="view-content" id="kanban-view">
+            <h2>Kanban View</h2>
+            <div class="kanban-container">
+                <div class="kanban-column">
+                    <div class="kanban-header">Active Services</div>
+                    <div class="service-item">Web Development</div>
+                    <div class="service-item">Mobile App Development</div>
+                    <div class="service-item">Strategic Consulting</div>
+                </div>
+                <div class="kanban-column">
+                    <div class="kanban-header">Inactive Services</div>
+                    <div class="service-item">Legacy System Maintenance</div>
+                </div>
+                <div class="kanban-column">
+                    <div class="kanban-header">Draft Services</div>
+                    <div class="service-item">AI Integration Service</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple view switching functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const viewButtons = document.querySelectorAll('.view-btn');
+            const viewContents = document.querySelectorAll('.view-content');
+            
+            viewButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetView = this.dataset.view;
+                    
+                    // Update active button
+                    viewButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Hide all views
+                    viewContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Show target view
+                    const targetContent = document.getElementById(`${targetView}-view`);
+                    if (targetContent) {
+                        targetContent.classList.add('active');
+                    }
+                    
+                    console.log(`Switched to ${targetView} view`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,2307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Service Type Management - Multi-Tenant SaaS ERP</title>
+
+    <!-- Material Design Components CSS -->
+    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="unified-styles.css">
+</head>
+<body>
+    <!-- App Bar -->
+    <header class="mdc-top-app-bar mdc-top-app-bar--fixed">
+        <div class="mdc-top-app-bar__row">
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button" id="menu-button">menu</button>
+                <span class="mdc-top-app-bar__title">Aftermarket Vehicle & Asset Service Management</span>
+            </section>
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end">
+                <!-- Context Selectors -->
+                <div class="context-selectors">
+                    <div class="mdc-select mdc-select--outlined context-selector" id="tenant-selector">
+                        <div class="mdc-select__anchor">
+                            <span class="mdc-notched-outline">
+                                <span class="mdc-notched-outline__leading"></span>
+                                <span class="mdc-notched-outline__notch">
+                                    <span class="mdc-floating-label">Tenant</span>
+                                </span>
+                                <span class="mdc-notched-outline__trailing"></span>
+                            </span>
+                            <span class="mdc-select__selected-text"></span>
+                            <span class="mdc-select__dropdown-icon">
+                                <i class="material-icons">arrow_drop_down</i>
+                            </span>
+                        </div>
+                        <div class="mdc-select__menu mdc-menu mdc-menu-surface">
+                            <ul class="mdc-list">
+                                <li class="mdc-list-item mdc-list-item--selected" data-value="autoparts-global">
+                                    <span class="mdc-list-item__text">AutoParts Global</span>
+                                </li>
+                                <li class="mdc-list-item" data-value="fleet-solutions">
+                                    <span class="mdc-list-item__text">Fleet Solutions Inc</span>
+                                </li>
+                                <li class="mdc-list-item" data-value="vehicle-services">
+                                    <span class="mdc-list-item__text">Vehicle Services Corp</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="mdc-select mdc-select--outlined context-selector" id="company-selector">
+                        <div class="mdc-select__anchor">
+                            <span class="mdc-notched-outline">
+                                <span class="mdc-notched-outline__leading"></span>
+                                <span class="mdc-notched-outline__notch">
+                                    <span class="mdc-floating-label">Company</span>
+                                </span>
+                                <span class="mdc-notched-outline__trailing"></span>
+                            </span>
+                            <span class="mdc-select__selected-text"></span>
+                            <span class="mdc-select__dropdown-icon">
+                                <i class="material-icons">arrow_drop_down</i>
+                            </span>
+                        </div>
+                        <div class="mdc-select__menu mdc-menu mdc-menu-surface">
+                            <ul class="mdc-list">
+                                <li class="mdc-list-item mdc-list-item--selected" data-value="usa">
+                                    <span class="mdc-list-item__text">AutoParts USA</span>
+                                </li>
+                                <li class="mdc-list-item" data-value="europe">
+                                    <span class="mdc-list-item__text">AutoParts Europe</span>
+                                </li>
+                                <li class="mdc-list-item" data-value="asia">
+                                    <span class="mdc-list-item__text">AutoParts Asia</span>
+                                </li>
+                                <li class="mdc-list-item" data-value="service-center">
+                                    <span class="mdc-list-item__text">Global Service Center</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="mdc-select mdc-select--outlined context-selector" id="brand-selector">
+                        <div class="mdc-select__anchor">
+                            <span class="mdc-notched-outline">
+                                <span class="mdc-notched-outline__leading"></span>
+                                <span class="mdc-notched-outline__notch">
+                                    <span class="mdc-floating-label">Brand</span>
+                                </span>
+                                <span class="mdc-notched-outline__trailing"></span>
+                            </span>
+                            <span class="mdc-select__selected-text"></span>
+                            <span class="mdc-select__dropdown-icon">
+                                <i class="material-icons">arrow_drop_down</i>
+                            </span>
+                        </div>
+                        <div class="mdc-select__menu mdc-menu mdc-menu-surface">
+                            <ul class="mdc-list">
+                                <li class="mdc-list-item mdc-list-item--selected" data-value="autopro">
+                                    <span class="mdc-list-item__text">AutoPro</span>
+                                </li>
+                                <li class="mdc-list-item" data-value="fleetmaster">
+                                    <span class="mdc-list-item__text">FleetMaster</span>
+                                </li>
+                                <li class="mdc-list-item" data-value="vehiclecare">
+                                    <span class="mdc-list-item__text">VehicleCare</span>
+                                </li>
+                                <li class="mdc-list-item" data-value="assetguard">
+                                    <span class="mdc-list-item__text">AssetGuard</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button" id="language-button" title="Language">translate</button>
+                <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button" id="currency-button" title="Currency">attach_money</button>
+                <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button" id="search-button">search</button>
+                <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button" id="notifications-button">notifications</button>
+                <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button" id="profile-button">account_circle</button>
+            </section>
+        </div>
+    </header>
+
+    <!-- Navigation Drawer -->
+    <aside class="mdc-drawer mdc-drawer--modal" id="navigation-drawer">
+        <div class="mdc-drawer__header">
+            <h3 class="mdc-drawer__title">Aftermarket ERP</h3>
+            <h6 class="mdc-drawer__subtitle">Vehicle & Asset Services</h6>
+        </div>
+        <div class="mdc-drawer__content">
+            <nav class="mdc-list">
+                <!-- Core Features -->
+                <h6 class="mdc-list-group__subheader">Core Management</h6>
+                <a class="mdc-list-item mdc-list-item--activated" href="#" data-section="dashboard">
+                    <span class="mdc-list-item__ripple"></span>
+                    <i class="material-icons mdc-list-item__graphic">dashboard</i>
+                    <span class="mdc-list-item__text">Dashboard</span>
+                </a>
+                <a class="mdc-list-item" href="#" data-section="services">
+                    <span class="mdc-list-item__ripple"></span>
+                    <i class="material-icons mdc-list-item__graphic">build</i>
+                    <span class="mdc-list-item__text">Service Types</span>
+                </a>
+                <a class="mdc-list-item" href="#" data-section="catalogs">
+                    <span class="mdc-list-item__ripple"></span>
+                    <i class="material-icons mdc-list-item__graphic">library_books</i>
+                    <span class="mdc-list-item__text">Service Catalogs</span>
+                </a>
+                <a class="mdc-list-item" href="#" data-section="bundles">
+                    <span class="mdc-list-item__ripple"></span>
+                    <i class="material-icons mdc-list-item__graphic">inventory</i>
+                    <span class="mdc-list-item__text">Service Bundles</span>
+                </a>
+                <a class="mdc-list-item" href="#" data-section="templates">
+                    <span class="mdc-list-item__ripple"></span>
+                    <i class="material-icons mdc-list-item__graphic">dashboard_customize</i>
+                    <span class="mdc-list-item__text">Job Templates</span>
+                </a>
+
+                <hr class="mdc-list-divider">
+
+                <!-- Configuration -->
+                <h6 class="mdc-list-group__subheader">Configuration</h6>
+                <a class="mdc-list-item" href="#" data-section="pricing">
+                    <span class="mdc-list-item__ripple"></span>
+                    <i class="material-icons mdc-list-item__graphic">monetization_on</i>
+                    <span class="mdc-list-item__text">Pricing & Costing</span>
+                </a>
+                <a class="mdc-list-item" href="#" data-section="sla">
+                    <span class="mdc-list-item__ripple"></span>
+                    <i class="material-icons mdc-list-item__graphic">schedule</i>
+                    <span class="mdc-list-item__text">SLA Templates</span>
+                </a>
+                <a class="mdc-list-item" href="#" data-section="skills">
+                    <span class="mdc-list-item__ripple"></span>
+                    <i class="material-icons mdc-list-item__graphic">psychology</i>
+                    <span class="mdc-list-item__text">Skills & Resources</span>
+                </a>
+                <a class="mdc-list-item" href="#" data-section="workflows">
+                    <span class="mdc-list-item__ripple"></span>
+                    <i class="material-icons mdc-list-item__graphic">account_tree</i>
+                    <span class="mdc-list-item__text">Workflows</span>
+                </a>
+
+                <hr class="mdc-list-divider">
+
+                <!-- Integration & Compliance -->
+                <h6 class="mdc-list-group__subheader">Integration & Compliance</h6>
+                <a class="mdc-list-item" href="#" data-section="integration">
+                    <span class="mdc-list-item__ripple"></span>
+                    <i class="material-icons mdc-list-item__graphic">integration_instructions</i>
+                    <span class="mdc-list-item__text">ERP Integration</span>
+                </a>
+                <a class="mdc-list-item" href="#" data-section="compliance">
+                    <span class="mdc-list-item__ripple"></span>
+                    <i class="material-icons mdc-list-item__graphic">verified_user</i>
+                    <span class="mdc-list-item__text">Compliance</span>
+                </a>
+                <a class="mdc-list-item" href="#" data-section="audit">
+                    <span class="mdc-list-item__ripple"></span>
+                    <i class="material-icons mdc-list-item__graphic">history</i>
+                    <span class="mdc-list-item__text">Audit Trails</span>
+                </a>
+
+                <hr class="mdc-list-divider">
+
+                <!-- Analytics & Reporting -->
+                <h6 class="mdc-list-group__subheader">Analytics & Reporting</h6>
+                <a class="mdc-list-item" href="#" data-section="analytics">
+                    <span class="mdc-list-item__ripple"></span>
+                    <i class="material-icons mdc-list-item__graphic">analytics</i>
+                    <span class="mdc-list-item__text">Analytics</span>
+                </a>
+                <a class="mdc-list-item" href="#" data-section="reports">
+                    <span class="mdc-list-item__ripple"></span>
+                    <i class="material-icons mdc-list-item__graphic">assessment</i>
+                    <span class="mdc-list-item__text">Reports</span>
+                </a>
+                <a class="mdc-list-item" href="#" data-section="ai-insights">
+                    <span class="mdc-list-item__ripple"></span>
+                    <i class="material-icons mdc-list-item__graphic">psychology_alt</i>
+                    <span class="mdc-list-item__text">AI Insights</span>
+                </a>
+
+                <hr class="mdc-list-divider">
+
+                <!-- Administration -->
+                <h6 class="mdc-list-group__subheader">Administration</h6>
+                <a class="mdc-list-item" href="#" data-section="rbac">
+                    <span class="mdc-list-item__ripple"></span>
+                    <i class="material-icons mdc-list-item__graphic">admin_panel_settings</i>
+                    <span class="mdc-list-item__text">Access Control</span>
+                </a>
+                <a class="mdc-list-item" href="#" data-section="settings">
+                    <span class="mdc-list-item__ripple"></span>
+                    <i class="material-icons mdc-list-item__graphic">settings</i>
+                    <span class="mdc-list-item__text">Settings</span>
+                </a>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Drawer Scrim -->
+    <div class="mdc-drawer-scrim"></div>
+
+    <!-- Main Content -->
+    <div class="mdc-drawer-app-content mdc-top-app-bar--fixed-adjust">
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="content-section active">
+                <div class="page-header">
+                    <h1 class="mdc-typography--headline4">Dashboard</h1>
+                    <p class="mdc-typography--body1">Overview of your service types and analytics</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="mdc-card stats-card">
+                        <div class="mdc-card__primary-action">
+                            <div class="stats-card__content">
+                                <div class="stats-icon">
+                                    <i class="material-icons">build</i>
+                                </div>
+                                <div class="stats-info">
+                                    <h2 class="mdc-typography--headline6" id="total-services">0</h2>
+                                    <p class="mdc-typography--body2">Total Services</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mdc-card stats-card">
+                        <div class="mdc-card__primary-action">
+                            <div class="stats-card__content">
+                                <div class="stats-icon">
+                                    <i class="material-icons">check_circle</i>
+                                </div>
+                                <div class="stats-info">
+                                    <h2 class="mdc-typography--headline6" id="active-services">0</h2>
+                                    <p class="mdc-typography--body2">Active Services</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mdc-card stats-card">
+                        <div class="mdc-card__primary-action">
+                            <div class="stats-card__content">
+                                <div class="stats-icon">
+                                    <i class="material-icons">pause_circle</i>
+                                </div>
+                                <div class="stats-info">
+                                    <h2 class="mdc-typography--headline6" id="inactive-services">0</h2>
+                                    <p class="mdc-typography--body2">Inactive Services</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mdc-card stats-card">
+                        <div class="mdc-card__primary-action">
+                            <div class="stats-card__content">
+                                <div class="stats-icon">
+                                    <i class="material-icons">trending_up</i>
+                                </div>
+                                <div class="stats-info">
+                                    <h2 class="mdc-typography--headline6">+12%</h2>
+                                    <p class="mdc-typography--body2">Growth Rate</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="mdc-card activity-card">
+                    <div class="mdc-card__primary-action">
+                        <div class="card-header">
+                            <h3 class="mdc-typography--headline6">Recent Activity</h3>
+                        </div>
+                        <div class="activity-list">
+                            <div class="activity-item">
+                                <i class="material-icons activity-icon">add</i>
+                                <div class="activity-content">
+                                    <p class="mdc-typography--body1">New service type "Web Development" added</p>
+                                    <p class="mdc-typography--body2">2 hours ago</p>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <i class="material-icons activity-icon">edit</i>
+                                <div class="activity-content">
+                                    <p class="mdc-typography--body1">Service type "Mobile App" updated</p>
+                                    <p class="mdc-typography--body2">5 hours ago</p>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <i class="material-icons activity-icon">delete</i>
+                                <div class="activity-content">
+                                    <p class="mdc-typography--body1">Service type "Legacy Support" removed</p>
+                                    <p class="mdc-typography--body2">1 day ago</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Service Types Section -->
+            <section id="services-section" class="content-section">
+                <!-- Menu Search Bar -->
+                <div class="menu-search-container">
+                    <div class="menu-search-bar">
+                        <div class="search-input-container">
+                            <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-leading-icon menu-search-field">
+                                <span class="mdc-notched-outline">
+                                    <span class="mdc-notched-outline__leading"></span>
+                                    <span class="mdc-notched-outline__notch">
+                                        <span class="mdc-floating-label">Search all menus and navigate instantly...</span>
+                                    </span>
+                                    <span class="mdc-notched-outline__trailing"></span>
+                                </span>
+                                <i class="material-icons mdc-text-field__icon mdc-text-field__icon--leading">search</i>
+                                <input class="mdc-text-field__input" type="text" id="menu-search-input" placeholder="Type menu name to navigate instantly (e.g., dashboard, analytics, settings)">
+                            </label>
+                        </div>
+
+                        <button class="mdc-button mdc-button--outlined advanced-search-btn" id="advanced-search-btn">
+                            <span class="mdc-button__ripple"></span>
+                            <i class="material-icons mdc-button__icon">tune</i>
+                            <span class="mdc-button__label">Advanced Search</span>
+                        </button>
+
+                        <button class="mdc-button mdc-button--outlined search-help-btn" id="search-help-btn" title="Search Help">
+                            <span class="mdc-button__ripple"></span>
+                            <i class="material-icons mdc-button__icon">help_outline</i>
+                        </button>
+                    </div>
+
+                    <!-- Search Results Dropdown -->
+                    <div class="search-results-dropdown" id="search-results-dropdown" style="display: none;">
+                        <div class="search-results-header">
+                            <span class="results-title">Search Results</span>
+                            <span class="results-count" id="search-results-count">0 results</span>
+                        </div>
+                        <div class="search-results-content" id="search-results-content">
+                            <!-- Search results will be populated here -->
+                        </div>
+                        <div class="search-results-footer">
+                            <button class="view-all-results-btn" id="view-all-results-btn">
+                                <i class="material-icons">open_in_new</i>
+                                View All Results
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Bar -->
+                <div class="action-bar">
+                    <div class="action-buttons">
+                        <button class="mdc-button mdc-button--raised" id="add-service-btn">
+                            <span class="mdc-button__ripple"></span>
+                            <i class="material-icons mdc-button__icon">add</i>
+                            <span class="mdc-button__label">Add Service Type</span>
+                        </button>
+
+                        <button class="mdc-button mdc-button--outlined" id="templates-btn">
+                            <span class="mdc-button__ripple"></span>
+                            <i class="material-icons mdc-button__icon">dashboard_customize</i>
+                            <span class="mdc-button__label">Templates</span>
+                        </button>
+
+                        <button class="mdc-button mdc-button--outlined" id="import-services-btn">
+                            <span class="mdc-button__ripple"></span>
+                            <i class="material-icons mdc-button__icon">upload</i>
+                            <span class="mdc-button__label">Import</span>
+                        </button>
+
+                        <button class="mdc-button mdc-button--outlined" id="export-services-btn">
+                            <span class="mdc-button__ripple"></span>
+                            <i class="material-icons mdc-button__icon">download</i>
+                            <span class="mdc-button__label">Export</span>
+                        </button>
+
+                    <button class="mdc-button mdc-button--outlined theme-selector-btn" id="theme-selector-btn">
+                        <span class="mdc-button__ripple"></span>
+                        <i class="material-icons mdc-button__icon">palette</i>
+                        <span class="mdc-button__label">Themes</span>
+                    </button>
+
+                        <button class="mdc-button mdc-button--outlined" id="bulk-actions-btn">
+                            <span class="mdc-button__ripple"></span>
+                            <i class="material-icons mdc-button__icon">checklist</i>
+                            <span class="mdc-button__label">Bulk Actions</span>
+                        </button>
+                    </div>
+
+                    <div class="filter-search-container">
+                        <div class="mdc-select mdc-select--outlined filter-select" id="category-filter">
+                            <div class="mdc-select__anchor">
+                                <span class="mdc-notched-outline">
+                                    <span class="mdc-notched-outline__leading"></span>
+                                    <span class="mdc-notched-outline__notch">
+                                        <span class="mdc-floating-label">Category</span>
+                                    </span>
+                                    <span class="mdc-notched-outline__trailing"></span>
+                                </span>
+                                <span class="mdc-select__selected-text"></span>
+                                <span class="mdc-select__dropdown-icon">
+                                    <i class="material-icons">arrow_drop_down</i>
+                                </span>
+                            </div>
+                            <div class="mdc-select__menu mdc-menu mdc-menu-surface">
+                                <ul class="mdc-list">
+                                    <li class="mdc-list-item mdc-list-item--selected" data-value="">
+                                        <span class="mdc-list-item__text">All Categories</span>
+                                    </li>
+                                    <li class="mdc-list-item" data-value="maintenance">
+                                        <span class="mdc-list-item__text">Maintenance & Repair</span>
+                                    </li>
+                                    <li class="mdc-list-item" data-value="inspection">
+                                        <span class="mdc-list-item__text">Inspection & Testing</span>
+                                    </li>
+                                    <li class="mdc-list-item" data-value="parts">
+                                        <span class="mdc-list-item__text">Parts & Components</span>
+                                    </li>
+                                    <li class="mdc-list-item" data-value="diagnostics">
+                                        <span class="mdc-list-item__text">Diagnostics</span>
+                                    </li>
+                                    <li class="mdc-list-item" data-value="warranty">
+                                        <span class="mdc-list-item__text">Warranty Services</span>
+                                    </li>
+                                    <li class="mdc-list-item" data-value="fleet">
+                                        <span class="mdc-list-item__text">Fleet Management</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="mdc-select mdc-select--outlined filter-select" id="status-filter">
+                            <div class="mdc-select__anchor">
+                                <span class="mdc-notched-outline">
+                                    <span class="mdc-notched-outline__leading"></span>
+                                    <span class="mdc-notched-outline__notch">
+                                        <span class="mdc-floating-label">Status</span>
+                                    </span>
+                                    <span class="mdc-notched-outline__trailing"></span>
+                                </span>
+                                <span class="mdc-select__selected-text"></span>
+                                <span class="mdc-select__dropdown-icon">
+                                    <i class="material-icons">arrow_drop_down</i>
+                                </span>
+                            </div>
+                            <div class="mdc-select__menu mdc-menu mdc-menu-surface">
+                                <ul class="mdc-list">
+                                    <li class="mdc-list-item mdc-list-item--selected" data-value="">
+                                        <span class="mdc-list-item__text">All Status</span>
+                                    </li>
+                                    <li class="mdc-list-item" data-value="active">
+                                        <span class="mdc-list-item__text">Active</span>
+                                    </li>
+                                    <li class="mdc-list-item" data-value="inactive">
+                                        <span class="mdc-list-item__text">Inactive</span>
+                                    </li>
+                                    <li class="mdc-list-item" data-value="draft">
+                                        <span class="mdc-list-item__text">Draft</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="search-container">
+                            <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-leading-icon">
+                                <span class="mdc-notched-outline">
+                                    <span class="mdc-notched-outline__leading"></span>
+                                    <span class="mdc-notched-outline__notch">
+                                        <span class="mdc-floating-label">Search services...</span>
+                                    </span>
+                                    <span class="mdc-notched-outline__trailing"></span>
+                                </span>
+                                <i class="material-icons mdc-text-field__icon mdc-text-field__icon--leading">search</i>
+                                <input class="mdc-text-field__input" type="text" id="search-input">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modern View Controls -->
+                <div class="modern-view-controls">
+                    <!-- View Toggle -->
+                    <div class="view-toggle-container">
+                        <div class="view-toggle">
+                            <button class="view-btn active" data-view="grid" title="Grid View">
+                                <i class="material-icons">grid_view</i>
+                                <span>Grid</span>
+                            </button>
+                            <button class="view-btn" data-view="list" title="List View">
+                                <i class="material-icons">view_list</i>
+                                <span>List</span>
+                            </button>
+                            <button class="view-btn" data-view="table" title="Table View">
+                                <i class="material-icons">table_chart</i>
+                                <span>Table</span>
+                            </button>
+                            <button class="view-btn" data-view="kanban" title="Kanban View">
+                                <i class="material-icons">view_kanban</i>
+                                <span>Kanban</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Control Group -->
+                    <div class="control-group">
+                        <!-- Sort Dropdown -->
+                        <div class="sort-container">
+                            <button class="control-btn" id="sort-btn">
+                                <i class="material-icons">sort</i>
+                                <span>Sort</span>
+                                <i class="material-icons arrow">keyboard_arrow_down</i>
+                            </button>
+                            <div class="dropdown-menu" id="sort-menu">
+                                <div class="dropdown-item" data-sort="name" data-order="asc">
+                                    <i class="material-icons">sort_by_alpha</i>
+                                    <span>Name A-Z</span>
+                                </div>
+                                <div class="dropdown-item" data-sort="name" data-order="desc">
+                                    <i class="material-icons">sort_by_alpha</i>
+                                    <span>Name Z-A</span>
+                                </div>
+                                <div class="dropdown-item" data-sort="created" data-order="desc">
+                                    <i class="material-icons">schedule</i>
+                                    <span>Newest First</span>
+                                </div>
+                                <div class="dropdown-item" data-sort="price" data-order="desc">
+                                    <i class="material-icons">attach_money</i>
+                                    <span>Price High-Low</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Advanced Filter Button -->
+                        <button class="control-btn" id="advanced-filter-btn">
+                            <i class="material-icons">tune</i>
+                            <span>Filters</span>
+                            <span class="filter-badge" id="filter-badge" style="display: none;">0</span>
+                        </button>
+
+                        <!-- Bulk Select Button -->
+                        <button class="control-btn" id="bulk-select-btn">
+                            <i class="material-icons">checklist</i>
+                            <span>Select</span>
+                        </button>
+                    </div>
+
+                    <!-- Results Info -->
+                    <div class="results-info">
+                        <span id="results-count">0 services</span>
+                        <span id="selection-info" style="display: none;">
+                            • <span id="selected-count">0</span> selected
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Drag and Drop Zone -->
+                <div class="drag-drop-zone" id="drag-drop-zone" style="display: none;">
+                    <div class="drag-drop-content">
+                        <i class="material-icons">cloud_upload</i>
+                        <h3>Drop to Create Service</h3>
+                        <p>Drop templates, files, or components here to create new service types</p>
+                        <div class="drag-drop-actions">
+                            <button class="mdc-button mdc-button--outlined" id="browse-templates-btn">
+                                <i class="material-icons mdc-button__icon">dashboard_customize</i>
+                                <span class="mdc-button__label">Browse Templates</span>
+                            </button>
+                            <button class="mdc-button mdc-button--outlined" id="upload-file-btn">
+                                <i class="material-icons mdc-button__icon">upload_file</i>
+                                <span class="mdc-button__label">Upload File</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Services Container with Multiple Views -->
+                <div class="services-container" id="services-container">
+                    <!-- Grid View -->
+                    <div class="services-grid view-content active" id="services-grid" data-view="grid">
+                        <!-- Service cards will be dynamically generated here -->
+                    </div>
+
+                    <!-- List View -->
+                    <div class="services-list view-content" id="services-list" data-view="list" style="display: none;">
+                        <!-- Service list items will be dynamically generated here -->
+                    </div>
+
+                    <!-- Table View -->
+                    <div class="services-table-container view-content" id="services-table-container" data-view="table" style="display: none;">
+                        <div class="table-wrapper">
+                            <table class="services-table" id="services-table">
+                                <thead>
+                                    <!-- Header Row with Sort Controls -->
+                                    <tr class="table-header-row">
+                                        <th class="select-column">
+                                            <label class="checkbox-container">
+                                                <input type="checkbox" id="select-all-checkbox">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </th>
+                                        <th class="sortable-column" data-sort="name">
+                                            <div class="column-header">
+                                                <span class="column-title">Service Name</span>
+                                                <div class="column-controls">
+                                                    <button class="sort-btn" data-sort="name" data-order="asc" title="Sort A-Z">
+                                                        <i class="material-icons">keyboard_arrow_up</i>
+                                                    </button>
+                                                    <button class="sort-btn" data-sort="name" data-order="desc" title="Sort Z-A">
+                                                        <i class="material-icons">keyboard_arrow_down</i>
+                                                    </button>
+                                                    <button class="filter-btn" data-column="name" title="Filter">
+                                                        <i class="material-icons">filter_list</i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </th>
+                                        <th class="sortable-column" data-sort="code">
+                                            <div class="column-header">
+                                                <span class="column-title">Code</span>
+                                                <div class="column-controls">
+                                                    <button class="sort-btn" data-sort="code" data-order="asc" title="Sort A-Z">
+                                                        <i class="material-icons">keyboard_arrow_up</i>
+                                                    </button>
+                                                    <button class="sort-btn" data-sort="code" data-order="desc" title="Sort Z-A">
+                                                        <i class="material-icons">keyboard_arrow_down</i>
+                                                    </button>
+                                                    <button class="filter-btn" data-column="code" title="Filter">
+                                                        <i class="material-icons">filter_list</i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </th>
+                                        <th class="sortable-column" data-sort="category">
+                                            <div class="column-header">
+                                                <span class="column-title">Category</span>
+                                                <div class="column-controls">
+                                                    <button class="sort-btn" data-sort="category" data-order="asc" title="Sort A-Z">
+                                                        <i class="material-icons">keyboard_arrow_up</i>
+                                                    </button>
+                                                    <button class="sort-btn" data-sort="category" data-order="desc" title="Sort Z-A">
+                                                        <i class="material-icons">keyboard_arrow_down</i>
+                                                    </button>
+                                                    <button class="filter-btn" data-column="category" title="Filter">
+                                                        <i class="material-icons">filter_list</i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </th>
+                                        <th class="sortable-column" data-sort="price">
+                                            <div class="column-header">
+                                                <span class="column-title">Price</span>
+                                                <div class="column-controls">
+                                                    <button class="sort-btn" data-sort="price" data-order="asc" title="Sort Low-High">
+                                                        <i class="material-icons">keyboard_arrow_up</i>
+                                                    </button>
+                                                    <button class="sort-btn" data-sort="price" data-order="desc" title="Sort High-Low">
+                                                        <i class="material-icons">keyboard_arrow_down</i>
+                                                    </button>
+                                                    <button class="filter-btn" data-column="price" title="Filter">
+                                                        <i class="material-icons">filter_list</i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </th>
+                                        <th class="sortable-column" data-sort="status">
+                                            <div class="column-header">
+                                                <span class="column-title">Status</span>
+                                                <div class="column-controls">
+                                                    <button class="sort-btn" data-sort="status" data-order="asc" title="Sort A-Z">
+                                                        <i class="material-icons">keyboard_arrow_up</i>
+                                                    </button>
+                                                    <button class="sort-btn" data-sort="status" data-order="desc" title="Sort Z-A">
+                                                        <i class="material-icons">keyboard_arrow_down</i>
+                                                    </button>
+                                                    <button class="filter-btn" data-column="status" title="Filter">
+                                                        <i class="material-icons">filter_list</i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </th>
+                                        <th class="actions-column">Actions</th>
+                                    </tr>
+                                    <!-- Filter Row -->
+                                    <tr class="table-filter-row" id="table-filter-row" style="display: none;">
+                                        <th class="select-column"></th>
+                                        <th class="filter-cell">
+                                            <input type="text" class="column-filter" data-column="name" placeholder="Filter by name...">
+                                        </th>
+                                        <th class="filter-cell">
+                                            <input type="text" class="column-filter" data-column="code" placeholder="Filter by code...">
+                                        </th>
+                                        <th class="filter-cell">
+                                            <select class="column-filter" data-column="category">
+                                                <option value="">All Categories</option>
+                                                <option value="development">Development</option>
+                                                <option value="consulting">Consulting</option>
+                                                <option value="maintenance">Maintenance</option>
+                                                <option value="training">Training</option>
+                                            </select>
+                                        </th>
+                                        <th class="filter-cell">
+                                            <input type="number" class="column-filter" data-column="price" placeholder="Min price...">
+                                        </th>
+                                        <th class="filter-cell">
+                                            <select class="column-filter" data-column="status">
+                                                <option value="">All Status</option>
+                                                <option value="active">Active</option>
+                                                <option value="inactive">Inactive</option>
+                                                <option value="draft">Draft</option>
+                                            </select>
+                                        </th>
+                                        <th class="actions-column">
+                                            <button class="clear-filters-btn" title="Clear all filters">
+                                                <i class="material-icons">clear</i>
+                                            </button>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="services-table-body">
+                                    <!-- Table rows will be dynamically generated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Kanban View -->
+                    <div class="services-kanban view-content" id="services-kanban" data-view="kanban" style="display: none;">
+                        <div class="kanban-columns">
+                            <div class="kanban-column" data-status="active">
+                                <div class="kanban-header">
+                                    <h3>Active Services</h3>
+                                    <span class="count" id="active-count">0</span>
+                                </div>
+                                <div class="kanban-items" id="active-kanban"></div>
+                            </div>
+                            <div class="kanban-column" data-status="inactive">
+                                <div class="kanban-header">
+                                    <h3>Inactive Services</h3>
+                                    <span class="count" id="inactive-count">0</span>
+                                </div>
+                                <div class="kanban-items" id="inactive-kanban"></div>
+                            </div>
+                            <div class="kanban-column" data-status="draft">
+                                <div class="kanban-header">
+                                    <h3>Draft Services</h3>
+                                    <span class="count" id="draft-count">0</span>
+                                </div>
+                                <div class="kanban-items" id="draft-kanban"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Service Bundles Section -->
+            <section id="bundles-section" class="content-section">
+                <div class="page-header">
+                    <h1 class="mdc-typography--headline4">Service Bundles</h1>
+                    <p class="mdc-typography--body1">Create and manage comprehensive service packages with predefined tasks, skills, and procedures</p>
+                </div>
+
+                <!-- Action Bar -->
+                <div class="action-bar">
+                    <div class="action-buttons">
+                        <button class="mdc-button mdc-button--raised" id="create-bundle-btn">
+                            <span class="mdc-button__ripple"></span>
+                            <i class="material-icons mdc-button__icon">add_box</i>
+                            <span class="mdc-button__label">Create Bundle</span>
+                        </button>
+
+                        <button class="mdc-button mdc-button--outlined" id="import-bundles-btn">
+                            <span class="mdc-button__ripple"></span>
+                            <i class="material-icons mdc-button__icon">upload</i>
+                            <span class="mdc-button__label">Import Bundles</span>
+                        </button>
+
+                        <button class="mdc-button mdc-button--outlined" id="export-bundles-btn">
+                            <span class="mdc-button__ripple"></span>
+                            <i class="material-icons mdc-button__icon">download</i>
+                            <span class="mdc-button__label">Export Bundles</span>
+                        </button>
+                    </div>
+
+                    <div class="filter-search-container">
+                        <div class="search-container">
+                            <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-leading-icon">
+                                <span class="mdc-notched-outline">
+                                    <span class="mdc-notched-outline__leading"></span>
+                                    <span class="mdc-notched-outline__notch">
+                                        <span class="mdc-floating-label">Search bundles...</span>
+                                    </span>
+                                    <span class="mdc-notched-outline__trailing"></span>
+                                </span>
+                                <i class="material-icons mdc-text-field__icon mdc-text-field__icon--leading">search</i>
+                                <input class="mdc-text-field__input" type="text" id="bundles-search-input">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bundles Grid -->
+                <div class="bundles-container" id="bundles-container">
+                    <div class="bundles-grid" id="bundles-grid">
+                        <!-- Bundle cards will be dynamically generated here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics-section" class="content-section">
+                <div class="page-header">
+                    <h1 class="mdc-typography--headline4">Analytics</h1>
+                    <p class="mdc-typography--body1">Service performance and usage statistics</p>
+                </div>
+
+                <div class="analytics-grid">
+                    <div class="mdc-card chart-card">
+                        <div class="card-header">
+                            <h3 class="mdc-typography--headline6">Service Usage Trends</h3>
+                        </div>
+                        <div class="chart-placeholder">
+                            <i class="material-icons">trending_up</i>
+                            <p>Chart visualization would go here</p>
+                        </div>
+                    </div>
+
+                    <div class="mdc-card chart-card">
+                        <div class="card-header">
+                            <h3 class="mdc-typography--headline6">Service Distribution</h3>
+                        </div>
+                        <div class="chart-placeholder">
+                            <i class="material-icons">pie_chart</i>
+                            <p>Pie chart visualization would go here</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings-section" class="content-section">
+                <div class="page-header">
+                    <h1 class="mdc-typography--headline4">Settings</h1>
+                    <p class="mdc-typography--body1">Configure your application preferences</p>
+                </div>
+
+                <div class="settings-grid">
+                    <div class="mdc-card settings-card">
+                        <div class="card-header">
+                            <h3 class="mdc-typography--headline6">General Settings</h3>
+                        </div>
+                        <div class="settings-content">
+                            <div class="setting-item">
+                                <div class="mdc-form-field">
+                                    <div class="mdc-switch">
+                                        <div class="mdc-switch__track"></div>
+                                        <div class="mdc-switch__thumb-underlay">
+                                            <div class="mdc-switch__thumb"></div>
+                                            <input type="checkbox" id="dark-mode-switch" class="mdc-switch__native-control" role="switch">
+                                        </div>
+                                    </div>
+                                    <label for="dark-mode-switch">Dark Mode</label>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <div class="mdc-form-field">
+                                    <div class="mdc-switch">
+                                        <div class="mdc-switch__track"></div>
+                                        <div class="mdc-switch__thumb-underlay">
+                                            <div class="mdc-switch__thumb"></div>
+                                            <input type="checkbox" id="notifications-switch" class="mdc-switch__native-control" role="switch" checked>
+                                        </div>
+                                    </div>
+                                    <label for="notifications-switch">Enable Notifications</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Service Catalogs Section -->
+            <section id="catalogs-section" class="content-section">
+                <div class="page-header">
+                    <h1 class="mdc-typography--headline4">Service Catalogs</h1>
+                    <p class="mdc-typography--body1">Manage service catalogs for different brands and companies</p>
+                </div>
+
+                <div class="action-bar">
+                    <button class="mdc-button mdc-button--raised" id="add-catalog-btn">
+                        <span class="mdc-button__ripple"></span>
+                        <i class="material-icons mdc-button__icon">add</i>
+                        <span class="mdc-button__label">Create Catalog</span>
+                    </button>
+                </div>
+
+                <!-- Service Catalogs Grid -->
+                <div class="services-grid catalogs-grid">
+                    <!-- Catalogs will be dynamically generated here -->
+                </div>
+
+                <!-- Empty State -->
+                <div class="empty-state" id="catalogs-empty-state" style="display: none;">
+                    <div class="empty-state-content">
+                        <i class="material-icons">library_books</i>
+                        <h3>No Service Catalogs Created Yet</h3>
+                        <p>Create your first service catalog to get started with organizing your services</p>
+                        <button class="mdc-button mdc-button--raised" id="create-catalog-btn">
+                            <span class="mdc-button__ripple"></span>
+                            <i class="material-icons mdc-button__icon">add</i>
+                            <span class="mdc-button__label">Create First Catalog</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Service Bundles Section -->
+            <section id="bundles-section" class="content-section">
+                <div class="page-header">
+                    <h1 class="mdc-typography--headline4">Service Bundles</h1>
+                    <p class="mdc-typography--body1">Create and manage service packages and bundles</p>
+                </div>
+
+                <div class="action-bar">
+                    <button class="mdc-button mdc-button--raised" id="create-bundle-btn">
+                        <span class="mdc-button__ripple"></span>
+                        <i class="material-icons mdc-button__icon">add</i>
+                        <span class="mdc-button__label">Create Bundle</span>
+                    </button>
+                </div>
+
+                <!-- Service Bundles Grid -->
+                <div class="services-grid" id="bundles-grid">
+                    <!-- Bundles will be dynamically generated here -->
+                </div>
+
+                <!-- Empty State -->
+                <div class="empty-state" id="bundles-empty-state" style="display: none;">
+                    <div class="empty-state-content">
+                        <i class="material-icons">inventory_2</i>
+                        <h3>No Service Bundles Created Yet</h3>
+                        <p>Create your first service bundle to get started with comprehensive service packages</p>
+                        <button class="mdc-button mdc-button--raised" id="create-bundle-btn">
+                            <span class="mdc-button__ripple"></span>
+                            <i class="material-icons mdc-button__icon">add</i>
+                            <span class="mdc-button__label">Create First Bundle</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Job Templates Section -->
+            <section id="templates-section" class="content-section">
+                <div class="page-header">
+                    <h1 class="mdc-typography--headline4">Job Templates</h1>
+                    <p class="mdc-typography--body1">Manage comprehensive service templates with tasks, skills, BOM, and procedures</p>
+                </div>
+
+                <div class="action-bar">
+                    <button class="mdc-button mdc-button--raised" id="create-template-btn">
+                        <span class="mdc-button__ripple"></span>
+                        <i class="material-icons mdc-button__icon">add</i>
+                        <span class="mdc-button__label">Create Template</span>
+                    </button>
+                    <button class="mdc-button mdc-button--outlined" id="import-templates-btn">
+                        <span class="mdc-button__ripple"></span>
+                        <i class="material-icons mdc-button__icon">upload</i>
+                        <span class="mdc-button__label">Import Templates</span>
+                    </button>
+                    <button class="mdc-button mdc-button--outlined" id="export-templates-btn">
+                        <span class="mdc-button__ripple"></span>
+                        <i class="material-icons mdc-button__icon">download</i>
+                        <span class="mdc-button__label">Export Templates</span>
+                    </button>
+                </div>
+
+                <!-- Templates Grid -->
+                <div class="templates-grid" id="saved-templates-grid">
+                    <!-- Templates will be dynamically generated here -->
+                </div>
+
+                <!-- Empty State -->
+                <div class="empty-state" id="templates-empty-state" style="display: none;">
+                    <div class="empty-state-content">
+                        <i class="material-icons">dashboard_customize</i>
+                        <h3>No Templates Created Yet</h3>
+                        <p>Create your first job template to get started with comprehensive service packages</p>
+                        <button class="mdc-button mdc-button--raised" onclick="app.openJobTemplateDialog()">
+                            <span class="mdc-button__ripple"></span>
+                            <i class="material-icons mdc-button__icon">add</i>
+                            <span class="mdc-button__label">Create First Template</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pricing & Costing Section -->
+            <section id="pricing-section" class="content-section">
+                <div class="page-header">
+                    <h1 class="mdc-typography--headline4">Pricing & Costing</h1>
+                    <p class="mdc-typography--body1">Manage multi-currency pricing and costing models</p>
+                </div>
+
+                <div class="pricing-tabs">
+                    <div class="mdc-tab-bar" role="tablist">
+                        <div class="mdc-tab-scroller">
+                            <div class="mdc-tab-scroller__scroll-area">
+                                <div class="mdc-tab-scroller__scroll-content">
+                                    <button class="mdc-tab mdc-tab--active" role="tab" data-tab="standard-pricing">
+                                        <span class="mdc-tab__content">
+                                            <span class="mdc-tab__text-label">Standard Pricing</span>
+                                        </span>
+                                        <span class="mdc-tab-indicator mdc-tab-indicator--active">
+                                            <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                                        </span>
+                                        <span class="mdc-tab__ripple"></span>
+                                    </button>
+                                    <button class="mdc-tab" role="tab" data-tab="cost-models">
+                                        <span class="mdc-tab__content">
+                                            <span class="mdc-tab__text-label">Cost Models</span>
+                                        </span>
+                                        <span class="mdc-tab-indicator">
+                                            <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                                        </span>
+                                        <span class="mdc-tab__ripple"></span>
+                                    </button>
+                                    <button class="mdc-tab" role="tab" data-tab="currency-rates">
+                                        <span class="mdc-tab__content">
+                                            <span class="mdc-tab__text-label">Currency Rates</span>
+                                        </span>
+                                        <span class="mdc-tab-indicator">
+                                            <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                                        </span>
+                                        <span class="mdc-tab__ripple"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content active" id="standard-pricing-content">
+                        <div class="pricing-table">
+                            <div class="mdc-data-table">
+                                <div class="mdc-data-table__table-container">
+                                    <table class="mdc-data-table__table">
+                                        <thead>
+                                            <tr class="mdc-data-table__header-row">
+                                                <th class="mdc-data-table__header-cell">Service Type</th>
+                                                <th class="mdc-data-table__header-cell">Company</th>
+                                                <th class="mdc-data-table__header-cell">Brand</th>
+                                                <th class="mdc-data-table__header-cell">Base Price (USD)</th>
+                                                <th class="mdc-data-table__header-cell">Local Price</th>
+                                                <th class="mdc-data-table__header-cell">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="mdc-data-table__content">
+                                            <tr class="mdc-data-table__row">
+                                                <td class="mdc-data-table__cell">Web Development</td>
+                                                <td class="mdc-data-table__cell">Company A (USA)</td>
+                                                <td class="mdc-data-table__cell">InnovatePro</td>
+                                                <td class="mdc-data-table__cell">$150/hr</td>
+                                                <td class="mdc-data-table__cell">$150/hr</td>
+                                                <td class="mdc-data-table__cell">
+                                                    <button class="mdc-icon-button">
+                                                        <i class="material-icons">edit</i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr class="mdc-data-table__row">
+                                                <td class="mdc-data-table__cell">Web Development</td>
+                                                <td class="mdc-data-table__cell">Company B (Germany)</td>
+                                                <td class="mdc-data-table__cell">InnovatePro</td>
+                                                <td class="mdc-data-table__cell">$150/hr</td>
+                                                <td class="mdc-data-table__cell">€135/hr</td>
+                                                <td class="mdc-data-table__cell">
+                                                    <button class="mdc-icon-button">
+                                                        <i class="material-icons">edit</i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLA Templates Section -->
+            <section id="sla-section" class="content-section">
+                <div class="page-header">
+                    <h1 class="mdc-typography--headline4">SLA Templates</h1>
+                    <p class="mdc-typography--body1">Define service level agreements for different service types</p>
+                </div>
+
+                <div class="action-bar">
+                    <button class="mdc-button mdc-button--raised" id="add-sla-btn">
+                        <span class="mdc-button__ripple"></span>
+                        <i class="material-icons mdc-button__icon">add</i>
+                        <span class="mdc-button__label">Create SLA Template</span>
+                    </button>
+                </div>
+
+                <div class="sla-grid">
+                    <div class="mdc-card sla-card">
+                        <div class="sla-header">
+                            <h3 class="mdc-typography--headline6">Premium Support SLA</h3>
+                            <span class="sla-tier premium">Premium</span>
+                        </div>
+                        <div class="sla-content">
+                            <div class="sla-metrics">
+                                <div class="metric-item">
+                                    <span class="metric-label">Response Time</span>
+                                    <span class="metric-value">2 hours</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">Resolution Time</span>
+                                    <span class="metric-value">24 hours</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">Availability</span>
+                                    <span class="metric-value">99.9%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mdc-card sla-card">
+                        <div class="sla-header">
+                            <h3 class="mdc-typography--headline6">Standard Support SLA</h3>
+                            <span class="sla-tier standard">Standard</span>
+                        </div>
+                        <div class="sla-content">
+                            <div class="sla-metrics">
+                                <div class="metric-item">
+                                    <span class="metric-label">Response Time</span>
+                                    <span class="metric-value">8 hours</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">Resolution Time</span>
+                                    <span class="metric-value">72 hours</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">Availability</span>
+                                    <span class="metric-value">99.5%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add Service Dialog -->
+    <div class="mdc-dialog" id="add-service-dialog">
+        <div class="mdc-dialog__container">
+            <div class="mdc-dialog__surface">
+                <h2 class="mdc-dialog__title">Add New Service Type</h2>
+                <div class="mdc-dialog__content">
+                    <!-- Quick Service Type Buttons -->
+                    <div class="quick-service-types">
+                        <h3 class="quick-types-title">
+                            <i class="material-icons">flash_on</i>
+                            Quick Service Types
+                        </h3>
+                        <p class="quick-types-subtitle">Drag or click to auto-fill service information</p>
+
+                        <div class="quick-types-grid">
+                            <div class="quick-type-btn" id="warranty-claim-btn" draggable="true" data-type="warranty">
+                                <div class="quick-type-icon">
+                                    <i class="material-icons">verified_user</i>
+                                </div>
+                                <div class="quick-type-content">
+                                    <h4>Warranty Claim</h4>
+                                    <p>Auto-fill warranty service details</p>
+                                </div>
+                                <div class="quick-type-drag-hint">
+                                    <i class="material-icons">drag_indicator</i>
+                                </div>
+                            </div>
+
+                            <div class="quick-type-btn" id="mandatory-claim-btn" draggable="true" data-type="mandatory">
+                                <div class="quick-type-icon">
+                                    <i class="material-icons">priority_high</i>
+                                </div>
+                                <div class="quick-type-content">
+                                    <h4>Mandatory Claim</h4>
+                                    <p>Auto-fill mandatory service details</p>
+                                </div>
+                                <div class="quick-type-drag-hint">
+                                    <i class="material-icons">drag_indicator</i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Drag and Drop Instructions -->
+                    <div class="drag-drop-instructions" id="drag-drop-instructions">
+                        <div class="instruction-content">
+                            <i class="material-icons">touch_app</i>
+                            <span>Drag the buttons above to this form area to auto-fill service information</span>
+                        </div>
+                    </div>
+
+                    <form id="service-form">
+                        <!-- Basic Information -->
+                        <h6 class="form-section-title">Basic Information</h6>
+
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label class="mdc-text-field mdc-text-field--outlined">
+                                    <span class="mdc-notched-outline">
+                                        <span class="mdc-notched-outline__leading"></span>
+                                        <span class="mdc-notched-outline__notch">
+                                            <span class="mdc-floating-label">Service Code</span>
+                                        </span>
+                                        <span class="mdc-notched-outline__trailing"></span>
+                                    </span>
+                                    <input class="mdc-text-field__input" type="text" id="service-code" required>
+                                </label>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="mdc-text-field mdc-text-field--outlined">
+                                    <span class="mdc-notched-outline">
+                                        <span class="mdc-notched-outline__leading"></span>
+                                        <span class="mdc-notched-outline__notch">
+                                            <span class="mdc-floating-label">Service Name</span>
+                                        </span>
+                                        <span class="mdc-notched-outline__trailing"></span>
+                                    </span>
+                                    <input class="mdc-text-field__input" type="text" id="service-name" required>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-field">
+                            <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--textarea">
+                                <span class="mdc-notched-outline">
+                                    <span class="mdc-notched-outline__leading"></span>
+                                    <span class="mdc-notched-outline__notch">
+                                        <span class="mdc-floating-label">Description</span>
+                                    </span>
+                                    <span class="mdc-notched-outline__trailing"></span>
+                                </span>
+                                <textarea class="mdc-text-field__input" id="service-description" rows="3"></textarea>
+                            </label>
+                        </div>
+
+                        <!-- Service Attributes Row 1 -->
+                        <div class="form-row">
+                            <div class="form-field">
+                                <div class="mdc-form-field">
+                                    <div class="mdc-checkbox">
+                                        <input type="checkbox" class="mdc-checkbox__native-control" id="is-mandatory"/>
+                                        <div class="mdc-checkbox__background">
+                                            <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                                                <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                                            </svg>
+                                            <div class="mdc-checkbox__mixedmark"></div>
+                                        </div>
+                                        <div class="mdc-checkbox__ripple"></div>
+                                    </div>
+                                    <label for="is-mandatory">Is Mandatory?</label>
+                                </div>
+                            </div>
+
+                            <div class="form-field">
+                                <div class="mdc-form-field">
+                                    <div class="mdc-checkbox">
+                                        <input type="checkbox" class="mdc-checkbox__native-control" id="is-consider-for-demand"/>
+                                        <div class="mdc-checkbox__background">
+                                            <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                                                <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                                            </svg>
+                                            <div class="mdc-checkbox__mixedmark"></div>
+                                        </div>
+                                        <div class="mdc-checkbox__ripple"></div>
+                                    </div>
+                                    <label for="is-consider-for-demand">Is Consider For Demand?</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Service Attributes Row 2 -->
+                        <div class="form-row">
+                            <div class="form-field">
+                                <div class="mdc-form-field">
+                                    <div class="mdc-checkbox">
+                                        <input type="checkbox" class="mdc-checkbox__native-control" id="is-active"/>
+                                        <div class="mdc-checkbox__background">
+                                            <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                                                <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                                            </svg>
+                                            <div class="mdc-checkbox__mixedmark"></div>
+                                        </div>
+                                        <div class="mdc-checkbox__ripple"></div>
+                                    </div>
+                                    <label for="is-active">Is Active?</label>
+                                </div>
+                            </div>
+
+                            <div class="form-field">
+                                <div class="mdc-form-field">
+                                    <div class="mdc-checkbox">
+                                        <input type="checkbox" class="mdc-checkbox__native-control" id="is-warranty"/>
+                                        <div class="mdc-checkbox__background">
+                                            <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                                                <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                                            </svg>
+                                            <div class="mdc-checkbox__mixedmark"></div>
+                                        </div>
+                                        <div class="mdc-checkbox__ripple"></div>
+                                    </div>
+                                    <label for="is-warranty">Is Warranty?</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Service Attributes Row 3 -->
+                        <div class="form-row">
+                            <div class="form-field">
+                                <div class="mdc-form-field">
+                                    <div class="mdc-checkbox">
+                                        <input type="checkbox" class="mdc-checkbox__native-control" id="is-installation"/>
+                                        <div class="mdc-checkbox__background">
+                                            <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                                                <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                                            </svg>
+                                            <div class="mdc-checkbox__mixedmark"></div>
+                                        </div>
+                                        <div class="mdc-checkbox__ripple"></div>
+                                    </div>
+                                    <label for="is-installation">Is Installation?</label>
+                                </div>
+                            </div>
+
+                            <div class="form-field">
+                                <div class="mdc-form-field">
+                                    <div class="mdc-checkbox">
+                                        <input type="checkbox" class="mdc-checkbox__native-control" id="is-insurance"/>
+                                        <div class="mdc-checkbox__background">
+                                            <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                                                <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                                            </svg>
+                                            <div class="mdc-checkbox__mixedmark"></div>
+                                        </div>
+                                        <div class="mdc-checkbox__ripple"></div>
+                                    </div>
+                                    <label for="is-insurance">Is Insurance?</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Service Due Days -->
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label class="mdc-text-field mdc-text-field--outlined">
+                                    <span class="mdc-notched-outline">
+                                        <span class="mdc-notched-outline__leading"></span>
+                                        <span class="mdc-notched-outline__notch">
+                                            <span class="mdc-floating-label">Service Due Days</span>
+                                        </span>
+                                        <span class="mdc-notched-outline__trailing"></span>
+                                    </span>
+                                    <input class="mdc-text-field__input" type="number" id="service-due-days" min="0">
+                                </label>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="mdc-text-field mdc-text-field--outlined">
+                                    <span class="mdc-notched-outline">
+                                        <span class="mdc-notched-outline__leading"></span>
+                                        <span class="mdc-notched-outline__notch">
+                                            <span class="mdc-floating-label">Service Due Reading</span>
+                                        </span>
+                                        <span class="mdc-notched-outline__trailing"></span>
+                                    </span>
+                                    <input class="mdc-text-field__input" type="number" id="service-due-reading" min="0">
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Operation Detail Section -->
+                        <h6 class="form-section-title">Operation Detail</h6>
+
+                        <div class="operation-detail-section">
+                            <!-- Enhanced Operation Section Header -->
+                            <div class="operation-section-header">
+                                <div>
+                                    <h3 class="operation-section-title">
+                                        <i class="material-icons">settings</i>
+                                        Operation Details
+                                    </h3>
+                                    <p class="operation-section-subtitle">Define and manage service operations and procedures</p>
+                                </div>
+                            </div>
+
+                            <!-- Enhanced Operation Controls -->
+                            <div class="operation-controls">
+                                <div class="operation-controls-left">
+                                    <button type="button" class="operation-add-btn" id="add-operation-btn">
+                                        <i class="material-icons">add_circle</i>
+                                        <span>Add Operation</span>
+                                    </button>
+                                </div>
+
+                                <div class="operation-view-info">
+                                    <i class="material-icons">visibility</i>
+                                    <span id="operation-view-info">View 1 - 1 of 1</span>
+                                </div>
+                            </div>
+
+                            <!-- Operation Detail Table -->
+                            <div class="operation-table-container">
+                                <div class="mdc-data-table operation-data-table">
+                                    <div class="mdc-data-table__table-container">
+                                        <table class="mdc-data-table__table">
+                                            <thead>
+                                                <tr class="mdc-data-table__header-row">
+                                                    <th class="mdc-data-table__header-cell operation-actions-header">
+                                                        <span>Edit</span>
+                                                    </th>
+                                                    <th class="mdc-data-table__header-cell operation-actions-header">
+                                                        <span>Delete</span>
+                                                    </th>
+                                                    <th class="mdc-data-table__header-cell operation-code-header">
+                                                        <span>Operation Code</span>
+                                                        <i class="material-icons sort-icon">arrow_upward</i>
+                                                    </th>
+                                                    <th class="mdc-data-table__header-cell operation-desc-header">
+                                                        <span>Operation Description</span>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="mdc-data-table__content" id="operation-table-body">
+                                                <!-- Operation rows will be dynamically added here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-field">
+                                <div class="mdc-select mdc-select--outlined" data-field="category" id="category-select">
+                                    <div class="mdc-select__anchor">
+                                        <span class="mdc-notched-outline">
+                                            <span class="mdc-notched-outline__leading"></span>
+                                            <span class="mdc-notched-outline__notch">
+                                                <span class="mdc-floating-label">Category</span>
+                                            </span>
+                                            <span class="mdc-notched-outline__trailing"></span>
+                                        </span>
+                                        <span class="mdc-select__selected-text"></span>
+                                        <span class="mdc-select__dropdown-icon">
+                                            <i class="material-icons">arrow_drop_down</i>
+                                        </span>
+                                    </div>
+                                    <div class="mdc-select__menu mdc-menu mdc-menu-surface">
+                                        <ul class="mdc-list">
+                                            <li class="mdc-list-item mdc-list-item--selected" data-value="development">
+                                                <span class="mdc-list-item__text">Development</span>
+                                            </li>
+                                            <li class="mdc-list-item" data-value="consulting">
+                                                <span class="mdc-list-item__text">Consulting</span>
+                                            </li>
+                                            <li class="mdc-list-item" data-value="maintenance">
+                                                <span class="mdc-list-item__text">Maintenance</span>
+                                            </li>
+                                            <li class="mdc-list-item" data-value="training">
+                                                <span class="mdc-list-item__text">Training</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-field">
+                                <div class="mdc-select mdc-select--outlined" data-field="unit" id="unit-select">
+                                    <div class="mdc-select__anchor">
+                                        <span class="mdc-notched-outline">
+                                            <span class="mdc-notched-outline__leading"></span>
+                                            <span class="mdc-notched-outline__notch">
+                                                <span class="mdc-floating-label">Unit of Measure</span>
+                                            </span>
+                                            <span class="mdc-notched-outline__trailing"></span>
+                                        </span>
+                                        <span class="mdc-select__selected-text"></span>
+                                        <span class="mdc-select__dropdown-icon">
+                                            <i class="material-icons">arrow_drop_down</i>
+                                        </span>
+                                    </div>
+                                    <div class="mdc-select__menu mdc-menu mdc-menu-surface">
+                                        <ul class="mdc-list">
+                                            <li class="mdc-list-item mdc-list-item--selected" data-value="hours">
+                                                <span class="mdc-list-item__text">Hours</span>
+                                            </li>
+                                            <li class="mdc-list-item" data-value="days">
+                                                <span class="mdc-list-item__text">Days</span>
+                                            </li>
+                                            <li class="mdc-list-item" data-value="fixed">
+                                                <span class="mdc-list-item__text">Fixed Price</span>
+                                            </li>
+                                            <li class="mdc-list-item" data-value="units">
+                                                <span class="mdc-list-item__text">Per Unit</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Multi-Tenant Context -->
+                        <h6 class="form-section-title">Context & Scope</h6>
+
+                        <div class="form-row">
+                            <div class="form-field">
+                                <div class="mdc-form-field">
+                                    <div class="mdc-checkbox">
+                                        <input type="checkbox" class="mdc-checkbox__native-control" id="tenant-level"/>
+                                        <div class="mdc-checkbox__background">
+                                            <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                                                <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                                            </svg>
+                                            <div class="mdc-checkbox__mixedmark"></div>
+                                        </div>
+                                        <div class="mdc-checkbox__ripple"></div>
+                                    </div>
+                                    <label for="tenant-level">Available at Tenant Level</label>
+                                </div>
+                            </div>
+
+                            <div class="form-field">
+                                <div class="mdc-form-field">
+                                    <div class="mdc-checkbox">
+                                        <input type="checkbox" class="mdc-checkbox__native-control" id="company-specific"/>
+                                        <div class="mdc-checkbox__background">
+                                            <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                                                <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                                            </svg>
+                                            <div class="mdc-checkbox__mixedmark"></div>
+                                        </div>
+                                        <div class="mdc-checkbox__ripple"></div>
+                                    </div>
+                                    <label for="company-specific">Company Specific</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Multi-Brand Association -->
+                        <div class="form-field">
+                            <label class="form-label">Associated Brands</label>
+                            <div class="brand-checkboxes">
+                                <div class="mdc-form-field">
+                                    <div class="mdc-checkbox">
+                                        <input type="checkbox" class="mdc-checkbox__native-control" id="brand-innovatepro"/>
+                                        <div class="mdc-checkbox__background">
+                                            <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                                                <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                                            </svg>
+                                            <div class="mdc-checkbox__mixedmark"></div>
+                                        </div>
+                                        <div class="mdc-checkbox__ripple"></div>
+                                    </div>
+                                    <label for="brand-innovatepro">InnovatePro</label>
+                                </div>
+
+                                <div class="mdc-form-field">
+                                    <div class="mdc-checkbox">
+                                        <input type="checkbox" class="mdc-checkbox__native-control" id="brand-innovatelite"/>
+                                        <div class="mdc-checkbox__background">
+                                            <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                                                <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                                            </svg>
+                                            <div class="mdc-checkbox__mixedmark"></div>
+                                        </div>
+                                        <div class="mdc-checkbox__ripple"></div>
+                                    </div>
+                                    <label for="brand-innovatelite">InnovateLite</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pricing Information -->
+                        <h6 class="form-section-title">Pricing & Costing</h6>
+
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label class="mdc-text-field mdc-text-field--outlined">
+                                    <span class="mdc-notched-outline">
+                                        <span class="mdc-notched-outline__leading"></span>
+                                        <span class="mdc-notched-outline__notch">
+                                            <span class="mdc-floating-label">Standard Cost (USD)</span>
+                                        </span>
+                                        <span class="mdc-notched-outline__trailing"></span>
+                                    </span>
+                                    <input class="mdc-text-field__input" type="number" id="standard-cost" step="0.01">
+                                </label>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="mdc-text-field mdc-text-field--outlined">
+                                    <span class="mdc-notched-outline">
+                                        <span class="mdc-notched-outline__leading"></span>
+                                        <span class="mdc-notched-outline__notch">
+                                            <span class="mdc-floating-label">List Price (USD)</span>
+                                        </span>
+                                        <span class="mdc-notched-outline__trailing"></span>
+                                    </span>
+                                    <input class="mdc-text-field__input" type="number" id="list-price" step="0.01">
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Integration Settings -->
+                        <h6 class="form-section-title">Integration & Compliance</h6>
+
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label class="mdc-text-field mdc-text-field--outlined">
+                                    <span class="mdc-notched-outline">
+                                        <span class="mdc-notched-outline__leading"></span>
+                                        <span class="mdc-notched-outline__notch">
+                                            <span class="mdc-floating-label">Default GL Account</span>
+                                        </span>
+                                        <span class="mdc-notched-outline__trailing"></span>
+                                    </span>
+                                    <input class="mdc-text-field__input" type="text" id="gl-account">
+                                </label>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="mdc-text-field mdc-text-field--outlined">
+                                    <span class="mdc-notched-outline">
+                                        <span class="mdc-notched-outline__leading"></span>
+                                        <span class="mdc-notched-outline__notch">
+                                            <span class="mdc-floating-label">Tax Code</span>
+                                        </span>
+                                        <span class="mdc-notched-outline__trailing"></span>
+                                    </span>
+                                    <input class="mdc-text-field__input" type="text" id="tax-code">
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="mdc-dialog__actions">
+                    <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="cancel">
+                        <span class="mdc-button__ripple"></span>
+                        <span class="mdc-button__label">Cancel</span>
+                    </button>
+                    <button type="button" class="mdc-button mdc-button--raised mdc-dialog__button" data-mdc-dialog-action="accept">
+                        <span class="mdc-button__ripple"></span>
+                        <span class="mdc-button__label">Add Service</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="mdc-dialog__scrim"></div>
+    </div>
+
+    <!-- Service Templates Panel -->
+    <div class="templates-panel" id="templates-panel">
+        <div class="templates-panel-overlay" id="templates-panel-overlay"></div>
+        <div class="templates-panel-content">
+            <div class="templates-panel-header">
+                <h2>Service Templates</h2>
+                <p>Drag templates to create new services or click to use</p>
+                <button class="close-panel-btn" id="close-templates-panel">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+
+            <div class="templates-categories">
+                <div class="template-category active" data-category="automotive">
+                    <i class="material-icons">directions_car</i>
+                    <span>Automotive</span>
+                </div>
+                <div class="template-category" data-category="maintenance">
+                    <i class="material-icons">build</i>
+                    <span>Maintenance</span>
+                </div>
+                <div class="template-category" data-category="diagnostics">
+                    <i class="material-icons">computer</i>
+                    <span>Diagnostics</span>
+                </div>
+                <div class="template-category" data-category="fleet">
+                    <i class="material-icons">local_shipping</i>
+                    <span>Fleet</span>
+                </div>
+            </div>
+
+            <div class="templates-grid" id="templates-grid">
+                <!-- Templates will be dynamically generated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Operation Dialog -->
+    <div class="mdc-dialog" id="add-operation-dialog">
+        <div class="mdc-dialog__container">
+            <div class="mdc-dialog__surface">
+                <div class="mdc-dialog__header">
+                    <h2 class="mdc-dialog__title">Add Operation</h2>
+                </div>
+                <div class="mdc-dialog__content">
+                    <div class="operation-form">
+                        <div class="form-field">
+                            <label class="mdc-text-field mdc-text-field--outlined">
+                                <span class="mdc-notched-outline">
+                                    <span class="mdc-notched-outline__leading"></span>
+                                    <span class="mdc-notched-outline__notch">
+                                        <span class="mdc-floating-label">Operation Code *</span>
+                                    </span>
+                                    <span class="mdc-notched-outline__trailing"></span>
+                                </span>
+                                <input class="mdc-text-field__input" type="text" id="operation-code" required>
+                            </label>
+                        </div>
+
+                        <div class="form-field">
+                            <label class="mdc-text-field mdc-text-field--outlined">
+                                <span class="mdc-notched-outline">
+                                    <span class="mdc-notched-outline__leading"></span>
+                                    <span class="mdc-notched-outline__notch">
+                                        <span class="mdc-floating-label">Operation Description</span>
+                                    </span>
+                                    <span class="mdc-notched-outline__trailing"></span>
+                                </span>
+                                <input class="mdc-text-field__input" type="text" id="operation-description">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mdc-dialog__actions">
+                    <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="cancel">
+                        <div class="mdc-button__ripple"></div>
+                        <span class="mdc-button__label">Cancel</span>
+                    </button>
+                    <button type="button" class="mdc-button mdc-button--raised mdc-dialog__button" data-mdc-dialog-action="save" id="save-operation-btn">
+                        <div class="mdc-button__ripple"></div>
+                        <span class="mdc-button__label">Save</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="mdc-dialog__scrim"></div>
+    </div>
+
+    <!-- Job Template Creation Dialog -->
+    <div class="mdc-dialog job-template-dialog" id="job-template-dialog">
+        <div class="mdc-dialog__container">
+            <div class="mdc-dialog__surface">
+                <div class="mdc-dialog__header">
+                    <h2 class="mdc-dialog__title">
+                        <i class="material-icons">assignment</i>
+                        Create Job Template
+                    </h2>
+                    <p class="dialog-subtitle">Define comprehensive service packages with tasks, skills, BOM, and procedures</p>
+                </div>
+
+                <div class="mdc-dialog__content">
+                    <form id="job-template-form">
+                        <!-- Basic Template Information -->
+                        <div class="template-section">
+                            <h3 class="template-section-title">
+                                <i class="material-icons">info</i>
+                                Template Information
+                            </h3>
+
+                            <div class="form-row">
+                                <div class="form-field">
+                                    <label class="mdc-text-field mdc-text-field--outlined">
+                                        <span class="mdc-notched-outline">
+                                            <span class="mdc-notched-outline__leading"></span>
+                                            <span class="mdc-notched-outline__notch">
+                                                <span class="mdc-floating-label">Template Code *</span>
+                                            </span>
+                                            <span class="mdc-notched-outline__trailing"></span>
+                                        </span>
+                                        <input class="mdc-text-field__input" type="text" id="template-code" required>
+                                    </label>
+                                </div>
+
+                                <div class="form-field">
+                                    <label class="mdc-text-field mdc-text-field--outlined">
+                                        <span class="mdc-notched-outline">
+                                            <span class="mdc-notched-outline__leading"></span>
+                                            <span class="mdc-notched-outline__notch">
+                                                <span class="mdc-floating-label">Template Name *</span>
+                                            </span>
+                                            <span class="mdc-notched-outline__trailing"></span>
+                                        </span>
+                                        <input class="mdc-text-field__input" type="text" id="template-name" required>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-field">
+                                    <div class="mdc-select mdc-select--outlined">
+                                        <div class="mdc-select__anchor">
+                                            <span class="mdc-notched-outline">
+                                                <span class="mdc-notched-outline__leading"></span>
+                                                <span class="mdc-notched-outline__notch">
+                                                    <span class="mdc-floating-label">Linked Service Type</span>
+                                                </span>
+                                                <span class="mdc-notched-outline__trailing"></span>
+                                            </span>
+                                            <span class="mdc-select__selected-text"></span>
+                                            <span class="mdc-select__dropdown-icon">
+                                                <i class="material-icons">arrow_drop_down</i>
+                                            </span>
+                                        </div>
+                                        <div class="mdc-select__menu mdc-menu mdc-menu-surface">
+                                            <ul class="mdc-list" id="service-type-list">
+                                                <!-- Service types will be populated dynamically -->
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-field">
+                                    <label class="mdc-text-field mdc-text-field--outlined">
+                                        <span class="mdc-notched-outline">
+                                            <span class="mdc-notched-outline__leading"></span>
+                                            <span class="mdc-notched-outline__notch">
+                                                <span class="mdc-floating-label">Estimated Total Hours</span>
+                                            </span>
+                                            <span class="mdc-notched-outline__trailing"></span>
+                                        </span>
+                                        <input class="mdc-text-field__input" type="number" id="total-hours" step="0.5" min="0">
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="mdc-text-field mdc-text-field--outlined">
+                                    <span class="mdc-notched-outline">
+                                        <span class="mdc-notched-outline__leading"></span>
+                                        <span class="mdc-notched-outline__notch">
+                                            <span class="mdc-floating-label">Template Description</span>
+                                        </span>
+                                        <span class="mdc-notched-outline__trailing"></span>
+                                    </span>
+                                    <textarea class="mdc-text-field__input" id="template-description" rows="3"></textarea>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Tasks and Sub-tasks Section -->
+                        <div class="template-section">
+                            <h3 class="template-section-title">
+                                <i class="material-icons">task_alt</i>
+                                Tasks & Sub-tasks
+                            </h3>
+
+                            <div class="section-controls">
+                                <button type="button" class="mdc-button mdc-button--outlined" id="add-task-btn">
+                                    <i class="material-icons mdc-button__icon">add</i>
+                                    <span class="mdc-button__label">Add Task</span>
+                                </button>
+                                <button type="button" class="mdc-button mdc-button--outlined" id="add-predefined-task-btn">
+                                    <i class="material-icons mdc-button__icon">library_add</i>
+                                    <span class="mdc-button__label">Add from Predefined</span>
+                                </button>
+                            </div>
+
+                            <div class="tasks-container drop-zone" id="tasks-container" data-drop-type="tasks">
+                                <div class="drop-zone-content">
+                                    <i class="material-icons drop-zone-icon">task_alt</i>
+                                    <div class="drop-zone-text">Drop tasks here</div>
+                                    <div class="drop-zone-hint">Drag predefined tasks from the panel</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Required Skills Section -->
+                        <div class="template-section">
+                            <h3 class="template-section-title">
+                                <i class="material-icons">school</i>
+                                Required Skills & Certifications
+                            </h3>
+
+                            <div class="section-controls">
+                                <button type="button" class="mdc-button mdc-button--outlined" id="add-skill-btn">
+                                    <i class="material-icons mdc-button__icon">add</i>
+                                    <span class="mdc-button__label">Add Skill</span>
+                                </button>
+                                <button type="button" class="mdc-button mdc-button--outlined" id="add-predefined-skill-btn">
+                                    <i class="material-icons mdc-button__icon">library_add</i>
+                                    <span class="mdc-button__label">Add from Predefined</span>
+                                </button>
+                            </div>
+
+                            <div class="skills-container drop-zone" id="skills-container" data-drop-type="skills">
+                                <div class="drop-zone-content">
+                                    <i class="material-icons drop-zone-icon">school</i>
+                                    <div class="drop-zone-text">Drop skills here</div>
+                                    <div class="drop-zone-hint">Drag predefined skills from the panel</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bill of Materials Section -->
+                        <div class="template-section">
+                            <h3 class="template-section-title">
+                                <i class="material-icons">inventory_2</i>
+                                Bill of Materials (BOM)
+                            </h3>
+
+                            <div class="section-controls">
+                                <button type="button" class="mdc-button mdc-button--outlined" id="add-bom-item-btn">
+                                    <i class="material-icons mdc-button__icon">add</i>
+                                    <span class="mdc-button__label">Add Part/Material</span>
+                                </button>
+                                <button type="button" class="mdc-button mdc-button--outlined" id="add-predefined-bom-btn">
+                                    <i class="material-icons mdc-button__icon">library_add</i>
+                                    <span class="mdc-button__label">Add from Predefined</span>
+                                </button>
+                            </div>
+
+                            <div class="bom-container drop-zone" id="bom-container" data-drop-type="bom">
+                                <div class="drop-zone-content">
+                                    <i class="material-icons drop-zone-icon">inventory</i>
+                                    <div class="drop-zone-text">Drop BOM items here</div>
+                                    <div class="drop-zone-hint">Drag predefined parts from the panel</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tools and Equipment Section -->
+                        <div class="template-section">
+                            <h3 class="template-section-title">
+                                <i class="material-icons">construction</i>
+                                Tools & Equipment
+                            </h3>
+
+                            <div class="section-controls">
+                                <button type="button" class="mdc-button mdc-button--outlined" id="add-tool-btn">
+                                    <i class="material-icons mdc-button__icon">add</i>
+                                    <span class="mdc-button__label">Add Tool</span>
+                                </button>
+                                <button type="button" class="mdc-button mdc-button--outlined" id="add-predefined-tool-btn">
+                                    <i class="material-icons mdc-button__icon">library_add</i>
+                                    <span class="mdc-button__label">Add from Predefined</span>
+                                </button>
+                            </div>
+
+                            <div class="tools-container" id="tools-container">
+                                <!-- Tools will be added dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Standard Operating Procedures Section -->
+                        <div class="template-section">
+                            <h3 class="template-section-title">
+                                <i class="material-icons">description</i>
+                                Standard Operating Procedures (SOPs)
+                            </h3>
+
+                            <div class="section-controls">
+                                <button type="button" class="mdc-button mdc-button--outlined" id="add-sop-btn">
+                                    <i class="material-icons mdc-button__icon">add</i>
+                                    <span class="mdc-button__label">Add SOP</span>
+                                </button>
+                                <button type="button" class="mdc-button mdc-button--outlined" id="add-predefined-sop-btn">
+                                    <i class="material-icons mdc-button__icon">library_add</i>
+                                    <span class="mdc-button__label">Add from Predefined</span>
+                                </button>
+                            </div>
+
+                            <div class="sops-container" id="sops-container">
+                                <!-- SOPs will be added dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Safety Instructions Section -->
+                        <div class="template-section">
+                            <h3 class="template-section-title">
+                                <i class="material-icons">security</i>
+                                Safety Instructions & Checklists
+                            </h3>
+
+                            <div class="section-controls">
+                                <button type="button" class="mdc-button mdc-button--outlined" id="add-safety-btn">
+                                    <i class="material-icons mdc-button__icon">add</i>
+                                    <span class="mdc-button__label">Add Safety Instruction</span>
+                                </button>
+                                <button type="button" class="mdc-button mdc-button--outlined" id="add-predefined-safety-btn">
+                                    <i class="material-icons mdc-button__icon">library_add</i>
+                                    <span class="mdc-button__label">Add from Predefined</span>
+                                </button>
+                            </div>
+
+                            <div class="safety-container" id="safety-container">
+                                <!-- Safety instructions will be added dynamically -->
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="mdc-dialog__actions">
+                    <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="cancel">
+                        <span class="mdc-button__ripple"></span>
+                        <span class="mdc-button__label">Cancel</span>
+                    </button>
+                    <button type="button" class="mdc-button mdc-button--raised mdc-dialog__button" data-mdc-dialog-action="save" id="save-template-btn">
+                        <span class="mdc-button__ripple"></span>
+                        <span class="mdc-button__label">Create Template</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="mdc-dialog__scrim"></div>
+    </div>
+
+    <!-- Floating Action Button for Predefined Items -->
+    <button class="predefined-fab" id="predefined-fab" style="display: none;" title="Show Predefined Items">
+        <i class="material-icons">library_add</i>
+    </button>
+
+    <!-- Predefined Items Panel -->
+    <div class="predefined-items-panel" id="predefined-items-panel" style="display: none;">
+        <div class="predefined-panel-header">
+            <h3 class="predefined-panel-title">Predefined Items</h3>
+            <button class="predefined-panel-close" id="predefined-panel-close">
+                <i class="material-icons">close</i>
+            </button>
+        </div>
+        <div class="predefined-panel-tabs">
+            <button class="predefined-tab active" data-tab="tasks">Tasks</button>
+            <button class="predefined-tab" data-tab="skills">Skills</button>
+            <button class="predefined-tab" data-tab="bom">BOM</button>
+            <button class="predefined-tab" data-tab="tools">Tools</button>
+            <button class="predefined-tab" data-tab="sops">SOPs</button>
+            <button class="predefined-tab" data-tab="safety">Safety</button>
+        </div>
+        <div class="predefined-panel-content" id="predefined-panel-content">
+            <!-- Content will be populated dynamically -->
+        </div>
+    </div>
+
+    <!-- Theme Selector Modal -->
+    <div class="theme-selector-modal-overlay" id="theme-selector-modal" style="display: none;">
+        <div class="theme-selector-modal">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="material-icons">palette</i>
+                    Choose Your Theme
+                </h2>
+                <button class="modal-close" onclick="app.closeThemeSelector()">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="theme-categories">
+                    <div class="theme-category">
+                        <h3 class="category-title">Light Themes</h3>
+                        <div class="theme-grid">
+                            <div class="theme-option" data-theme="light-default">
+                                <div class="theme-preview light-default-preview">
+                                    <div class="preview-header"></div>
+                                    <div class="preview-content">
+                                        <div class="preview-card"></div>
+                                        <div class="preview-card"></div>
+                                    </div>
+                                </div>
+                                <div class="theme-info">
+                                    <h4>Default Light</h4>
+                                    <p>Clean and professional</p>
+                                </div>
+                            </div>
+
+                            <div class="theme-option" data-theme="light-blue">
+                                <div class="theme-preview light-blue-preview">
+                                    <div class="preview-header"></div>
+                                    <div class="preview-content">
+                                        <div class="preview-card"></div>
+                                        <div class="preview-card"></div>
+                                    </div>
+                                </div>
+                                <div class="theme-info">
+                                    <h4>Ocean Blue</h4>
+                                    <p>Calm and trustworthy</p>
+                                </div>
+                            </div>
+
+                            <div class="theme-option" data-theme="light-green">
+                                <div class="theme-preview light-green-preview">
+                                    <div class="preview-header"></div>
+                                    <div class="preview-content">
+                                        <div class="preview-card"></div>
+                                        <div class="preview-card"></div>
+                                    </div>
+                                </div>
+                                <div class="theme-info">
+                                    <h4>Nature Green</h4>
+                                    <p>Fresh and energetic</p>
+                                </div>
+                            </div>
+
+                            <div class="theme-option" data-theme="light-purple">
+                                <div class="theme-preview light-purple-preview">
+                                    <div class="preview-header"></div>
+                                    <div class="preview-content">
+                                        <div class="preview-card"></div>
+                                        <div class="preview-card"></div>
+                                    </div>
+                                </div>
+                                <div class="theme-info">
+                                    <h4>Royal Purple</h4>
+                                    <p>Elegant and sophisticated</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="theme-category">
+                        <h3 class="category-title">Dark Themes</h3>
+                        <div class="theme-grid">
+                            <div class="theme-option" data-theme="dark-default">
+                                <div class="theme-preview dark-default-preview">
+                                    <div class="preview-header"></div>
+                                    <div class="preview-content">
+                                        <div class="preview-card"></div>
+                                        <div class="preview-card"></div>
+                                    </div>
+                                </div>
+                                <div class="theme-info">
+                                    <h4>Dark Mode</h4>
+                                    <p>Easy on the eyes</p>
+                                </div>
+                            </div>
+
+                            <div class="theme-option" data-theme="dark-blue">
+                                <div class="theme-preview dark-blue-preview">
+                                    <div class="preview-header"></div>
+                                    <div class="preview-content">
+                                        <div class="preview-card"></div>
+                                        <div class="preview-card"></div>
+                                    </div>
+                                </div>
+                                <div class="theme-info">
+                                    <h4>Midnight Blue</h4>
+                                    <p>Professional dark theme</p>
+                                </div>
+                            </div>
+
+                            <div class="theme-option" data-theme="dark-slate">
+                                <div class="theme-preview dark-slate-preview">
+                                    <div class="preview-header"></div>
+                                    <div class="preview-content">
+                                        <div class="preview-card"></div>
+                                        <div class="preview-card"></div>
+                                    </div>
+                                </div>
+                                <div class="theme-info">
+                                    <h4>Slate Gray</h4>
+                                    <p>Modern and sleek</p>
+                                </div>
+                            </div>
+
+                            <div class="theme-option" data-theme="dark-forest">
+                                <div class="theme-preview dark-forest-preview">
+                                    <div class="preview-header"></div>
+                                    <div class="preview-content">
+                                        <div class="preview-card"></div>
+                                        <div class="preview-card"></div>
+                                    </div>
+                                </div>
+                                <div class="theme-info">
+                                    <h4>Forest Dark</h4>
+                                    <p>Natural dark theme</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="theme-category">
+                        <h3 class="category-title">High Contrast</h3>
+                        <div class="theme-grid">
+                            <div class="theme-option" data-theme="high-contrast">
+                                <div class="theme-preview high-contrast-preview">
+                                    <div class="preview-header"></div>
+                                    <div class="preview-content">
+                                        <div class="preview-card"></div>
+                                        <div class="preview-card"></div>
+                                    </div>
+                                </div>
+                                <div class="theme-info">
+                                    <h4>High Contrast</h4>
+                                    <p>Maximum accessibility</p>
+                                </div>
+                            </div>
+
+                            <div class="theme-option" data-theme="black-white">
+                                <div class="theme-preview black-white-preview">
+                                    <div class="preview-header"></div>
+                                    <div class="preview-content">
+                                        <div class="preview-card"></div>
+                                        <div class="preview-card"></div>
+                                    </div>
+                                </div>
+                                <div class="theme-info">
+                                    <h4>Black & White</h4>
+                                    <p>Pure monochrome</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="theme-settings">
+                    <h3>Theme Settings</h3>
+                    <div class="setting-row">
+                        <label class="setting-label">
+                            <input type="checkbox" id="auto-dark-mode">
+                            Auto Dark Mode (6 PM - 6 AM)
+                        </label>
+                    </div>
+                    <div class="setting-row">
+                        <label class="setting-label">
+                            <input type="checkbox" id="system-theme">
+                            Follow System Theme
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-secondary" onclick="app.resetTheme()">
+                    Reset to Default
+                </button>
+                <button class="modal-btn modal-btn-primary" onclick="app.closeThemeSelector()">
+                    Apply Theme
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Material Design Components JS -->
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Manual Admin | Documentation Preview</title>
+    <link rel="stylesheet" href="css/admin-base.css">
+    <link rel="stylesheet" href="css/admin-styles.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/tenant-locale.css">
+    <link rel="stylesheet" href="css/documentation-manager.css">
+    <link rel="stylesheet" href="css/preview.css">
+    <link rel="stylesheet" href="css/action-buttons-redesign.css">
+    <link rel="stylesheet" href="css/preview-buttons-redesign.css">
+    <link rel="stylesheet" href="css/admin-menu-new.css">
+    <!-- Include diff2html for version comparison -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Admin Header -->
+        <header class="admin-header">
+            <div class="logo">
+                <div class="logo-text">
+                    <span class="hcl-brand">HCLSoftware</span>
+                    <span class="hcl-separator">|</span>
+                    <span class="manual-title">User Manual</span>
+                </div>
+                <span class="admin-badge">ADMIN</span>
+            </div>
+            <div class="header-actions">
+                <!-- Theme Toggle Button -->
+                <button id="theme-toggle" class="icon-btn theme-toggle" aria-label="Toggle between light and dark theme">
+                    <i class="fas fa-sun"></i>
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="notifications-container">
+                    <button class="icon-btn notifications" id="notifications-toggle">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <div class="notifications-dropdown">
+                        <div class="notifications-header">
+                            <h3>Notifications</h3>
+                            <button class="mark-all-read">Mark all as read</button>
+                        </div>
+                        <div class="notifications-list">
+                            <!-- Notification items would be dynamically generated -->
+                            <div class="notification-item unread">
+                                <div class="notification-icon">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="notification-text">New content has been published</p>
+                                    <p class="notification-time">2 hours ago</p>
+                                </div>
+                                <button class="notification-action"><i class="fas fa-times"></i></button>
+                            </div>
+                            <!-- More notification items -->
+                        </div>
+                        <div class="notifications-footer">
+                            <a href="notifications.html">View all notifications</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="admin-profile">
+                    <button id="admin-profile-toggle" class="admin-profile-button">
+                        <span class="admin-name">Admin User</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="admin-dropdown-menu">
+                        <a href="profile.html"><i class="fas fa-user"></i> My Profile</a>
+                        <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+                        <a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Admin Content Area -->
+        <div class="admin-content-wrapper">
+            <!-- Admin Menu - New Design -->
+            <div class="admin-menu">
+                <!-- Mobile Menu Toggle -->
+                <button class="admin-menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <!-- Main Navigation -->
+                <nav class="admin-menu-nav">
+                    <ul class="primary-menu">
+                        <!-- Dashboard -->
+                        <li>
+                            <a href="dashboard.html">
+                                <i class="fas fa-tachometer-alt"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+
+                        <!-- Content Management Category -->
+                        <li class="has-dropdown category-content active">
+                            <a href="#">
+                                <i class="fas fa-book"></i>
+                                <span>Content</span>
+                                <i class="fas fa-chevron-down dropdown-indicator"></i>
+                            </a>
+                            <ul class="dropdown">
+                                <li>
+                                    <a href="content-manager.html">
+                                        <i class="fas fa-book"></i>
+                                        <span>Content Manager</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="documentation-manager.html">
+                                        <i class="fas fa-file-alt"></i>
+                                        <span>Documentation Manager</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="version-manager.html">
+                                        <i class="fas fa-code-branch"></i>
+                                        <span>Version Manager</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="media-library.html">
+                                        <i class="fas fa-images"></i>
+                                        <span>Media Library</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="documentation-workflow.html">
+                                        <i class="fas fa-tasks"></i>
+                                        <span>Documentation Workflow</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Structure Category -->
+                        <li class="category-structure">
+                            <a href="structure.html">
+                                <i class="fas fa-sitemap"></i>
+                                <span>Structure</span>
+                            </a>
+                        </li>
+
+                        <!-- Tenant & Localization Category -->
+                        <li class="has-dropdown category-users">
+                            <a href="#">
+                                <i class="fas fa-globe"></i>
+                                <span>Localization</span>
+                                <i class="fas fa-chevron-down dropdown-indicator"></i>
+                            </a>
+                            <ul class="dropdown">
+                                <li>
+                                    <a href="tenant-manager.html">
+                                        <i class="fas fa-building"></i>
+                                        <span>Tenant Manager</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="translation-manager.html">
+                                        <i class="fas fa-language"></i>
+                                        <span>Translation Manager</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="locale-manager.html">
+                                        <i class="fas fa-globe"></i>
+                                        <span>Locale Manager</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Users Category -->
+                        <li class="has-dropdown category-users optional">
+                            <a href="#">
+                                <i class="fas fa-users"></i>
+                                <span>Users</span>
+                                <i class="fas fa-chevron-down dropdown-indicator"></i>
+                            </a>
+                            <ul class="dropdown">
+                                <li>
+                                    <a href="users.html">
+                                        <i class="fas fa-users"></i>
+                                        <span>Users List</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="user-permissions.html">
+                                        <i class="fas fa-user-shield"></i>
+                                        <span>User Permissions</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Analytics Category -->
+                        <li class="has-dropdown category-analytics optional">
+                            <a href="#">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Analytics</span>
+                                <i class="fas fa-chevron-down dropdown-indicator"></i>
+                            </a>
+                            <ul class="dropdown">
+                                <li>
+                                    <a href="analytics.html">
+                                        <i class="fas fa-chart-bar"></i>
+                                        <span>Analytics Dashboard</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="advanced-analytics.html">
+                                        <i class="fas fa-chart-pie"></i>
+                                        <span>Advanced Analytics</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Settings Category -->
+                        <li class="category-settings optional">
+                            <a href="settings.html">
+                                <i class="fas fa-cog"></i>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+
+                        <!-- Divider -->
+                        <li class="menu-divider"></li>
+
+                        <!-- View Manual (External Link) -->
+                        <li>
+                            <a href="../Complete_User Manual/index.html" target="_blank">
+                                <i class="fas fa-external-link-alt"></i>
+                                <span>View Manual</span>
+                            </a>
+                        </li>
+
+                        <!-- More Menu -->
+                        <li class="has-dropdown more-menu">
+                            <a href="#">
+                                <i class="fas fa-ellipsis-h"></i>
+                                <span>More</span>
+                                <i class="fas fa-chevron-down dropdown-indicator"></i>
+                            </a>
+                            <ul class="dropdown">
+                                <!-- Items will be dynamically added here by JavaScript -->
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Admin Main Content -->
+            <main class="admin-main-content">
+                <div class="admin-page-header">
+                    <h2><i class="fas fa-eye"></i> Documentation Preview</h2>
+                    <div class="admin-breadcrumbs">
+                        <span>Home</span>
+                        <i class="fas fa-chevron-right"></i>
+                        <span>Preview</span>
+                    </div>
+                    <div class="admin-page-actions">
+                        <a href="structure.html" class="admin-button secondary">
+                            <i class="fas fa-sitemap"></i> Back to Structure
+                        </a>
+                        <a href="documentation-manager.html" class="admin-button secondary">
+                            <i class="fas fa-file-alt"></i> Documentation Manager
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Preview Controls -->
+                <div class="preview-controls">
+                    <div class="preview-info">
+                        <h3 id="preview-title">User Roles and Permissions</h3>
+                        <div class="preview-meta">
+                            <span class="preview-doc-type" id="preview-doc-type">Complete User Manual</span>
+                            <span class="preview-version">Version: <select id="version-select" class="admin-select">
+                                <option value="current">Current (1.2)</option>
+                                <option value="1.1">1.1</option>
+                                <option value="1.0">1.0</option>
+                            </select></span>
+                            <span class="preview-tenant">Tenant: <select id="preview-tenant" class="admin-select">
+                                <option value="global">Global (All Tenants)</option>
+                                <option value="acme-corp">Acme Corporation</option>
+                                <option value="global-ent">Global Enterprises</option>
+                                <option value="springfield-gov">City of Springfield</option>
+                                <option value="tech-solutions">Tech Solutions Ltd</option>
+                            </select></span>
+                            <span class="preview-locale">Locale: <select id="preview-locale" class="admin-select">
+                                <option value="en-US">English (US)</option>
+                                <option value="de-DE">German</option>
+                                <option value="fr-FR">French</option>
+                                <option value="ja-JP">Japanese</option>
+                                <option value="es-ES">Spanish</option>
+                            </select></span>
+                        </div>
+                    </div>
+                    <div class="preview-actions">
+                        <button class="admin-button secondary" id="toggle-comparison">
+                            <i class="fas fa-code-compare"></i> Compare Versions
+                        </button>
+                        <button class="admin-button secondary" id="toggle-devices">
+                            <i class="fas fa-mobile-alt"></i> Device Preview
+                        </button>
+                        <button class="admin-button" id="edit-document">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Preview Container -->
+                <div class="preview-container">
+                    <!-- Single Preview Mode -->
+                    <div class="preview-single active" id="preview-single">
+                        <div class="preview-frame-container">
+                            <div class="preview-frame-header">
+                                <div class="preview-frame-title">Preview</div>
+                                <div class="preview-frame-actions">
+                                    <button class="preview-frame-action active" title="Desktop View" data-device="desktop">
+                                        <i class="fas fa-desktop"></i>
+                                    </button>
+                                    <button class="preview-frame-action" title="Tablet View" data-device="tablet">
+                                        <i class="fas fa-tablet-alt"></i>
+                                    </button>
+                                    <button class="preview-frame-action" title="Mobile View" data-device="mobile">
+                                        <i class="fas fa-mobile-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="preview-frame desktop" id="preview-frame">
+                                <div class="preview-content">
+                                    <h1>User Roles and Permissions</h1>
+                                    <p class="lead">Understanding the different user roles and their associated permissions is essential for proper system administration and security.</p>
+
+                                    <h2>Available User Roles</h2>
+                                    <p>The system provides several predefined user roles, each with specific access levels and capabilities:</p>
+
+                                    <div class="role-card">
+                                        <div class="role-header">
+                                            <i class="fas fa-user-shield"></i>
+                                            <h3>Administrator</h3>
+                                        </div>
+                                        <div class="role-description">
+                                            <p>Administrators have complete access to all system functions and can manage all aspects of the application.</p>
+                                            <ul>
+                                                <li>User management (create, edit, delete users)</li>
+                                                <li>Role assignment and permission configuration</li>
+                                                <li>System configuration and settings</li>
+                                                <li>Access to all modules and features</li>
+                                                <li>Audit log review</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div class="role-card">
+                                        <div class="role-header">
+                                            <i class="fas fa-user-cog"></i>
+                                            <h3>Manager</h3>
+                                        </div>
+                                        <div class="role-description">
+                                            <p>Managers have access to most system functions but cannot modify system-level settings.</p>
+                                            <ul>
+                                                <li>View and manage all orders and customers</li>
+                                                <li>Generate and view all reports</li>
+                                                <li>Manage products and inventory</li>
+                                                <li>Limited user management (cannot create admins)</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <h2>Custom Roles</h2>
+                                    <p>In addition to the predefined roles, administrators can create custom roles with specific permission sets tailored to your organization's needs.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Comparison Mode -->
+                    <div class="preview-comparison" id="preview-comparison" style="display: none;">
+                        <div class="comparison-header">
+                            <div class="comparison-version">
+                                <h4>Current Version (1.2)</h4>
+                            </div>
+                            <div class="comparison-version">
+                                <h4>Selected Version: <span id="comparison-version-label">1.1</span></h4>
+                            </div>
+                        </div>
+                        <div class="comparison-container" id="comparison-container">
+                            <!-- Diff content will be inserted here by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="js/admin-theme-switcher.js"></script>
+    <script src="js/admin-header.js"></script>
+    <script src="js/responsive.js"></script>
+    <script src="js/admin-preview.js"></script>
+    <script src="js/action-buttons-redesign.js"></script>
+    <script src="js/admin-menu-new.js"></script>
+</body>
+</html>
+

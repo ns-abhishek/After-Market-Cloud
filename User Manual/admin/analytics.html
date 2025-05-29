@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Manual Admin | Analytics</title>
+    <link rel="stylesheet" href="css/admin-base.css">
+    <link rel="stylesheet" href="css/admin-styles.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/tenant-locale.css">
+    <link rel="stylesheet" href="css/admin-menu-new.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Include Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Admin Header -->
+        <header class="admin-header">
+            <div class="logo">
+                <div class="logo-text">
+                    <span class="hcl-brand">HCLSoftware</span>
+                    <span class="hcl-separator">|</span>
+                    <span class="manual-title">User Manual</span>
+                </div>
+                <span class="admin-badge">ADMIN</span>
+            </div>
+            <div class="header-actions">
+                <!-- Theme Toggle Button -->
+                <button id="theme-toggle" class="icon-btn theme-toggle" aria-label="Toggle between light and dark theme">
+                    <i class="fas fa-sun"></i>
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="notifications-container">
+                    <button class="icon-btn notifications" id="notifications-toggle">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <div class="notifications-dropdown">
+                        <div class="notifications-header">
+                            <h3>Notifications</h3>
+                            <button class="mark-all-read">Mark all as read</button>
+                        </div>
+                        <div class="notifications-list">
+                            <div class="notification-item unread">
+                                <div class="notification-icon info">
+                                    <i class="fas fa-info"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="notification-text">New content has been published</p>
+                                    <p class="notification-time">Just now</p>
+                                </div>
+                            </div>
+                            <div class="notification-item unread">
+                                <div class="notification-icon warning">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="notification-text">Your storage is almost full (85%)</p>
+                                    <p class="notification-time">2 hours ago</p>
+                                </div>
+                            </div>
+                            <div class="notification-item">
+                                <div class="notification-icon success">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="notification-text">Weekly backup completed successfully</p>
+                                    <p class="notification-time">Yesterday</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="notifications-footer">
+                            <a href="#">View all notifications</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="admin-user-profile" id="admin-profile-toggle">
+                    <div class="admin-user-info">
+                        <span class="admin-name">Admin User</span>
+                        <span class="admin-role">Administrator</span>
+                    </div>
+                    <div class="admin-dropdown-toggle">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="admin-dropdown-menu">
+                        <a href="#"><i class="fas fa-user-cog"></i> Profile</a>
+                        <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                        <a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Admin Content Area -->
+        <div class="admin-content-wrapper">
+            <!-- Admin Menu - New Design -->
+<div class="admin-menu">
+    <!-- Mobile Menu Toggle -->
+    <button class="admin-menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <!-- Main Navigation -->
+    <nav class="admin-menu-nav">
+        <ul class="primary-menu">
+            <!-- Dashboard -->
+            <li class="DASHBOARD_ACTIVE">
+                <a href="dashboard.html">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            
+            <!-- Content Management Category -->
+            <li class="has-dropdown category-content CONTENT_ACTIVE">
+                <a href="#">
+                    <i class="fas fa-book"></i>
+                    <span>Content</span>
+                    <i class="fas fa-chevron-down dropdown-indicator"></i>
+                </a>
+                <ul class="dropdown">
+                    <li class="CONTENT_MANAGER_ACTIVE">
+                        <a href="content-manager.html">
+                            <i class="fas fa-book"></i>
+                            <span>Content Manager</span>
+                        </a>
+                    </li>
+                    <li class="DOCUMENTATION_MANAGER_ACTIVE">
+                        <a href="documentation-manager.html">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Documentation Manager</span>
+                        </a>
+                    </li>
+                    <li class="VERSION_MANAGER_ACTIVE">
+                        <a href="version-manager.html">
+                            <i class="fas fa-code-branch"></i>
+                            <span>Version Manager</span>
+                        </a>
+                    </li>
+                    <li class="MEDIA_LIBRARY_ACTIVE">
+                        <a href="media-library.html">
+                            <i class="fas fa-images"></i>
+                            <span>Media Library</span>
+                        </a>
+                    </li>
+                    <li class="DOCUMENTATION_WORKFLOW_ACTIVE">
+                        <a href="documentation-workflow.html">
+                            <i class="fas fa-tasks"></i>
+                            <span>Documentation Workflow</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            
+            <!-- Structure Category -->
+            <li class="category-structure STRUCTURE_ACTIVE">
+                <a href="structure.html">
+                    <i class="fas fa-sitemap"></i>
+                    <span>Structure</span>
+                </a>
+            </li>
+            
+            <!-- Tenant & Localization Category -->
+            <li class="has-dropdown category-users LOCALIZATION_ACTIVE">
+                <a href="#">
+                    <i class="fas fa-globe"></i>
+                    <span>Localization</span>
+                    <i class="fas fa-chevron-down dropdown-indicator"></i>
+                </a>
+                <ul class="dropdown">
+                    <li class="TENANT_MANAGER_ACTIVE">
+                        <a href="tenant-manager.html">
+                            <i class="fas fa-building"></i>
+                            <span>Tenant Manager</span>
+                        </a>
+                    </li>
+                    <li class="TRANSLATION_MANAGER_ACTIVE">
+                        <a href="translation-manager.html">
+                            <i class="fas fa-language"></i>
+                            <span>Translation Manager</span>
+                        </a>
+                    </li>
+                    <li class="LOCALE_MANAGER_ACTIVE">
+                        <a href="locale-manager.html">
+                            <i class="fas fa-globe"></i>
+                            <span>Locale Manager</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            
+            <!-- Users Category -->
+            <li class="has-dropdown category-users USERS_ACTIVE optional">
+                <a href="#">
+                    <i class="fas fa-users"></i>
+                    <span>Users</span>
+                    <i class="fas fa-chevron-down dropdown-indicator"></i>
+                </a>
+                <ul class="dropdown">
+                    <li class="USERS_LIST_ACTIVE">
+                        <a href="users.html">
+                            <i class="fas fa-users"></i>
+                            <span>Users List</span>
+                        </a>
+                    </li>
+                    <li class="USER_PERMISSIONS_ACTIVE">
+                        <a href="user-permissions.html">
+                            <i class="fas fa-user-shield"></i>
+                            <span>User Permissions</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            
+            <!-- Analytics Category -->
+            <li class="has-dropdown category-analytics ANALYTICS_ACTIVE optional">
+                <a href="#">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Analytics</span>
+                    <i class="fas fa-chevron-down dropdown-indicator"></i>
+                </a>
+                <ul class="dropdown">
+                    <li class="ANALYTICS_DASHBOARD_ACTIVE">
+                        <a href="analytics.html">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Analytics Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="ADVANCED_ANALYTICS_ACTIVE">
+                        <a href="advanced-analytics.html">
+                            <i class="fas fa-chart-pie"></i>
+                            <span>Advanced Analytics</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            
+            <!-- Settings Category -->
+            <li class="category-settings SETTINGS_ACTIVE optional">
+                <a href="settings.html">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+            
+            <!-- Divider -->
+            <li class="menu-divider"></li>
+            
+            <!-- View Manual (External Link) -->
+            <li>
+                <a href="../Complete_User Manual/index.html" target="_blank">
+                    <i class="fas fa-external-link-alt"></i>
+                    <span>View Manual</span>
+                </a>
+            </li>
+            
+            <!-- More Menu -->
+            <li class="has-dropdown more-menu">
+                <a href="#">
+                    <i class="fas fa-ellipsis-h"></i>
+                    <span>More</span>
+                    <i class="fas fa-chevron-down dropdown-indicator"></i>
+                </a>
+                <ul class="dropdown">
+                    <!-- Items will be dynamically added here by JavaScript -->
+                </ul>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+
+            <!-- Main Content
+            <main class="admin-main-content">
+                <div class="admin-page-header">
+                    <h2><i class="fas fa-chart-line"></i> Analytics</h2>
+                    <div class="admin-breadcrumbs">
+                        <span>Home</span>
+                        <i class="fas fa-chevron-right"></i>
+                        <span>Analytics</span>
+                    </div>
+                </div>
+
+                <!-- Analytics Tabs -->
+                <div class="admin-tabs">
+                    <button class="admin-tab active" data-tab="overview">
+                        <i class="fas fa-chart-pie"></i> Overview
+                    </button>
+                    <button class="admin-tab" data-tab="page-views">
+                        <i class="fas fa-eye"></i> Page Views
+                    </button>
+                    <button class="admin-tab" data-tab="user-engagement">
+                        <i class="fas fa-user-clock"></i> User Engagement
+                    </button>
+                    <button class="admin-tab" data-tab="documentation-analytics">
+                        <i class="fas fa-book"></i> Documentation Analytics
+                    </button>
+                    <button class="admin-tab" data-tab="tenant-analytics">
+                        <i class="fas fa-building"></i> Tenant Analytics
+                    </button>
+                    <button class="admin-tab" data-tab="locale-analytics">
+                        <i class="fas fa-globe"></i> Locale Analytics
+                    </button>
+                    <button class="admin-tab" data-tab="search-analytics">
+                        <i class="fas fa-search"></i> Search Analytics
+                    </button>
+                    <button class="admin-tab" data-tab="reports">
+                        <i class="fas fa-file-alt"></i> Reports
+                    </button>
+                </div>
+
+                <!-- Date Range Selector -->
+                <div class="analytics-date-range">
+                    <div class="date-range-label">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Date Range:</span>
+                    </div>
+                    <div class="date-range-options">
+                        <button class="date-range-btn active" data-range="7">Last 7 Days</button>
+                        <button class="date-range-btn" data-range="30">Last 30 Days</button>
+                        <button class="date-range-btn" data-range="90">Last 90 Days</button>
+                        <button class="date-range-btn" data-range="custom">Custom Range</button>
+                    </div>
+                    <div class="date-range-custom">
+                        <input type="date" id="date-from" name="date-from">
+                        <span>to</span>
+                        <input type="date" id="date-to" name="date-to">
+                        <button class="admin-button small">Apply</button>
+                    </div>
+                </div>
+
+                <!-- Overview Tab -->
+                <div class="admin-tab-content active" id="overview">
+                    <!-- Analytics Stats -->
+                    <div class="analytics-stats-container">
+                        <div class="analytics-stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Total Page Views</h3>
+                                <p class="stat-value">12,547</p>
+                                <p class="stat-change positive">
+                                    <i class="fas fa-arrow-up"></i> 12.5% vs previous period
+                                </p>
+                            </div>
+                        </div>
+                        <div class="analytics-stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Unique Visitors</h3>
+                                <p class="stat-value">3,842</p>
+                                <p class="stat-change positive">
+                                    <i class="fas fa-arrow-up"></i> 8.2% vs previous period
+                                </p>
+                            </div>
+                        </div>
+                        <div class="analytics-stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Avg. Time on Page</h3>
+                                <p class="stat-value">3m 24s</p>
+                                <p class="stat-change positive">
+                                    <i class="fas fa-arrow-up"></i> 15.3% vs previous period
+                                </p>
+                            </div>
+                        </div>
+                        <div class="analytics-stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Search Queries</h3>
+                                <p class="stat-value">1,254</p>
+                                <p class="stat-change negative">
+                                    <i class="fas fa-arrow-down"></i> 3.1% vs previous period
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Charts -->
+                    <div class="analytics-charts-container">
+                        <div class="analytics-chart-card">
+                            <div class="chart-header">
+                                <h3>Page Views Over Time</h3>
+                                <div class="chart-actions">
+                                    <button class="chart-action-btn" data-type="day">Day</button>
+                                    <button class="chart-action-btn active" data-type="week">Week</button>
+                                    <button class="chart-action-btn" data-type="month">Month</button>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="pageViewsChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="analytics-chart-card">
+                            <div class="chart-header">
+                                <h3>Top Pages</h3>
+                                <div class="chart-actions">
+                                    <button class="chart-action-btn" data-view="table">
+                                        <i class="fas fa-table"></i>
+                                    </button>
+                                    <button class="chart-action-btn active" data-view="chart">
+                                        <i class="fas fa-chart-bar"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="topPagesChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="analytics-charts-container">
+                        <div class="analytics-chart-card">
+                            <div class="chart-header">
+                                <h3>User Engagement</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="engagementChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="analytics-chart-card">
+                            <div class="chart-header">
+                                <h3>Search Terms</h3>
+                            </div>
+                            <div class="chart-container">
+                                <div id="searchTermsCloud" class="search-terms-cloud">
+                                    <span class="search-term" style="font-size: 2.2em;">orders</span>
+                                    <span class="search-term" style="font-size: 1.8em;">shipping</span>
+                                    <span class="search-term" style="font-size: 1.6em;">returns</span>
+                                    <span class="search-term" style="font-size: 1.5em;">products</span>
+                                    <span class="search-term" style="font-size: 1.4em;">inventory</span>
+                                    <span class="search-term" style="font-size: 1.3em;">customers</span>
+                                    <span class="search-term" style="font-size: 1.2em;">reports</span>
+                                    <span class="search-term" style="font-size: 1.1em;">dashboard</span>
+                                    <span class="search-term" style="font-size: 1em;">settings</span>
+                                    <span class="search-term" style="font-size: 0.9em;">login</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page Views Tab -->
+                <div class="admin-tab-content" id="page-views">
+                    <div class="analytics-table-container">
+                        <div class="analytics-table-header">
+                            <h3>Page Views by Content</h3>
+                            <div class="analytics-table-actions">
+                                <button class="admin-button secondary">
+                                    <i class="fas fa-download"></i> Export
+                                </button>
+                            </div>
+                        </div>
+                        <table class="admin-content-table">
+                            <thead>
+                                <tr>
+                                    <th>Page</th>
+                                    <th>Views</th>
+                                    <th>Unique Visitors</th>
+                                    <th>Avg. Time on Page</th>
+                                    <th>Bounce Rate</th>
+                                    <th>Trend</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Getting Started</td>
+                                    <td>2,547</td>
+                                    <td>1,842</td>
+                                    <td>4m 12s</td>
+                                    <td>24.5%</td>
+                                    <td><span class="trend-up"><i class="fas fa-arrow-up"></i> 12%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Managing Orders</td>
+                                    <td>1,982</td>
+                                    <td>1,456</td>
+                                    <td>3m 45s</td>
+                                    <td>18.2%</td>
+                                    <td><span class="trend-up"><i class="fas fa-arrow-up"></i> 8%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>System Requirements</td>
+                                    <td>1,654</td>
+                                    <td>1,245</td>
+                                    <td>2m 30s</td>
+                                    <td>32.1%</td>
+                                    <td><span class="trend-down"><i class="fas fa-arrow-down"></i> 3%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>User Roles and Permissions</td>
+                                    <td>1,432</td>
+                                    <td>1,102</td>
+                                    <td>5m 18s</td>
+                                    <td>15.7%</td>
+                                    <td><span class="trend-up"><i class="fas fa-arrow-up"></i> 15%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Navigating the Interface</td>
+                                    <td>1,254</td>
+                                    <td>987</td>
+                                    <td>3m 22s</td>
+                                    <td>21.3%</td>
+                                    <td><span class="trend-up"><i class="fas fa-arrow-up"></i> 5%</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Documentation Analytics Tab -->
+                <div class="admin-tab-content" id="documentation-analytics">
+                    <!-- Documentation Analytics Stats -->
+                    <div class="analytics-stats-container">
+                        <div class="analytics-stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Documentation Pages</h3>
+                                <p class="stat-value">124</p>
+                                <p class="stat-change positive">
+                                    <i class="fas fa-arrow-up"></i> 8.7% vs previous period
+                                </p>
+                            </div>
+                        </div>
+                        <div class="analytics-stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Documentation Views</h3>
+                                <p class="stat-value">8,742</p>
+                                <p class="stat-change positive">
+                                    <i class="fas fa-arrow-up"></i> 15.3% vs previous period
+                                </p>
+                            </div>
+                        </div>
+                        <div class="analytics-stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Documentation Searches</h3>
+                                <p class="stat-value">2,156</p>
+                                <p class="stat-change positive">
+                                    <i class="fas fa-arrow-up"></i> 5.8% vs previous period
+                                </p>
+                            </div>
+                        </div>
+                        <div class="analytics-stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Documentation Coverage</h3>
+                                <p class="stat-value">82%</p>
+                                <p class="stat-change positive">
+                                    <i class="fas fa-arrow-up"></i> 4.2% vs previous period
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Documentation Usage Charts -->
+                    <div class="analytics-charts-container">
+                        <div class="analytics-chart-card">
+                            <div class="chart-header">
+                                <h3>Documentation Usage by Type</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="docTypeChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="analytics-chart-card">
+                            <div class="chart-header">
+                                <h3>Most Viewed Documentation</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="topDocsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Documentation Coverage -->
+                    <div class="admin-section">
+                        <div class="admin-section-header">
+                            <h3><i class="fas fa-tasks"></i> Documentation Coverage</h3>
+                        </div>
+                        <div class="admin-section-content">
+                            <div class="coverage-progress">
+                                <div class="coverage-item">
+                                    <div class="coverage-label">
+                                        <span>Complete User Manual</span>
+                                        <span>85%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 85%;"></div>
+                                    </div>
+                                </div>
+                                <div class="coverage-item">
+                                    <div class="coverage-label">
+                                        <span>OMS Module</span>
+                                        <span>92%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 92%;"></div>
+                                    </div>
+                                </div>
+                                <div class="coverage-item">
+                                    <div class="coverage-label">
+                                        <span>Finance Module</span>
+                                        <span>78%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 78%;"></div>
+                                    </div>
+                                </div>
+                                <div class="coverage-item">
+                                    <div class="coverage-label">
+                                        <span>HR Module</span>
+                                        <span>65%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 65%;"></div>
+                                    </div>
+                                </div>
+                                <div class="coverage-item">
+                                    <div class="coverage-label">
+                                        <span>Inventory Module</span>
+                                        <span>88%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 88%;"></div>
+                                    </div>
+                                </div>
+                                <div class="coverage-item">
+                                    <div class="coverage-label">
+                                        <span>CRM Module</span>
+                                        <span>72%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 72%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Documentation Search Analytics -->
+                    <div class="admin-section">
+                        <div class="admin-section-header">
+                            <h3><i class="fas fa-search"></i> Most Searched Documentation Topics</h3>
+                        </div>
+                        <div class="admin-section-content">
+                            <div class="search-analytics-table-container">
+                                <table class="admin-content-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Search Term</th>
+                                            <th>Search Count</th>
+                                            <th>Click-through Rate</th>
+                                            <th>Avg. Time After Search</th>
+                                            <th>Documentation Coverage</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>order processing</td>
+                                            <td>342</td>
+                                            <td>78.2%</td>
+                                            <td>4m 12s</td>
+                                            <td><span class="coverage-badge high">High</span></td>
+                                            <td><button class="action-btn view" title="View Content"><i class="fas fa-eye"></i></button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>return policy</td>
+                                            <td>287</td>
+                                            <td>65.4%</td>
+                                            <td>3m 45s</td>
+                                            <td><span class="coverage-badge medium">Medium</span></td>
+                                            <td><button class="action-btn view" title="View Content"><i class="fas fa-eye"></i></button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>user permissions</td>
+                                            <td>254</td>
+                                            <td>82.1%</td>
+                                            <td>5m 30s</td>
+                                            <td><span class="coverage-badge high">High</span></td>
+                                            <td><button class="action-btn view" title="View Content"><i class="fas fa-eye"></i></button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>invoice generation</td>
+                                            <td>198</td>
+                                            <td>45.7%</td>
+                                            <td>2m 18s</td>
+                                            <td><span class="coverage-badge low">Low</span></td>
+                                            <td><button class="action-btn view" title="View Content"><i class="fas fa-eye"></i></button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>shipping options</td>
+                                            <td>176</td>
+                                            <td>72.3%</td>
+                                            <td>3m 22s</td>
+                                            <td><span class="coverage-badge medium">Medium</span></td>
+                                            <td><button class="action-btn view" title="View Content"><i class="fas fa-eye"></i></button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tenant Analytics Tab -->
+                <div class="admin-tab-content" id="tenant-analytics">
+                    <div class="admin-section">
+                        <div class="admin-section-header">
+                            <h3><i class="fas fa-building"></i> Tenant Usage Comparison</h3>
+                        </div>
+                        <div class="admin-section-content">
+                            <div class="chart-container">
+                                <canvas id="tenantUsageChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="admin-section">
+                        <div class="admin-section-header">
+                            <h3><i class="fas fa-chart-bar"></i> Content Usage by Tenant</h3>
+                        </div>
+                        <div class="admin-section-content">
+                            <div class="selector-container">
+                                <div class="selector-item">
+                                    <h3><i class="fas fa-building"></i> Tenant</h3>
+                                    <select id="tenant-content-select" class="admin-select">
+                                        <option value="all">All Tenants</option>
+                                        <option value="global">Global</option>
+                                        <option value="acme-corp">Acme Corporation</option>
+                                        <option value="global-ent">Global Enterprises</option>
+                                        <option value="springfield-gov">City of Springfield</option>
+                                        <option value="tech-solutions">Tech Solutions Ltd</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="analytics-table-container">
+                                <table class="admin-content-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Content</th>
+                                            <th>Views</th>
+                                            <th>Unique Visitors</th>
+                                            <th>Avg. Time on Page</th>
+                                            <th>Bounce Rate</th>
+                                            <th>Trend</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Getting Started</td>
+                                            <td>1,547</td>
+                                            <td>1,242</td>
+                                            <td>3m 45s</td>
+                                            <td>22.5%</td>
+                                            <td><span class="trend-up"><i class="fas fa-arrow-up"></i> 10%</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Managing Orders</td>
+                                            <td>1,382</td>
+                                            <td>1,056</td>
+                                            <td>4m 15s</td>
+                                            <td>18.3%</td>
+                                            <td><span class="trend-up"><i class="fas fa-arrow-up"></i> 12%</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Locale Analytics Tab -->
+                <div class="admin-tab-content" id="locale-analytics">
+                    <div class="admin-section">
+                        <div class="admin-section-header">
+                            <h3><i class="fas fa-globe"></i> Content Usage by Locale</h3>
+                        </div>
+                        <div class="admin-section-content">
+                            <div class="chart-container">
+                                <canvas id="localeUsageChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="admin-section">
+                        <div class="admin-section-header">
+                            <h3><i class="fas fa-language"></i> Language Preference Analysis</h3>
+                        </div>
+                        <div class="admin-section-content">
+                            <div class="selector-container">
+                                <div class="selector-item">
+                                    <h3><i class="fas fa-globe"></i> Locale</h3>
+                                    <select id="locale-content-select" class="admin-select">
+                                        <option value="all">All Locales</option>
+                                        <option value="en-US">English (US)</option>
+                                        <option value="de-DE">German</option>
+                                        <option value="fr-FR">French</option>
+                                        <option value="ja-JP">Japanese</option>
+                                        <option value="es-ES">Spanish</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="analytics-table-container">
+                                <table class="admin-content-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Content</th>
+                                            <th>Views</th>
+                                            <th>Unique Visitors</th>
+                                            <th>Avg. Time on Page</th>
+                                            <th>Bounce Rate</th>
+                                            <th>Trend</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Getting Started</td>
+                                            <td>2,147</td>
+                                            <td>1,642</td>
+                                            <td>3m 55s</td>
+                                            <td>20.5%</td>
+                                            <td><span class="trend-up"><i class="fas fa-arrow-up"></i> 8%</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Managing Orders</td>
+                                            <td>1,782</td>
+                                            <td>1,356</td>
+                                            <td>4m 05s</td>
+                                            <td>19.3%</td>
+                                            <td><span class="trend-up"><i class="fas fa-arrow-up"></i> 7%</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="js/admin-theme-switcher.js"></script>
+    <script src="js/admin-header.js"></script>
+    <script src="js/responsive.js"></script>
+    <script src="js/admin-analytics.js"></script>
+    <script src="js/admin-menu-new.js"></script>
+</body>
+</html>
+

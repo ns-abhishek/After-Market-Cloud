@@ -1,0 +1,6 @@
+@echo off
+echo Updating admin menu across all pages...
+node update-menu.js
+echo.
+echo Press any key to exit...
+pause > nul

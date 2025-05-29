@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exchange Rate Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            /* Light grey background */
+            color: #3c4043;
+            /* Darker text color */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Basic fade in/out animation for toasts */
+        @keyframes fadeInOut {
+
+            0%,
+            100% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            10%,
+            90% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fadeInOut {
+            animation: fadeInOut 4s ease-in-out forwards;
+        }
+
+        /* Ensure select arrows are visible in dark mode */
+        .dark select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        }
+
+        /* Custom styling for range input track and thumb */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 0.5rem;
+            /* h-2 */
+            border-radius: 0.5rem;
+            /* rounded-lg */
+            background-color: #e5e7eb;
+            /* bg-gray-200 */
+        }
+
+        .dark input[type="range"] {
+            background-color: #4b5563;
+            /* dark:bg-gray-700 */
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 1.25rem;
+            /* Typically h-5 w-5 */
+            height: 1.25rem;
+            border-radius: 9999px;
+            /* rounded-full */
+            background-color: #3b82f6;
+            /* accent-blue-600 */
+            cursor: pointer;
+            border: 2px solid white;
+        }
+
+        .dark input[type="range"]::-webkit-slider-thumb {
+            background-color: #60a5fa;
+            /* dark:accent-blue-500 */
+            border: 2px solid #1f2937;
+            /* dark:bg-gray-800 or similar */
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 9999px;
+            background-color: #3b82f6;
+            cursor: pointer;
+            border: 2px solid white;
+        }
+
+        .dark input[type="range"]::-moz-range-thumb {
+            background-color: #60a5fa;
+            border: 2px solid #1f2937;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 9999px;
+            color: #5f6368;
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+        }
+
+        .nav-link:hover {
+            background-color: #e8f0fe;
+            color: #1967d2;
+        }
+
+        .nav-link.active {
+            background-color: #e8f0fe;
+            color: #0a346e;
+            font-weight: 500;
+        }
+
+        .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .activeeee {
+            background-color: #000000 !important;
+            color: #ffffff;
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 text-gray-900">
+
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <span class="text-2xl font-bold text-blue-600">Admin<span
+                                class="text-gray-700">Panel</span></span>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-2">
+                        <a href="dashboard.html" class="nav-link">
+                            <i class="fas fa-tachometer-alt"></i>Dashboard
+                        </a>
+                        <a href="platformSetup.html" class="nav-link">
+                            <i class="fas fa-cogs"></i>Platform Setup
+                        </a>
+                        <a href="companySetup.html" class="nav-link">
+                            <i class="fas fa-building"></i>Company Setup
+                        </a>
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-bell"></i>Notifications
+                            <span
+                                class="ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">3</span>
+                        </a>
+                        <a href="exchangeRate.html"
+                            class="text-sm font-medium text-white bg-blue-400 hover:bg-gray-800 px-3 py-2 rounded-md edit-btn activeeee">
+                            Exchange Rate Management
+                        </a>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-4 flex items-center md:ml-6">
+                        <button
+                            class="p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-500">
+                            <span class="sr-only">View notifications</span>
+                            <i class="fas fa-user-circle text-2xl"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" id="mobile-menu-button"
+                        class="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+                        aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="dashboard.html" class="nav-link block">
+                    <i class="fas fa-tachometer-alt"></i>Dashboard
+                </a>
+                <a href="platformSetup.html" class="nav-link block">
+                    <i class="fas fa-cogs"></i>Platform Setup
+                </a>
+                <a href="companySetup.html" class="nav-link block">
+                    <i class="fas fa-building"></i>Company Setup
+                </a>
+                <a href="#" class="nav-link block"><i class="fas fa-bell"></i>Notifications
+                    <span
+                        class="ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">3</span>
+                </a>
+                <a href="exchangeRate.html"
+                    class="text-sm font-medium text-white bg-blue-400 hover:bg-gray-800 px-3 py-2 rounded-md edit-btn">
+                    Exchange Rate Management
+                </a>
+            </div>
+            <div class="pt-4 pb-3 border-t border-gray-200">
+                <div class="flex items-center px-5">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-user-circle text-3xl text-gray-400"></i>
+                    </div>
+                    <div class="ml-3">
+                        <div class="text-base font-medium leading-none text-gray-800">Admin User</div>
+                        <div class="text-sm font-medium leading-none text-gray-500">admin@example.com</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div id="toastContainer" class="fixed top-4 right-4 z-[100] space-y-2 w-auto max-w-sm"></div>
+
+    <div id="appContainer" class="min-h-screen">
+    </div>
+
+    <div id="modalContainer">
+        <div id="rateModal"
+            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-40 p-4 hidden">
+            <div id="rateModalContent" class="bg-white p-6 shadow-xl w-full max-w-md">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 id="rateModalTitle" class="text-xl font-semibold">Add Rate</h2>
+                    <button id="closeRateModalBtn" class="p-1 hover:bg-gray-200 text-gray-600"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg></button>
+                </div>
+                <form id="rateForm" class="space-y-4">
+                    <input type="hidden" id="rateIdModal">
+                    <div>
+                        <label for="currencyModal" class="block text-sm font-medium text-gray-700 mb-1">Currency Name
+                            <span id="derivedCurrencyCodeModal"></span></label>
+                        <input type="text" id="currencyModalInput" list="commonCurrenciesModalDatalist"
+                            class="w-full p-2 border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
+                            placeholder="e.g. US Dollar">
+                        <datalist id="commonCurrenciesModalDatalist"></datalist>
+                        <p id="currencyModalError" class="text-red-500 text-xs mt-1"></p>
+                    </div>
+                    <div>
+                        <label for="rateModalInput" id="rateModalLabel"
+                            class="block text-sm font-medium text-gray-700 mb-1">Rate</label>
+                        <input type="number" step="0.00001" id="rateModalInput"
+                            class="w-full p-2 border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
+                            placeholder="e.g., 1.35">
+                        <p id="rateModalError" class="text-red-500 text-xs mt-1"></p>
+                    </div>
+                    <div>
+                        <label for="effectiveDateModalInput"
+                            class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                        <input type="date" id="effectiveDateModalInput"
+                            class="w-full p-2 border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <p id="effectiveDateModalError" class="text-red-500 text-xs mt-1"></p>
+                    </div>
+                    <div class="flex justify-end space-x-3 pt-2">
+                        <button type="button" id="cancelRateModalBtn"
+                            class="px-4 py-2 text-gray-700 bg-gray-200 hover:bg-gray-300">Cancel</button>
+                        <button type="submit" id="saveRateModalBtn"
+                            class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 flex items-center"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="mr-2">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                <polyline points="7 3 7 8 15 8"></polyline>
+                            </svg><span id="rateModalSaveText">Add Rate</span></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="configPanel"
+            class="fixed inset-y-0 right-0 w-72 bg-gray-100 p-6 shadow-xl z-30 transform translate-x-full transition-transform">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-semibold">Settings</h3>
+                <button id="closeConfigPanelBtn" class="p-1 hover:bg-gray-200"><svg xmlns="http://www.w3.org/2000/svg"
+                        width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg></button>
+            </div>
+            <div class="space-y-6">
+                <div>
+                    <label for="themeSelect" class="block text-sm font-medium text-gray-700 mb-1">Theme</label>
+                    <select id="themeSelect"
+                        class="w-full p-2 border border-gray-300 rounded-md bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="fontSizeSelect" class="block text-sm font-medium text-gray-700 mb-1">Font Size</label>
+                    <select id="fontSizeSelect"
+                        class="w-full p-2 border border-gray-300 rounded-md bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option value="sm">Small</option>
+                        <option value="base">Medium</option>
+                        <option value="lg">Large</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="roundnessRange" class="block text-sm font-medium text-gray-700 mb-1">Rounded Corners:
+                        <span id="currentRoundnessLabel" class="font-normal text-blue-600">Medium</span></label>
+                    <input type="range" id="roundnessRange" min="0" max="7"
+                        class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                    <div class="flex justify-between text-xs text-gray-500 mt-1"><span>Square</span><span>Max
+                            Round</span></div>
+                </div>
+                <div>
+                    <label for="editModeSelect" class="block text-sm font-medium text-gray-700 mb-1">Edit Mode
+                        (Table)</label>
+                    <select id="editModeSelect"
+                        class="w-full p-2 border border-gray-300 rounded-md bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option value="inline">Inline Row</option>
+                        <option value="modal">Modal</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="addModeSelect" class="block text-sm font-medium text-gray-700 mb-1">Add Mode
+                        (Table)</label>
+                    <select id="addModeSelect"
+                        class="w-full p-2 border border-gray-300 rounded-md bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option value="inline">Inline Row</option>
+                        <option value="modal">Modal</option>
+                    </select>
+                </div>
+            </div>
+            <p class="mt-8 text-xs text-gray-500">Settings apply dynamically.</p>
+        </div>
+        <div id="configPanelOverlay" class="fixed inset-0 bg-black bg-opacity-25 z-20 hidden"></div>
+
+        <div id="requestPlanModal"
+            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 hidden">
+            <div id="requestPlanModalContent"
+                class="bg-white p-6 shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-semibold">Request Plan Change</h2>
+                    <button id="closeRequestPlanModalBtn" class="p-1 hover:bg-gray-200"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg></button>
+                </div>
+                <form id="requestPlanForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">What would you like to
+                            change?</label>
+                        <div class="mt-2 space-y-2">
+                            <div><input type="radio" name="requestType" value="Change Base Currency" id="reqTypeBase"
+                                    class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300"><label
+                                    for="reqTypeBase" class="ml-2 text-sm">Change Base Currency</label></div>
+                            <div><input type="radio" name="requestType" value="Switch to Automatic Setup"
+                                    id="reqTypeAuto"
+                                    class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300"><label
+                                    for="reqTypeAuto" class="ml-2 text-sm">Switch to Automatic Setup</label></div>
+                            <div><input type="radio" name="requestType" value="Other Request" id="reqTypeOther"
+                                    class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300"><label
+                                    for="reqTypeOther" class="ml-2 text-sm">Other Request</label></div>
+                        </div>
+                        <p id="requestTypeError" class="text-red-500 text-xs mt-1"></p>
+                    </div>
+                    <div id="newBaseCurrencySection" class="hidden space-y-4">
+                        <div class="relative">
+                            <label for="newBaseCurrencySelect" class="block text-sm font-medium text-gray-700 mb-1">New
+                                Base Currency</label>
+                            <select id="newBaseCurrencySelect"
+                                class="mt-1 block w-full p-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm bg-white appearance-none"></select>
+                            <div class="absolute right-3 top-9 text-gray-400 pointer-events-none"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg></div>
+                            <p id="newBaseCurrencyError" class="text-red-500 text-xs mt-1"></p>
+                        </div>
+                        <div>
+                            <label for="baseChangeNotesTextarea"
+                                class="block text-sm font-medium text-gray-700 mb-1">Reason/Notes (Optional)</label>
+                            <textarea id="baseChangeNotesTextarea" rows="2"
+                                class="mt-1 block w-full p-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm bg-white"
+                                placeholder="Why are you requesting this change?"></textarea>
+                        </div>
+                    </div>
+                    <div id="autoSetupNotesSection" class="hidden">
+                        <label for="autoSetupNotesTextarea"
+                            class="block text-sm font-medium text-gray-700 mb-1">Integration Notes/Preferences
+                            (Optional)</label>
+                        <textarea id="autoSetupNotesTextarea" rows="3"
+                            class="mt-1 block w-full p-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm bg-white"
+                            placeholder="Any specific systems or preferences?"></textarea>
+                    </div>
+                    <div id="otherRequestNotesSection" class="hidden">
+                        <label for="otherRequestNotesTextarea"
+                            class="block text-sm font-medium text-gray-700 mb-1">Details for "Other Request"</label>
+                        <textarea id="otherRequestNotesTextarea" rows="3"
+                            class="mt-1 block w-full p-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm bg-white"
+                            placeholder="Please describe your request..."></textarea>
+                        <p id="otherRequestNotesError" class="text-red-500 text-xs mt-1"></p>
+                    </div>
+                    <div class="mt-6 flex justify-end space-x-3">
+                        <button type="button" id="cancelRequestPlanModalBtn"
+                            class="px-4 py-2 text-gray-700 bg-gray-200 hover:bg-gray-300">Cancel</button>
+                        <button type="submit" id="submitRequestPlanModalBtn"
+                            class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 flex items-center"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="mr-2">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>Submit Request</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="deleteDropZone"
+        class="fixed bottom-0 left-0 right-0 h-24 bg-red-500/90 text-white flex items-center justify-center transition-transform z-50 translate-y-full">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <line x1="10" y1="11" x2="10" y2="17"></line>
+            <line x1="14" y1="11" x2="14" y2="17"></line>
+        </svg>
+        <span class="text-lg font-semibold">Drop to delete</span>
+    </div>
+
+    <datalist id="commonCurrenciesDatalistGlobal"></datalist>
+
+
+    <script>
+        // --- GLOBAL STATE AND CONFIGURATION ---
+        const appId = 'local-exchange-rates-app-html';
+        let rates = [];
+        let isLoading = true;
+        let globalError = null;
+        let viewType = 'table'; // 'table' or 'cards'
+        let searchTerm = '';
+        let searchField = 'all';
+        let selectedIds = [];
+        let currentRateToEdit = null; // For modal editing
+        let sortConfig = { key: 'order', direction: 'ascending' };
+        let draggedItemId = null;
+        let isDragging = false;
+        let currentPage = 1;
+        let recordsPerPage = 10;
+        let editingRowId = null; // For inline table editing
+        let editingRowData = null; // Data for the row being edited inline
+        let isInlineAddRowVisible = false;
+        let toasts = [];
+        let companyPlan = { baseCurrency: "USD", updateFrequency: "Monthly", pendingUpdateFrequency: null, currentPeriodEndsIn: "approx. 25 days", setupType: "Manual Entry" };
+        let config = { theme: 'light', fontSize: 'base', roundness: 7, spacing: 'comfortable', editMode: 'inline', addMode: 'inline', cardViewColumns: 'auto' };
+
+        const frequencyOptions = ["Monthly", "Quarterly", "Half Yearly", "Yearly"];
+        const frequencyOrder = { "Monthly": 0, "Quarterly": 1, "Half Yearly": 2, "Yearly": 3 };
+        const roundnessLabels = ["None", "X-Small", "Small", "Medium", "Large", "X-Large", "2X-Large", "3X-Large"];
+
+
+        // --- DATA ---
+        const commonCurrencies = [
+            { name: "US Dollar", code: "USD" }, { name: "Euro", code: "EUR" },
+            { name: "Japanese Yen", code: "JPY" }, { name: "British Pound", code: "GBP" },
+            { name: "Swiss Franc", code: "CHF" }, { name: "Canadian Dollar", code: "CAD" },
+            { name: "Australian Dollar", code: "AUD" }, { name: "New Zealand Dollar", code: "NZD" },
+            { name: "Chinese Yuan", code: "CNY" }, { name: "Indian Rupee", code: "INR" },
+            { name: "Brazilian Real", code: "BRL" }, { name: "South African Rand", code: "ZAR" },
+            { name: "Singapore Dollar", code: "SGD" }, { name: "Mexican Peso", code: "MXN" },
+            { name: "Russian Ruble", code: "RUB" }, { name: "Hong Kong Dollar", code: "HKD" },
+            { name: "Norwegian Krone", code: "NOK" }, { name: "Swedish Krona", code: "SEK" },
+            { name: "Danish Krone", code: "DKK" }, { name: "Polish Zloty", code: "PLN" },
+            { name: "Thai Baht", code: "THB" }, { name: "South Korean Won", code: "KRW" },
+            { name: "Turkish Lira", code: "TRY" }
+        ];
+
+        const initialRatesData = [
+            { id: 'seed1', currency: 'Canadian Dollar', currencyCode: 'CAD', rate: 0.7315, effectiveDate: '2024-05-27', lastUpdatedAt: new Date().toISOString(), order: 0 },
+            { id: 'seed2', currency: 'Euro', currencyCode: 'EUR', rate: 1.0842, effectiveDate: '2024-05-27', lastUpdatedAt: new Date().toISOString(), order: 1 },
+            { id: 'seed3', currency: 'British Pound', currencyCode: 'GBP', rate: 1.2730, effectiveDate: '2024-05-26', lastUpdatedAt: new Date(Date.now() - 86400000).toISOString(), order: 2 },
+            { id: 'seed4', currency: 'Japanese Yen', currencyCode: 'JPY', rate: 0.00637, effectiveDate: '2024-05-27', lastUpdatedAt: new Date().toISOString(), order: 3 },
+            { id: 'seed5', currency: 'Australian Dollar', currencyCode: 'AUD', rate: 0.6645, effectiveDate: '2024-05-27', lastUpdatedAt: new Date().toISOString(), order: 4 },
+            { id: 'seed6', currency: 'Canadian Dollar', currencyCode: 'CAD', rate: 1.27000, effectiveDate: '2018-05-02', lastUpdatedAt: new Date().toISOString(), order: 5 },
+            { id: 'seed7', currency: 'US Dollar', currencyCode: 'USD', rate: 1.32000, effectiveDate: '2024-04-19', lastUpdatedAt: new Date().toISOString(), order: 6 },
+            { id: 'seed8', currency: 'Euro', currencyCode: 'EUR', rate: 0.92540, effectiveDate: '2024-05-20', lastUpdatedAt: new Date().toISOString(), order: 7 },
+            { id: 'seed9', currency: 'British Pound', currencyCode: 'GBP', rate: 0.78510, effectiveDate: '2024-05-20', lastUpdatedAt: new Date().toISOString(), order: 8 },
+            { id: 'seed10', currency: 'Japanese Yen', currencyCode: 'JPY', rate: 156.82, effectiveDate: '2024-05-21', lastUpdatedAt: new Date().toISOString(), order: 9 },
+            { id: 'seed11', currency: 'Swiss Franc', currencyCode: 'CHF', rate: 0.91450, effectiveDate: '2024-05-19', lastUpdatedAt: new Date().toISOString(), order: 10 },
+            { id: 'seed12', currency: 'Australian Dollar', currencyCode: 'AUD', rate: 1.50860, effectiveDate: '2024-05-21', lastUpdatedAt: new Date().toISOString(), order: 11 },
+            { id: 'seed13', currency: 'New Zealand Dollar', currencyCode: 'NZD', rate: 1.63210, effectiveDate: '2024-05-20', lastUpdatedAt: new Date().toISOString(), order: 12 },
+            { id: 'seed14', currency: 'Chinese Yuan', currencyCode: 'CNY', rate: 7.2345, effectiveDate: '2024-05-21', lastUpdatedAt: new Date().toISOString(), order: 13 },
+            { id: 'seed15', currency: 'Indian Rupee', currencyCode: 'INR', rate: 83.12, effectiveDate: '2024-05-21', lastUpdatedAt: new Date().toISOString(), order: 14 },
+            { id: 'seed16', currency: 'Brazilian Real', currencyCode: 'BRL', rate: 5.15, effectiveDate: '2024-04-30', lastUpdatedAt: new Date().toISOString(), order: 15 },
+            { id: 'seed17', currency: 'South African Rand', currencyCode: 'ZAR', rate: 18.35, effectiveDate: '2024-05-15', lastUpdatedAt: new Date().toISOString(), order: 16 },
+            { id: 'seed18', currency: 'Singapore Dollar', currencyCode: 'SGD', rate: 1.3470, effectiveDate: '2024-05-22', lastUpdatedAt: new Date().toISOString(), order: 17 },
+            { id: 'seed19', currency: 'Mexican Peso', currencyCode: 'MXN', rate: 16.62, effectiveDate: '2024-05-18', lastUpdatedAt: new Date().toISOString(), order: 18 },
+            { id: 'seed20', currency: 'Russian Ruble', currencyCode: 'RUB', rate: 90.50, effectiveDate: '2024-05-23', lastUpdatedAt: new Date().toISOString(), order: 19 },
+            { id: 'seed21', currency: 'Swedish Krona', currencyCode: 'SEK', rate: 10.65, effectiveDate: '2024-05-23', lastUpdatedAt: new Date().toISOString(), order: 20 },
+            { id: 'seed22', currency: 'Norwegian Krone', currencyCode: 'NOK', rate: 10.60, effectiveDate: '2024-05-23', lastUpdatedAt: new Date().toISOString(), order: 21 },
+            { id: 'seed23', currency: 'Hong Kong Dollar', currencyCode: 'HKD', rate: 7.81, effectiveDate: '2024-05-23', lastUpdatedAt: new Date().toISOString(), order: 22 },
+            { id: 'seed24', currency: 'Turkish Lira', currencyCode: 'TRY', rate: 32.15, effectiveDate: '2024-05-23', lastUpdatedAt: new Date().toISOString(), order: 23 },
+            { id: 'seed25', currency: 'South Korean Won', currencyCode: 'KRW', rate: 1365.00, effectiveDate: '2024-05-23', lastUpdatedAt: new Date().toISOString(), order: 24 },
+            { id: 'seed26', currency: 'Thai Baht', currencyCode: 'THB', rate: 36.30, effectiveDate: '2024-05-23', lastUpdatedAt: new Date().toISOString(), order: 25 }
+        ];
+
+
+
+        // --- UTILITY FUNCTIONS ---
+        function formatDate(dateString, forInput = false, includeTime = false) {
+            if (!dateString) return forInput ? '' : 'N/A';
+            try {
+                const date = new Date(dateString);
+                if (isNaN(date.getTime())) return dateString;
+
+                let adjustedDate = date;
+                if (typeof dateString === 'string' && /^\\d{4}-\\d{2}-\\d{2}$/.test(dateString) && !dateString.includes('T')) {
+                    const [year, month, day] = dateString.split('-').map(Number);
+                    adjustedDate = new Date(Date.UTC(year, month - 1, day));
+                }
+
+                if (forInput) {
+                    const year = adjustedDate.getUTCFullYear();
+                    const month = (adjustedDate.getUTCMonth() + 1).toString().padStart(2, '0');
+                    const day = adjustedDate.getUTCDate().toString().padStart(2, '0');
+                    return `${year}-${month}-${day}`;
+                }
+
+                const day = adjustedDate.getUTCDate().toString().padStart(2, '0');
+                const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                const month = months[adjustedDate.getUTCMonth()];
+                const year = adjustedDate.getUTCFullYear();
+                let datePart = `${day}-${month}-${year}`;
+
+                if (includeTime) {
+                    const hours = dateString.includes('T') ? date.getHours().toString().padStart(2, '0') : adjustedDate.getUTCHours().toString().padStart(2, '0');
+                    const minutes = dateString.includes('T') ? date.getMinutes().toString().padStart(2, '0') : adjustedDate.getUTCMinutes().toString().padStart(2, '0');
+                    return `${datePart} ${hours}:${minutes}`;
+                }
+                return datePart;
+            } catch (error) {
+                console.error("Error formatting date:", dateString, error);
+                return dateString;
+            }
+        }
+
+        function getRoundnessClass(value) {
+            const numValue = parseInt(value, 10);
+            switch (numValue) {
+                case 0: return 'rounded-none'; case 1: return 'rounded-sm'; case 2: return 'rounded';
+                case 3: return 'rounded-md'; case 4: return 'rounded-lg'; case 5: return 'rounded-xl';
+                case 6: return 'rounded-2xl'; case 7: return 'rounded-3xl'; default: return 'rounded-lg';
+            }
+        }
+
+        function applyConfigStyles() {
+            document.documentElement.classList.toggle('dark', config.theme === 'dark');
+            const body = document.body;
+            body.classList.remove('text-sm', 'text-base', 'text-lg');
+            body.classList.add(`text-${config.fontSize}`);
+
+            // Update all elements that depend on roundness dynamically
+            // This is a bit broad, but ensures consistency.
+            // More targeted updates could be done if performance becomes an issue.
+            document.querySelectorAll('[data-dynamic-roundness]').forEach(el => {
+                const baseClasses = el.dataset.baseRoundnessClasses ? el.dataset.baseRoundnessClasses.split(' ') : [];
+                const oldRoundness = el.dataset.currentRoundnessClass;
+                if (oldRoundness) el.classList.remove(oldRoundness);
+
+                const newRoundness = getRoundnessClass(config.roundness);
+                el.classList.add(newRoundness, ...baseClasses);
+                el.dataset.currentRoundnessClass = newRoundness;
+            });
+            renderApp(); // Re-render to apply spacing and other config-dependent styles in components
+        }
+
+
+        // --- TOAST NOTIFICATIONS ---
+        function addToast(message, type = 'info', duration = 4000) {
+            const id = `toast-${crypto.randomUUID()}`;
+            toasts.push({ id, message, type });
+            renderToasts();
+            setTimeout(() => removeToast(id), duration);
+        }
+
+        function removeToast(id) {
+            toasts = toasts.filter(toast => toast.id !== id);
+            renderToasts();
+        }
+
+        function renderToasts() {
+            const container = document.getElementById('toastContainer');
+            container.innerHTML = toasts.map(toast => {
+                let iconSvg = '';
+                let bgColor = 'bg-blue-500';
+                if (toast.type === 'success') {
+                    iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`;
+                    bgColor = 'bg-green-500';
+                } else if (toast.type === 'error') {
+                    iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`;
+                    bgColor = 'bg-red-500';
+                } else { // info
+                    iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`;
+                }
+                return `
+                    <div id="${toast.id}" class="${bgColor} text-white p-3 rounded-md shadow-lg flex items-center justify-between animate-fadeInOut">
+                        <div class="flex items-center">
+                            ${iconSvg}
+                            <span>${toast.message}</span>
+                        </div>
+                        <button onclick="removeToast('${toast.id}')" class="ml-4 p-1 rounded-full hover:bg-white/20 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        </button>
+                    </div>`;
+            }).join('');
+        }
+
+        // --- DOM MANIPULATION & RENDERING ---
+        function renderApp() {
+            const appContainer = document.getElementById('appContainer');
+            const currentRoundness = getRoundnessClass(config.roundness);
+            const spacingClasses = { container: 'p-4 md:p-6', header: 'mb-4', actionBar: 'mb-4 space-x-2 md:space-x-3', button: 'px-3 py-2 text-sm md:px-4 md:py-2.5', iconButton: 'p-2 md:p-2.5' };
+            const btnBase = `flex items-center justify-center font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all ${currentRoundness} ${spacingClasses.button}`;
+            const btnPrimary = `${btnBase} text-white bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 dark:bg-blue-500 dark:hover:bg-blue-600`;
+            const btnSecondary = `${btnBase} text-gray-700 bg-gray-200 hover:bg-gray-300 focus:ring-gray-400 dark:text-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 disabled:opacity-50`;
+            const btnDanger = `${btnBase} text-white bg-red-600 hover:bg-red-700 focus:ring-red-500 dark:bg-red-500 dark:hover:bg-red-600 disabled:opacity-50`;
+            const iconBtn = `${btnSecondary} ${spacingClasses.iconButton}`;
+
+            let errorHtml = '';
+            if (globalError) {
+                errorHtml = `
+                <div class="my-2 p-3 ${currentRoundness} bg-red-100 dark:bg-red-800 border border-red-300 dark:border-red-600 text-red-700 dark:text-red-200 text-sm flex justify-between items-center shadow">
+                    <span><strong>Error:</strong> ${globalError}</span>
+                    <button onclick="clearGlobalError()" class="ml-2 p-1 rounded-md hover:bg-red-200 dark:hover:bg-red-700 text-red-600 dark:text-red-300" aria-label="Dismiss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+                </div>`;
+            }
+
+            const { currentRecords, totalFilteredRecords } = getPaginatedAndFilteredRates();
+
+            appContainer.innerHTML = `
+                <div class="${spacingClasses.container} max-w-full mx-auto">
+                    <header class="flex flex-col sm:flex-row justify-between items-center ${spacingClasses.header} pb-4 border-b border-gray-300 dark:border-gray-700">
+                        <h1 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-2 sm:mb-0">Exchange Rate Management</h1>
+                        <div class="flex items-center space-x-2">
+                            <button id="openConfigPanelBtn" class="${iconBtn}" title="Settings"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></button>
+                        </div>
+                    </header>
+
+                    <div class="p-4 mb-4 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 ${currentRoundness} shadow-sm">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                            <div class="flex-grow">
+                                <h2 class="text-lg font-semibold text-blue-700 dark:text-blue-300 mb-2">Current Setup</h2>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-3 text-sm">
+                                    <p><strong class="text-gray-600 dark:text-gray-400">Base Currency:</strong> ${companyPlan.baseCurrency}</p>
+                                    <div class="flex items-center gap-2">
+                                        <label for="frequencySelectPlan" class="text-gray-600 dark:text-gray-400 font-semibold whitespace-nowrap">Frequency:</label>
+                                        <select id="frequencySelectPlan" class="p-1 ${currentRoundness} bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 text-sm w-full sm:w-auto">
+                                            ${frequencyOptions.map(freq => `<option value="${freq}" ${companyPlan.updateFrequency === freq ? 'selected' : ''}>${freq}</option>`).join('')}
+                                        </select>
+                                    </div>
+                                    <p><strong class="text-gray-600 dark:text-gray-400">Mode:</strong> ${companyPlan.setupType}</p>
+                                </div>
+                            </div>
+                            <button id="openRequestPlanModalBtn" class="${btnSecondary} ${spacingClasses.button} bg-blue-100 dark:bg-blue-600 hover:bg-blue-200 dark:hover:bg-blue-500 text-blue-700 dark:text-white mt-2 md:mt-0 self-start md:self-center" title="Request changes">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg> Request Plan Change
+                            </button>
+                        </div>
+                        <p class="mt-3 text-xs text-gray-500 dark:text-gray-400">Rates below are 1 Foreign Unit = X ${companyPlan.baseCurrency}.</p>
+                    </div>
+
+                    ${errorHtml}
+
+                    <div class="flex flex-wrap items-center justify-between gap-2 ${spacingClasses.actionBar}">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <button id="addRateBtn" class="${btnPrimary}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>Add Rate</button>
+                            <button id="deleteSelectedBtn" class="${btnDanger}" ${selectedIds.length === 0 ? 'disabled' : ''}><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>Del. Sel. (${selectedIds.length})</button>
+                            <div class="relative">
+                                <button id="exportBtnToggle" class="${btnSecondary}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>Export <svg id="exportChevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-1 transition-transform"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
+                                <div id="exportDropdown" class="absolute left-0 mt-2 w-56 ${currentRoundness} bg-white dark:bg-gray-700 shadow-lg z-20 border border-gray-200 dark:border-gray-600 hidden">
+                                    <button id="exportSelectedBtn" ${selectedIds.length === 0 ? 'disabled' : ''} class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 disabled:opacity-50">Export Sel. (${selectedIds.length})</button>
+                                    <button id="exportPageBtn" ${currentRecords.length === 0 ? 'disabled' : ''} class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 disabled:opacity-50">Export Page (${currentRecords.length})</button>
+                                    <button id="exportAllBtn" ${totalFilteredRecords === 0 ? 'disabled' : ''} class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 disabled:opacity-50">Export All (${totalFilteredRecords})</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <div class="relative flex items-center">
+                                <select id="searchFieldSelect" class="${spacingClasses.button} ${currentRoundness} bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 outline-none appearance-none pr-8" aria-label="Search field">
+                                    <option value="all" ${searchField === 'all' ? 'selected' : ''}>All Fields</option>
+                                    <option value="currency" ${searchField === 'currency' ? 'selected' : ''}>Currency</option>
+                                    <option value="currencyCode" ${searchField === 'currencyCode' ? 'selected' : ''}>Code</option>
+                                    <option value="rate" ${searchField === 'rate' ? 'selected' : ''}>Rate</option>
+                                    <option value="effectiveDate" ${searchField === 'effectiveDate' ? 'selected' : ''}>Effective</option>
+                                    <option value="lastUpdatedAt" ${searchField === 'lastUpdatedAt' ? 'selected' : ''}>Updated At</option>
+                                </select>
+                                <div class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+                            </div>
+                            <div class="relative flex items-center">
+                                <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 z-10"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></div>
+                                <input type="text" id="searchInput" placeholder="Search..." value="${searchTerm}" class="${spacingClasses.button} ${currentRoundness} pl-10 pr-3 w-full md:w-auto bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none" style="padding-left: 2rem;" aria-label="Search"/>
+                            </div>
+                            <div class="flex ${currentRoundness} bg-gray-200 dark:bg-gray-700 p-0.5">
+                                <button id="tableViewBtn" title="Table" class="${spacingClasses.iconButton} ${viewType === 'table' ? 'bg-white dark:bg-gray-600 shadow' : 'hover:bg-gray-300 dark:hover:bg-gray-600'} ${currentRoundness} transition-all"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg></button>
+                                <button id="cardViewBtn" title="Cards" class="${spacingClasses.iconButton} ${viewType === 'cards' ? 'bg-white dark:bg-gray-600 shadow' : 'hover:bg-gray-300 dark:hover:bg-gray-600'} ${currentRoundness} transition-all"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="cardViewHeader" class="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 mb-4 p-3 bg-gray-50 dark:bg-gray-800 ${currentRoundness} shadow ${viewType === 'cards' ? '' : 'hidden'}">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="selectAllCardsCheckbox" class="form-checkbox h-5 w-5 text-blue-600 dark:text-blue-500 bg-gray-100 dark:bg-gray-600 border-gray-300 dark:border-gray-500 ${getRoundnessClass(config.roundness <= 1 ? 1 : 2)} focus:ring-blue-500 focus:ring-offset-0 mr-2" ${currentRecords.length === 0 ? 'disabled' : ''}>
+                            <label for="selectAllCardsCheckbox" class="text-sm text-gray-700 dark:text-gray-300">Select All on Page</label>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Columns:</span>
+                            <div id="cardColumnSelectorContainerCards" class="flex items-center space-x-1">
+                                <!-- CardColumnSelector will be rendered here by JS -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="contentArea" class="max-w-full mx-auto">
+                        </div>
+                    <div id="paginationArea">
+                        </div>
+                </div>
+            `;
+
+            // Render table or cards
+            if (viewType === 'table') {
+                renderTableView(currentRecords, totalFilteredRecords);
+            } else {
+                renderCardView(currentRecords, totalFilteredRecords);
+                renderCardColumnSelector('cardColumnSelectorContainerCards'); // Ensure columns selector is rendered in card view
+            }
+            renderPagination(totalFilteredRecords);
+            addEventListeners();
+            updateDynamicRoundnessAttributes(); // Ensure new elements get data-attributes
+        }
+
+        function updateDynamicRoundnessAttributes() {
+            // Add data-dynamic-roundness to elements that should have their roundness updated by config
+            const elementsToTrack = [
+                ...document.querySelectorAll('button, input, select, textarea, div.shadow-md, div.shadow-lg, div.shadow, div.border'),
+                document.getElementById('rateModalContent'),
+                document.getElementById('configPanel'),
+                document.getElementById('requestPlanModalContent'),
+                document.getElementById('exportDropdown'),
+                document.getElementById('cardViewHeader'),
+            ];
+            elementsToTrack.forEach(el => {
+                if (el && !el.hasAttribute('data-dynamic-roundness')) {
+                    el.setAttribute('data-dynamic-roundness', 'true');
+                    // Store base classes that should persist excluding existing roundness
+                    const baseClasses = Array.from(el.classList).filter(cls => !cls.startsWith('rounded-')).join(' ');
+                    el.dataset.baseRoundnessClasses = baseClasses;
+                    el.dataset.currentRoundnessClass = Array.from(el.classList).find(cls => cls.startsWith('rounded-')) || getRoundnessClass(config.roundness);
+                }
+            });
+        }
+
+
+        function renderTableView(currentRecords, totalFilteredRecords) {
+            const contentArea = document.getElementById('contentArea');
+            const currentRoundness = getRoundnessClass(config.roundness);
+            const spacing = config.spacing === 'compact' ? 'py-1 px-2' : 'py-2 px-3';
+            const inputStyle = `w-full box-border px-1.5 py-0.5 text-sm border border-gray-300 dark:border-gray-600 focus:border-blue-500 outline-none bg-white dark:bg-gray-700 ${currentRoundness}`;
+
+            if (isLoading && !currentRecords.length) {
+                contentArea.innerHTML = `<div class="flex items-center justify-center py-10"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-spin mr-3 text-blue-500"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg><p class="text-lg">Loading...</p></div>`;
+                return;
+            }
+
+            let tableHtml = `<div class="overflow-x-auto ${currentRoundness} shadow-md bg-white dark:bg-gray-800" data-dynamic-roundness="true">
+                <table class="w-full text-${config.fontSize} text-left text-gray-700 dark:text-gray-300 table-auto">
+                    <colgroup><col style="width:3%"><col style="width:7%"><col style="width:28%"><col style="width:15%"><col style="width:22%"><col style="width:25%"></colgroup>
+                    <thead class="bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-400 uppercase text-xs">
+                        <tr>
+                            <th class="${spacing} text-center"><input type="checkbox" id="selectAllTable" class="form-checkbox h-4 w-4 md:h-5 md:w-5 text-blue-600 dark:text-blue-500 bg-gray-100 dark:bg-gray-600 border-gray-300 dark:border-gray-500 rounded focus:ring-blue-500 focus:ring-offset-0" ${currentRecords.length > 0 && selectedIds.length === currentRecords.length ? 'checked' : ''} aria-label="Select all"/></th>
+                            <th class="${spacing} text-center">Actions</th>
+                            ${renderTableHeader('currency', 'Currency (Code)', spacing)}
+                            ${renderTableHeader('rate', `Rate (vs ${companyPlan.baseCurrency})`, `${spacing} text-right`)}
+                            ${renderTableHeader('effectiveDate', 'Effective', spacing)}
+                            ${renderTableHeader('lastUpdatedAt', 'Last Updated', spacing)}
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">`;
+
+            currentRecords.forEach(rate => {
+                const isEditing = editingRowId === rate.id && config.editMode === 'inline';
+                tableHtml += `
+                    <tr data-id="${rate.id}" draggable="${!isEditing}" class="hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors ${isEditing ? 'bg-blue-50 dark:bg-blue-900/30' : 'cursor-grab active:cursor-grabbing'} ${rate.isDragging ? 'opacity-50' : ''}">
+                        <td class="${spacing} text-center"><input type="checkbox" data-id="${rate.id}" class="select-row-checkbox form-checkbox h-4 w-4 md:h-5 md:w-5 text-blue-600 dark:text-blue-500 bg-gray-100 dark:bg-gray-600 border-gray-300 dark:border-gray-500 rounded focus:ring-blue-500 focus:ring-offset-0" ${selectedIds.includes(rate.id) ? 'checked' : ''} aria-label="Select ${rate.currency}"/></td>
+                        <td class="${spacing} text-center">
+                            ${isEditing ? `
+                                <div class="flex items-center justify-center space-x-1">
+                                    <button data-action="save-inline-edit" data-id="${rate.id}" class="p-1 text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300" title="Save"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></button>
+                                    <button data-action="cancel-inline-edit" class="p-1 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300" title="Cancel"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg></button>
+                                </div>` : `
+                                <div class="flex items-center justify-center space-x-1">
+                                    <button data-action="edit-rate" data-id="${rate.id}" class="p-1 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors" title="${config.editMode === 'inline' ? "Edit Inline" : "Edit"}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+                                    <button data-action="delete-rate" data-id="${rate.id}" class="p-1 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 transition-colors" title="Delete"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
+                                </div>`}
+                        </td>
+                        <td class="${spacing}">${isEditing ? `<input type="text" data-field="currency" value="${editingRowData?.currency || ''}" list="commonCurrenciesDatalistGlobal" class="${inputStyle}" autofocus>` : `${rate.currency} ${rate.currencyCode ? `(${rate.currencyCode})` : ''}`}</td>
+                        <td class="${spacing} text-right">${isEditing ? `<input type="number" step="0.00001" data-field="rate" value="${editingRowData?.rate || ''}" class="${inputStyle} text-right">` : (typeof rate.rate === 'number' ? rate.rate.toFixed(5) : 'N/A')}</td>
+                        <td class="${spacing}">${isEditing ? `<input type="date" data-field="effectiveDate" value="${editingRowData?.effectiveDate || ''}" class="${inputStyle}">` : formatDate(rate.effectiveDate)}</td>
+                        <td class="${spacing}">${formatDate(rate.lastUpdatedAt, false, true)}</td>
+                    </tr>
+                `;
+            });
+
+            if (config.addMode === 'inline' && isInlineAddRowVisible) {
+                const newInlineRate = { currency: '', currencyCode: '', rate: '', effectiveDate: formatDate(new Date().toISOString(), true), lastUpdatedAt: new Date().toISOString() }; // Reset for rendering
+                tableHtml += `
+                    <tr id="inlineAddRow" class="bg-gray-100 dark:bg-gray-750 border-t-2 border-blue-300 dark:border-blue-700">
+                        <td class="${spacing}"></td>
+                        <td class="${spacing} text-center">
+                            <div class="flex items-center justify-center space-x-1">
+                                <button id="saveInlineAddBtn" class="p-1 text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300" title="Save"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></button>
+                                <button id="cancelInlineAddBtn" class="p-1 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300" title="Cancel"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg></button>
+                            </div>
+                        </td>
+                        <td class="${spacing}"><input type="text" id="newInlineCurrency" value="${newInlineRate.currency}" placeholder="Currency Name" list="commonCurrenciesDatalistGlobal" class="${inputStyle}"> <span id="newInlineCurrencyCode"></span></td>
+                        <td class="${spacing} text-right"><input type="number" step="0.00001" id="newInlineRate" value="${newInlineRate.rate}" placeholder="Rate" class="${inputStyle} text-right"></td>
+                        <td class="${spacing}"><input type="date" id="newInlineEffectiveDate" value="${newInlineRate.effectiveDate}" class="${inputStyle}"></td>
+                        <td class="${spacing}">${formatDate(newInlineRate.lastUpdatedAt, false, true)}</td>
+                    </tr>
+                `;
+            }
+
+            tableHtml += `</tbody></table>`;
+            if (currentRecords.length === 0 && !editingRowId && (!isInlineAddRowVisible || config.addMode === 'modal')) {
+                tableHtml += `<p class="text-center py-8 text-gray-500 dark:text-gray-400">No rates. Click "Add Rate".</p>`;
+            }
+            tableHtml += `</div>`; // End of overflow-x-auto
+            contentArea.innerHTML = tableHtml;
+        }
+
+        function renderTableHeader(sortKey, label, className) {
+            const isSorted = sortConfig.key === sortKey;
+            const icon = isSorted
+                ? (sortConfig.direction === 'ascending' ? `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-1"><polyline points="18 15 12 9 6 15"></polyline></svg>` : `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-1"><polyline points="6 9 12 15 18 9"></polyline></svg>`)
+                : `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-1 opacity-30"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>`;
+            return `<th class="cursor-pointer select-none ${className}" data-sortkey="${sortKey}">
+                        <div class="flex items-center ${sortKey === 'rate' ? 'justify-end' : ''}">${label}${icon}</div>
+                    </th>`;
+        }
+
+        function renderCardView(currentRecords, totalFilteredRecords) {
+            const contentArea = document.getElementById('contentArea');
+            const currentRoundness = getRoundnessClass(config.roundness);
+            const numColsSetting = config.cardViewColumns === 'auto' ? 4 : parseInt(config.cardViewColumns, 10);
+            let cardSpacing, currencyTextSize, rateTextSize, dateTextSize, iconSize, codeTextSize, lastUpdatedTextSize;
+
+            if (numColsSetting >= 7) { cardSpacing = 'p-1.5 sm:p-2'; currencyTextSize = 'text-xs sm:text-sm'; codeTextSize = 'text-xs'; rateTextSize = 'text-sm sm:text-base'; dateTextSize = 'text-xs'; lastUpdatedTextSize = 'text-xs'; iconSize = 14; }
+            else if (numColsSetting >= 5) { cardSpacing = 'p-2 sm:p-2.5'; currencyTextSize = 'text-sm sm:text-base'; codeTextSize = 'text-xs sm:text-sm'; rateTextSize = 'text-base sm:text-lg'; dateTextSize = 'text-xs sm:text-sm'; lastUpdatedTextSize = 'text-xs'; iconSize = 16; }
+            else { cardSpacing = config.spacing === 'compact' ? 'p-3' : 'p-4'; currencyTextSize = 'text-base md:text-lg'; codeTextSize = 'text-xs md:text-sm'; rateTextSize = 'text-xl md:text-2xl'; dateTextSize = 'text-sm'; lastUpdatedTextSize = 'text-xs'; iconSize = 20; }
+
+            const getGridColsClass = (colsCfg) => {
+                if (colsCfg === 'auto') return 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6';
+                const num = parseInt(colsCfg, 10);
+                if (num >= 1 && num <= 8) return `grid-cols-${num}`;
+                return 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'; // Fallback
+            };
+            const gridColsClass = getGridColsClass(config.cardViewColumns);
+
+            if (isLoading && !currentRecords.length) {
+                contentArea.innerHTML = `<div class="flex items-center justify-center py-10"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-spin mr-3 text-blue-500"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg><p class="text-lg">Loading...</p></div>`;
+                return;
+            }
+
+            let cardsHtml = `<div class="grid ${gridColsClass} gap-2 sm:gap-3 md:gap-4 text-${config.fontSize}">`;
+            if (currentRecords.length === 0) {
+                cardsHtml += `<p class="col-span-full text-center py-8 text-gray-500 dark:text-gray-400">No rates. Click "Add Rate".</p>`;
+            } else {
+                currentRecords.forEach(rate => {
+                    cardsHtml += `
+                        <div data-id="${rate.id}" draggable="true" class="bg-white dark:bg-gray-800 shadow-md ${currentRoundness} ${cardSpacing} flex flex-col justify-between cursor-grab active:cursor-grabbing transition-all hover:shadow-lg dark:hover:shadow-gray-700/50 relative ${rate.isDragging ? 'opacity-50 scale-95' : 'opacity-100'}" data-dynamic-roundness="true">
+                            <div>
+                                <div class="flex justify-between items-start mb-1 sm:mb-2">
+                                    <div class="flex-grow min-w-0">
+                                        <h3 class="${currencyTextSize} font-semibold text-gray-800 dark:text-white truncate" title="${rate.currency}">${rate.currency} ${rate.currencyCode ? `<span class="${codeTextSize} text-gray-500 dark:text-gray-400 ml-1">(${rate.currencyCode})</span>` : ''}</h3>
+                                    </div>
+                                    <input type="checkbox" data-id="${rate.id}" class="select-row-checkbox form-checkbox h-4 w-4 sm:h-5 sm:w-5 text-blue-600 dark:text-blue-500 bg-gray-100 dark:bg-gray-600 border-gray-300 dark:border-gray-500 rounded focus:ring-blue-500 focus:ring-offset-0 ml-2 flex-shrink-0" ${selectedIds.includes(rate.id) ? 'checked' : ''} aria-label="Select ${rate.currency}"/>
+                                </div>
+                                <p class="${rateTextSize} font-bold text-blue-600 dark:text-blue-400 my-1 sm:my-2" title="1 ${rate.currencyCode} = ${typeof rate.rate === 'number' ? rate.rate.toFixed(5) : 'N/A'} ${companyPlan.baseCurrency}">${typeof rate.rate === 'number' ? rate.rate.toFixed(5) : 'N/A'}</p>
+                                <p class="${dateTextSize} text-gray-600 dark:text-gray-400">Effective: ${formatDate(rate.effectiveDate)}</p>
+                                <p class="${lastUpdatedTextSize} text-gray-500 dark:text-gray-400 mt-1">Updated: ${formatDate(rate.lastUpdatedAt, false, true)}</p>
+                            </div>
+                            <div class="mt-2 sm:mt-3 pt-2 sm:pt-3 border-t border-gray-200 dark:border-gray-700 flex justify-end space-x-1 sm:space-x-2">
+                                <button data-action="edit-rate" data-id="${rate.id}" class="p-1 sm:p-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700" title="Edit"><svg xmlns="http://www.w3.org/2000/svg" width="${iconSize}" height="${iconSize}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+                                <button data-action="delete-rate" data-id="${rate.id}" class="p-1 sm:p-2 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700" title="Delete"><svg xmlns="http://www.w3.org/2000/svg" width="${iconSize}" height="${iconSize}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            cardsHtml += `</div>`;
+            contentArea.innerHTML = cardsHtml;
+        }
+
+        function renderPagination(totalFilteredRecords) {
+            const paginationArea = document.getElementById('paginationArea');
+            const totalPages = Math.ceil(totalFilteredRecords / recordsPerPage);
+            const firstRecordIndex = (currentPage - 1) * recordsPerPage + 1;
+            const lastRecordIndex = Math.min(currentPage * recordsPerPage, totalFilteredRecords);
+            const currentRoundness = getRoundnessClass(config.roundness);
+
+            if (totalFilteredRecords === 0 && totalPages <= 1) {
+                paginationArea.innerHTML = '';
+                return;
+            }
+
+            let paginationHtml = `
+                <div class="flex flex-col md:flex-row justify-between items-center mt-4 p-2 bg-white dark:bg-gray-800 shadow-md ${currentRoundness} text-sm text-gray-700 dark:text-gray-300" data-dynamic-roundness="true">
+                    <div class="flex items-center space-x-4 mb-2 md:mb-0">
+                        <div class="flex items-center">
+                            <span class="mr-2">Rows:</span>
+                            <select id="recordsPerPageSelect" class="p-1 ${currentRoundness} bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500" data-dynamic-roundness="true">
+                                <option value="10" ${recordsPerPage === 10 ? 'selected' : ''}>10</option>
+                                <option value="20" ${recordsPerPage === 20 ? 'selected' : ''}>20</option>
+                                <option value="50" ${recordsPerPage === 50 ? 'selected' : ''}>50</option>
+                                <option value="100" ${recordsPerPage === 100 ? 'selected' : ''}>100</option>
+                            </select>
+                        </div>
+                        <span class="font-medium">${totalFilteredRecords > 0 ? `${firstRecordIndex}-${lastRecordIndex}` : '0'} of ${totalFilteredRecords}</span>
+                    </div>`;
+            if (totalPages > 1) {
+                paginationHtml += `
+                    <div class="flex items-center">
+                        <span class="mr-4">Page ${currentPage} of ${totalPages}</span>
+                        <div class="flex items-center space-x-1">
+                            <button id="firstPageBtn" ${currentPage === 1 ? 'disabled' : ''} class="p-2 disabled:opacity-50 hover:bg-gray-100 dark:hover:bg-gray-700 ${currentRoundness}" data-dynamic-roundness="true"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"></polyline><polyline points="18 17 13 12 18 7"></polyline></svg></button>
+                            <button id="prevPageBtn" ${currentPage === 1 ? 'disabled' : ''} class="p-2 disabled:opacity-50 hover:bg-gray-100 dark:hover:bg-gray-700 ${currentRoundness}" data-dynamic-roundness="true"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+                            <button id="nextPageBtn" ${currentPage === totalPages ? 'disabled' : ''} class="p-2 disabled:opacity-50 hover:bg-gray-100 dark:hover:bg-gray-700 ${currentRoundness}" data-dynamic-roundness="true"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+                            <button id="lastPageBtn" ${currentPage === totalPages ? 'disabled' : ''} class="p-2 disabled:opacity-50 hover:bg-gray-100 dark:hover:bg-gray-700 ${currentRoundness}" data-dynamic-roundness="true"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg></button>
+                        </div>
+                    </div>`;
+            }
+            paginationHtml += `</div>`;
+            paginationArea.innerHTML = paginationHtml;
+        }
+
+        function renderCardColumnSelector(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            const currentRoundness = getRoundnessClass(config.roundness);
+            const btnStyle = `p-1.5 sm:p-2 ${currentRoundness} bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors`;
+
+            container.innerHTML = `
+                <button data-action="setCardColsAuto" class="${btnStyle} ${config.cardViewColumns === 'auto' ? 'bg-blue-500 text-white dark:bg-blue-600' : ''}" title="Auto Columns" data-dynamic-roundness="true">Auto</button>
+                <button data-action="decrementCardCols" ${config.cardViewColumns !== 'auto' && parseInt(config.cardViewColumns, 10) <= 1 ? 'disabled' : ''} class="${btnStyle} disabled:opacity-50" title="Decrease Columns" data-dynamic-roundness="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
+                <span class="px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 ${currentRoundness} bg-white dark:bg-gray-700 w-12 text-center" data-dynamic-roundness="true">${config.cardViewColumns === 'auto' ? 'Auto' : config.cardViewColumns}</span>
+                <button data-action="incrementCardCols" ${config.cardViewColumns !== 'auto' && parseInt(config.cardViewColumns, 10) >= 8 ? 'disabled' : ''} class="${btnStyle} disabled:opacity-50" title="Increase Columns" data-dynamic-roundness="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
+            `;
+        }
+
+
+        // --- EVENT HANDLERS & LOGIC ---
+        function handlePrimaryAddAction() {
+            if (config.addMode === 'inline') {
+                isInlineAddRowVisible = !isInlineAddRowVisible;
+                if (editingRowId) { // If editing a row, cancel it
+                    editingRowId = null;
+                    editingRowData = null;
+                }
+                renderApp(); // Re-render to show/hide inline add row
+            } else {
+                openRateModal(null); // Open modal for adding
+            }
+        }
+
+        function handleConfigChange(key, value) {
+            if (key === 'editMode') { editingRowId = null; editingRowData = null; }
+            if (key === 'addMode' && value === 'modal') { isInlineAddRowVisible = false; }
+            if (key === 'roundness') { config[key] = parseInt(value, 10); }
+            else { config[key] = value; }
+
+            if (key === 'theme' || key === 'fontSize' || key === 'roundness') {
+                applyConfigStyles(); // Applies global styles and re-renders
+            } else {
+                renderApp(); // Re-render for other config changes like spacing, modes
+            }
+            // Update config panel display if it's open
+            if (document.getElementById('configPanel').classList.contains('translate-x-0')) {
+                updateConfigPanelDisplay();
+            }
+        }
+
+        function updateConfigPanelDisplay() {
+            document.getElementById('themeSelect').value = config.theme;
+            document.getElementById('fontSizeSelect').value = config.fontSize;
+            document.getElementById('roundnessRange').value = config.roundness;
+            document.getElementById('currentRoundnessLabel').textContent = roundnessLabels[config.roundness] || "Medium";
+            document.getElementById('spacingSelect').value = config.spacing;
+            document.getElementById('editModeSelect').value = config.editMode;
+            document.getElementById('addModeSelect').value = config.addMode;
+        }
+
+        function openRateModal(rate) {
+            currentRateToEdit = rate;
+            const modal = document.getElementById('rateModal');
+            const title = document.getElementById('rateModalTitle');
+            const currencyInput = document.getElementById('currencyModalInput');
+            const derivedCodeSpan = document.getElementById('derivedCurrencyCodeModal');
+            const rateInput = document.getElementById('rateModalInput');
+            const dateInput = document.getElementById('effectiveDateModalInput');
+            const saveBtnText = document.getElementById('rateModalSaveText');
+            const rateIdInput = document.getElementById('rateIdModal');
+            const rateLabel = document.getElementById('rateModalLabel');
+
+            // Clear previous errors
+            document.getElementById('currencyModalError').textContent = '';
+            document.getElementById('rateModalError').textContent = '';
+            document.getElementById('effectiveDateModalError').textContent = '';
+
+            const currentRoundness = getRoundnessClass(config.roundness);
+            document.getElementById('rateModalContent').className = `bg-white dark:bg-gray-800 p-6 shadow-xl w-full max-w-md ${currentRoundness}`;
+            currencyInput.className = `w-full p-2 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 outline-none bg-white dark:bg-gray-700 ${currentRoundness}`;
+            rateInput.className = `w-full p-2 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 outline-none bg-white dark:bg-gray-700 ${currentRoundness}`;
+            dateInput.className = `w-full p-2 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 outline-none bg-white dark:bg-gray-700 ${currentRoundness}`;
+            document.getElementById('cancelRateModalBtn').className = `px-4 py-2 ${currentRoundness} text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500`;
+            document.getElementById('saveRateModalBtn').className = `px-4 py-2 ${currentRoundness} text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center`;
+            document.getElementById('closeRateModalBtn').className = `p-1 ${currentRoundness} hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300`;
+
+
+            if (rate) {
+                title.textContent = 'Edit Rate';
+                saveBtnText.textContent = 'Save';
+                rateIdInput.value = rate.id;
+                currencyInput.value = rate.currency || '';
+                derivedCodeSpan.textContent = rate.currencyCode ? `(${rate.currencyCode})` : '';
+                rateInput.value = rate.rate || '';
+                dateInput.value = formatDate(rate.effectiveDate, true);
+            } else {
+                title.textContent = 'Add Rate';
+                saveBtnText.textContent = 'Add Rate';
+                rateIdInput.value = '';
+                currencyInput.value = '';
+                derivedCodeSpan.textContent = '';
+                rateInput.value = '';
+                dateInput.value = formatDate(new Date().toISOString(), true);
+            }
+            rateLabel.textContent = `Rate (1 ${rate?.currencyCode || 'CUR'} = X ${companyPlan.baseCurrency})`;
+            modal.classList.remove('hidden');
+        }
+
+        function closeRateModal() {
+            document.getElementById('rateModal').classList.add('hidden');
+            currentRateToEdit = null;
+        }
+
+        function handleRateFormSubmit(event) {
+            event.preventDefault();
+            const currencyName = document.getElementById('currencyModalInput').value.trim();
+            const rateValue = document.getElementById('rateModalInput').value;
+            const effectiveDateValue = document.getElementById('effectiveDateModalInput').value;
+            const rateId = document.getElementById('rateIdModal').value;
+
+            let errors = {};
+            const foundCurrency = commonCurrencies.find(c => c.name === currencyName);
+            const finalCurrencyCode = foundCurrency ? foundCurrency.code : '';
+
+            if (!currencyName) errors.currency = "Currency name is required.";
+            else if (!finalCurrencyCode) errors.currency = "Valid currency name required to derive code.";
+
+            if (!rateValue || isNaN(parseFloat(rateValue)) || parseFloat(rateValue) <= 0) errors.rate = `Rate vs ${companyPlan.baseCurrency} required. Must be a positive number.`;
+            if (!effectiveDateValue) errors.effectiveDate = "Date is required.";
+            else { try { new Date(effectiveDateValue).toISOString(); } catch (e) { errors.effectiveDate = "Invalid date."; } }
+
+            document.getElementById('currencyModalError').textContent = errors.currency || '';
+            document.getElementById('rateModalError').textContent = errors.rate || '';
+            document.getElementById('effectiveDateModalError').textContent = errors.effectiveDate || '';
+
+            if (Object.keys(errors).length > 0) return;
+
+            const rateData = {
+                id: rateId || null,
+                currency: currencyName,
+                currencyCode: finalCurrencyCode.toUpperCase(),
+                rate: parseFloat(rateValue),
+                effectiveDate: effectiveDateValue,
+                lastUpdatedAt: new Date().toISOString()
+            };
+
+            saveRate(rateData);
+            closeRateModal();
+        }
+
+        function saveRate(rateData) {
+            isLoading = true;
+            if (rateData.id) { // Update existing
+                rates = rates.map(r => r.id === rateData.id ? { ...r, ...rateData } : r);
+                addToast("Rate updated.", "success");
+            } else { // Add new
+                const newRate = {
+                    ...rateData,
+                    id: `local-${crypto.randomUUID()}`,
+                    order: rates.length > 0 ? Math.max(...rates.map(r => typeof r.order === 'number' ? r.order : -1)) + 1 : 0
+                };
+                rates.push(newRate);
+                addToast("New rate added.", "success");
+            }
+            globalError = null;
+            isLoading = false;
+            renderApp();
+        }
+
+        function handleSingleDelete(idToDelete) {
+            const rateToDelete = rates.find(r => r.id === idToDelete);
+            if (rateToDelete) {
+                // For demo, actual deletion is commented out
+                addToast(`Confirm delete of "${rateToDelete.currency}"? (Action cancelled for demo)`, "info");
+                console.warn(`CONFIRM_DELETE: "${rateToDelete.currency}"?`);
+                // rates = rates.filter(r => r.id !== idToDelete);
+                // selectedIds = selectedIds.filter(id => id !== idToDelete);
+                // addToast("Rate deleted.", "success");
+                // renderApp();
+            }
+        }
+
+        function handleDeleteSelected() {
+            if (selectedIds.length === 0) {
+                addToast("No items selected.", "info");
+                return;
+            }
+            // For demo, actual deletion is commented out
+            addToast(`Confirm delete of ${selectedIds.length} items? (Action cancelled for demo)`, "info");
+            console.warn(`CONFIRM_DELETE_MULTIPLE: ${selectedIds.length} items?`);
+            // rates = rates.filter(r => !selectedIds.includes(r.id));
+            // selectedIds = [];
+            // addToast(`${selectedIds.length} rates deleted.`, "success");
+            // renderApp();
+        }
+
+        function handleSelectRate(idOrIds, isChecked) {
+            if (Array.isArray(idOrIds)) { // Bulk selection (e.g., select all)
+                if (isChecked) {
+                    selectedIds = [...new Set([...selectedIds, ...idOrIds])];
+                } else {
+                    selectedIds = selectedIds.filter(id => !idOrIds.includes(id));
+                }
+            } else { // Single selection
+                if (isChecked) {
+                    if (!selectedIds.includes(idOrIds)) selectedIds.push(idOrIds);
+                } else {
+                    selectedIds = selectedIds.filter(id => id !== idOrIds);
+                }
+            }
+            renderApp(); // Re-render to update checkbox states and delete button
+        }
+
+        function handleSort(key) {
+            sortConfig.direction = sortConfig.key === key && sortConfig.direction === 'ascending' ? 'descending' : 'ascending';
+            sortConfig.key = key;
+            currentPage = 1;
+            renderApp();
+        }
+
+        function getPaginatedAndFilteredRates() {
+            let items = [...rates];
+            // Apply search filter
+            if (searchTerm.trim() !== '') {
+                const term = searchTerm.toLowerCase();
+                items = items.filter(r => {
+                    const curM = r.currency && r.currency.toLowerCase().includes(term);
+                    const cCM = r.currencyCode && r.currencyCode.toLowerCase().includes(term);
+                    const rS = typeof r.rate === 'number' ? r.rate.toString() : '';
+                    const rM = rS.toLowerCase().includes(term);
+                    const dS_eff = r.effectiveDate ? formatDate(r.effectiveDate) : '';
+                    const dM_eff = dS_eff.toLowerCase().includes(term);
+                    const dS_upd = r.lastUpdatedAt ? formatDate(r.lastUpdatedAt, false, true) : '';
+                    const dM_upd = dS_upd.toLowerCase().includes(term);
+
+                    if (searchField === 'all') return curM || cCM || rM || dM_eff || dM_upd;
+                    if (searchField === 'currency') return curM;
+                    if (searchField === 'currencyCode') return cCM;
+                    if (searchField === 'rate') return rM;
+                    if (searchField === 'effectiveDate') return dM_eff;
+                    if (searchField === 'lastUpdatedAt') return dM_upd;
+                    return false;
+                });
+            }
+
+            // Apply sorting
+            if (sortConfig.key) {
+                items.sort((a, b) => {
+                    let vA = a[sortConfig.key], vB = b[sortConfig.key];
+                    if (sortConfig.key === 'effectiveDate' || sortConfig.key === 'lastUpdatedAt') {
+                        vA = new Date(a[sortConfig.key] || 0).getTime();
+                        vB = new Date(b[sortConfig.key] || 0).getTime();
+                    } else if (typeof vA === 'string') {
+                        vA = vA.toLowerCase(); vB = vB.toLowerCase();
+                    } else if (sortConfig.key === 'rate' && (vA == null || vA === undefined)) {
+                        vA = sortConfig.direction === 'ascending' ? Infinity : -Infinity;
+                    } else if (sortConfig.key === 'rate' && (vB == null || vB === undefined)) {
+                        vB = sortConfig.direction === 'ascending' ? Infinity : -Infinity;
+                    } else if (vA == null || vA === undefined) {
+                        vA = sortConfig.direction === 'ascending' ? Infinity : -Infinity;
+                    } else if (vB == null || vB === undefined) {
+                        vB = sortConfig.direction === 'ascending' ? Infinity : -Infinity;
+                    }
+                    if (sortConfig.key === 'order') {
+                        vA = typeof vA === 'number' ? vA : Infinity;
+                        vB = typeof vB === 'number' ? vB : Infinity;
+                    }
+                    if (vA < vB) return sortConfig.direction === 'ascending' ? -1 : 1;
+                    if (vA > vB) return sortConfig.direction === 'ascending' ? 1 : -1;
+                    return 0;
+                });
+            } else { // Default sort by order if no specific key
+                items.sort((a, b) => (a.order || 0) - (b.order || 0));
+            }
+
+            const totalFilteredRecords = items.length;
+            const iLR = currentPage * recordsPerPage;
+            const iFR = iLR - recordsPerPage;
+            const currentRecords = items.slice(iFR, iLR);
+
+            return { currentRecords, totalFilteredRecords };
+        }
+
+        function handleExport(exportType) {
+            const { currentRecords, totalFilteredRecords: allFilteredRatesCount } = getPaginatedAndFilteredRates(); // Get all filtered rates for 'all' export
+            const allFilteredRates = getPaginatedAndFilteredRates(true).currentRecords; // Temp: get all for now
+
+            let dataToExport = [];
+            let filename = "exchange_rates.csv";
+
+            if (exportType === 'selected') {
+                if (selectedIds.length === 0) { addToast("No items selected.", "info"); return; }
+                dataToExport = rates.filter(r => selectedIds.includes(r.id)); // Use original rates array for selected
+                filename = `rates_selected_${new Date().toISOString().split('T')[0]}.csv`;
+            } else if (exportType === 'currentPage') {
+                if (currentRecords.length === 0) { addToast("No items on page.", "info"); return; }
+                dataToExport = currentRecords;
+                filename = `rates_page_${currentPage}_${new Date().toISOString().split('T')[0]}.csv`;
+            } else if (exportType === 'all') {
+                // To get all filtered rates, not just current page
+                let allSortedAndFiltered = [...rates];
+                if (searchTerm.trim() !== '') { /* ... apply filter as in getPaginatedAndFilteredRates ... */ }
+                if (sortConfig.key) { /* ... apply sort as in getPaginatedAndFilteredRates ... */ }
+                else { allSortedAndFiltered.sort((a, b) => (a.order || 0) - (b.order || 0)); }
+                dataToExport = allSortedAndFiltered;
+
+                if (dataToExport.length === 0) { addToast("No items to export.", "info"); return; }
+                filename = `rates_all_${new Date().toISOString().split('T')[0]}.csv`;
+            } else return;
+
+            if (dataToExport.length === 0) { addToast("No data for export.", "info"); return; }
+
+            const headers = `Currency Name,Code,Rate (vs ${companyPlan.baseCurrency}),Effective Date,Last Updated At\n`;
+            const csvContent = dataToExport.map(r => `"${r.currency}","${r.currencyCode}",${typeof r.rate === 'number' ? r.rate.toFixed(5) : 'N/A'},"${formatDate(r.effectiveDate)}","${formatDate(r.lastUpdatedAt, false, true)}"`).join("\n");
+            const blob = new Blob([headers + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.setAttribute("href", URL.createObjectURL(blob));
+            link.setAttribute("download", filename);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            document.getElementById('exportDropdown').classList.add('hidden');
+            document.getElementById('exportChevron').classList.remove('rotate-180');
+            addToast("Data exported.", "success");
+        }
+
+        // Drag and Drop
+        function handleDragStart(event, id) {
+            draggedItemId = id;
+            isDragging = true;
+            event.dataTransfer.effectAllowed = 'move';
+            event.target.classList.add('opacity-50'); // Visual feedback
+            document.getElementById('deleteDropZone').classList.remove('translate-y-full');
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = 'move';
+        }
+
+        function handleDropOnDeleteZone(event) {
+            event.preventDefault();
+            if (draggedItemId) {
+                handleSingleDelete(draggedItemId); // This will show a confirm toast
+            }
+            handleDragEnd();
+        }
+
+        function handleDropOnItem(event, targetId) {
+            event.preventDefault();
+            if (!draggedItemId || draggedItemId === targetId) {
+                handleDragEnd(); // Still call drag end to reset states
+                return;
+            }
+
+            const draggedIndex = rates.findIndex(r => r.id === draggedItemId);
+            const targetIndex = rates.findIndex(r => r.id === targetId);
+
+            if (draggedIndex === -1 || targetIndex === -1) {
+                handleDragEnd();
+                return;
+            }
+
+            const [draggedItem] = rates.splice(draggedIndex, 1);
+            rates.splice(targetIndex, 0, draggedItem);
+
+            // Update order property for all items
+            rates.forEach((rate, idx) => rate.order = idx);
+
+            handleDragEnd(); // This will also call renderApp
+        }
+
+        function handleDragEnd() {
+            if (draggedItemId) {
+                const draggedEl = document.querySelector(`[data-id="${draggedItemId}"][draggable="true"]`);
+                if (draggedEl) draggedEl.classList.remove('opacity-50');
+            }
+            draggedItemId = null;
+            isDragging = false;
+            document.getElementById('deleteDropZone').classList.add('translate-y-full');
+            renderApp(); // Re-render to reflect order changes and remove dragging styles
+        }
+
+        function clearGlobalError() {
+            globalError = null;
+            renderApp();
+        }
+
+        // --- INITIALIZATION & EVENT LISTENERS ---
+        function addEventListeners() {
+            // Main action buttons
+            document.getElementById('addRateBtn')?.addEventListener('click', handlePrimaryAddAction);
+            document.getElementById('deleteSelectedBtn')?.addEventListener('click', handleDeleteSelected);
+
+            // Export buttons
+            document.getElementById('exportBtnToggle')?.addEventListener('click', () => {
+                document.getElementById('exportDropdown').classList.toggle('hidden');
+                document.getElementById('exportChevron').classList.toggle('rotate-180');
+            });
+            document.getElementById('exportSelectedBtn')?.addEventListener('click', () => handleExport('selected'));
+            document.getElementById('exportPageBtn')?.addEventListener('click', () => handleExport('currentPage'));
+            document.getElementById('exportAllBtn')?.addEventListener('click', () => handleExport('all'));
+
+            // Search and view toggle
+            document.getElementById('searchInput')?.addEventListener('input', (e) => { searchTerm = e.target.value; currentPage = 1; renderApp(); });
+            document.getElementById('searchFieldSelect')?.addEventListener('change', (e) => { searchField = e.target.value; currentPage = 1; renderApp(); });
+            document.getElementById('tableViewBtn')?.addEventListener('click', () => { viewType = 'table'; renderApp(); });
+            document.getElementById('cardViewBtn')?.addEventListener('click', () => { viewType = 'cards'; renderApp(); });
+
+            // Config Panel
+            document.getElementById('openConfigPanelBtn')?.addEventListener('click', () => {
+                document.getElementById('configPanel').classList.remove('translate-x-full');
+                document.getElementById('configPanel').classList.add('translate-x-0');
+                document.getElementById('configPanelOverlay').classList.remove('hidden');
+                updateConfigPanelDisplay(); // Populate with current config
+            });
+            document.getElementById('closeConfigPanelBtn')?.addEventListener('click', closeConfigPanel);
+            document.getElementById('configPanelOverlay')?.addEventListener('click', closeConfigPanel);
+            document.getElementById('themeSelect')?.addEventListener('change', (e) => handleConfigChange('theme', e.target.value));
+            document.getElementById('fontSizeSelect')?.addEventListener('change', (e) => handleConfigChange('fontSize', e.target.value));
+            document.getElementById('roundnessRange')?.addEventListener('input', (e) => handleConfigChange('roundness', e.target.value));
+            document.getElementById('spacingSelect')?.addEventListener('change', (e) => handleConfigChange('spacing', e.target.value));
+            document.getElementById('editModeSelect')?.addEventListener('change', (e) => handleConfigChange('editMode', e.target.value));
+            document.getElementById('addModeSelect')?.addEventListener('change', (e) => handleConfigChange('addMode', e.target.value));
+
+            // Card Column Selectors in Card View Header
+            const ccsCardsContainer = document.getElementById('cardColumnSelectorContainerCards');
+            if (ccsCardsContainer) {
+                ccsCardsContainer.addEventListener('click', (e) => {
+                    const action = e.target.closest('button')?.dataset.action;
+                    if (!action) return;
+                    let currentVal = config.cardViewColumns;
+                    if (action === 'setCardColsAuto') handleConfigChange('cardViewColumns', 'auto');
+                    else if (action === 'decrementCardCols') {
+                        if (currentVal === 'auto') handleConfigChange('cardViewColumns', '8');
+                        else if (parseInt(currentVal) > 1) handleConfigChange('cardViewColumns', (parseInt(currentVal) - 1).toString());
+                    } else if (action === 'incrementCardCols') {
+                        if (currentVal === 'auto') handleConfigChange('cardViewColumns', '1');
+                        else if (parseInt(currentVal) < 8) handleConfigChange('cardViewColumns', (parseInt(currentVal) + 1).toString());
+                    }
+                });
+            }
+
+
+            // Rate Modal
+            document.getElementById('closeRateModalBtn')?.addEventListener('click', closeRateModal);
+            document.getElementById('cancelRateModalBtn')?.addEventListener('click', closeRateModal);
+            document.getElementById('rateForm')?.addEventListener('submit', handleRateFormSubmit);
+            document.getElementById('currencyModalInput')?.addEventListener('input', (e) => {
+                const found = commonCurrencies.find(c => c.name === e.target.value);
+                document.getElementById('derivedCurrencyCodeModal').textContent = found ? `(${found.code})` : '';
+                document.getElementById('rateModalLabel').textContent = `Rate (1 ${found?.code || 'CUR'} = X ${companyPlan.baseCurrency})`;
+            });
+
+
+            // Table specific listeners (event delegation for dynamic rows)
+            const contentArea = document.getElementById('contentArea');
+            contentArea?.addEventListener('click', (e) => {
+                const targetButton = e.target.closest('button');
+                if (!targetButton) return;
+
+                const action = targetButton.dataset.action;
+                const id = targetButton.dataset.id;
+
+                if (action === 'edit-rate') {
+                    const rateToEdit = rates.find(r => r.id === id);
+                    if (rateToEdit) {
+                        if (config.editMode === 'inline') {
+                            editingRowId = id;
+                            editingRowData = { ...rateToEdit, effectiveDate: formatDate(rateToEdit.effectiveDate, true) };
+                            isInlineAddRowVisible = false; // Hide add row if editing
+                            renderApp();
+                        } else {
+                            openRateModal(rateToEdit);
+                        }
+                    }
+                } else if (action === 'delete-rate') {
+                    handleSingleDelete(id);
+                } else if (action === 'save-inline-edit' && editingRowId && editingRowData) {
+                    saveInlineEdit();
+                } else if (action === 'cancel-inline-edit') {
+                    editingRowId = null;
+                    editingRowData = null;
+                    renderApp();
+                }
+            });
+
+            contentArea?.addEventListener('change', (e) => { // For checkboxes
+                if (e.target.matches('.select-row-checkbox')) {
+                    handleSelectRate(e.target.dataset.id, e.target.checked);
+                } else if (e.target.id === 'selectAllTable') {
+                    const { currentRecords } = getPaginatedAndFilteredRates();
+                    handleSelectRate(currentRecords.map(r => r.id), e.target.checked);
+                }
+            });
+
+            contentArea?.addEventListener('input', (e) => { // For inline editing inputs
+                if (editingRowId && editingRowData && e.target.dataset.field) {
+                    const field = e.target.dataset.field;
+                    editingRowData[field] = e.target.value;
+                    if (field === 'currency') {
+                        const found = commonCurrencies.find(c => c.name === e.target.value);
+                        editingRowData.currencyCode = found ? found.code : '';
+                        // Visually update code in the input row if needed (though re-render will handle it)
+                        const currencyCell = e.target.closest('td');
+                        if (currencyCell) currencyCell.innerHTML = `<input type="text" data-field="currency" value="${editingRowData.currency}" list="commonCurrenciesDatalistGlobal" class="${e.target.className}" autofocus> ${editingRowData.currencyCode ? `(${editingRowData.currencyCode})` : ''}`;
+                    }
+                }
+            });
+            contentArea?.addEventListener('keydown', (e) => { // For Enter/Escape in inline edit
+                if (editingRowId && e.target.closest('tr')?.contains(e.target)) {
+                    if (e.key === 'Enter') { e.preventDefault(); saveInlineEdit(); }
+                    else if (e.key === 'Escape') { editingRowId = null; editingRowData = null; renderApp(); }
+                }
+            });
+
+            // Inline Add Row listeners
+            document.getElementById('saveInlineAddBtn')?.addEventListener('click', saveNewInlineRate);
+            document.getElementById('cancelInlineAddBtn')?.addEventListener('click', () => { isInlineAddRowVisible = false; renderApp(); });
+            document.getElementById('newInlineCurrency')?.addEventListener('input', (e) => {
+                const found = commonCurrencies.find(c => c.name === e.target.value);
+                document.getElementById('newInlineCurrencyCode').textContent = found ? `(${found.code})` : '';
+            });
+
+
+            // Sorting
+            document.querySelectorAll('th[data-sortkey]').forEach(th => {
+                th.addEventListener('click', () => handleSort(th.dataset.sortkey));
+            });
+
+            // Pagination
+            document.getElementById('recordsPerPageSelect')?.addEventListener('change', (e) => { recordsPerPage = Number(e.target.value); currentPage = 1; renderApp(); });
+            document.getElementById('firstPageBtn')?.addEventListener('click', () => { currentPage = 1; renderApp(); });
+            document.getElementById('prevPageBtn')?.addEventListener('click', () => { if (currentPage > 1) currentPage--; renderApp(); });
+            document.getElementById('nextPageBtn')?.addEventListener('click', () => { const { totalFilteredRecords } = getPaginatedAndFilteredRates(); if (currentPage < Math.ceil(totalFilteredRecords / recordsPerPage)) currentPage++; renderApp(); });
+            document.getElementById('lastPageBtn')?.addEventListener('click', () => { const { totalFilteredRecords } = getPaginatedAndFilteredRates(); currentPage = Math.ceil(totalFilteredRecords / recordsPerPage) || 1; renderApp(); });
+
+            // Drag and Drop
+            document.querySelectorAll('[draggable="true"]').forEach(item => {
+                item.addEventListener('dragstart', (e) => handleDragStart(e, item.dataset.id));
+                item.addEventListener('dragend', handleDragEnd);
+                // For table rows, drop target is the row itself
+                if (item.tagName === 'TR') {
+                    item.addEventListener('dragover', handleDragOver);
+                    item.addEventListener('drop', (e) => handleDropOnItem(e, item.dataset.id));
+                }
+            });
+            // For card view, drop target is also the card itself
+            document.querySelectorAll('div.grid > div[draggable="true"]').forEach(card => {
+                card.addEventListener('dragover', handleDragOver);
+                card.addEventListener('drop', (e) => handleDropOnItem(e, card.dataset.id));
+            });
+
+
+            document.getElementById('deleteDropZone').addEventListener('dragover', handleDragOver);
+            document.getElementById('deleteDropZone').addEventListener('drop', handleDropOnDeleteZone);
+
+            // Plan change modal
+            document.getElementById('openRequestPlanModalBtn')?.addEventListener('click', openRequestPlanModal);
+            document.getElementById('closeRequestPlanModalBtn')?.addEventListener('click', closeRequestPlanModal);
+            document.getElementById('cancelRequestPlanModalBtn')?.addEventListener('click', closeRequestPlanModal);
+            document.getElementById('requestPlanForm')?.addEventListener('submit', handleRequestPlanFormSubmit);
+            document.querySelectorAll('input[name="requestType"]').forEach(radio => {
+                radio.addEventListener('change', handleRequestTypeChange);
+            });
+            document.getElementById('frequencySelectPlan')?.addEventListener('change', (e) => handleFrequencyChange(e.target.value));
+
+            // Card view header select all
+            document.getElementById('selectAllCardsCheckbox')?.addEventListener('change', (e) => {
+                const { currentRecords } = getPaginatedAndFilteredRates();
+                handleSelectRate(currentRecords.map(r => r.id), e.target.checked);
+            });
+        }
+
+        function saveInlineEdit() {
+            if (!editingRowId || !editingRowData) return;
+
+            let errors = {};
+            const foundCurrency = commonCurrencies.find(c => c.name === editingRowData.currency);
+            const finalCurrencyCode = foundCurrency ? foundCurrency.code : editingRowData.currencyCode; // Keep original if not found
+
+            if (!editingRowData.currency || !String(editingRowData.currency).trim() || !finalCurrencyCode) errors.currency = "Valid currency name required.";
+            if (!editingRowData.rate || isNaN(parseFloat(editingRowData.rate)) || parseFloat(editingRowData.rate) <= 0) errors.rate = "Valid positive rate required.";
+            if (!editingRowData.effectiveDate) errors.effectiveDate = "Effective date required.";
+            else { try { new Date(editingRowData.effectiveDate).toISOString(); } catch (e) { errors.effectiveDate = "Invalid date."; } }
+
+            if (Object.keys(errors).length > 0) {
+                addToast(Object.values(errors).join(' '), 'error');
+                return;
+            }
+
+            const updatedData = {
+                ...editingRowData,
+                currencyCode: finalCurrencyCode.toUpperCase(),
+                rate: parseFloat(editingRowData.rate),
+                lastUpdatedAt: new Date().toISOString()
+            };
+            rates = rates.map(rate => rate.id === editingRowId ? updatedData : rate);
+            editingRowId = null;
+            editingRowData = null;
+            addToast("Row updated.", "success");
+            renderApp();
+        }
+
+        function saveNewInlineRate() {
+            const currencyName = document.getElementById('newInlineCurrency').value.trim();
+            const rateValue = document.getElementById('newInlineRate').value;
+            const effectiveDateValue = document.getElementById('newInlineEffectiveDate').value;
+
+            let errors = {};
+            const foundCurrency = commonCurrencies.find(c => c.name === currencyName);
+            const finalCurrencyCode = foundCurrency ? foundCurrency.code : '';
+
+            if (!currencyName || !finalCurrencyCode) errors.currency = "Valid currency name required.";
+            if (!rateValue || isNaN(parseFloat(rateValue)) || parseFloat(rateValue) <= 0) errors.rate = "Valid positive rate required.";
+            if (!effectiveDateValue) errors.effectiveDate = "Effective date required.";
+            else { try { new Date(effectiveDateValue).toISOString(); } catch (e) { errors.effectiveDate = "Invalid date."; } }
+
+
+            if (Object.keys(errors).length > 0) {
+                addToast(Object.values(errors).join(' '), 'error');
+                return;
+            }
+
+            const newRateData = {
+                currency: currencyName,
+                currencyCode: finalCurrencyCode.toUpperCase(),
+                rate: parseFloat(rateValue),
+                effectiveDate: effectiveDateValue,
+                lastUpdatedAt: new Date().toISOString(),
+                id: `local-${crypto.randomUUID()}`,
+                order: rates.length > 0 ? Math.max(...rates.map(r => typeof r.order === 'number' ? r.order : -1)) + 1 : 0
+            };
+            rates.push(newRateData);
+            isInlineAddRowVisible = false;
+            addToast("New rate added inline.", "success");
+            renderApp();
+        }
+
+        function closeConfigPanel() {
+            document.getElementById('configPanel').classList.remove('translate-x-0');
+            document.getElementById('configPanel').classList.add('translate-x-full');
+            document.getElementById('configPanelOverlay').classList.add('hidden');
+        }
+
+        function openRequestPlanModal() {
+            const modal = document.getElementById('requestPlanModal');
+            const currentRoundness = getRoundnessClass(config.roundness);
+            document.getElementById('requestPlanModalContent').className = `bg-white dark:bg-gray-800 p-6 shadow-xl w-full max-w-lg ${currentRoundness} max-h-[90vh] overflow-y-auto dark:text-white`;
+            // Apply roundness to form elements inside this modal too
+            modal.querySelectorAll('input, select, textarea, button').forEach(el => {
+                // Remove old roundness
+                const oldR = Array.from(el.classList).find(c => c.startsWith('rounded-'));
+                if (oldR) el.classList.remove(oldR);
+                // Add new roundness, preserve other classes
+                if (!el.classList.contains(currentRoundness)) el.classList.add(currentRoundness);
+            });
+
+
+            // Reset form
+            document.getElementById('requestPlanForm').reset();
+            document.getElementById('newBaseCurrencySection').classList.add('hidden');
+            document.getElementById('autoSetupNotesSection').classList.add('hidden');
+            document.getElementById('otherRequestNotesSection').classList.add('hidden');
+            ['requestTypeError', 'newBaseCurrencyError', 'otherRequestNotesError'].forEach(id => document.getElementById(id).textContent = '');
+
+            const baseCurrencySelect = document.getElementById('newBaseCurrencySelect');
+            baseCurrencySelect.innerHTML = commonCurrencies
+                .filter(c => c.code !== companyPlan.baseCurrency)
+                .map(c => `<option value="${c.code}">${c.name} (${c.code})</option>`).join('');
+            if (baseCurrencySelect.options.length > 0) baseCurrencySelect.value = baseCurrencySelect.options[0].value;
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeRequestPlanModal() {
+            document.getElementById('requestPlanModal').classList.add('hidden');
+        }
+
+        function handleRequestTypeChange(event) {
+            const type = event.target.value;
+            document.getElementById('newBaseCurrencySection').classList.toggle('hidden', type !== 'Change Base Currency');
+            document.getElementById('autoSetupNotesSection').classList.toggle('hidden', type !== 'Switch to Automatic Setup');
+            document.getElementById('otherRequestNotesSection').classList.toggle('hidden', type !== 'Other Request');
+        }
+
+        function handleRequestPlanFormSubmit(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const requestType = formData.get('requestType');
+            const newBase = formData.get('newBaseCurrency'); // Will be null if not selected
+            let notes = '';
+            if (requestType === 'Change Base Currency') notes = document.getElementById('baseChangeNotesTextarea').value;
+            else if (requestType === 'Switch to Automatic Setup') notes = document.getElementById('autoSetupNotesTextarea').value;
+            else if (requestType === 'Other Request') notes = document.getElementById('otherRequestNotesTextarea').value;
+
+            let errors = {};
+            if (!requestType) errors.requestType = "Please select a request type.";
+            else {
+                if (requestType === 'Change Base Currency' && !newBase) errors.newBaseCurrency = "Please select a new base currency.";
+                if (requestType === 'Other Request' && !notes.trim()) errors.notes = "Please provide details for your 'Other' request.";
+            }
+
+            document.getElementById('requestTypeError').textContent = errors.requestType || '';
+            document.getElementById('newBaseCurrencyError').textContent = errors.newBaseCurrency || '';
+            document.getElementById('otherRequestNotesError').textContent = errors.notes || '';
+
+            if (Object.keys(errors).length > 0) return;
+
+            console.log("Plan change request submitted:", { requestType, newBaseCurrency: newBase, notes });
+            let message = `Request for "${requestType}" submitted.`;
+            if (requestType === 'Change Base Currency' && newBase) {
+                message += ` New base: ${newBase}.`;
+            }
+            addToast(message, "success");
+            closeRequestPlanModal();
+        }
+
+        function handleFrequencyChange(newFrequency) {
+            const oldFrequency = companyPlan.updateFrequency;
+            companyPlan.updateFrequency = newFrequency; // Simplified for demo
+            if (frequencyOrder[newFrequency] < frequencyOrder[oldFrequency]) {
+                addToast(`Frequency change to ${newFrequency} requested. Effective after current ${oldFrequency} period (ends: ${companyPlan.currentPeriodEndsIn}).`, "info");
+            } else if (newFrequency !== oldFrequency) {
+                addToast(`Frequency updated to ${newFrequency}. Applies from next cycle.`, "info");
+            }
+            // No need to re-renderApp just for this, unless it affects displayed data structure
+        }
+
+
+        // --- APP INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            rates = initialRatesData.map(r => ({ ...r, id: r.id || `local-${crypto.randomUUID()}` }));
+            isLoading = false;
+
+            // Populate global datalist
+            const globalDatalist = document.getElementById('commonCurrenciesDatalistGlobal');
+            commonCurrencies.forEach(c => {
+                const option = document.createElement('option');
+                option.value = c.name;
+                option.label = c.code ? `${c.name} (${c.code})` : c.name;
+                globalDatalist.appendChild(option);
+            });
+            // Populate modal datalist (can be the same or separate if needed)
+            const modalDatalist = document.getElementById('commonCurrenciesModalDatalist');
+            commonCurrencies.forEach(c => {
+                const option = document.createElement('option');
+                option.value = c.name;
+                option.label = c.code ? `${c.name} (${c.code})` : c.name;
+                modalDatalist.appendChild(option);
+            });
+
+
+            applyConfigStyles(); // Apply initial theme, font, etc.
+            renderApp(); // Initial render
+            renderCardColumnSelector('cardColumnSelectorContainerCards'); // For card view header
+        });
+
+    </script>
+</body>
+
+</html>
