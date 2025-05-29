@@ -1,2283 +1,2147 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Account Dashboard</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-    />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings - Monochrome Digital Store</title>
+    <meta name="description" content="Manage your account settings for Monochrome Digital Store.">
+    <link rel="shortcut icon" type="image/x-icon" href="https://placehold.co/16x16/000000/ffffff?text=Fav">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Poppins", Arial, sans-serif;
-      }
-
-      body {
-        background-color: #ffffff;
-        transition: background-color 0.3s ease, color 0.3s ease;
-      }
-
-      body.dark-mode {
-        background-color: #000000;
-        color: #f0f0f0;
-      }
-
-      .container {
-        display: flex;
-        min-height: 100vh;
-      }
-
-      .sidebar {
-        width: 260px;
-        background-color: #fff;
-        color: #000000;
-        padding: 20px;
-        transition: all 0.3s ease;
-        border-right: 1px solid #e0e0e0;
-        position: sticky;
-        top: 0;
-        height: 100vh;
-      }
-
-      body.dark-mode .sidebar {
-        background-color: #0f0f0f;
-        border-right: 1px solid #2c2c2c;
-      }
-
-      .sidebar .user-info {
-        display: flex;
-        align-items: center;
-        margin-bottom: 20px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid #e0e0e0;
-        position: relative;
-      }
-
-      body.dark-mode .sidebar .user-info {
-        border-bottom: 1px solid #000000;
-      }
-
-      .sidebar .user-info .profile-pic {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        margin-right: 15px;
-        border: 2px solid #000000;
-        cursor: pointer;
-      }
-
-      .sidebar .user-info .profile-pic:hover {
-        opacity: 0.9;
-      }
-
-      .sidebar .user-info input[type="file"] {
-        display: none;
-      }
-
-      .sidebar .user-info span {
-        font-size: 16px;
-        font-weight: 500;
-        color: #000000;
-      }
-
-      body.dark-mode .sidebar .user-info span {
-        color: #000000;
-      }
-
-      .sidebar .dark-mode-toggle {
-        position: absolute;
-        right: 0;
-        top: 15px;
-        cursor: pointer;
-        color: #000000;
-      }
-
-      body.dark-mode .sidebar .dark-mode-toggle {
-        color: #000000;
-      }
-
-      .sidebar .menu-item {
-        padding: 12px 15px;
-        font-size: 14px;
-        cursor: pointer;
-        border-radius: 5px;
-        margin-bottom: 5px;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-      }
-
-      body.dark-mode .sidebar .menu-item {
-        color: #f0f0f0;
-      }
-
-      .sidebar .menu-item i {
-        margin-right: 10px;
-        color: #000000;
-      }
-
-      body.dark-mode .sidebar .menu-item i {
-        color: #000000;
-      }
-
-      .sidebar .menu-item:hover {
-        background-color: #ff6f611a;
-      }
-
-      body.dark-mode .sidebar .menu-item:hover {
-        background-color: #ff6f6133;
-      }
-
-      .sidebar .menu-item.active {
-        background-color: #000000;
-        color: #fff;
-        font-weight: bold;
-      }
-
-      body.dark-mode .sidebar .menu-item.active {
-        background-color: #000000;
-      }
-
-      .sidebar .menu-item.active i {
-        color: #fff;
-      }
-
-      .sidebar .menu-item.logout {
-        color: #000000;
-        margin-top: 20px;
-      }
-
-      body.dark-mode .sidebar .menu-item.logout {
-        color: #000000;
-      }
-
-      .sidebar .menu-item.logout:hover {
-        background-color: #0000001a;
-      }
-
-      .sidebar .menu-header {
-        padding: 15px;
-        font-size: 18px;
-        font-weight: bold;
-        color: #333;
-        margin-top: 25px;
-        margin-bottom: 15px;
-        text-transform: uppercase;
-        border-bottom: 2px solid #e0e0e0;
-        letter-spacing: 0.5px;
-      }
-
-      body.dark-mode .sidebar .menu-header {
-        color: #f0f0f0;
-        border-bottom: 1px solid #2c2c2c;
-      }
-
-      .sidebar .menu-header i {
-        color: #333;
-        margin-right: 10px;
-      }
-
-      body.dark-mode .sidebar .menu-header i {
-        color: #f0f0f0;
-      }
-
-      .sidebar .sub-menu-item {
-        padding: 12px 15px 12px 25px;
-        font-size: 14px;
-        cursor: pointer;
-        border-radius: 5px;
-        margin-bottom: 8px;
-        margin-left: 10px;
-        margin-right: 10px;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-      }
-
-      body.dark-mode .sidebar .sub-menu-item {
-        color: #f0f0f0;
-      }
-
-      .sidebar .sub-menu-item i {
-        margin-right: 10px;
-        color: #000000;
-      }
-
-      body.dark-mode .sidebar .sub-menu-item i {
-        color: #000000;
-      }
-
-      .sidebar .sub-menu-item:hover {
-        background-color: #f0f0f0;
-      }
-
-      body.dark-mode .sidebar .sub-menu-item:hover {
-        background-color: #2c2c2c;
-      }
-
-      .sidebar .sub-menu-item.active:hover {
-        background-color: #000000;
-      }
-
-      body.dark-mode .sidebar .sub-menu-item.active:hover {
-        background-color: #000000;
-      }
-
-      .sidebar .sub-menu-item.active {
-        background-color: #000000;
-        color: #ffffff;
-        font-weight: bold;
-      }
-
-      body.dark-mode .sidebar .sub-menu-item.active {
-        background-color: #000000;
-        color: #ffffff;
-      }
-
-      .sidebar .sub-menu-item.active i {
-        color: #ffffff;
-      }
-
-      .main-content {
-        flex: 1;
-        padding: 40px;
-        background-color: #f8f9fa;
-        transition: background-color 0.3s ease, color 0.3s ease;
-      }
-
-      body.dark-mode .main-content {
-        background-color: #0f0f0f;
-        color: #f0f0f0;
-      }
-
-      .main-content h2 {
-        font-size: 22px;
-        color: #333;
-        margin-bottom: 30px;
-        display: flex;
-        align-items: center;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #eee;
-      }
-
-      body.dark-mode .main-content h2 {
-        color: #f0f0f0;
-        border-bottom: 1px solid #2c2c2c;
-      }
-
-      .main-content h2 i {
-        margin-right: 10px;
-        color: #000000;
-      }
-
-      body.dark-mode .main-content h2 i {
-        color: #000000;
-      }
-
-      .form-group {
-        margin-bottom: 30px;
-        position: relative;
-        width: 100%;
-        max-width: 800px;
-      }
-
-      .form-group label {
-        display: block;
-        font-size: 14px;
-        font-weight: 500;
-        color: #333;
-        margin-bottom: 8px;
-      }
-
-      body.dark-mode .form-group label {
-        color: #f0f0f0;
-      }
-
-      .form-group input[type="text"],
-      .form-group input[type="email"],
-      .form-group input[type="password"] {
-        width: 100%;
-        max-width: 400px;
-        padding: 12px 15px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        font-size: 14px;
-        transition: border-color 0.3s ease;
-        background-color: #fff;
-        margin-bottom: 5px;
-      }
-
-      body.dark-mode .form-group input[type="text"],
-      body.dark-mode .form-group input[type="email"],
-      body.dark-mode .form-group input[type="password"] {
-        background-color: #1a1a1a;
-        border: 1px solid #333333;
-        color: #f0f0f0;
-      }
-
-      .form-group input:focus {
-        outline: none;
-        border-color: #000000;
-        box-shadow: 0 0 5px rgba(255, 111, 97, 0.2);
-      }
-
-      body.dark-mode .form-group input:focus {
-        border-color: #ff8a80;
-        box-shadow: 0 0 5px rgba(255, 138, 128, 0.2);
-      }
-
-      .form-group .edit-btn,
-      .form-group .save-btn,
-      .form-group .cancel-btn,
-      .action-btn {
-        color: #000000;
-        cursor: pointer;
-        font-size: 14px;
-        margin-left: 15px;
-        transition: color 0.3s ease;
-      }
-
-      body.dark-mode .form-group .edit-btn,
-      body.dark-mode .form-group .save-btn,
-      body.dark-mode .form-group .cancel-btn,
-      body.dark-mode .action-btn {
-        color: #ff8a80;
-      }
-
-      .form-group .save-btn,
-      .action-btn.save {
-        color: #28a745;
-      }
-
-      .form-group .cancel-btn,
-      .action-btn.cancel {
-        color: #ff6161;
-      }
-
-      .form-group .edit-btn:hover,
-      .form-group .save-btn:hover,
-      .form-group .cancel-btn:hover,
-      .action-btn:hover {
-        color: #333;
-      }
-
-      body.dark-mode .form-group .edit-btn:hover,
-      body.dark-mode .form-group .save-btn:hover,
-      body.dark-mode .form-group .cancel-btn:hover,
-      body.dark-mode .action-btn:hover {
-        color: #ffffff;
-      }
-
-      .radio-group {
-        display: flex;
-        gap: 20px;
-        margin-top: 10px;
-      }
-
-      .radio-group label {
-        font-size: 14px;
-        color: #555;
-        cursor: pointer;
-      }
-
-      body.dark-mode .radio-group label {
-        color: #cccccc;
-      }
-
-      .radio-group input[type="radio"] {
-        margin-right: 5px;
-      }
-
-      .info-section {
-        margin-top: 40px;
-        padding-top: 20px;
-        border-top: 1px solid #eee;
-      }
-
-      body.dark-mode .info-section {
-        border-top: 1px solid #2c2c2c;
-      }
-
-      .info-section h3 {
-        font-size: 16px;
-        color: #333;
-        margin-bottom: 15px;
-      }
-
-      body.dark-mode .info-section h3 {
-        color: #f0f0f0;
-      }
-
-      .info-section p {
-        font-size: 14px;
-        color: #666;
-        margin-bottom: 10px;
-        line-height: 1.6;
-      }
-
-      body.dark-mode .info-section p {
-        color: #cccccc;
-      }
-
-      .info-section p strong {
-        color: #333;
-      }
-
-      body.dark-mode .info-section p strong {
-        color: #f0f0f0;
-      }
-
-      .success-message {
-        color: #28a745;
-        font-size: 14px;
-        margin-top: 10px;
-        display: none;
-      }
-
-      .tab-content {
-        display: none;
-        padding: 20px;
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-      }
-
-      body.dark-mode .tab-content {
-        background-color: #1a1a1a;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-      }
-
-      .tab-content.active {
-        display: block;
-      }
-
-      .order-item,
-      .address-item,
-      .payment-item {
-        border: 1px solid #ddd;
-        padding: 15px;
-        margin-bottom: 15px;
-        border-radius: 5px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      body.dark-mode .order-item,
-      body.dark-mode .address-item,
-      body.dark-mode .payment-item {
-        border: 1px solid #2c2c2c;
-        background-color: #1a1a1a;
-      }
-
-      .order-item p,
-      .address-item p,
-      .payment-item p {
-        margin: 5px 0;
-        font-size: 14px;
-        color: #333;
-      }
-
-      body.dark-mode .order-item p,
-      body.dark-mode .address-item p,
-      body.dark-mode .payment-item p {
-        color: #f0f0f0;
-      }
-
-      .order-item .status {
-        color: #28a745;
-        font-weight: 500;
-      }
-
-      .address-item .action-btn,
-      .payment-item .action-btn {
-        margin-left: 10px;
-      }
-
-      .add-btn {
-        background-color: #000000;
-        color: #fff;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        display: inline-block;
-        margin-bottom: 20px;
-        transition: background-color 0.3s ease;
-      }
-
-      body.dark-mode .add-btn {
-        background-color: #000000;
-      }
-
-      .add-btn:hover {
-        background-color: #000000;
-      }
-
-      body.dark-mode .add-btn:hover {
-        background-color: #000000;
-      }
-
-      .add-btn i {
-        margin-right: 5px;
-      }
-
-      .empty-message {
-        font-size: 14px;
-        color: #666;
-        margin-top: 20px;
-      }
-
-      body.dark-mode .empty-message {
-        color: #cccccc;
-      }
-
-      .rewards-card {
-        background-color: #f1f3f6;
-        padding: 20px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      body.dark-mode .rewards-card {
-        background-color: #1a1a1a;
-      }
-
-      .rewards-card p {
-        font-size: 16px;
-        color: #000000;
-      }
-
-      body.dark-mode .rewards-card p {
-        color: #000000;
-      }
-
-      .rewards-card p span {
-        color: #000000;
-        font-weight: bold;
-      }
-
-      body.dark-mode .rewards-card p span {
-        color: #000000;
-      }
-
-      .order-timeline {
-        position: relative;
-        padding-left: 30px;
-        margin-top: 20px;
-      }
-
-      .order-timeline::before {
-        content: "";
-        position: absolute;
-        left: 10px;
-        top: 0;
-        bottom: 0;
-        width: 2px;
-        background-color: #ddd;
-      }
-
-      body.dark-mode .order-timeline::before {
-        background-color: #2c2c2c;
-      }
-
-      .timeline-item {
-        position: relative;
-        margin-bottom: 20px;
-      }
-
-      .timeline-item::before {
-        content: "";
-        position: absolute;
-        left: -29px;
-        top: 5px;
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        background-color: #ff6f61;
-        border: 2px solid #fff;
-      }
-
-      body.dark-mode .timeline-item::before {
-        background-color: #ff8a80;
-        border: 2px solid #0f0f0f;
-      }
-
-      .timeline-item p {
-        font-size: 14px;
-        color: #666;
-      }
-
-      body.dark-mode .timeline-item p {
-        color: #cccccc;
-      }
-
-      .timeline-item p strong {
-        color: #333;
-      }
-
-      body.dark-mode .timeline Witem p strong {
-        color: #f0f0f0;
-      }
-
-      /* Orders Style Start */
-      :root {
-        --black: #000;
-        --white: #fff;
-        --gray: #d3d3d3;
-        --dark-gray: #555;
-        --light-gray: #f8f8f8;
-      }
-
-      .search-container {
-        display: flex;
-        align-items: center;
-        margin-bottom: 1rem;
-        max-width: 400px;
-      }
-
-      .search-input {
-        flex: 1;
-        padding: 0.5rem 0.8rem;
-        border: 1px solid var(--dark-gray);
-        border-right: none;
-        border-radius: 4px 0 0 4px;
-        font-size: 0.9rem;
-        outline: none;
-        transition: border-color 0.2s ease;
-      }
-
-      .search-input:focus {
-        border-color: var(--black);
-      }
-
-      .search-button {
-        background: var(--black);
-        color: var(--white);
-        padding: 0.5rem 1rem;
-        border: none;
-        border-radius: 0 4px 4px 0;
-        cursor: pointer;
-        font-size: 0.9rem;
-        transition: background 0.3s ease;
-      }
-
-      .search-button:hover {
-        background: var(--dark-gray);
-      }
-
-      .order-filters {
-        display: flex;
-        align-items: center;
-        gap: 0.8rem;
-        margin-bottom: 1rem;
-        background: var(--white);
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-        position: sticky;
-        top: 60px;
-        z-index: 500;
-      }
-
-      .filter-group {
-        position: relative;
-      }
-
-      .filter-group label {
-        display: inline-block;
-        padding: 0.4rem 0.8rem;
-        background: var(--light-gray);
-        border: 1px solid var(--dark-gray);
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 0.85rem;
-        font-weight: 500;
-        transition: background 0.2s ease;
-      }
-
-      .filter-group label:hover {
-        background: var(--gray);
-      }
-
-      .filter-options {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        background: var(--white);
-        border: 1px solid var(--dark-gray);
-        border-radius: 4px;
-        padding: 0.5rem;
-        z-index: 10;
-        width: 160px;
-        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-        opacity: 0;
-        transform: translateY(-8px);
-        transition: opacity 0.3s ease, transform 0.3s ease;
-      }
-
-      .filter-group.active .filter-options {
-        display: block;
-        opacity: 1;
-        transform: translateY(0);
-      }
-
-      .filter-options label {
-        display: flex;
-        align-items: center;
-        padding: 0.4rem;
-        font-size: 0.8rem;
-        transition: background 0.2s ease;
-      }
-
-      .filter-options label:hover {
-        background: var(--light-gray);
-      }
-
-      .filter-options input {
-        margin-right: 0.4rem;
-      }
-
-      .clear-filters {
-        background: var(--black);
-        color: var(--white);
-        padding: 0.4rem 0.8rem;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 0.85rem;
-        transition: background 0.3s ease;
-      }
-
-      .clear-filters:hover {
-        background: var(--dark-gray);
-      }
-
-      /* Modified: Increased padding and aligned items to top for text arrangement */
-      .order-card {
-        background: var(--white);
-        border-radius: 6px;
-        padding: 1.2rem;
-        margin-bottom: 0.8rem;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-        display: flex;
-        align-items: flex-start;
-        gap: 1rem;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-      }
-
-      .order-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-      }
-
-      .order-image {
-        width: 200px;
-        height: auto;
-        border-radius: 8px;
-        object-fit: cover;
-      }
-
-      /* Modified: Structured for better text alignment */
-      .order-info {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-
-      /* Modified: Adjusted for price alignment */
-      .order-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 0.3rem;
-        flex: 1;
-      }
-
-      .order-header h3 {
-        font-size: 0.95rem;
-        font-weight: 500;
-        margin: 0;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 300px;
-      }
-
-      .order-price {
-        font-size: 1.2rem;
-        font-weight: 600;
-        white-space: nowrap;
-      }
-
-      .order-meta {
-        font-size: 0.75rem;
-        color: var(--dark-gray);
-      }
-
-      .order-status {
-        display: inline-block;
-        padding: 0.2rem 0.5rem;
-        border-radius: 10px;
-        font-size: 0.7rem;
-        font-weight: 500;
-        margin-bottom: 0.2rem;
-        background: var(--gray);
-      }
-
-      .rate-review {
-        color: var(--black);
-        text-decoration: none;
-        font-size: 0.75rem;
-        transition: color 0.2s ease;
-      }
-
-      .rate-review:hover {
-        color: var(--dark-gray);
-      }
-
-      /* Modified: Aligned button to right */
-      .reorder-button {
-        background: var(--black);
-        color: var(--white);
-        padding: 0.4rem 0.8rem;
-        border-radius: 4px;
-        border: none;
-        font-size: 0.8rem;
-        cursor: pointer;
-        transition: background 0.3s ease;
-        margin-left: auto;
-        align-self: flex-start;
-      }
-
-      .reorder-button:hover {
-        background: var(--dark-gray);
-      }
-
-      .order-details {
-        display: none;
-        animation: fadeIn 0.3s ease-in-out;
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(8px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      .card {
-        background: var(--white);
-        border-radius: 6px;
-        padding: 1rem;
-        margin-bottom: 1rem;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-      }
-
-      /* Modified: Adjusted grid for image and details */
-      .details-grid {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        gap: 1.5rem;
-      }
-
-      .timeline div {
-        margin: 0.4rem 0;
-        font-size: 0.85rem;
-      }
-
-      .btn {
-        background: var(--black);
-        color: var(--white);
-        padding: 0.5rem 1rem;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 0.85rem;
-        transition: background 0.3s ease;
-      }
-
-      .btn:hover {
-        background: var(--dark-gray);
-      }
-
-      .back-btn {
-        background: var(--dark-gray);
-        margin-bottom: 0.8rem;
-      }
-
-      .stars-container {
-        display: flex;
-        gap: 0.2rem;
-        margin: 0.4rem 0;
-      }
-
-      .star {
-        font-size: 1rem;
-        color: var(--gray);
-        cursor: pointer;
-        transition: color 0.2s ease;
-      }
-
-      .star:hover,
-      .star.active {
-        color: var(--black);
-      }
-
-      .order-summary {
-        display: flex;
-        flex-direction: column;
-        gap: 0.4rem;
-      }
-
-      .order-summary-item {
-        display: flex;
-        justify-content: space-between;
-        font-size: 0.85rem;
-      }
-
-      .order-total {
-        font-size: 1rem;
-        font-weight: 600;
-        margin-top: 0.8rem;
-        display: flex;
-        justify-content: space-between;
-      }
-
-      .shipping-details {
-        background: var(--light-gray);
-        padding: 0.8rem;
-        border-radius: 4px;
-        margin-top: 0.8rem;
-      }
-
-      .shipping-details h3 {
-        font-size: 0.9rem;
-        margin-bottom: 0.4rem;
-      }
-
-      .empty-state {
-        text-align: center;
-        padding: 1.5rem;
-        color: var(--dark-gray);
-        font-size: 0.9rem;
-      }
-
-      .loading {
-        text-align: center;
-        padding: 1.5rem;
-        color: var(--dark-gray);
-        font-size: 0.9rem;
-      }
-
-      .form-group {
-        margin-bottom: 0.8rem;
-      }
-
-      .form-control {
-        width: 100%;
-        padding: 0.5rem;
-        border: 1px solid var(--dark-gray);
-        border-radius: 4px;
-        font-size: 0.9rem;
-        resize: vertical;
-      }
-
-      .form-control:focus {
-        outline: none;
-        border-color: var(--black);
-        box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
-      }
-
-      /* New: Style for item image in order details */
-      .order-details-image {
-        width: 400px;
-        height: auto;
-        border-radius: 8px;
-        object-fit: cover;
-        margin-bottom: 1rem;
-      }
-
-      /* New: Container for image and product details */
-      .product-details-container {
-        display: flex;
-        gap: 1.5rem;
-        margin-bottom: 1rem;
-      }
-
-      @media (max-width: 768px) {
-        .sidebar {
-          transform: translateX(-240px);
+        /* Google-Style Header CSS */
+        :root {
+            --header-height: 60px;
+            --header-bg: #fff;
+            --header-border: 1px solid #e5e7eb;
+            --header-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --header-text: #6b7280;
+            --header-text-hover: #111827;
+            --search-bg: #f3f4f6;
+            --search-bg-focus: #fff;
+            --search-border: 1px solid transparent;
+            --search-border-focus: 1px solid #e5e7eb;
+            --search-shadow-focus: 0 1px 6px rgba(0, 0, 0, 0.1);
+            --search-text: #111827;
+            --search-placeholder: #6b7280;
+            --icon-color: #6b7280;
+            --icon-hover-color: #111827;
+            --icon-badge-bg: #000000;
+            --icon-badge-color: #fff;
         }
 
-        .sidebar.visible {
-          transform: translateX(0);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
         }
 
-        .main {
-          margin-left: 0;
+        body {
+            padding-top: var(--header-height);
+            background-color: #f9fafb;
+            color: #111827;
         }
 
-        .menu-toggle {
-          display: block;
+        .google-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--header-height);
+            background: var(--header-bg);
+            border-bottom: var(--header-border);
+            box-shadow: var(--header-shadow);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
         }
 
-        .order-filters {
-          flex-wrap: wrap;
-          gap: 0.5rem;
-          padding: 0.4rem;
+        .google-header-logo {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            margin-right: 20px;
         }
 
-        .filter-group label {
-          padding: 0.3rem 0.6rem;
-          font-size: 0.8rem;
+        .google-header-logo span {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111827;
         }
 
-        .filter-options {
-          width: 140px;
+        .google-header-search {
+            flex: 1;
+            max-width: 720px;
+            margin: 0 auto;
+            position: relative;
         }
 
-        .order-card {
-          flex-direction: column;
-          align-items: flex-start;
-          padding: 0.8rem;
+        .google-search-form {
+            display: flex;
+            width: 100%;
         }
 
-        .order-image {
-          width: 100%;
-          max-height: 500px;
+        .google-search-input-container {
+            position: relative;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: var(--search-bg);
+            border-radius: 24px;
+            height: 46px;
+            transition: background 0.2s, box-shadow 0.2s, border 0.2s;
+            border: var(--search-border);
         }
 
-        .order-header {
-          flex-direction: row;
-          align-items: center;
-          gap: 0.5rem;
-          width: 100%;
+        .google-search-input-container:hover {
+            background: var(--search-bg-focus);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
         }
 
-        .order-header h3 {
-          max-width: 60%;
+        .google-search-input-container:focus-within {
+            background: var(--search-bg-focus);
+            border: var(--search-border-focus);
+            box-shadow: var(--search-shadow-focus);
         }
 
-        .order-price {
-          flex-shrink: 0;
+        .google-search-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            color: var(--icon-color);
         }
 
-        .reorder-button {
-          margin-left: 0;
-          margin-top: 0.5rem;
-          align-self: stretch;
+        .google-search-input {
+            flex: 1;
+            height: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            color: var(--search-text);
+            padding: 0;
         }
 
-        .details-grid {
-          grid-template-columns: 1fr;
+        .google-search-input::placeholder {
+            color: var(--search-placeholder);
         }
 
-        /* New: Stack image and details on mobile */
-        .product-details-container {
-          flex-direction: column;
-          gap: 1rem;
+        .google-search-voice {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            color: var(--icon-color);
+            cursor: pointer;
         }
 
-        .order-details-image {
-          width: 100%;
-          max-height: 500px;
+        .google-header-icons {
+            display: flex;
+            align-items: center;
         }
-      }
-      /* Orders Style End */
+
+        .google-header-icon {
+            position: relative;
+            margin-left: 16px;
+            display: flex;
+            align-items: center;
+            color: var(--icon-color);
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 8px 12px;
+            border-radius: 20px;
+        }
+
+        .google-header-icon:hover {
+            background-color: rgba(60, 64, 67, 0.08);
+            color: var(--icon-hover-color);
+        }
+
+        .google-header-icon i {
+            margin-right: 6px;
+        }
+
+        .google-header-icon-text {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .google-icon-badge {
+            position: absolute;
+            top: 0;
+            left: 16px;
+            background: var(--icon-badge-bg);
+            color: var(--icon-badge-color);
+            font-size: 11px;
+            font-weight: 700;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px;
+        }
+
+        /* Tab Styling */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+            overflow-x: auto; /* Enable horizontal scrolling for small screens */
+            white-space: nowrap; /* Prevent wrapping */
+        }
+
+        .tab {
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #6b7280;
+            cursor: pointer;
+            transition: color 0.2s, border-bottom 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab:hover {
+            color: #111827;
+        }
+
+        .tab.active {
+            color: #111827;
+            border-bottom: 2px solid #000000;
+            font-weight: 600;
+        }
+
+        /* Sub-section Navigation Styling */
+        .sub-section-nav {
+            margin-bottom: 1.5rem; /* mb-6 equivalent */
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .sub-section-nav a {
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #6b7280;
+            cursor: pointer;
+            transition: color 0.2s, border-bottom 0.2s;
+            border-bottom: 2px solid transparent;
+            text-decoration: none; /* Remove default underline */
+        }
+
+        .sub-section-nav a:hover {
+            color: #111827;
+        }
+
+        .sub-section-nav a.active {
+            color: #111827;
+            border-bottom: 2px solid #000000;
+            font-weight: 600;
+        }
+
+
+        /* Content and Sub-section Display */
+        .content-section, .sub-section {
+            display: none;
+        }
+
+        .content-section.active, .sub-section.active {
+            display: block;
+        }
+
+        /* Toggle Switch Styling */
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #000000;
+        }
+
+        .toggle-checkbox:checked + .toggle-label::after {
+            transform: translateX(16px);
+        }
+
+        .toggle-label {
+            width: 36px;
+            height: 20px;
+            background-color: #d1d5db;
+            border-radius: 9999px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: inline-block; /* Ensure label is inline-block for flex alignment */
+        }
+
+        .toggle-label::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.2s;
+        }
+
+        /* Edit Mode Styling */
+        .edit-mode input:not([type="checkbox"]), .edit-mode select, .edit-mode input[type="radio"] + label {
+            background-color: #ffffff;
+            border-color: #000000 !important; /* Use !important to override Tailwind defaults if necessary */
+            pointer-events: auto; /* Enable interaction */
+        }
+
+        .view-mode input:not([type="checkbox"]), .view-mode select, .view-mode input[type="radio"] + label {
+            background-color: #f3f4f6;
+            border-color: #e5e7eb !important; /* Use !important to override Tailwind defaults if necessary */
+            pointer-events: none; /* Disable interaction */
+        }
+
+        /* Hide elements in view mode */
+        .view-mode .view-mode-hidden {
+            display: none;
+        }
+
+
+        /* Style for radio button labels in view mode */
+        .view-mode .gender-option label {
+             background-color: transparent !important; /* Ensure labels are transparent in view mode */
+             border: none !important; /* Remove border in view mode */
+             padding: 0 !important; /* Remove padding in view mode */
+             cursor: default !important; /* Change cursor in view mode */
+        }
+
+        /* Style for disabled checkboxes in view mode */
+        .view-mode input[type="checkbox"] {
+            pointer-events: none; /* Disable clicking */
+            opacity: 0.7; /* Visually indicate disabled state */
+        }
+         .view-mode input[type="checkbox"] + label {
+            pointer-events: none; /* Disable clicking on the label */
+            opacity: 0.7; /* Visually indicate disabled state */
+         }
+
+        /* Hide radio button inputs in view mode */
+        .view-mode .gender-option input[type="radio"] {
+            display: none;
+        }
+
+         /* Style for disabled text inputs in view mode */
+        .view-mode input[type="text"],
+        .view-mode input[type="email"],
+        .view-mode input[type="tel"],
+        .view-mode input[type="password"] {
+            pointer-events: none; /* Disable interaction */
+            color: #4b5563; /* Match text color to view mode */
+        }
+
+        /* Style for disabled buttons in view mode */
+        .view-mode button:not(.edit-btn) {
+             pointer-events: none; /* Disable clicking */
+             opacity: 0.7; /* Visually indicate disabled state */
+        }
+
+
+        /* Scrollable Sections */
+        .scrollable-addresses, .scrollable-payments, .scrollable-upi {
+            max-height: 200px;
+            overflow-y: auto;
+            scrollbar-width: thin; /* Firefox */
+            scrollbar-color: #d1d5db #f3f4f6; /* Firefox */
+        }
+
+        /* Scrollbar for Webkit browsers */
+        .scrollable-addresses::-webkit-scrollbar, .scrollable-payments::-webkit-scrollbar, .scrollable-upi::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .scrollable-addresses::-webkit-scrollbar-thumb, .scrollable-payments::-webkit-scrollbar-thumb, .scrollable-upi::-webkit-scrollbar-thumb {
+            background-color: #d1d5db;
+            border-radius: 9999px;
+        }
+
+        .scrollable-addresses::-webkit-scrollbar-track, .scrollable-payments::-webkit-scrollbar-track, .scrollable-upi::-webkit-scrollbar-track {
+            background-color: #f3f4f6;
+        }
+
+        /* FAQ Styling */
+        .faq-item {
+            border-bottom: 1px solid #e5e7eb;
+            padding: 12px 0;
+        }
+
+        .faq-question {
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #111827; /* Ensure question text is dark */
+        }
+
+        .faq-question i {
+             transition: transform 0.2s ease-in-out; /* Smooth rotation for arrow */
+        }
+
+        .faq-question i.fa-chevron-up {
+             transform: rotate(180deg); /* Rotate arrow up when active */
+        }
+
+
+        .faq-answer {
+            display: none;
+            margin-top: 8px;
+            color: #6b7280;
+            font-size: 14px; /* Adjust font size for readability */
+            line-height: 1.5; /* Improve line spacing */
+        }
+
+        .faq-answer.active {
+            display: block;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .google-header-search {
+                max-width: 100%;
+                margin: 0 10px;
+            }
+
+            .google-search-input-container {
+                height: 40px;
+            }
+
+            .google-header-icon {
+                margin-left: 8px;
+            }
+
+            .google-header-icon-text {
+                display: none;
+            }
+
+            .google-header-icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                justify-content: center;
+                padding: 0;
+            }
+
+            .google-header-icon i {
+                margin-right: 0;
+            }
+
+            .google-icon-badge {
+                top: 0;
+                right: 0;
+                left: auto;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .google-header {
+                padding: 0 10px;
+            }
+
+            .google-header-logo span {
+                font-size: 16px;
+            }
+
+            .google-search-input-container {
+                height: 36px;
+            }
+
+            .google-search-icon,
+            .google-search-voice {
+                width: 36px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .tabs {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+            }
+
+            .tab {
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+             .sub-section-nav a {
+                padding: 6px 12px;
+                font-size: 13px;
+             }
+        }
     </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="sidebar">
-        <div class="user-info">
-          <label for="profile-pic-upload">
-            <img src="image.jpg" alt="Profile Picture" class="profile-pic" />
-          </label>
-
-          <span id="user-name">John Doe</span>
+</head>
+<body>
+    <header class="google-header">
+        <div class="google-header-logo">
+            <span>HCL Software</span>
         </div>
 
-        <div class="menu-header" style="margin-top: 10px">
-          <i class="fas1"></i> Purchases
-        </div>
-        <div class="sub-menu-item" onclick="showTab('orders')">
-          <i class="fas fa-box"></i> Order History
-        </div>
-        <div class="sub-menu-item" onclick="showTab('tracking')">
-          <i class="fas fa-map"></i> Track Orders
-        </div>
-
-        <div class="menu-header"><i class="fas2"></i> My Profile</div>
-        <div class="sub-menu-item active" onclick="showTab('profile')">
-          <i class="fas fa-user"></i> Personal Details
-        </div>
-        <div class="sub-menu-item" onclick="showTab('addresses')">
-          <i class="fas fa-map-marker-alt"></i> Delivery Addresses
-        </div>
-        <div class="sub-menu-item" onclick="showTab('security')">
-          <i class="fas fa-lock"></i> Security Settings
-        </div>
-
-        <div class="menu-header"><i class="fas3"></i> Wallet</div>
-        <div class="sub-menu-item" onclick="showTab('rewards')">
-          <i class="fas fa-coins"></i> Rewards Points
-        </div>
-        <div class="sub-menu-item" onclick="showTab('saved-payments')">
-          <i class="fas fa-credit-card"></i> Saved Payments
-        </div>
-
-        <div class="menu-item logout" onclick="logout()">
-          <i class="fas fa-sign-out-alt"></i> Sign Out
-        </div>
-      </div>
-      <div class="main-content">
-        <div id="orders" class="tab-content">
-          <!-- =================================== Order History Start =================================== -->
-          Orders 1234
-          <div class="main" id="mainContent">
-            <div id="orderListPage">
-              <div class="search-container">
-                <input
-                  type="text"
-                  id="orderSearch"
-                  class="search-input"
-                  placeholder="Search your orders here..."
-                  aria-label="Search orders"
-                />
-                <button
-                  class="search-button"
-                  onclick="searchOrders()"
-                  aria-label="Search"
-                >
-                  <i class="bi bi-search"></i> Search Orders
-                </button>
-              </div>
-
-              <div class="order-filters">
-                <div class="filter-group" id="statusFilterGroup">
-                  <label
-                    onclick="toggleDropdown('statusFilterGroup')"
-                    aria-haspopup="true"
-                    >Order Status</label
-                  >
-                  <div class="filter-options">
-                    <label
-                      ><input
-                        type="checkbox"
-                        value="all"
-                        onclick="filterOrders()"
-                      />
-                      All Statuses</label
-                    >
-                    <label
-                      ><input
-                        type="checkbox"
-                        value="on the way"
-                        onclick="filterOrders()"
-                      />
-                      On the Way</label
-                    >
-                    <label
-                      ><input
-                        type="checkbox"
-                        value="delivered"
-                        onclick="filterOrders()"
-                      />
-                      Delivered</label
-                    >
-                    <label
-                      ><input
-                        type="checkbox"
-                        value="cancelled"
-                        onclick="filterOrders()"
-                      />
-                      Cancelled</label
-                    >
-                    <label
-                      ><input
-                        type="checkbox"
-                        value="returned"
-                        onclick="filterOrders()"
-                      />
-                      Returned</label
-                    >
-                  </div>
+        <div class="google-header-search">
+            <form class="google-search-form">
+                <div class="google-search-input-container">
+                    <div class="google-search-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <input type="text" class="google-search-input" placeholder="Search settings...">
+                    <div class="google-search-voice">
+                        <i class="fas fa-microphone"></i>
+                    </div>
                 </div>
-                <div class="filter-group" id="timeFilterGroup">
-                  <label
-                    onclick="toggleDropdown('timeFilterGroup')"
-                    aria-haspopup="true"
-                    >Order Time</label
-                  >
-                  <div class="filter-options">
-                    <label
-                      ><input
-                        type="checkbox"
-                        value="last 30 days"
-                        onclick="filterOrders()"
-                      />
-                      Last 30 Days</label
-                    >
-                    <label
-                      ><input
-                        type="checkbox"
-                        value="2024"
-                        onclick="filterOrders()"
-                      />
-                      2024</label
-                    >
-                    <label
-                      ><input
-                        type="checkbox"
-                        value="2023"
-                        onclick="filterOrders()"
-                      />
-                      2023</label
-                    >
-                    <label
-                      ><input
-                        type="checkbox"
-                        value="2022"
-                        onclick="filterOrders()"
-                      />
-                      2022</label
-                    >
-                    <label
-                      ><input
-                        type="checkbox"
-                        value="2021"
-                        onclick="filterOrders()"
-                      />
-                      2021</label
-                    >
-                    <label
-                      ><input
-                        type="checkbox"
-                        value="older"
-                        onclick="filterOrders()"
-                      />
-                      Older</label
-                    >
-                  </div>
-                </div>
-                <button class="clear-filters" onclick="clearFilters()">
-                  Clear Filters
-                </button>
-              </div>
+            </form>
+        </div>
 
-              <div id="orderList"></div>
-              <div id="loading" class="loading" style="display: none">
-                Loading...
-              </div>
-              <div id="emptyState" class="empty-state" style="display: none">
-                No orders found.
-              </div>
+        <div class="google-header-icons">
+            <div class="google-header-icon" title="Wishlist">
+                <i class="fas fa-heart"></i>
+                <span class="google-icon-badge">0</span>
+                <span class="google-header-icon-text">Wishlist</span>
             </div>
+            <div class="google-header-icon" title="My Account">
+                <i class="fas fa-user"></i>
+                <span class="google-header-icon-text">Account</span>
+            </div>
+            <div class="google-header-icon" title="Cart">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="google-header-icon-text">Cart</span>
+            </div>
+            <div class="google-header-icon" title="Logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span class="google-header-icon-text">Logout</span>
+            </div>
+        </div>
+    </header>
 
-            <div id="orderDetails" class="order-details">
-              <button class="btn back-btn" onclick="showOrderList()">
-                ← Back to Orders
-              </button>
-              <div class="card">
-                <h2>Order #<span id="orderIdDetails"></span></h2>
-                <p>
-                  Track your order:
-                  <strong><span id="orderTrackDetails"></span></strong> (Shared
-                  via SMS)
-                </p>
-              </div>
-              <div class="card">
-                <div class="details-grid">
-                  <div>
-                    <h3>Product Details</h3>
-                    <!-- New: Container for image and details -->
-                    <div class="product-details-container">
-                      <img
-                        id="orderImageDetails"
-                        class="order-details-image"
-                        src=""
-                        alt=""
-                      />
-                      <div>
-                        <p>
-                          <strong>Product:</strong>
-                          <span id="orderProductDetails"></span>
-                        </p>
-                        <p>
-                          <strong>Status:</strong>
-                          <span id="orderStatusDetails"></span>
-                        </p>
-                        <div class="timeline" id="orderTimelineDetails"></div>
-                        <p>
-                          Product has <strong>no-return policy</strong>
-                          <a href="#" style="color: var(--black)">Know more</a>
-                        </p>
-                        <div class="stars-container" id="orderRating">
-                          <span
-                            class="star"
-                            data-rating="1"
-                            role="button"
-                            aria-label="Rate 1 star"
-                            >★</span
-                          >
-                          <span
-                            class="star"
-                            data-rating="2"
-                            role="button"
-                            aria-label="Rate 2 stars"
-                            >★</span
-                          >
-                          <span
-                            class="star"
-                            data-rating="3"
-                            role="button"
-                            aria-label="Rate 3 stars"
-                            >★</span
-                          >
-                          <span
-                            class="star"
-                            data-rating="4"
-                            role="button"
-                            aria-label="Rate 4 stars"
-                            >★</span
-                          >
-                          <span
-                            class="star"
-                            data-rating="5"
-                            role="button"
-                            aria-label="Rate 5 stars"
-                            >★</span
-                          >
+    <div class="container mx-auto px-4 py-8 max-w-7xl">
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('my-account')">My Account</div>
+            <div class="tab" onclick="showTab('my-addresses')">My Addresses</div>
+            <div class="tab" onclick="showTab('saved-payments')">Saved Payment Options</div>
+            <div class="tab" onclick="showTab('my-reviews')">My Reviews</div>
+            <div class="tab" onclick="showTab('finances')">Finances</div>
+            <div class="tab" onclick="showTab('more')">More</div>
+            <div class="tab" onclick="showTab('my-queries')">My Queries</div>
+        </div>
+
+        <div id="my-account" class="content-section active mt-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div id="my-account-profile" class="bg-white p-5 rounded-lg shadow-sm view-mode">
+                    <div class="flex justify-between items-center mb-3">
+                        <h2 class="text-lg font-semibold text-black">Personal Information</h2>
+                        <button onclick="toggleEditMode('my-account-profile')" class="text-sm font-medium text-white bg-black hover:bg-gray-800 px-3 py-1 rounded-md edit-btn">Edit</button>
+                    </div>
+                    <form id="profile-form" onsubmit="saveProfile(event)">
+                        <div class="flex flex-col items-center mb-4">
+                            <img id="profile-photo" class="w-24 h-24 rounded-full object-cover mb-2 border border-gray-300" src="https://placehold.co/96x96/e5e7eb/111827?text=Profile" alt="Profile Photo">
+                            <input type="file" id="profile-photo-upload" class="hidden" accept="image/*" onchange="previewPhoto(event)">
+                            <label for="profile-photo-upload" class="text-sm font-medium text-black hover:text-gray-700 cursor-pointer view-mode-hidden">Change Photo</label>
                         </div>
-                        <button class="btn">Chat with us</button>
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <h3>Price Details</h3>
-                    <div class="order-summary">
-                      <div class="order-summary-item">
-                        <div>List Price</div>
-                        <div id="orderListPrice"></div>
-                      </div>
-                      <div class="order-summary-item">
-                        <div>Selling Price</div>
-                        <div id="orderSellingPrice"></div>
-                      </div>
-                      <div class="order-summary-item">
-                        <div>Extra Discount</div>
-                        <div id="orderDiscount"></div>
-                      </div>
-                      <div class="order-summary-item">
-                        <div>Special Price</div>
-                        <div id="orderSpecialPrice"></div>
-                      </div>
-                      <div class="order-summary-item">
-                        <div>Delivery Charge</div>
-                        <div>Free</div>
-                      </div>
-                      <div class="order-summary-item">
-                        <div>Platform Fee</div>
-                        <div>₹3</div>
-                      </div>
-                    </div>
-                    <hr />
-                    <div class="order-total">
-                      <div>Total</div>
-                      <div id="orderTotal"></div>
-                    </div>
-                    <div>
-                      <button class="btn">Download Invoice</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="card">
-                <h3>Shipping Address</h3>
-                <div class="shipping-details">
-                  <p><strong>Kumari</strong></p>
-                  <p>#78, West of Chord Road, 3rd Stage</p>
-                  <p>Basaveshwar Nagar, Bengaluru</p>
-                  <p>Karnataka - 560079</p>
-                  <p><strong>Phone:</strong> 8073931650</p>
-                </div>
-              </div>
-            </div>
-
-            <div id="reviewForm" class="order-details">
-              <button class="btn back-btn" onclick="showOrderList()">
-                ← Back to Orders
-              </button>
-              <div class="card">
-                <h2>Rate & Review Product</h2>
-                <p>Order ID: <span id="reviewOrderId"></span></p>
-                <div>
-                  <div class="form-group">
-                    <label for="rating">Rating:</label>
-                    <div class="stars-container" id="reviewRating">
-                      <span
-                        class="star"
-                        data-rating="1"
-                        role="button"
-                        aria-label="Rate 1 star"
-                        >★</span
-                      >
-                      <span
-                        class="star"
-                        data-rating="2"
-                        role="button"
-                        aria-label="Rate 2 stars"
-                        >★</span
-                      >
-                      <span
-                        class="star"
-                        data-rating="3"
-                        role="button"
-                        aria-label="Rate 3 stars"
-                        >★</span
-                      >
-                      <span
-                        class="star"
-                        data-rating="4"
-                        role="button"
-                        aria-label="Rate 4 stars"
-                        >★</span
-                      >
-                      <span
-                        class="star"
-                        data-rating="5"
-                        role="button"
-                        aria-label="Rate 5 stars"
-                        >★</span
-                      >
-                    </div>
-                    <input type="hidden" id="rating" name="rating" value="0" />
-                  </div>
-                  <div class="form-group">
-                    <label for="review">Your Review:</label>
-                    <textarea
-                      class="form-control"
-                      id="review"
-                      rows="5"
-                      aria-required="true"
-                    ></textarea>
-                  </div>
-                  <button class="btn" onclick="submitReview(event)">
-                    Submit Review
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- =================================== Order History End =================================== -->
-        </div>
-
-        <div id="tracking" class="tab-content">
-          <h2><i class="fas fa-map"></i> Track Orders</h2>
-          <div class="order-item">
-            <div>
-              <p><strong>Order #12346</strong> - Smartwatch</p>
-              <p>Estimated Delivery: May 15, 2025</p>
-            </div>
-          </div>
-          <div class="order-timeline">
-            <div class="timeline-item">
-              <p><strong>May 5, 2025</strong> - Order Placed</p>
-            </div>
-            <div class="timeline-item">
-              <p><strong>May 6, 2025</strong> - Order Confirmed</p>
-            </div>
-            <div class="timeline-item">
-              <p><strong>May 7, 2025</strong> - Shipped</p>
-            </div>
-            <div class="timeline-item">
-              <p><strong>May 10, 2025</strong> - Out for Delivery</p>
-            </div>
-          </div>
-        </div>
-
-        <div id="profile" class="tab-content active">
-          <h2><i class="fas fa-user"></i> Personal Details</h2>
-          <div class="form-group">
-            <input
-              type="text"
-              id="first-name"
-              value="John"
-              placeholder="First Name"
-            />
-            <input
-              type="text"
-              id="last-name"
-              value="Doe"
-              placeholder="Last Name"
-            />
-          </div>
-          <div class="form-group">
-            <label>Gender</label>
-            <div class="radio-group">
-              <label
-                ><input type="radio" name="gender" value="male" checked />
-                Male</label
-              >
-              <label
-                ><input type="radio" name="gender" value="female" />
-                Female</label
-              >
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Email Address</label>
-            <input
-              type="email"
-              id="email"
-              value="johndoe@example.com"
-              disabled
-            />
-            <span class="edit-btn" onclick="enableEdit('email')"
-              ><i class="fas fa-edit"></i> Edit</span
-            >
-            <span
-              class="save-btn"
-              onclick="saveField('email')"
-              style="display: none"
-              ><i class="fas fa-save"></i> Save</span
-            >
-            <span
-              class="cancel-btn"
-              onclick="cancelEdit('email')"
-              style="display: none"
-              ><i class="fas fa-times"></i> Cancel</span
-            >
-            <div class="success-message" id="email-success">
-              Email updated successfully!
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Phone Number</label>
-            <input type="text" id="mobile" value="+919876543210" disabled />
-            <span class="edit-btn" onclick="enableEdit('mobile')"
-              ><i class="fas fa-edit"></i> Edit</span
-            >
-            <span
-              class="save-btn"
-              onclick="saveField('mobile')"
-              style="display: none"
-              ><i class="fas fa-save"></i> Save</span
-            >
-            <span
-              class="cancel-btn"
-              onclick="cancelEdit('mobile')"
-              style="display: none"
-              ><i class="fas fa-times"></i> Cancel</span
-            >
-            <div class="success-message" id="mobile-success">
-              Phone number updated successfully!
-            </div>
-          </div>
-          <div class="info-section">
-            <h3>Information</h3>
-            <p><strong>How do I update my contact details?</strong></p>
-            <p>
-              Click the "Edit" button next to the field you want to update, make
-              your changes, and click "Save". You'll need to verify your new
-              email or phone number.
-            </p>
-          </div>
-        </div>
-
-        <div id="addresses" class="tab-content">
-          <h2><i class="fas fa-map-marker-alt"></i> Delivery Addresses</h2>
-          <div class="add-btn" onclick="addAddress()">
-            <i class="fas fa-plus"></i> Add New Address
-          </div>
-          <div id="address-list">
-            <div class="address-item">
-              <div>
-                <p><strong>Home Address</strong></p>
-                <p>123 Main St, Apt 4B, New York, NY 10001</p>
-                <p>Phone: +919876543210</p>
-              </div>
-              <div>
-                <span class="action-btn" onclick="editAddress(this)"
-                  ><i class="fas fa-edit"></i> Edit</span
-                >
-                <span class="action-btn cancel" onclick="deleteAddress(this)"
-                  ><i class="fas fa-trash"></i> Delete</span
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div id="security" class="tab-content">
-          <h2><i class="fas fa-lock"></i> Security Settings</h2>
-          <div class="form-group">
-            <label>Current Password</label>
-            <input
-              type="password"
-              id="current-password"
-              placeholder="Enter current password"
-            />
-          </div>
-          <div class="form-group">
-            <label>New Password</label>
-            <input
-              type="password"
-              id="new-password"
-              placeholder="Enter new password"
-            />
-          </div>
-          <div class="form-group">
-            <label>Confirm New Password</label>
-            <input
-              type="password"
-              id="confirm-password"
-              placeholder="Confirm new password"
-            />
-          </div>
-          <div class="add-btn" onclick="changePassword()">
-            <i class="fas fa-save"></i> Update Password
-          </div>
-        </div>
-
-        <div id="rewards" class="tab-content">
-          <h2><i class="fas fa-coins"></i> Rewards Points</h2>
-          <div class="rewards-card">
-            <p>Your Rewards Balance: <span>250 Points</span></p>
-            <div
-              class="action-btn"
-              onclick="alert('Redeem points functionality coming soon!')"
-            >
-              <i class="fas fa-gift"></i> Redeem
-            </div>
-          </div>
-          <h3>Points History</h3>
-          <p>Earned 100 points on May 10, 2025 - Order #12345</p>
-          <p>Earned 150 points on May 5, 2025 - Order #12346</p>
-        </div>
-
-        <div id="saved-payments" class="tab-content">
-          <h2><i class="fas fa-credit-card"></i> Saved Payments</h2>
-          <div id="payment-list">
-            <div class="payment-item">
-              <div>
-                <p><strong>Visa ending in 1234</strong></p>
-                <p>Expires: 12/26</p>
-              </div>
-              <span class="action-btn cancel" onclick="deletePayment(this)"
-                ><i class="fas fa-trash"></i> Delete</span
-              >
-            </div>
-          </div>
-          <div class="add-btn" onclick="addPayment()">
-            <i class="fas fa-plus"></i> Add New Payment Method
-          </div>
-        </div>
-
-        <div id="favorites" class="tab-content">
-          <h2><i class="fas fa-heart"></i> Favorites</h2>
-          <p class="empty-message">
-            You haven't added any items to your favorites yet.
-          </p>
-        </div>
-
-        <div id="feedback" class="tab-content">
-          <h2><i class="fas fa-comment"></i> Feedback</h2>
-          <p class="empty-message">You haven't submitted any feedback yet.</p>
-        </div>
-      </div>
-    </div>
-    <script>
-      // Simulated user data
-      let userData = {
-        firstName: "John",
-        lastName: "Doe",
-        email: "johndoe@example.com",
-        mobile: "+919876543210",
-        gender: "male",
-        profilePic: "image.jpg",
-        addresses: [
-          {
-            type: "Home",
-            address: "123 Main St, Apt 4B, New York, NY 10001",
-            phone: "+919876543210",
-          },
-        ],
-        payments: [{ type: "Visa", lastFour: "1234", expiry: "12/26" }],
-        orders: [
-          {
-            id: "12345",
-            date: "May 10, 2025",
-            item: "Wireless Headphones",
-            price: "Rs.99.99",
-            status: "Delivered",
-          },
-          {
-            id: "12346",
-            date: "May 5, 2025",
-            item: "Smartwatch",
-            price: "Rs.149.99",
-            status: "Shipped",
-          },
-        ],
-      };
-
-      // Load initial data
-      document.addEventListener("DOMContentLoaded", () => {
-        loadUserData();
-        showTab("profile"); // Default tab
-        loadDarkMode();
-      });
-
-      function loadUserData() {
-        document.getElementById("first-name").value = userData.firstName;
-        document.getElementById("last-name").value = userData.lastName;
-        document.getElementById("email").value = userData.email;
-        document.getElementById("mobile").value = userData.mobile;
-        document.getElementById(
-          "user-name"
-        ).textContent = `${userData.firstName} ${userData.lastName}`;
-        //document.getElementById("profile-pic").src = userData.profilePic;
-        document.querySelector(
-          `input[name="gender"][value="${userData.gender}"]`
-        ).checked = true;
-      }
-
-      function toggleDarkMode() {
-        document.body.classList.toggle("dark-mode");
-        const isDarkMode = document.body.classList.contains("dark-mode");
-        localStorage.setItem("darkMode", isDarkMode);
-        const toggleIcon = document.querySelector(".dark-mode-toggle");
-        toggleIcon.classList.toggle("fa-moon", !isDarkMode);
-        toggleIcon.classList.toggle("fa-sun", isDarkMode);
-      }
-
-      function loadDarkMode() {
-        const isDarkMode = localStorage.getItem("darkMode") === "true";
-        if (isDarkMode) {
-          document.body.classList.add("dark-mode");
-          const toggleIcon = document.querySelector(".dark-mode-toggle");
-          toggleIcon.classList.remove("fa-moon");
-          toggleIcon.classList.add("fa-sun");
-        }
-      }
-
-      function showTab(tabId) {
-        document
-          .querySelectorAll(".tab-content")
-          .forEach((tab) => tab.classList.remove("active"));
-        document
-          .querySelectorAll(".sub-menu-item")
-          .forEach((item) => item.classList.remove("active"));
-        document.getElementById(tabId).classList.add("active");
-        const menuItem = document.querySelector(
-          `.sub-menu-item[onclick="showTab('${tabId}')"]`
-        );
-        if (menuItem) {
-          menuItem.classList.add("active");
-        }
-      }
-
-      function enableEdit(field) {
-        const input = document.getElementById(field);
-        const editBtn = input.nextElementSibling;
-        const saveBtn = editBtn.nextElementSibling;
-        const cancelBtn = saveBtn.nextElementSibling;
-        input.disabled = false;
-        input.focus();
-        editBtn.style.display = "none";
-        saveBtn.style.display = "inline";
-        cancelBtn.style.display = "inline";
-      }
-
-      function saveField(field) {
-        const input = document.getElementById(field);
-        const editBtn = input.nextElementSibling;
-        const saveBtn = editBtn.nextElementSibling;
-        const cancelBtn = saveBtn.nextElementSibling;
-        const successMessage = document.getElementById(field + "-success");
-        userData[field] = input.value;
-        input.disabled = true;
-        editBtn.style.display = "inline";
-        saveBtn.style.display = "none";
-        cancelBtn.style.display = "none";
-        if (successMessage) {
-          successMessage.style.display = "block";
-          setTimeout(() => {
-            successMessage.style.display = "none";
-          }, 2000);
-        }
-      }
-
-      function cancelEdit(field) {
-        const input = document.getElementById(field);
-        const editBtn = input.nextElementSibling;
-        const saveBtn = editBtn.nextElementSibling;
-        const cancelBtn = saveBtn.nextElementSibling;
-        input.value = userData[field];
-        input.disabled = true;
-        editBtn.style.display = "inline";
-        saveBtn.style.display = "none";
-        cancelBtn.style.display = "none";
-      }
-
-      function addAddress() {
-        alert("Add new address functionality coming soon!");
-      }
-
-      function editAddress(element) {
-        alert("Edit address functionality coming soon!");
-      }
-
-      function deleteAddress(element) {
-        const addressItem = element.closest(".address-item");
-        if (confirm("Are you sure you want to delete this address?")) {
-          addressItem.remove();
-        }
-      }
-
-      function changePassword() {
-        alert("Change password functionality coming soon!");
-      }
-
-      function addPayment() {
-        alert("Add new payment method functionality coming soon!");
-      }
-
-      function deletePayment(element) {
-        const paymentItem = element.closest(".payment-item");
-        if (confirm("Are you sure you want to delete this payment method?")) {
-          paymentItem.remove();
-        }
-      }
-
-      function logout() {
-        //alert("Logout functionality coming soon!");
-        window.location.href = "login.html";
-      }
-
-      function viewOrderDetails(orderId) {
-        alert(`View details for order #${orderId} coming soon!`);
-      }
-
-      /* Orders Style Start */
-      const allOrders = [
-        {
-          orderId: "OD334320015444680100",
-          product: "Bushes",
-          status: "Delivered",
-          price: 902,
-          deliveryDate: "May 05, 2024",
-          image: "bushes.jpg",
-          trackingNumber: "8073931650",
-          details: {
-            listPrice: 1199,
-            sellingPrice: 1199,
-            discount: 300,
-            specialPrice: 899,
-            timeline: [
-              { event: "Order Confirmed", date: "May 04, 2024" },
-              { event: "Delivered", date: "May 05, 2024" },
-              {
-                event: "Item opened & verified on delivery",
-                date: "May 05, 2024",
-              },
-            ],
-          },
-        },
-        {
-          orderId: "OD334320015444680101",
-          product: "Brake-Pads",
-          status: "Delivered",
-          price: 14048,
-          deliveryDate: "March 24, 2024",
-          image: "brake-pads.jpg",
-          trackingNumber: "8073931651",
-          details: {
-            listPrice: 15999,
-            sellingPrice: 14999,
-            discount: 1001,
-            specialPrice: 13998,
-            timeline: [
-              { event: "Order Confirmed", date: "March 22, 2024" },
-              { event: "Delivered", date: "March 24, 2024" },
-              { event: "Out for delivery", date: "March 23, 2024" },
-            ],
-          },
-        },
-        {
-          orderId: "OD334320015444680102",
-          product: "Barbushes",
-          status: "Delivered",
-          price: 0,
-          deliveryDate: "March 24, 2023",
-          image: "barbushes.jpg",
-          trackingNumber: "8073931652",
-          details: {
-            listPrice: 1000,
-            sellingPrice: 0,
-            discount: 1000,
-            specialPrice: 0,
-            timeline: [
-              { event: "Order Confirmed", date: "March 20, 2023" },
-              { event: "Delivered", date: "March 24, 2023" },
-            ],
-          },
-        },
-        {
-          orderId: "OD334320015444680103",
-          product: "Brake-Pads",
-          status: "Delivered",
-          price: 434,
-          deliveryDate: "December 06, 2022",
-          image: "brake-pads.jpg",
-          trackingNumber: "8073931653",
-          details: {
-            listPrice: 799,
-            sellingPrice: 499,
-            discount: 65,
-            specialPrice: 434,
-            timeline: [
-              { event: "Order Confirmed", date: "December 01, 2022" },
-              { event: "Delivered", date: "December 06, 2022" },
-            ],
-          },
-        },
-        {
-          orderId: "OD334320015444680104",
-          product: "Engine Parts",
-          status: "Delivered",
-          price: 750,
-          deliveryDate: "January 15, 2023",
-          image: "EngineParts.jpg",
-          trackingNumber: "8073931654",
-          details: {
-            listPrice: 1200,
-            sellingPrice: 900,
-            discount: 150,
-            specialPrice: 750,
-            timeline: [
-              { event: "Order Confirmed", date: "January 10, 2023" },
-              { event: "Delivered", date: "January 15, 2023" },
-            ],
-          },
-        },
-      ];
-
-      let filteredOrders = [...allOrders];
-      let selectedOrderId = null;
-      let currentPage = 1;
-      const ordersPerPage = 5;
-
-      function toggleSidebar() {
-        const sidebar = document.getElementById("sidebar");
-        const mainContent = document.getElementById("mainContent");
-        sidebar.classList.toggle("visible");
-        mainContent.classList.toggle("full-width");
-      }
-
-      function toggleDropdown(filterGroupId) {
-        const filterGroup = document.getElementById(filterGroupId);
-        const isActive = filterGroup.classList.contains("active");
-        document.querySelectorAll(".filter-group").forEach((group) => {
-          group.classList.remove("active");
-        });
-        if (!isActive) {
-          filterGroup.classList.add("active");
-        }
-      }
-
-      function displayOrders() {
-        const orderList = document.getElementById("orderList");
-        const loading = document.getElementById("loading");
-        const emptyState = document.getElementById("emptyState");
-
-        loading.style.display = "block";
-        orderList.style.display = "none";
-        emptyState.style.display = "none";
-
-        setTimeout(() => {
-          orderList.innerHTML = "";
-          const start = (currentPage - 1) * ordersPerPage;
-          const end = start + ordersPerPage;
-          const paginatedOrders = filteredOrders.slice(start, end);
-
-          if (paginatedOrders.length === 0) {
-            emptyState.style.display = "block";
-          } else {
-            paginatedOrders.forEach((order) => {
-              const orderCard = document.createElement("div");
-              orderCard.className = "order-card";
-              orderCard.onclick = () => showDetails(order.orderId);
-              orderCard.innerHTML = `
-                            <img src="${order.image}" alt="${
-                order.product
-              }" class="order-image">
-                            <div class="order-info">
-                                <div class="order-header">
-                                    <h3>${order.product}</h3>
-                                    <span class="order-price">${
-                                      order.price === 0
-                                        ? "FREE"
-                                        : "₹" + order.price
-                                    }</span>
-                                </div>
-                                <div class="order-meta">
-                                    <span class="order-status">${
-                                      order.status
-                                    }</span><br>
-                                    <span>Order ID: ${order.orderId}</span><br>
-                                    <span>${
-                                      order.status === "Delivered"
-                                        ? "Delivered on"
-                                        : order.status === "Cancelled"
-                                        ? "Cancelled on"
-                                        : "Returned on"
-                                    }: ${order.deliveryDate}</span><br>
-                                    <a href="#" class="rate-review" onclick="showReviewForm('${
-                                      order.orderId
-                                    }'); event.stopPropagation();" aria-label="Rate and review ${
-                order.product
-              }">★ Rate & Review</a>
+                        <div class="grid grid-cols-1 gap-3">
+                            <div>
+                                <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
+                                <input type="text" name="firstName" id="firstName" value="Arjun" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm">
+                            </div>
+                            <div>
+                                <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+                                <input type="text" name="lastName" id="lastName" value="Kumar" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm">
+                            </div>
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                                <input type="email" name="email" id="email" value="arjun.kumar@gmail.com" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm">
+                            </div>
+                            <div>
+                                <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                                <input type="tel" name="phone" id="phone" value="+919876543210" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm">
+                            </div>
+                             <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                                <div class="mt-1 flex flex-wrap gap-4">
+                                    <div class="flex items-center gender-option">
+                                        <input type="radio" name="gender" id="gender_male" value="Male" class="focus:ring-black h-4 w-4 text-black border-gray-300" checked> <label for="gender_male" class="ml-2 block text-sm font-medium text-gray-700">Male</label>
+                                    </div>
+                                    <div class="flex items-center gender-option">
+                                        <input type="radio" name="gender" id="gender_female" value="Female" class="focus:ring-black h-4 w-4 text-black border-gray-300">
+                                        <label for="gender_female" class="ml-2 block text-sm font-medium text-gray-700">Female</label>
+                                    </div>
+                                    <div class="flex items-center gender-option">
+                                        <input type="radio" name="gender" id="gender_other" value="Other" class="focus:ring-black h-4 w-4 text-black border-gray-300">
+                                        <label for="gender_other" class="ml-2 block text-sm font-medium text-gray-700">Other</label>
+                                    </div>
+                                     <div class="flex items-center gender-option">
+                                        <input type="radio" name="gender" id="gender_not_say" value="Prefer not to say" class="focus:ring-black h-4 w-4 text-black border-gray-300">
+                                        <label for="gender_not_say" class="ml-2 block text-sm font-medium text-gray-700">Prefer not to say</label>
+                                    </div>
                                 </div>
                             </div>
-                            <button class="reorder-button" onclick="reorderItem('${
-                              order.orderId
-                            }'); event.stopPropagation();" aria-label="Reorder ${
-                order.product
-              }">Reorder</button>
-                        `;
-              orderList.appendChild(orderCard);
-            });
-          }
+                        </div>
+                        <div class="mt-4 text-right hidden save-cancel">
+                            <button type="button" onclick="toggleEditMode('my-account-profile')" class="text-sm font-medium text-gray-600 hover:text-gray-800 px-3 py-1 rounded-md mr-2">Cancel</button>
+                            <button type="submit" class="text-sm font-medium text-white bg-black hover:bg-gray-800 px-3 py-1 rounded-md">Save</button>
+                        </div>
+                    </form>
+                </div>
 
-          loading.style.display = "none";
-          orderList.style.display = "block";
-        }, 300);
-      }
+                <div id="login-security" class="bg-white p-5 rounded-lg shadow-sm">
+                    <div class="flex justify-between items-center mb-3">
+                        <h2 class="text-lg font-semibold text-black">Login and Security</h2>
+                    </div>
+                    <div class="grid grid-cols-1 gap-3">
+                        <div class="flex items-center justify-between py-2 border-b border-gray-200">
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">Password</p>
+                                <p class="text-xs text-gray-500">Last updated: 30 days ago</p>
+                            </div>
+                            <button onclick="openPasswordModal()" class="text-sm font-medium text-white bg-black hover:bg-gray-800 px-3 py-1 rounded-md">Change</button>
+                        </div>
 
-      function searchOrders() {
-        const searchTerm = document
-          .getElementById("orderSearch")
-          .value.toLowerCase();
-        currentPage = 1;
-        filteredOrders = allOrders.filter(
-          (order) =>
-            order.product.toLowerCase().includes(searchTerm) ||
-            order.orderId.toLowerCase().includes(searchTerm)
-        );
-        displayOrders();
-      }
+                        <div class="py-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Two-Step Verification</label>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-600">Add an extra layer of security to your account</p>
+                                </div>
+                                <div class="relative inline-block">
+                                    <input type="checkbox" name="two_step_verification" id="two_step_verification" class="toggle-checkbox hidden" onchange="saveSecurityToggle(this)">
+                                    <label for="two_step_verification" class="toggle-label"></label>
+                                </div>
+                            </div>
+                        </div>
 
-      function filterOrders() {
-        const statusFilters = Array.from(
-          document.querySelectorAll(
-            '#statusFilterGroup input[type="checkbox"]:checked'
-          )
-        ).map((input) => input.value.toLowerCase());
+                        <div class="py-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Multi-Factor Authentication</label>
+                            <select id="mfa_method" name="mfa_method" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-black focus:border-black sm:text-sm rounded-md" onchange="saveMfaMethod(this)">
+                                <option value="none">None</option>
+                                <option value="app">Authenticator App</option>
+                                <option value="sms">SMS Code</option>
+                                <option value="email">Email Code</option>
+                                <option value="security_key">Security Key</option>
+                            </select>
+                            <p class="text-xs text-gray-500 mt-1">Choose your preferred authentication method</p>
+                        </div>
+                    </div>
+                </div>
 
-        const timeFilters = Array.from(
-          document.querySelectorAll(
-            '#timeFilterGroup input[type="checkbox"]:checked'
-          )
-        ).map((input) => input.value.toLowerCase());
+                <!-- Password Change Modal -->
+                <div id="password-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+                    <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-semibold text-black">Change Password</h3>
+                            <button onclick="closePasswordModal()" class="text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <form id="password-form" onsubmit="changePassword(event)">
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="currentPassword" class="block text-sm font-medium text-gray-700">Current Password</label>
+                                    <input type="password" name="currentPassword" id="currentPassword" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm">
+                                </div>
+                                <div>
+                                    <label for="newPassword" class="block text-sm font-medium text-gray-700">New Password</label>
+                                    <input type="password" name="newPassword" id="newPassword" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm">
+                                </div>
+                                <div>
+                                    <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm New Password</label>
+                                    <input type="password" name="confirmPassword" id="confirmPassword" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm">
+                                </div>
+                            </div>
+                            <div class="mt-6 flex justify-end space-x-3">
+                                <button type="button" onclick="closePasswordModal()" class="text-sm font-medium text-gray-600 hover:text-gray-800 px-3 py-1 rounded-md">Cancel</button>
+                                <button type="submit" class="text-sm font-medium text-white bg-black hover:bg-gray-800 px-3 py-1 rounded-md">Update Password</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
 
-        currentPage = 1;
-        filteredOrders = [...allOrders];
+                <div id="notification-preferences" class="bg-white p-5 rounded-lg shadow-sm">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-semibold text-black">Notification Preferences</h2>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between py-2">
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">Email Notifications</p>
+                                <p class="text-xs text-gray-500">Receive updates about orders, promotions, and news via email.</p>
+                            </div>
+                            <div class="relative inline-block">
+                                <input type="checkbox" name="email_notifications" id="email_notifications_pref" class="toggle-checkbox hidden" checked onchange="saveNotificationToggle(this)">
+                                <label for="email_notifications_pref" class="toggle-label"></label>
+                            </div>
+                        </div>
+                        <div class="border-t border-gray-200"></div>
+                        <div class="flex items-center justify-between py-2">
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">SMS Notifications</p>
+                                <p class="text-xs text-gray-500">Get order updates and important alerts via SMS.</p>
+                            </div>
+                            <div class="relative inline-block">
+                                <input type="checkbox" name="sms_notifications" id="sms_notifications_pref" class="toggle-checkbox hidden" onchange="saveNotificationToggle(this)">
+                                <label for="sms_notifications_pref" class="toggle-label"></label>
+                            </div>
+                        </div>
+                        <div class="border-t border-gray-200"></div>
+                        <div class="flex items-center justify-between py-2">
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">WhatsApp Notifications</p>
+                                <p class="text-xs text-gray-500">Receive order confirmations and support via WhatsApp.</p>
+                            </div>
+                            <div class="relative inline-block">
+                                <input type="checkbox" name="whatsapp_notifications" id="whatsapp_notifications_pref" class="toggle-checkbox hidden" checked onchange="saveNotificationToggle(this)">
+                                <label for="whatsapp_notifications_pref" class="toggle-label"></label>
+                            </div>
+                        </div>
+                        <div class="border-t border-gray-200"></div>
+                        <div class="flex items-center justify-between py-2">
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">Push Notifications</p>
+                                <p class="text-xs text-gray-500">Get instant notifications on your device.</p>
+                            </div>
+                            <div class="relative inline-block">
+                                <input type="checkbox" name="push_notifications" id="push_notifications_pref" class="toggle-checkbox hidden" onchange="saveNotificationToggle(this)">
+                                <label for="push_notifications_pref" class="toggle-label"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-5 rounded-lg shadow-sm mt-6">
+                <h2 class="text-lg font-semibold text-black mb-4">FAQs</h2>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How do I update my personal information?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Click "Edit" on the Personal Information card, update your details, and click "Save".
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How do I change my notification preferences?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Click "Edit" in the Notification Preferences section, toggle your preferences, and click "Save".
+                    </div>
+                </div>
+                 <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What kind of notifications can I receive?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        You can receive notifications via email, SMS, and WhatsApp about your orders, promotions, and important updates.
+                    </div>
+                </div>
+                 <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How do I change my profile picture?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        In the Personal Information section, click "Edit", then click "Change Photo" below your current profile picture and select a new image file. Click "Save" to apply the changes.
+                    </div>
+                </div>
+                 <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Can I update my gender information?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Yes, click "Edit" on the Personal Information card, select your gender using the radio buttons, and click "Save".
+                    </div>
+                </div>
+                 <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How do I change my password?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        In the Login and Security section, click the "Change" button next to Password. Enter your current password, new password, and confirm the new password in the popup. Click "Update Password" to save your changes.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What is Two-Step Verification?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Two-Step Verification adds an extra layer of security by requiring a second form of verification (like a code sent to your phone) when you log in, even if someone has your password.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What Multi-Factor Authentication options are available?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        You can choose from several options: Authenticator App (like Google Authenticator), SMS Code, Email Code, or a physical Security Key for the highest level of protection.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What should I do if I forget my password?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        On the login page, click "Forgot Password" and follow the instructions to reset your password via email or phone.
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        if (statusFilters.length > 0 && !statusFilters.includes("all")) {
-          filteredOrders = filteredOrders.filter((order) =>
-            statusFilters.includes(order.status.toLowerCase())
-          );
-        }
+        <div id="my-addresses" class="content-section mt-6">
+             <div class="bg-white p-5 rounded-lg shadow-sm">
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="text-lg font-semibold text-black">My Addresses</h2>
+                    <button onclick="addNewAddress()" class="text-sm font-medium text-white bg-black hover:bg-gray-800 px-3 py-1 rounded-md">Add New</button>
+                </div>
+                <div id="address-list" class="scrollable-addresses">
+                    </div>
+            </div>
+            <div class="bg-white p-5 rounded-lg shadow-sm mt-6">
+                <h2 class="text-lg font-semibold text-black mb-4">FAQs</h2>
+                 <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Can I add multiple addresses?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Yes, click "Add New" in the My Addresses section to add more addresses. You can also edit or delete existing ones.
+                    </div>
+                </div>
+                 <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How do I set a default shipping address?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        You can set a default address during checkout or by editing an address in the My Addresses section (functionality to be implemented).
+                    </div>
+                </div>
+                 <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What information is required for an address?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        You need to provide a label (like Home or Work), recipient name, full address, and a contact phone number.
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        if (timeFilters.length > 0) {
-          filteredOrders = filteredOrders.filter((order) => {
-            const orderDate = new Date(order.deliveryDate);
-            return timeFilters.some((filter) => {
-              if (filter === "last 30 days") {
-                const thirtyDaysAgo = new Date();
-                thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-                return orderDate >= thirtyDaysAgo;
-              }
-              if (filter === "2024") return orderDate.getFullYear() === 2024;
-              if (filter === "2023") return orderDate.getFullYear() === 2023;
-              if (filter === "2022") return orderDate.getFullYear() === 2022;
-              if (filter === "2021") return orderDate.getFullYear() === 2021;
-              if (filter === "older") return orderDate.getFullYear() < 2021;
-              return false;
-            });
-          });
-        }
+         <div id="saved-payments" class="content-section mt-6">
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-5 rounded-lg shadow-sm view-mode">
+                    <div class="flex justify-between items-center mb-3">
+                        <h2 class="text-lg font-semibold text-black">Saved UPI</h2>
+                        <button onclick="addNewUPI()" class="text-sm font-medium text-white bg-black hover:bg-gray-800 px-3 py-1 rounded-md">Add New</button>
+                    </div>
+                    <div id="upi-list" class="scrollable-upi space-y-2">
+                         </div>
+                </div>
+                <div class="bg-white p-5 rounded-lg shadow-sm view-mode">
+                    <div class="flex justify-between items-center mb-3">
+                        <h2 class="text-lg font-semibold text-black">Saved Cards</h2>
+                        <button onclick="addNewCard()" class="text-sm font-medium text-white bg-black hover:bg-gray-800 px-3 py-1 rounded-md">Add New</button>
+                    </div>
+                    <div id="payment-list" class="scrollable-payments space-y-2">
+                        </div>
+                </div>
+            </div>
+             <div class="bg-white p-5 rounded-lg shadow-sm mt-6">
+                <h2 class="text-lg font-semibold text-black mb-4">FAQs</h2>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How do I remove a saved UPI ID?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        In the Saved UPI section, click "Remove" next to the UPI ID you want to delete and confirm the action.
+                    </div>
+                </div>
+                 <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How do I add a new credit or debit card?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Click "Add New" in the Saved Cards section and enter your card details securely.
+                    </div>
+                </div>
+                 <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Is my payment information secure?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Yes, we use industry-standard encryption and security measures to protect your payment information. Your full card details are not stored on our servers.
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        displayOrders();
-      }
 
-      function clearFilters() {
-        document
-          .querySelectorAll('.filter-group input[type="checkbox"]')
-          .forEach((input) => {
-            input.checked = false;
-          });
-        filteredOrders = [...allOrders];
-        currentPage = 1;
-        displayOrders();
-      }
+        <div id="my-reviews" class="content-section mt-6">
+            <div class="bg-white p-5 rounded-lg shadow-sm">
+                <h2 class="text-lg font-semibold text-black mb-4">My Reviews & Ratings</h2>
+                <div class="space-y-4">
+                    <div class="border border-gray-200 rounded-md p-4">
+                        <div class="flex items-center mb-2">
+                            <div class="flex items-center text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i> </div>
+                            <span class="ml-2 text-sm text-gray-600">Order #54321 - May 12, 2025</span>
+                        </div>
+                        <p class="text-sm text-gray-900">The product was great, but the delivery was delayed by a day. Overall, satisfied with the quality!</p>
+                    </div>
+                    <div class="border border-gray-200 rounded-md p-4">
+                        <div class="flex items-center mb-2">
+                            <div class="flex items-center text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i> <i class="far fa-star"></i> </div>
+                            <span class="ml-2 text-sm text-gray-600">Order #54322 - May 05, 2025</span>
+                        </div>
+                        <p class="text-sm text-gray-900">Average experience. The item didn’t match the description fully. Customer support was helpful though.</p>
+                    </div>
+                    </div>
+            </div>
+            <div class="bg-white p-5 rounded-lg shadow-sm mt-6">
+                <h2 class="text-lg font-semibold text-black mb-4">FAQs</h2>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Can I edit my review after submitting?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Yes, you can edit your review within 7 days of submission by clicking "Edit Review" next to your review.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How do I submit a review for an order?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        After your order is delivered, you’ll receive a prompt to review the product. Alternatively, visit the order details to submit a review.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Why is my review not visible?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Reviews are moderated for appropriateness. If your review violates our guidelines, it may not be published.
+                    </div>
+                </div>
+            </div>
+        </div>
 
-      function showDetails(orderId) {
-        selectedOrderId = orderId;
-        document.getElementById("orderListPage").style.display = "none";
-        document.getElementById("orderDetails").style.display = "block";
-        document.getElementById("reviewForm").style.display = "none";
+        <div id="finances" class="content-section mt-6">
+             <div class="sub-section-nav flex flex-wrap">
+                <a href="#finances/wallet" onclick="showSubSection('finances', 'wallet', this)" class="active">Wallet</a>
+                <a href="#finances/giftcards" onclick="showSubSection('finances', 'giftcards', this)">Gift Cards</a>
+                <a href="#finances/coupons" onclick="showSubSection('finances', 'coupons', this)">My Coupons</a>
+            </div>
+            <div id="finances-wallet" class="sub-section active bg-white p-5 rounded-lg shadow-sm">
+                <h2 class="text-lg font-semibold text-black mb-4">My Wallet</h2>
+                <div class="bg-gray-50 p-4 rounded-md border border-gray-200">
+                    <p class="text-base font-medium text-gray-700">Current Balance:</p>
+                    <p class="text-2xl font-bold text-black mt-2">₹4,250</p>
+                    <button onclick="alert('Add Funds functionality not implemented.')" class="mt-4 text-sm font-medium text-white bg-black hover:bg-gray-800 px-3 py-1 rounded-md">Add Funds</button>
+                </div>
+                <h3 class="text-base font-semibold text-black mt-6 mb-3">Transaction History</h3>
+                <p class="text-gray-600">No recent transactions.</p>
+            </div>
+            <div id="finances-giftcards" class="sub-section bg-white p-5 rounded-lg shadow-sm">
+                <h2 class="text-lg font-semibold text-black mb-4">Gift Cards</h2>
+                <form class="mb-6" onsubmit="redeemGiftCard(event)">
+                    <label for="giftCardCode" class="block text-sm font-medium text-gray-700">Redeem Gift Card</label>
+                    <div class="mt-1 flex rounded-md shadow-sm">
+                        <input type="text" name="giftCardCode" id="giftCardCode" class="flex-1 block w-full rounded-none rounded-l-md sm:text-sm border-gray-300 focus:ring-black focus:border-black" placeholder="Enter gift card code" required>
+                        <button type="submit" class="inline-flex items-center px-3 py-1 border border-l-0 border-gray-300 rounded-r-md bg-gray-200 text-black hover:bg-gray-300 focus:outline-none focus:ring-1 focus:ring-black focus:border-black">Redeem</button>
+                    </div>
+                </form>
+                 <h3 class="text-base font-semibold text-black mb-3">Your Gift Card Balance</h3>
+                 <div class="bg-gray-50 p-4 rounded-md border border-gray-200">
+                    <p class="text-base font-medium text-gray-700">Available Balance:</p>
+                    <p class="text-2xl font-bold text-black mt-2">₹0</p>
+                </div>
+            </div>
+            <div id="finances-coupons" class="sub-section bg-white p-5 rounded-lg shadow-sm">
+                <h2 class="text-lg font-semibold text-black mb-4">My Coupons</h2>
+                <div class="space-y-3">
+                    <div class="border border-gray-200 rounded-md p-3 flex justify-between items-center">
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">SUMMER25</p>
+                            <p class="text-xs text-gray-600">25% off on orders above ₹2,000</p>
+                            <p class="text-xs text-gray-500">Expires: Jun 30, 2025</p>
+                        </div>
+                        <button onclick="alert('Apply Coupon functionality not implemented.')" class="text-xs font-medium text-white bg-black hover:bg-gray-800 px-2 py-1 rounded-md">Apply</button>
+                    </div>
+                    <div class="border border-gray-200 rounded-md p-3 flex justify-between items-center">
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">FREESHIP</p>
+                            <p class="text-xs text-gray-600">Free shipping on orders above ₹1,000</p>
+                            <p class="text-xs text-gray-500">Expires: May 31, 2025</p>
+                        </div>
+                         <button onclick="alert('Apply Coupon functionality not implemented.')" class="text-xs font-medium text-white bg-black hover:bg-gray-800 px-2 py-1 rounded-md">Apply</button>
+                    </div>
+                    </div>
+            </div>
+             <div class="bg-white p-5 rounded-lg shadow-sm mt-6">
+                <h2 class="text-lg font-semibold text-black mb-4">FAQs</h2>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How do I add funds to my wallet?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Click "Add Funds" in the Wallet section, choose your payment method, and follow the instructions to add money.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Where can I find my gift card balance?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Your gift card balance is displayed in the Gift Cards section under Finances.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How do I apply a coupon?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        During checkout, enter the coupon code in the designated field or apply it directly from the My Coupons section.
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        const order = allOrders.find((o) => o.orderId === orderId);
-        if (order) {
-          document.getElementById("orderIdDetails").textContent = order.orderId;
-          document.getElementById("orderTrackDetails").textContent =
-            order.trackingNumber;
-          document.getElementById("orderProductDetails").textContent =
-            order.product;
-          document.getElementById("orderStatusDetails").textContent =
-            order.status;
-          // New: Set item image
-          document.getElementById("orderImageDetails").src = order.image;
-          document.getElementById("orderImageDetails").alt = order.product;
+        <div id="more" class="content-section mt-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <div id="language" class="bg-white p-5 rounded-lg shadow-sm view-mode">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-semibold text-black">Language Settings</h2>
+                        <button onclick="toggleEditMode('language')" class="text-sm font-medium text-white bg-black hover:bg-gray-800 px-3 py-1 rounded-md edit-btn">Edit</button>
+                    </div>
+                     <form id="language-form" onsubmit="saveLanguage(event)">
+                        <div>
+                            <label for="languageSelect" class="block text-sm font-medium text-gray-700 mb-1">Language</label>
+                            <select id="languageSelect" name="languageSelect" class="nice-select block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-black focus:border-black sm:text-sm rounded-md">
+                                <option value="English" selected>English (India)</option>
+                                <option value="Hindi">Hindi</option>
+                                <option value="Tamil">Tamil</option>
+                            </select>
+                        </div>
+                         <div class="mt-6 text-right hidden save-cancel">
+                            <button type="button" onclick="toggleEditMode('language')" class="text-sm font-medium text-gray-600 hover:text-gray-800 px-3 py-1 rounded-md mr-2">Cancel</button>
+                            <button type="submit" class="text-sm font-medium text-white bg-black hover:bg-gray-800 px-3 py-1 rounded-md">Save</button>
+                        </div>
+                    </form>
+                </div>
+                 <div class="bg-white p-5 rounded-lg shadow-sm">
+                     <h2 class="text-lg font-semibold text-black mb-4">Other Settings</h2>
+                     <p class="text-gray-600">Additional settings can be placed here.</p>
+                 </div>
+            </div>
+             <div class="bg-white p-5 rounded-lg shadow-sm mt-6">
+                <h2 class="text-lg font-semibold text-black mb-4">FAQs</h2>
+                 <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Which languages are supported?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        We support English (India), Hindi, and Tamil. More languages will be added soon.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Will changing the language affect my account?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        No, changing the language only affects the display. Your account data remains unchanged.
+                    </div>
+                </div>
+            </div>
+        </div>
 
-          const timelineDiv = document.getElementById("orderTimelineDetails");
-          timelineDiv.innerHTML = order.details.timeline
-            .map((event) => `<div>✅ ${event.event}, ${event.date}</div>`)
-            .join("");
+        <div id="my-queries" class="content-section mt-6">
+            <div class="bg-white p-5 rounded-lg shadow-sm">
+                <h2 class="text-lg font-semibold text-black mb-4">My Queries</h2>
+                 <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ticket ID</th>
+                                <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Query</th>
+                                <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">#98765</td>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">May 10, 2025</td>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">Issue with order delivery</td>
+                                <td class="px-4 py-3 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Resolved</span></td>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm font-medium"><a href="#" class="text-black hover:text-gray-700">View Details</a></td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">#98766</td>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">May 02, 2025</td>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">Refund not processed</td>
+                                <td class="px-4 py-3 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">In Progress</span></td>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm font-medium"><a href="#" class="text-black hover:text-gray-700">View Details</a></td>
+                            </tr>
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+             <div class="bg-white p-5 rounded-lg shadow-sm mt-6">
+                <h2 class="text-lg font-semibold text-black mb-4">FAQs</h2>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How do I raise a new query?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Go to the Help section, click "Raise a Ticket", and fill in the details of your query.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How long does it take to resolve a query?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Most queries are resolved within 48 hours. Complex issues may take longer.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Can I track the status of my query?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Yes, the status of your query is updated in the My Queries tab. You’ll also receive notifications.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-          document.getElementById("orderListPrice").textContent =
-            "₹" + order.details.listPrice;
-          document.getElementById("orderSellingPrice").textContent =
-            "₹" + order.details.sellingPrice;
-          document.getElementById("orderDiscount").textContent =
-            "-₹" + order.details.discount;
-          document.getElementById("orderSpecialPrice").textContent =
-            "₹" + order.details.specialPrice;
-          document.getElementById("orderTotal").textContent =
-            order.price === 0 ? "FREE" : "₹" + order.price;
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
+    <script>
+        // Header Functions
+        function initHeader() {
+            const searchForm = document.querySelector('.google-search-form');
+            const searchInput = document.querySelector('.google-search-input');
+            const searchVoice = document.querySelector('.google-search-voice');
+            const wishlistIcon = document.querySelector('.google-header-icon .fa-heart')?.parentNode;
+            const profileIcon = document.querySelector('.google-header-icon .fa-user')?.parentNode;
+            const cartIcon = document.querySelector('.google-header-icon .fa-shopping-cart')?.parentNode;
+            const logoutIcon = document.querySelector('.google-header-icon .fa-sign-out-alt')?.parentNode;
 
-          const ratingStars = document.querySelectorAll("#orderRating .star");
-          ratingStars.forEach((star) => {
-            star.classList.remove("active");
-            star.removeEventListener("click", handleStarClick);
-            star.addEventListener("click", handleStarClick);
-          });
+            // Update counts from localStorage on load
+            updateCounts();
 
-          function handleStarClick() {
-            const rating = parseInt(this.getAttribute("data-rating"));
-            ratingStars.forEach((s) => s.classList.remove("active"));
-            for (let i = 0; i < rating; i++) {
-              ratingStars[i].classList.add("active");
+            // Add event listeners to header icons and search
+            if (searchForm) searchForm.addEventListener('submit', handleSearch);
+            if (searchVoice) searchVoice.addEventListener('click', activateVoiceSearch);
+            if (wishlistIcon) wishlistIcon.addEventListener('click', openWishlist);
+            if (profileIcon) profileIcon.addEventListener('click', openAccount);
+            if (cartIcon) cartIcon.addEventListener('click', openCart);
+            if (logoutIcon) logoutIcon.addEventListener('click', handleLogout);
+
+            // Focus search input when clicking the container
+            const searchContainer = document.querySelector('.google-search-input-container');
+            if (searchContainer) {
+                searchContainer.addEventListener('click', function(e) {
+                    // Only focus if the click is directly on the container or its children (excluding icons)
+                    if (e.target === searchContainer || e.target === searchInput) {
+                        searchInput.focus();
+                    }
+                });
             }
-            console.log(`Order rating: ${rating}`);
-          }
         }
-      }
 
-      function showOrderList() {
-        document.getElementById("orderDetails").style.display = "none";
-        document.getElementById("orderListPage").style.display = "block";
-        document.getElementById("reviewForm").style.display = "none";
-        document.getElementById("sidebar").classList.remove("visible");
-        document.getElementById("mainContent").classList.remove("full-width");
-        displayOrders();
-      }
+        // Function to update wishlist and cart counts (without localStorage)
+        function updateCounts() {
+            const wishlistCount = document.querySelector('.google-header-icon .fa-heart + .google-icon-badge');
+            const cartCount = document.querySelector('.google-header-icon .fa-shopping-cart + .google-icon-badge');
 
-      function showReviewForm(orderId) {
-        selectedOrderId = orderId;
-        document.getElementById("orderListPage").style.display = "none";
-        document.getElementById("orderDetails").style.display = "none";
-        document.getElementById("reviewForm").style.display = "block";
-        document.getElementById("reviewOrderId").textContent = orderId;
+            if (wishlistCount) {
+                // Set default count to 0
+                const count = 0;
+                wishlistCount.textContent = count;
+                // Hide badge if count is 0
+                wishlistCount.style.display = count == 0 ? 'none' : 'flex';
+            }
 
-        const ratingStars = document.querySelectorAll("#reviewRating .star");
-        const ratingInput = document.getElementById("rating");
-        ratingStars.forEach((star) => {
-          star.classList.remove("active");
-          star.removeEventListener("click", handleReviewStarClick);
-          star.addEventListener("click", handleReviewStarClick);
+            if (cartCount) {
+                // Set default count to 0
+                const count = 0;
+                cartCount.textContent = count;
+                // Hide badge if count is 0
+                cartCount.style.display = count == 0 ? 'none' : 'flex';
+            }
+        }
+
+        // Handle search form submission
+        function handleSearch(e) {
+            e.preventDefault(); // Prevent default form submission
+            const searchInput = document.querySelector('.google-search-input');
+            const searchTerm = searchInput.value.trim();
+            if (searchTerm) {
+                // Placeholder for search functionality
+                alert(`Searching for: ${searchTerm}`);
+                // In a real application, you would redirect or perform an AJAX search
+            }
+        }
+
+        // Activate voice search (placeholder)
+        function activateVoiceSearch() {
+            // Check for browser support for Speech Recognition API
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                alert('Voice search activated! (This is a demo - actual voice recognition would be implemented here)');
+                // Implement actual voice recognition logic here
+            } else {
+                alert('Voice search is not supported in your browser.');
+            }
+        }
+
+        // Open wishlist (placeholder)
+        function openWishlist() {
+            alert('Opening wishlist');
+            // In a real application, you would navigate to the wishlist page
+        }
+
+        // Open account (placeholder)
+        function openAccount() {
+            alert('Opening account');
+            // In a real application, you might navigate to the account dashboard or stay on this page
+        }
+
+        // Open cart (placeholder)
+        function openCart() {
+            alert('Opening cart');
+            // In a real application, you would navigate to the cart page
+        }
+
+        // Handle logout
+        function handleLogout() {
+            showToast('Logging out...');
+            // In a real app, you would clear session data here
+            // Redirect to login page after a short delay
+            setTimeout(() => {
+                window.location.href = 'login-register.html'; // Replace with your actual login page URL
+            }, 1000);
+        }
+
+        // Content Functions
+
+        // Function to show a specific tab
+        function showTab(tabId) {
+            console.log('showTab called with:', tabId);
+            // Hide all content sections
+            const sections = document.querySelectorAll('.content-section');
+            const tabs = document.querySelectorAll('.tab');
+            if (!sections.length || !tabs.length) {
+                console.error('Tabs or sections not found');
+                return;
+            }
+            sections.forEach(section => section.classList.remove('active'));
+            // Show the target content section
+            const targetSection = document.getElementById(tabId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            } else {
+                console.error(`Section with ID ${tabId} not found`);
+            }
+            // Deactivate all tabs
+            tabs.forEach(tab => tab.classList.remove('active'));
+            // Activate the clicked tab
+            const targetTab = document.querySelector(`.tab[onclick="showTab('${tabId}')"]`);
+            if (targetTab) {
+                targetTab.classList.add('active');
+            } else {
+                console.error(`Tab for ${tabId} not found`);
+            }
+
+            // Handle default sub-section for specific tabs (like Finances)
+            const defaultSubSection = {
+                'finances': 'wallet'
+            }[tabId];
+            if (defaultSubSection) {
+                // Show the default sub-section and update the URL hash
+                showSubSection(tabId, defaultSubSection, document.querySelector(`.sub-section-nav a[href="#${tabId}/${defaultSubSection}"]`));
+                history.pushState(null, null, `#${tabId}/${defaultSubSection}`);
+            } else {
+                 // If no default sub-section, just update the main tab hash
+                history.pushState(null, null, `#${tabId}`);
+            }
+
+            // Re-initialize nice select for the active tab's content
+             if (typeof jQuery !== 'undefined' && jQuery.fn.niceSelect) {
+                jQuery(`#${tabId} .nice-select`).niceSelect('destroy'); // Destroy existing instances
+                jQuery(`#${tabId} .nice-select`).niceSelect(); // Initialize new instances
+            }
+        }
+
+        // Function to show a specific sub-section within a tab
+        function showSubSection(tabId, subSectionId, clickedElement) {
+            console.log('showSubSection called with:', tabId, subSectionId);
+            const parentSection = document.getElementById(tabId);
+            if (!parentSection) {
+                console.error(`Parent section ${tabId} not found`);
+                return;
+            }
+            // Hide all sub-sections within the parent tab
+            parentSection.querySelectorAll('.sub-section').forEach(section => section.classList.remove('active'));
+            // Show the target sub-section
+            const targetSubSection = document.getElementById(`${tabId}-${subSectionId}`);
+            if (targetSubSection) {
+                targetSubSection.classList.add('active');
+            } else {
+                console.error(`Subsection ${tabId}-${subSectionId} not found`);
+            }
+            // Deactivate all sub-section navigation links
+            parentSection.querySelectorAll('.sub-section-nav a').forEach(link => link.classList.remove('active'));
+            // Activate the clicked sub-section navigation link
+            if (clickedElement) {
+                clickedElement.classList.add('active');
+            }
+            // Update the URL hash to reflect the current tab and sub-section
+            history.pushState(null, null, `#${tabId}/${subSectionId}`);
+
+             // Re-initialize nice select for the active sub-section's content
+             if (typeof jQuery !== 'undefined' && jQuery.fn.niceSelect) {
+                jQuery(`#${tabId}-${subSectionId} .nice-select`).niceSelect('destroy'); // Destroy existing instances
+                jQuery(`#${tabId}-${subSectionId} .nice-select`).niceSelect(); // Initialize new instances
+            }
+        }
+
+
+        // Function to toggle between view and edit mode for a section
+        function toggleEditMode(sectionId) {
+            console.log('toggleEditMode called with:', sectionId);
+            const section = document.getElementById(sectionId);
+            if (!section) {
+                console.error(`Section ${sectionId} not found`);
+                return;
+            }
+            // Check if currently in edit mode
+            const isEditMode = section.classList.contains('edit-mode');
+            // Toggle the 'edit-mode' and 'view-mode' classes
+            section.classList.toggle('edit-mode', !isEditMode);
+            section.classList.toggle('view-mode', isEditMode);
+
+            // Find the save/cancel buttons and the edit button within the section
+            const saveCancel = section.querySelector('.save-cancel');
+            const editBtn = section.querySelector('.edit-btn');
+            const viewModeHiddens = section.querySelectorAll('.view-mode-hidden'); // Elements to hide in view mode
+
+            if (saveCancel && editBtn) {
+                // Toggle visibility of save/cancel buttons
+                saveCancel.classList.toggle('hidden', isEditMode);
+                // Change the text of the edit button
+                editBtn.textContent = isEditMode ? 'Edit' : 'Cancel';
+            }
+
+            // Toggle visibility of elements meant to be hidden in view mode
+            viewModeHiddens.forEach(el => el.classList.toggle('hidden', isEditMode));
+
+            // Handle specific logic for notification preferences checkboxes
+            if (sectionId === 'notification-preferences') {
+                const checkboxes = section.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    // Disable if switching to view mode, enable if switching to edit mode
+                    checkbox.disabled = isEditMode;
+                     // Also toggle pointer-events and opacity for the label
+                     const label = checkbox.nextElementSibling;
+                     if (label && label.classList.contains('toggle-label')) {
+                        label.style.pointerEvents = isEditMode ? 'none' : 'auto';
+                        label.style.opacity = isEditMode ? '0.7' : '1';
+                     }
+                });
+            }
+
+            // Handle specific logic for gender radio buttons in profile section
+             if (sectionId === 'my-account-profile') {
+                const genderOptions = section.querySelectorAll('.gender-option');
+                genderOptions.forEach(option => {
+                    const radio = option.querySelector('input[type="radio"]');
+                    const label = option.querySelector('label');
+                    if (radio && label) {
+                        radio.disabled = isEditMode; // Disable radio button in view mode
+                         // Hide unchecked radio buttons and show only the selected label in view mode
+                         if (isEditMode) { // Switching to view mode
+                             if (!radio.checked) {
+                                 option.classList.add('hidden');
+                             } else {
+                                 option.classList.remove('hidden'); // Ensure selected is visible
+                             }
+                         } else { // Switching to edit mode
+                             option.classList.remove('hidden'); // Show all options
+                         }
+                    }
+                });
+            }
+
+             // Handle specific logic for login and security inputs
+             if (sectionId === 'login-security') {
+                 const inputs = section.querySelectorAll('input[type="password"]');
+                 inputs.forEach(input => {
+                     input.disabled = isEditMode; // Disable inputs in view mode
+                      // Clear inputs when switching to edit mode
+                      if (!isEditMode) {
+                          input.value = '';
+                      }
+                 });
+             }
+
+
+            // If switching back to view mode, reload the saved data
+            if (isEditMode) {
+                loadSavedData(sectionId);
+            }
+
+             // Re-initialize nice select for the section after toggling mode
+             if (typeof jQuery !== 'undefined' && jQuery.fn.niceSelect) {
+                // Destroy existing instances within this section
+                jQuery(`#${sectionId} .nice-select`).niceSelect('destroy');
+                // Initialize new instances if needed (though gender is now radio buttons)
+                // jQuery(`#${sectionId} .nice-select`).niceSelect();
+            }
+        }
+
+        // Function to save profile data (without localStorage)
+        function saveProfile(event) {
+            console.log('saveProfile called');
+            event.preventDefault(); // Prevent default form submission
+            const form = event.target;
+
+            // Get selected gender from radio buttons
+            const selectedGender = form.querySelector('input[name="gender"]:checked');
+            const genderValue = selectedGender ? selectedGender.value : '';
+
+            // Basic validation
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.value)) {
+                showToast('Please enter a valid email address.');
+                return;
+            }
+            if (!/^\+\d{10,15}$/.test(form.phone.value)) {
+                 showToast('Please enter a valid phone number (e.g., +919876543210).');
+                 return;
+            }
+
+            // Store the values in variables to use after toggling edit mode
+            const firstName = form.firstName.value;
+            const lastName = form.lastName.value;
+            const email = form.email.value;
+            const phone = form.phone.value;
+            const profilePhotoUrl = document.getElementById('profile-photo').src;
+
+            // Switch back to view mode
+            toggleEditMode('my-account-profile');
+
+            // Update the form fields with the new values
+            form.firstName.value = firstName;
+            form.lastName.value = lastName;
+            form.email.value = email;
+            form.phone.value = phone;
+
+            // Update gender radio buttons
+            const genderOptions = form.querySelectorAll('.gender-option');
+            genderOptions.forEach(option => {
+                const radio = option.querySelector('input[type="radio"]');
+                if (radio) {
+                    radio.checked = (radio.value === genderValue);
+                    // Show only the selected gender in view mode
+                    if (radio.checked) {
+                        option.classList.remove('hidden');
+                    } else {
+                        option.classList.add('hidden');
+                    }
+                }
+            });
+
+            showToast('Profile saved successfully!');
+        }
+
+        // Function to save individual notification toggle (without localStorage)
+        function saveNotificationToggle(checkbox) {
+            console.log('saveNotificationToggle called for', checkbox.name);
+
+            // Show a brief toast notification
+            showToast(`${checkbox.name.replace('_', ' ')} ${checkbox.checked ? 'enabled' : 'disabled'}`);
+        }
+
+        // Function to save security toggle (without localStorage)
+        function saveSecurityToggle(checkbox) {
+            console.log('saveSecurityToggle called for', checkbox.name);
+
+            // Show a brief toast notification
+            showToast(`Two-step verification ${checkbox.checked ? 'enabled' : 'disabled'}`);
+        }
+
+        // Function to save MFA method (without localStorage)
+        function saveMfaMethod(select) {
+            console.log('saveMfaMethod called with value', select.value);
+
+            // Show a brief toast notification
+            showToast(`Multi-factor authentication method updated`);
+        }
+
+        // Function to show a toast notification
+        function showToast(message) {
+            // Create toast element if it doesn't exist
+            let toast = document.getElementById('toast-notification');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'toast-notification';
+                toast.className = 'fixed mt-5 top-5 right-4 bg-black text-white px-4 py-2 rounded-md shadow-lg transform transition-transform duration-300 translate-y-20 opacity-0';
+                document.body.appendChild(toast);
+            }
+
+            // Set message and show toast
+            toast.textContent = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+
+            // Hide toast after 3 seconds
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Function to save language settings (without localStorage)
+        function saveLanguage(event) {
+            console.log('saveLanguage called');
+            event.preventDefault(); // Prevent default form submission
+
+            // Get the selected language
+            const form = event.target;
+            const selectedLanguage = form.languageSelect.value;
+
+            // Switch back to view mode
+            toggleEditMode('language');
+
+            // Make sure the selected language is still displayed after toggling edit mode
+            form.languageSelect.value = selectedLanguage;
+
+            // Update the nice-select dropdown if it's being used
+            if (typeof jQuery !== 'undefined' && jQuery.fn.niceSelect) {
+                jQuery(form.languageSelect).niceSelect('update');
+            }
+
+            showToast('Language settings saved');
+        }
+
+        // Function to open password change modal
+        function openPasswordModal() {
+            console.log('openPasswordModal called');
+            const modal = document.getElementById('password-modal');
+            if (modal) {
+                // Clear any previous values
+                const form = document.getElementById('password-form');
+                if (form) {
+                    form.reset();
+                }
+
+                // Show the modal
+                modal.classList.remove('hidden');
+
+                // Focus on the first input
+                setTimeout(() => {
+                    const firstInput = modal.querySelector('input');
+                    if (firstInput) firstInput.focus();
+                }, 100);
+            }
+        }
+
+        // Function to close password change modal
+        function closePasswordModal() {
+            console.log('closePasswordModal called');
+            const modal = document.getElementById('password-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+            }
+        }
+
+        // Function to handle password change (without localStorage)
+        function changePassword(event) {
+            console.log('changePassword called');
+            event.preventDefault(); // Prevent default form submission
+            const form = event.target;
+            const currentPassword = form.currentPassword.value;
+            const newPassword = form.newPassword.value;
+            const confirmPassword = form.confirmPassword.value;
+
+            // Basic password validation
+            if (newPassword !== confirmPassword) {
+                showToast('New password and confirm password do not match.');
+                return;
+            }
+            if (newPassword.length < 8) {
+                showToast('New password must be at least 8 characters long.');
+                return;
+            }
+
+            // In a real application, you would send the currentPassword and newPassword to your backend for validation and update.
+
+            // For demo purposes, show success message and close modal
+            showToast('Password updated successfully!');
+            closePasswordModal();
+
+            // Update the "last updated" text
+            const lastUpdatedText = document.querySelector('#login-security .text-xs.text-gray-500');
+            if (lastUpdatedText) {
+                lastUpdatedText.textContent = 'Last updated: Just now';
+            }
+        }
+
+
+        // Function to load default data and populate forms (no localStorage)
+        function loadSavedData(sectionId) {
+            console.log('loadSavedData called with:', sectionId);
+            const section = document.getElementById(sectionId); // Get the section element
+
+            if (sectionId === 'my-account-profile') {
+                // Use default profile data
+                const form = document.getElementById('profile-form');
+                const profilePhoto = document.getElementById('profile-photo');
+
+                // Default gender is 'Male'
+                const currentGender = 'Male';
+
+                if (form) {
+                    // Populate form fields with defaults
+                    form.firstName.value = 'Arjun';
+                    form.lastName.value = 'Kumar';
+                    form.email.value = 'arjun.kumar@gmail.com';
+                    form.phone.value = '+919876543210';
+
+                    // Set checked state for gender radio buttons and manage visibility
+                    const genderOptions = form.querySelectorAll('.gender-option');
+                    genderOptions.forEach(option => {
+                        const radio = option.querySelector('input[type="radio"]');
+                         if (radio) {
+                            radio.checked = (radio.value === currentGender);
+                            radio.disabled = section.classList.contains('view-mode'); // Disable in view mode
+
+                             // Manage visibility of the radio option div
+                             if (section.classList.contains('view-mode')) {
+                                 if (!radio.checked) {
+                                     option.classList.add('hidden');
+                                 } else {
+                                     option.classList.remove('hidden'); // Ensure selected is visible
+                                 }
+                             } else { // In edit mode
+                                 option.classList.remove('hidden'); // Show all options
+                             }
+                         }
+                    });
+                }
+                 if (profilePhoto) {
+                     // Set default profile photo
+                     profilePhoto.src = 'https://placehold.co/96x96/e5e7eb/111827?text=Profile';
+                 }
+            } else if (sectionId === 'notification-preferences') {
+                // Use default notification preferences
+                const defaultPreferences = {
+                    email_notifications: true,
+                    sms_notifications: false,
+                    whatsapp_notifications: true,
+                    push_notifications: false
+                };
+
+                // Apply defaults to UI
+                const emailToggle = document.getElementById('email_notifications_pref');
+                const smsToggle = document.getElementById('sms_notifications_pref');
+                const whatsappToggle = document.getElementById('whatsapp_notifications_pref');
+                const pushToggle = document.getElementById('push_notifications_pref');
+
+                if (emailToggle) emailToggle.checked = defaultPreferences.email_notifications;
+                if (smsToggle) smsToggle.checked = defaultPreferences.sms_notifications;
+                if (whatsappToggle) whatsappToggle.checked = defaultPreferences.whatsapp_notifications;
+                if (pushToggle) pushToggle.checked = defaultPreferences.push_notifications;
+            } else if (sectionId === 'login-security') {
+                // Use default security settings
+                const defaultSecurity = {
+                    twoStepVerification: false,
+                    mfaMethod: 'none',
+                    lastPasswordChange: '30 days ago'
+                };
+
+                // Set two-step verification toggle
+                const twoStepToggle = document.getElementById('two_step_verification');
+                if (twoStepToggle) {
+                    twoStepToggle.checked = defaultSecurity.twoStepVerification;
+                }
+
+                // Set MFA method dropdown
+                const mfaSelect = document.getElementById('mfa_method');
+                if (mfaSelect) {
+                    mfaSelect.value = defaultSecurity.mfaMethod;
+                }
+
+                // Update last password change date
+                const lastUpdatedText = document.querySelector('#login-security .text-xs.text-gray-500');
+                if (lastUpdatedText) {
+                    lastUpdatedText.textContent = `Last updated: ${defaultSecurity.lastPasswordChange}`;
+                }
+            } else if (sectionId === 'language') {
+                // Use default language settings
+                const form = document.getElementById('language-form');
+                if (form) {
+                    // Set default option in the dropdown
+                    form.languageSelect.value = 'English';
+                     // Update the appearance of the nice-select dropdown
+                    if (typeof jQuery !== 'undefined' && jQuery.fn.niceSelect) {
+                         jQuery(form.languageSelect).niceSelect('update');
+                    }
+                }
+            } else if (sectionId === 'login-security') {
+                 // Password fields are not loaded in view mode for security reasons.
+                 // They are only enabled for input in edit mode.
+                 const form = document.getElementById('password-form');
+                 if (form) {
+                     const inputs = form.querySelectorAll('input[type="password"]');
+                     inputs.forEach(input => {
+                         input.disabled = section.classList.contains('view-mode');
+                          // Clear inputs when loading in edit mode
+                         if (!section.classList.contains('view-mode')) {
+                             input.value = '';
+                         }
+                     });
+                 }
+            }
+        }
+
+        // Function to preview the selected photo before uploading (client-side only)
+        function previewPhoto(event) {
+            console.log('previewPhoto called');
+            const reader = new FileReader();
+            reader.onload = function(){
+                const output = document.getElementById('profile-photo');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+
+        // Function to add a new address form
+        function addNewAddress() {
+            console.log('addNewAddress called');
+            const addressList = document.getElementById('address-list');
+             if (!addressList) {
+                console.error('Address list not found');
+                return;
+            }
+            // Generate a unique ID for the new address
+            const id = Date.now();
+            const newAddress = document.createElement('div');
+            newAddress.className = 'border border-gray-200 rounded-md p-2 mb-2 edit-mode'; // Start in edit mode
+            newAddress.dataset.id = id; // Store the ID as a data attribute
+            newAddress.innerHTML = `
+                <form onsubmit="saveAddress(event, ${id})">
+                    <h3 class="font-semibold text-gray-900 text-sm mb-1">New Address</h3>
+                    <div class="space-y-1">
+                        <input type="text" name="label" placeholder="Label (e.g., Home)" required class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black text-sm">
+                        <input type="text" name="name" placeholder="Name" required class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black text-sm">
+                        <input type="text" name="address" placeholder="Address" required class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black text-sm">
+                        <input type="tel" name="phone" placeholder="Phone" required class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black text-sm">
+                    </div>
+                    <div class="mt-2 text-right">
+                        <button type="button" onclick="cancelAddress(${id})" class="text-xs font-medium text-gray-600 hover:text-gray-800 mr-2">Cancel</button>
+                        <button type="submit" class="text-xs font-medium text-white bg-black hover:bg-gray-800 px-2 py-1 rounded-md">Save</button>
+                    </div>
+                </form>
+            `;
+            // Add the new address form to the top of the list
+            addressList.insertBefore(newAddress, addressList.firstChild);
+        }
+
+        // Function to switch an address item to edit mode
+        function editAddress(id) {
+            console.log('editAddress called with:', id);
+            const addressDiv = document.querySelector(`#address-list [data-id="${id}"]`);
+             if (!addressDiv) {
+                console.error(`Address with ID ${id} not found`);
+                return;
+            }
+            // Extract current address data from the displayed text
+            const current = {
+                label: addressDiv.querySelector('h3').textContent,
+                name: addressDiv.querySelector('p:nth-child(2)').textContent,
+                address: addressDiv.querySelector('p:nth-child(3)').textContent,
+                phone: addressDiv.querySelector('p:nth-child(4)').textContent.replace('Phone: ', '') // Remove "Phone: " prefix
+            };
+            // Add 'edit-mode' class
+            addressDiv.classList.add('edit-mode');
+            // Replace the content with an editable form
+            addressDiv.innerHTML = `
+                <form onsubmit="saveAddress(event, ${id})">
+                    <h3 class="font-semibold text-gray-900 text-sm mb-1">Edit Address</h3>
+                    <div class="space-y-1">
+                        <input type="text" name="label" value="${current.label}" required class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black text-sm">
+                        <input type="text" name="name" value="${current.name}" required class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black text-sm">
+                        <input type="text" name="address" value="${current.address}" required class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black text-sm">
+                        <input type="tel" name="phone" value="${current.phone}" required class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black text-sm">
+                    </div>
+                    <div class="mt-2 text-right">
+                        <button type="button" onclick="cancelAddress(${id})" class="text-xs font-medium text-gray-600 hover:text-gray-800 mr-2">Cancel</button>
+                        <button type="submit" class="text-xs font-medium text-white bg-black hover:bg-gray-800 px-2 py-1 rounded-md">Save</button>
+                    </div>
+                </form>
+            `;
+        }
+
+        // Function to save an address (new or edited) without localStorage
+        function saveAddress(event, id) {
+            console.log('saveAddress called with:', id);
+            event.preventDefault(); // Prevent default form submission
+            const form = event.target;
+            // Get data from form inputs
+            const data = {
+                id,
+                label: form.label.value,
+                name: form.name.value,
+                address: form.address.value,
+                phone: form.phone.value
+            };
+
+             // Basic phone number validation
+            if (!/^\+\d{10,15}$/.test(data.phone)) {
+                 showToast('Please enter a valid phone number (e.g., +919876543210).');
+                 return;
+            }
+
+            // Find the address element
+            const addressDiv = document.querySelector(`#address-list [data-id="${id}"]`);
+            if (addressDiv) {
+                // Update the address element with the new data
+                addressDiv.className = 'border border-gray-200 rounded-md p-2 mb-2';
+                addressDiv.innerHTML = `
+                    <h3 class="font-semibold text-gray-900 text-sm">${data.label}</h3>
+                    <p class="text-xs text-gray-600 mt-0.5">${data.name}</p>
+                    <p class="text-xs text-gray-600">${data.address}</p>
+                    <p class="text-xs text-gray-600">Phone: ${data.phone}</p>
+                    <div class="mt-1">
+                        <a href="#" onclick="editAddress(${id}); return false;" class="text-xs font-medium text-black hover:text-gray-700 mr-2">Edit</a>
+                        <a href="#" onclick="deleteAddress(${id}); return false;" class="text-xs font-medium text-black hover:text-gray-700 opacity-70">Delete</a>
+                    </div>
+                `;
+                showToast('Address saved successfully!');
+            } else {
+                // If the address element doesn't exist (shouldn't happen), re-render the list
+                renderAddresses();
+                showToast('Address saved successfully!');
+            }
+        }
+
+        // Function to cancel editing or adding an address
+        function cancelAddress(id) {
+            console.log('cancelAddress called with:', id);
+            // Re-render the address list to discard changes or remove the new form
+            renderAddresses();
+        }
+
+        // Function to delete an address (without localStorage)
+        function deleteAddress(id) {
+            console.log('deleteAddress called with:', id);
+            // Find and remove the address element from the DOM
+            const addressElement = document.querySelector(`#address-list [data-id="${id}"]`);
+            if (addressElement) {
+                addressElement.remove();
+                showToast('Address deleted');
+            }
+        }
+
+        // Function to render the list of addresses (without localStorage)
+        function renderAddresses() {
+            console.log('renderAddresses called');
+            const addressList = document.getElementById('address-list');
+            if (!addressList) {
+                console.error('Address list not found');
+                return;
+            }
+            // Clear the current list
+            addressList.innerHTML = '';
+
+            // Define default addresses that should always be present
+            const defaultAddresses = [
+                { id: 1, label: 'Home', name: 'Arjun Kumar', address: 'Flat 302, Shanti Apartments, Andheri West, Mumbai, Maharashtra 400053', phone: '+919123456789' },
+                { id: 2, label: 'Work', name: 'Arjun Kumar', address: 'Office No. 45, Prestige Towers, MG Road, Bengaluru, Karnataka 560001', phone: '+919987654321' }
+            ];
+
+            // Render each address
+            defaultAddresses.forEach(addr => {
+                const div = document.createElement('div');
+                div.className = 'border border-gray-200 rounded-md p-2 mb-2';
+                div.dataset.id = addr.id; // Add data-id for easy selection
+                div.innerHTML = `
+                    <h3 class="font-semibold text-gray-900 text-sm">${addr.label}</h3>
+                    <p class="text-xs text-gray-600 mt-0.5">${addr.name}</p>
+                    <p class="text-xs text-gray-600">${addr.address}</p>
+                    <p class="text-xs text-gray-600">Phone: ${addr.phone}</p>
+                    <div class="mt-1">
+                        <a href="#" onclick="editAddress(${addr.id}); return false;" class="text-xs font-medium text-black hover:text-gray-700 mr-2">Edit</a>
+                        <a href="#" onclick="deleteAddress(${addr.id}); return false;" class="text-xs font-medium text-black hover:text-gray-700 opacity-70">Delete</a>
+                    </div>
+                `;
+                addressList.appendChild(div);
+            });
+        }
+
+        // Function to add a new UPI ID (without localStorage)
+        function addNewUPI() {
+            console.log('addNewUPI called');
+            const newUpiId = prompt("Enter new UPI ID:");
+            if (newUpiId) {
+                const upiList = document.getElementById('upi-list');
+                if (upiList) {
+                    const newId = Date.now(); // Generate a unique ID
+                    const div = document.createElement('div');
+                    div.className = 'border border-gray-200 rounded-md p-2 flex items-center justify-between';
+                    div.dataset.id = newId; // Add data-id
+                    div.innerHTML = `
+                        <div>
+                            <p class="font-medium text-gray-900 text-sm">${newUpiId}</p>
+                        </div>
+                        <a href="#" onclick="deleteUPI(${newId}); return false;" class="text-xs font-medium text-black hover:text-gray-700 opacity-70">Remove</a>
+                    `;
+                    upiList.appendChild(div);
+                    showToast('UPI ID added');
+                }
+            }
+        }
+
+        // Function to delete a UPI ID (without localStorage)
+        function deleteUPI(id) {
+            console.log('deleteUPI called with:', id);
+            // Find and remove the UPI element from the DOM
+            const upiElement = document.querySelector(`#upi-list [data-id="${id}"]`);
+            if (upiElement) {
+                upiElement.remove();
+                showToast('UPI ID deleted');
+            }
+        }
+
+        // Function to render the list of UPI IDs (without localStorage)
+        function renderUPIs() {
+            console.log('renderUPIs called');
+            const upiList = document.getElementById('upi-list');
+            if (!upiList) {
+                console.error('UPI list not found');
+                return;
+            }
+            // Clear the current list
+            upiList.innerHTML = '';
+
+            // Define default UPIs that should always be present
+            const defaultUPIs = [
+                { id: 1, upiId: 'arjun@upi' },
+                { id: 2, upiId: 'arjun.kumar@oksbi' }
+            ];
+
+            // Render each UPI ID
+            defaultUPIs.forEach(upi => {
+                const div = document.createElement('div');
+                div.className = 'border border-gray-200 rounded-md p-2 flex items-center justify-between';
+                div.dataset.id = upi.id; // Add data-id
+                div.innerHTML = `
+                    <div>
+                        <p class="font-medium text-gray-900 text-sm">${upi.upiId}</p>
+                    </div>
+                    <a href="#" onclick="deleteUPI(${upi.id}); return false;" class="text-xs font-medium text-black hover:text-gray-700 opacity-70">Remove</a>
+                `;
+                upiList.appendChild(div);
+            });
+        }
+
+        // Function to add a new card (without localStorage)
+        function addNewCard() {
+            console.log('addNewCard called');
+            const newCardType = prompt("Enter card type (e.g., Visa):");
+            const newCardLast4 = prompt("Enter last 4 digits:");
+            const newCardExpiry = prompt("Enter expiry date (MM/YY):");
+            if (newCardType && newCardLast4 && newCardExpiry) {
+                const paymentList = document.getElementById('payment-list');
+                if (paymentList) {
+                    const newId = Date.now(); // Generate a unique ID
+                    const div = document.createElement('div');
+                    div.className = 'border border-gray-200 rounded-md p-2 flex items-center justify-between';
+                    div.dataset.id = newId; // Add data-id
+                    div.innerHTML = `
+                        <div>
+                            <p class="font-medium text-gray-900 text-sm">${newCardType} ending in ${newCardLast4}</p>
+                            <p class="text-xs text-gray-500">Expires ${newCardExpiry}</p>
+                        </div>
+                        <a href="#" onclick="deleteCard(${newId}); return false;" class="text-xs font-medium text-black hover:text-gray-700 opacity-70">Remove</a>
+                    `;
+                    paymentList.appendChild(div);
+                    showToast('Card added');
+                }
+            }
+        }
+
+        // Function to delete a card (without localStorage)
+        function deleteCard(id) {
+            console.log('deleteCard called with:', id);
+            // Find and remove the card element from the DOM
+            const cardElement = document.querySelector(`#payment-list [data-id="${id}"]`);
+            if (cardElement) {
+                cardElement.remove();
+                showToast('Card deleted');
+            }
+        }
+
+        // Function to render the list of cards (without localStorage)
+        function renderCards() {
+            console.log('renderCards called');
+            const paymentList = document.getElementById('payment-list');
+            if (!paymentList) {
+                console.error('Payment list not found');
+                return;
+            }
+            // Clear the current list
+            paymentList.innerHTML = '';
+
+            // Define default cards that should always be present
+            const defaultCards = [
+                { id: 1, type: 'Visa', last4: '1234', expiry: '12/2028' },
+                { id: 2, type: 'Mastercard', last4: '5678', expiry: '06/2027' }
+            ];
+
+            // Render each card
+            defaultCards.forEach(card => {
+                const div = document.createElement('div');
+                div.className = 'border border-gray-200 rounded-md p-2 flex items-center justify-between';
+                div.dataset.id = card.id; // Add data-id
+                div.innerHTML = `
+                    <div>
+                        <p class="font-medium text-gray-900 text-sm">${card.type} ending in ${card.last4}</p>
+                        <p class="text-xs text-gray-500">Expires ${card.expiry}</p>
+                    </div>
+                     <a href="#" onclick="deleteCard(${card.id}); return false;" class="text-xs font-medium text-black hover:text-gray-700 opacity-70">Remove</a>
+                `;
+                paymentList.appendChild(div);
+            });
+        }
+
+        // Function to redeem a gift card
+        function redeemGiftCard(event) {
+            console.log('redeemGiftCard called');
+            event.preventDefault(); // Prevent default form submission
+            const code = event.target.giftCardCode.value;
+            // Placeholder for gift card redemption logic
+            showToast(`Gift card ${code} redeemed`);
+            event.target.reset(); // Clear the input field
+        }
+
+
+        // FAQ Toggle Functionality
+        function initFAQs() {
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    // Get the answer element associated with this question
+                    const answer = question.nextElementSibling;
+                    // Toggle the 'active' class to show/hide the answer
+                    answer.classList.toggle('active');
+                    // Find the icon within the question
+                    const icon = question.querySelector('i');
+                    // Toggle the chevron icon direction
+                    icon.classList.toggle('fa-chevron-down');
+                    icon.classList.toggle('fa-chevron-up');
+                });
+            });
+        }
+
+        // Initialize Header on DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Initializing header');
+            initHeader();
         });
 
-        function handleReviewStarClick() {
-          const rating = parseInt(this.getAttribute("data-rating"));
-          ratingStars.forEach((s) => s.classList.remove("active"));
-          for (let i = 0; i < rating; i++) {
-            ratingStars[i].classList.add("active");
-          }
-          ratingInput.value = rating;
-        }
-      }
+        // Initialize Content and handle URL hash on DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Initializing content');
 
-      function submitReview(event) {
-        event.preventDefault();
-        const rating = document.getElementById("rating").value;
-        const reviewText = document.getElementById("review").value.trim();
+            // Initialize Nice Select dropdowns if jQuery and Nice Select are loaded
+            if (typeof jQuery !== 'undefined' && jQuery.fn.niceSelect) {
+                jQuery('.nice-select').niceSelect();
+            } else {
+                console.error('jQuery or Nice Select not loaded. Dropdown styling may be affected.');
+            }
 
-        if (rating === "0") {
-          alert("Please select a rating.");
-          return;
-        }
-        if (!reviewText) {
-          alert("Please enter a review.");
-          return;
-        }
+            // Function to handle initial tab and sub-section based on URL hash
+            function handleHash() {
+                // Get the hash from the URL, default to 'my-account' if empty
+                const hash = window.location.hash.substring(1) || 'my-account';
+                // Split the hash into tabId and potential subSectionId
+                const [tabId, subSectionId] = hash.split('/');
+                const targetTab = document.getElementById(tabId);
 
-        console.log("Order ID:", selectedOrderId);
-        console.log("Rating:", rating);
-        console.log("Review Text:", reviewText);
-        alert("Thank you for your review!");
-        showOrderList();
-      }
+                if (targetTab) {
+                    // Show the main tab
+                    showTab(tabId);
+                    // If there's a subSectionId and the tab is 'finances', show the sub-section
+                    if (subSectionId && tabId === 'finances') {
+                        const targetLink = targetTab.querySelector(`.sub-section-nav a[href="#${tabId}/${subSectionId}"]`);
+                        if (targetLink) {
+                            showSubSection(tabId, subSectionId, targetLink);
+                        } else {
+                            // If sub-section not found, default to 'wallet' for finances
+                            showSubSection(tabId, 'wallet', targetTab.querySelector(`.sub-section-nav a[href="#${tabId}/wallet"]`));
+                        }
+                    }
+                } else {
+                    // If the tab from the hash is not found, default to 'my-account'
+                    showTab('my-account');
+                }
+            }
 
-      function reorderItem(orderId) {
-        const orderToReorder = allOrders.find(
-          (order) => order.orderId === orderId
-        );
-        if (orderToReorder) {
-          alert(`Reordering ${orderToReorder.product}`);
-        } else {
-          alert("Cannot reorder this order");
-        }
-      }
+            // Handle the initial hash on page load
+            handleHash();
+            // Add event listener for hash changes (when navigating between tabs/sub-sections)
+            window.addEventListener('hashchange', handleHash);
 
-      document.addEventListener("click", function (event) {
-        const filterGroups = document.querySelectorAll(".filter-group");
-        const isClickInsideFilter = Array.from(filterGroups).some((group) =>
-          group.contains(event.target)
-        );
-        if (!isClickInsideFilter) {
-          filterGroups.forEach((group) => group.classList.remove("active"));
-        }
-      });
+            // Load default data for editable sections
+            ['my-account-profile', 'notification-preferences', 'language', 'login-security'].forEach(sectionId => {
+                loadSavedData(sectionId);
+            });
 
-      document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape") {
-          document.querySelectorAll(".filter-group").forEach((group) => {
-            group.classList.remove("active");
-          });
-          document.getElementById("sidebar").classList.remove("visible");
-          document.getElementById("mainContent").classList.remove("full-width");
-        }
-      });
-
-      displayOrders();
-      /* Orders Style End */
+            // Render lists with default data
+            renderAddresses();
+            renderUPIs();
+            renderCards();
+            // Initialize FAQ toggles
+            initFAQs();
+        });
     </script>
-  </body>
+</body>
 </html>

@@ -4,565 +4,1619 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Function Group Management</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for better aesthetics and overrides if necessary */
+        body {
+            font-family: 'Inter', sans-serif; /* Default font */
+        }
+        /* Ensure the sidebar transition works smoothly */
+        .sidebar-transition {
+            transition: transform 0.3s ease-out;
+        }
+        .sidebar-overlay {
+            background-color: rgba(107, 114, 128, 0.5); /* gray-600 with 50% opacity */
+        }
+        /* Hide scrollbar for tables if desired, but allow content to scroll */
+        .overflow-x-auto::-webkit-scrollbar {
+            height: 8px;
+        }
+        .overflow-x-auto::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1; /* gray-300 */
+            border-radius: 4px;
+        }
+        .overflow-x-auto::-webkit-scrollbar-track {
+            background-color: #f1f5f9; /* gray-100 */
+        }
+
+        /* Theme-specific classes */
+        .theme-white .header-bg { background: linear-gradient(to right, #2563eb, #1d4ed8); } /* blue-600 to blue-800 */
+        .theme-white .accent-text { color: #2563eb; } /* blue-600 */
+        .theme-white .accent-bg { background-color: #2563eb; } /* blue-600 */
+        .theme-white .accent-ring { --tw-ring-color: #93c5fd; } /* blue-300 */
+        .theme-white .checkbox-color { color: #2563eb; } /* blue-600 */
+
+
+        .theme-blue .header-bg { background: linear-gradient(to right, #0284c7, #0369a1); } /* sky-600 to sky-800 */
+        .theme-blue .accent-text { color: #0284c7; } /* sky-600 */
+        .theme-blue .accent-bg { background-color: #0284c7; } /* sky-600 */
+        .theme-blue .accent-ring { --tw-ring-color: #7dd3fc; } /* sky-300 */
+        .theme-blue .checkbox-color { color: #0284c7; } /* sky-600 */
+
+
+        .theme-green .header-bg { background: linear-gradient(to right, #16a34a, #15803d); } /* green-600 to green-800 */
+        .theme-green .accent-text { color: #16a34a; } /* green-600 */
+        .theme-green .accent-bg { background-color: #16a34a; } /* green-600 */
+        .theme-green .accent-ring { --tw-ring-color: #86efac; } /* green-300 */
+        .theme-green .checkbox-color { color: #16a34a; } /* green-600 */
+
+
+        .theme-purple .header-bg { background: linear-gradient(to right, #9333ea, #7e22ce); } /* purple-600 to purple-800 */
+        .theme-purple .accent-text { color: #9333ea; } /* purple-600 */
+        .theme-purple .accent-bg { background-color: #9333ea; } /* purple-600 */
+        .theme-purple .accent-ring { --tw-ring-color: #d8b4fe; } /* purple-300 */
+        .theme-purple .checkbox-color { color: #9333ea; } /* purple-600 */
+
+
+        /* Font-specific classes */
+        .font-times-new-roman { font-family: 'Times New Roman', serif; }
+        .font-arial { font-family: 'Arial', sans-serif; }
+        .font-helvetica { font-family: 'Helvetica', sans-serif; }
+        .font-georgia { font-family: 'Georgia', serif; }
+        .font-verdana { font-family: 'Verdana', sans-serif; }
+        .font-inter { font-family: 'Inter', sans-serif; } /* Default */
+
+    </style>
 </head>
-<body>
-
-
-
-
-    <!-- Main Content Area -->
-    <div class="main-layout">
-        <div class="container">
-        <!-- Header Section -->
-        <header class="header">
-            <p class="center-text"></p>
-            <h1>Function Groups</h1>
-            <div class="header-actions">
-                <button class="btn btn-primary" id="newBtn">
-                    <i class="fas fa-plus"></i> New
+<body class="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8 antialiased theme-white font-inter">
+    <div class="max-w-7xl mx-auto bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200">
+        <div class="flex items-center justify-between p-4 sm:p-6 header-bg text-white rounded-t-xl">
+            <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">Function Groups</h1>
+            <div class="flex items-center space-x-3">
+                <button id="settingsButton" class="flex items-center space-x-2 px-4 py-2 bg-white text-gray-700 rounded-lg shadow-md hover:bg-gray-100 transition-all duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings w-5 h-5"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 0-1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 0 1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <span class="font-semibold text-sm sm:text-base">Settings</span>
                 </button>
-                <div class="dropdown" id="settingsDropdown">
-                    <button class="btn btn-secondary dropdown-toggle" id="settingsBtn">
-                        <i class="fas fa-cog"></i> Settings
-                        <i class="fas fa-chevron-down dropdown-arrow"></i>
+                <button id="newButton" class="flex items-center space-x-2 px-4 py-2 bg-white text-blue-700 rounded-lg shadow-md hover:bg-gray-100 transition-all duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus w-5 h-5"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                    <span class="font-semibold text-sm sm:text-base">New</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between p-4 sm:p-6 border-b border-gray-200 bg-gray-50">
+            <div class="flex flex-wrap gap-3 sm:gap-4 mb-4 sm:mb-0">
+                <button id="deleteButton" class="flex items-center space-x-2 px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed bg-red-500 text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2 w-4 h-4"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                    <span>Delete (<span id="selectedRowsCount">0</span>)</span>
+                </button>
+                <button id="advancedSearchButton" class="flex items-center space-x-2 px-3 py-2 text-sm font-medium rounded-lg bg-gray-200 text-gray-800 hover:bg-gray-300 transition-all duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search w-4 h-4"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    <span>Advanced Search</span>
+                </button>
+                <div class="relative">
+                    <button id="exportButton" class="flex items-center space-x-2 px-3 py-2 text-sm font-medium rounded-lg bg-gray-200 text-gray-800 hover:bg-gray-300 transition-all duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download w-4 h-4"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                        <span>Export</span>
+                        <svg id="exportChevron" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down w-4 h-4 transition-transform duration-200"></svg>
                     </button>
-                    <div class="dropdown-menu settings-menu" id="settingsMenu">
-                        <!-- Themes Section -->
-                        <div class="settings-section">
-                            <h4 class="settings-section-title">
-                                <i class="fas fa-palette"></i> Themes
-                            </h4>
-                            <div class="settings-options">
-                                <button class="dropdown-item theme-option" data-theme="white">
-                                    <i class="fas fa-circle theme-preview white-theme"></i> White
-                                    <i class="fas fa-check theme-check" style="display: none;"></i>
-                                </button>
-                                <button class="dropdown-item theme-option" data-theme="black">
-                                    <i class="fas fa-circle theme-preview black-theme"></i> Black
-                                    <i class="fas fa-check theme-check" style="display: none;"></i>
-                                </button>
-                                <button class="dropdown-item theme-option" data-theme="blue">
-                                    <i class="fas fa-circle theme-preview blue-theme"></i> Blue
-                                    <i class="fas fa-check theme-check" style="display: none;"></i>
-                                </button>
-                                <button class="dropdown-item theme-option" data-theme="green">
-                                    <i class="fas fa-circle theme-preview green-theme"></i> Green
-                                    <i class="fas fa-check theme-check" style="display: none;"></i>
-                                </button>
-                                <button class="dropdown-item theme-option" data-theme="purple">
-                                    <i class="fas fa-circle theme-preview purple-theme"></i> Purple
-                                    <i class="fas fa-check theme-check" style="display: none;"></i>
-                                </button>
+                    <div id="exportOptions" class="absolute z-10 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden" role="menu" aria-orientation="vertical" aria-labelledby="menu-button">
+                        <div class="py-1" role="none">
+                            <button id="exportCsvButton" class="text-gray-700 block px-4 py-2 text-sm w-full text-left hover:bg-gray-100" role="menuitem">
+                                Export to CSV
+                            </button>
+                            <button id="exportExcelButton" class="text-gray-700 block px-4 py-2 text-sm w-full text-left hover:bg-gray-100" role="menuitem">
+                                Export to Excel
+                            </button>
+                            <button id="exportPdfButton" class="text-gray-700 block px-4 py-2 text-sm w-full text-left hover:bg-gray-100" role="menuitem">
+                                Export to PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <button id="refreshButton" class="flex items-center space-x-2 px-3 py-2 text-sm font-medium rounded-lg bg-gray-200 text-gray-800 hover:bg-gray-300 transition-all duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw w-4 h-4"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>
+                    <span>Refresh</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="p-4 sm:p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label for="filterFunctionName" class="block text-sm font-medium text-gray-700 mb-1">
+                    Function Group Name
+                </label>
+                <input type="text" id="filterFunctionName" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2" placeholder="Search by name...">
+            </div>
+            <div>
+                <label for="filterBrand" class="block text-sm font-medium text-gray-700 mb-1">
+                    Brand
+                </label>
+                <input type="text" id="filterBrand" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2" placeholder="Search by brand...">
+            </div>
+        </div>
+
+        <div id="mainContentArea" class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tl-lg">
+                            View
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <input type="checkbox" id="selectAllCheckbox" class="rounded text-blue-600 focus:ring-blue-500">
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors duration-200" data-sort-column="functionGroupName">
+                            <div class="flex items-center">
+                                Function Group Name
+                                <span class="sort-icon ml-1"></span>
                             </div>
-                        </div>
-
-                        <div class="settings-divider"></div>
-
-                        <!-- View Mode Section -->
-                        <div class="settings-section">
-                            <h4 class="settings-section-title">
-                                <i class="fas fa-eye"></i> View Mode
-                            </h4>
-                            <div class="settings-options">
-                                <button class="dropdown-item view-mode-option" data-view="list">
-                                    <i class="fas fa-list view-mode-icon"></i> List View
-                                    <i class="fas fa-check view-mode-check" style="display: none;"></i>
-                                </button>
-                                <button class="dropdown-item view-mode-option" data-view="grid">
-                                    <i class="fas fa-th view-mode-icon"></i> Grid View
-                                    <i class="fas fa-check view-mode-check" style="display: none;"></i>
-                                </button>
-                                <button class="dropdown-item view-mode-option" data-view="card">
-                                    <i class="fas fa-id-card view-mode-icon"></i> Card View
-                                    <i class="fas fa-check view-mode-check" style="display: none;"></i>
-                                </button>
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors duration-200" data-sort-column="brand">
+                            <div class="flex items-center">
+                                Brand
+                                <span class="sort-icon ml-1"></span>
                             </div>
-                        </div>
-
-                        <div class="settings-divider"></div>
-
-                        <!-- Fonts Section -->
-                        <div class="settings-section">
-                            <h4 class="settings-section-title">
-                                <i class="fas fa-font"></i> Fonts
-                            </h4>
-                            <div class="settings-options">
-                                <button class="dropdown-item font-option" data-font="Times New Roman" style="font-family: 'Times New Roman', serif;">
-                                    Times New Roman
-                                    <i class="fas fa-check font-check" style="display: none;"></i>
-                                </button>
-                                <button class="dropdown-item font-option" data-font="Arial" style="font-family: Arial, sans-serif;">
-                                    Arial
-                                    <i class="fas fa-check font-check" style="display: none;"></i>
-                                </button>
-                                <button class="dropdown-item font-option" data-font="Helvetica" style="font-family: Helvetica, sans-serif;">
-                                    Helvetica
-                                    <i class="fas fa-check font-check" style="display: none;"></i>
-                                </button>
-                                <button class="dropdown-item font-option" data-font="Georgia" style="font-family: Georgia, serif;">
-                                    Georgia
-                                    <i class="fas fa-check font-check" style="display: none;"></i>
-                                </button>
-                                <button class="dropdown-item font-option" data-font="Verdana" style="font-family: Verdana, sans-serif;">
-                                    Verdana
-                                    <i class="fas fa-check font-check" style="display: none;"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- Toolbar Section -->
-        <div class="toolbar">
-            <div class="toolbar-left">
-                <button class="btn btn-danger" id="deleteBtn" disabled>
-                    <i class="fas fa-trash"></i> Delete
-                </button>
-                <button class="btn btn-accent" id="advancedSearchBtn">
-                    <i class="fas fa-search-plus"></i> Advanced Search
-                </button>
-                <div class="dropdown" id="exportDropdown">
-                    <button class="btn btn-accent dropdown-toggle" id="exportBtn">
-                        <i class="fas fa-download"></i> Export
-                        <i class="fas fa-chevron-down dropdown-arrow"></i>
-                    </button>
-                    <div class="dropdown-menu" id="exportMenu">
-                        <button class="dropdown-item" id="exportExcelBtn">
-                            <i class="fas fa-file-excel"></i> Export as Excel
-                        </button>
-                        <button class="dropdown-item" id="exportPdfBtn">
-                            <i class="fas fa-file-pdf"></i> Export as PDF
-                        </button>
-                    </div>
-                </div>
-                <button class="btn btn-accent" id="refreshBtn">
-                    <i class="fas fa-sync-alt"></i> Refresh
-                </button>
-            </div>
-            <div class="toolbar-right">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" placeholder="Search function groups...">
-                    <button class="clear-search" id="clearSearch" style="display: none;">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Loading Indicator -->
-        <div class="loading" id="loadingIndicator" style="display: none;">
-            <i class="fas fa-spinner fa-spin"></i> Loading...
-        </div>
-
-        <!-- Data Display Container -->
-        <div class="data-display-container">
-            <!-- List View (Table) -->
-            <div class="view-container list-view" id="listView">
-                <div class="table-container">
-                    <table class="data-table" id="functionGroupTable">
-                        <thead>
-                            <tr>
-                                <th class="checkbox-col">
-                                    <input type="checkbox" id="selectAll" aria-label="Select all rows">
-                                </th>
-                                <th class="action-col">View</th>
-                                <th class="action-col">Delete</th>
-                                <th class="sortable" data-column="name">
-                                     <p class="center-text"></p>
-                                    Function Group Name
-                                    <i class="fas fa-sort sort-icon"></i>
-                                </th>
-                                <th class="sortable" data-column="brand">
-                                    Brand
-                                    <i class="fas fa-sort sort-icon"></i>
-                                </th>
-                                <th class="sortable" data-column="active">
-                                    Is Active?
-                                    <i class="fas fa-sort sort-icon"></i>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody id="tableBody">
-                            <!-- Data will be populated by JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Grid View -->
-            <div class="view-container grid-view" id="gridView" style="display: none;">
-                <div class="grid-view-header">
-                    <div class="view-sort-controls">
-                        <label for="gridSortSelect">Sort by:</label>
-                        <select id="gridSortSelect" class="sort-select">
-                            <option value="name-asc">Name (A-Z)</option>
-                            <option value="name-desc">Name (Z-A)</option>
-                            <option value="brand-asc">Brand (A-Z)</option>
-                            <option value="brand-desc">Brand (Z-A)</option>
-                            <option value="active-asc">Active First</option>
-                            <option value="active-desc">Inactive First</option>
-                        </select>
-                        <button class="sort-direction-btn" id="gridSortDirection" title="Toggle sort direction">
-                            <i class="fas fa-sort-up"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="grid-container" id="gridContainer">
-                    <!-- Grid items will be populated by JavaScript -->
-                </div>
-            </div>
-
-            <!-- Card View -->
-            <div class="view-container card-view" id="cardView" style="display: none;">
-                <div class="card-view-header">
-                    <div class="view-sort-controls">
-                        <label for="cardSortSelect">Sort by:</label>
-                        <select id="cardSortSelect" class="sort-select">
-                            <option value="name-asc">Name (A-Z)</option>
-                            <option value="name-desc">Name (Z-A)</option>
-                            <option value="brand-asc">Brand (A-Z)</option>
-                            <option value="brand-desc">Brand (Z-A)</option>
-                            <option value="active-asc">Active First</option>
-                            <option value="active-desc">Inactive First</option>
-                        </select>
-                        <button class="sort-direction-btn" id="cardSortDirection" title="Toggle sort direction">
-                            <i class="fas fa-sort-up"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="card-container" id="cardContainer">
-                    <!-- Card items will be populated by JavaScript -->
-                </div>
-            </div>
-        </div>
-
-        <!-- No Results Message -->
-        <div class="no-results" id="noResults" style="display: none;">
-            <i class="fas fa-search"></i>
-            <p>No function groups found matching your search criteria.</p>
-        </div>
-
-        <!-- Pagination Section -->
-        <div class="pagination">
-            <div class="pagination-info">
-                <span id="paginationInfo">View 1 - 10 of 54</span>
-            </div>
-            <div class="pagination-controls">
-                <button class="btn btn-sm" id="firstPage" title="First page">
-                    <i class="fas fa-angle-double-left"></i>
-                </button>
-                <button class="btn btn-sm" id="prevPage" title="Previous page">
-                    <i class="fas fa-angle-left"></i>
-                </button>
-                <span class="page-info">
-                    Page <input type="number" id="currentPage" value="1" min="1" max="1"> of <span id="totalPages">1</span>
-                </span>
-                <button class="btn btn-sm" id="nextPage" title="Next page">
-                    <i class="fas fa-angle-right"></i>
-                </button>
-                <button class="btn btn-sm" id="lastPage" title="Last page">
-                    <i class="fas fa-angle-double-right"></i>
-                </button>
-                <select id="pageSize" class="page-size-select" title="Items per page">
-                    <option value="10" selected>10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                </select>
-            </div>
-        </div>
-
-
-        </div>
-    </div>
-
-    <!-- Modal for New/Edit Function Group -->
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal" id="functionGroupModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 id="modalTitle">New Function Group</h2>
-                    <button class="close-btn" id="closeModal" aria-label="Close modal">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="functionGroupForm">
-                        <div class="form-group">
-                            <label for="functionGroupName">Function Group Name *</label>
-                            <input type="text" id="functionGroupName" required maxlength="50">
-                            <div class="error-message" id="nameError"></div>
-                        </div>
-                        <div class="form-group">
-                            <label for="brand">Brand</label>
-                            <input type="text" id="brand" maxlength="50">
-                        </div>
-                        <div class="form-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="isActive" checked>
-                                <span class="checkmark"></span>
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tr-lg cursor-pointer hover:bg-gray-100 transition-colors duration-200" data-sort-column="isActive">
+                            <div class="flex items-center">
                                 Is Active?
-                            </label>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" id="cancelBtn">Cancel</button>
-                    <button class="btn btn-primary" id="saveBtn">
-                        <i class="fas fa-save"></i> Save
-                    </button>
-                </div>
-            </div>
+                                <span class="sort-icon ml-1"></span>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody" class="bg-white divide-y divide-gray-200">
+                    </tbody>
+            </table>
         </div>
-    </div>
 
-    <!-- View Details Modal -->
-    <div class="modal-overlay" id="viewModalOverlay">
-        <div class="modal view-modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2><i class="fas fa-eye"></i> Function Group Details</h2>
-                    <button class="close-btn" id="closeViewModal" aria-label="Close view modal">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="view-details">
-                        <!-- Basic Information Section -->
-                        <div class="detail-section">
-                            <h3 class="section-title">Basic Information</h3>
-                            <div class="detail-grid">
-                                <div class="detail-item">
-                                    <label>Function Group Name:</label>
-                                    <span id="viewName" class="detail-value"></span>
-                                </div>
-                                <div class="detail-item">
-                                    <label>Brand:</label>
-                                    <span id="viewBrand" class="detail-value"></span>
-                                </div>
-                                <div class="detail-item">
-                                    <label>Status:</label>
-                                    <span id="viewStatus" class="detail-value status-badge"></span>
-                                </div>
-                                <div class="detail-item">
-                                    <label>Category:</label>
-                                    <span id="viewCategory" class="detail-value category-badge"></span>
-                                </div>
-                                <div class="detail-item">
-                                    <label>Priority:</label>
-                                    <span id="viewPriority" class="detail-value priority-badge"></span>
-                                </div>
-                                <div class="detail-item">
-                                    <label>Version:</label>
-                                    <span id="viewVersion" class="detail-value version-badge"></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Description Section -->
-                        <div class="detail-section">
-                            <h3 class="section-title">Description</h3>
-                            <div class="description-content">
-                                <p id="viewDescription" class="detail-description"></p>
-                            </div>
-                        </div>
-
-                        <!-- Metadata Section -->
-                        <div class="detail-section">
-                            <h3 class="section-title">Metadata</h3>
-                            <div class="detail-grid">
-                                <div class="detail-item">
-                                    <label>Created Date:</label>
-                                    <span id="viewCreatedAt" class="detail-value"></span>
-                                </div>
-                                <div class="detail-item">
-                                    <label>Created By:</label>
-                                    <span id="viewCreatedBy" class="detail-value"></span>
-                                </div>
-                                <div class="detail-item">
-                                    <label>Last Modified:</label>
-                                    <span id="viewLastModified" class="detail-value"></span>
-                                </div>
-                                <div class="detail-item">
-                                    <label>Record ID:</label>
-                                    <span id="viewId" class="detail-value id-badge"></span>
-                                </div>
-                            </div>
-                        </div>
+        <div class="flex flex-wrap items-center justify-between p-4 sm:p-6 border-t border-gray-200 bg-gray-50 rounded-b-xl">
+            <div class="text-sm text-gray-700 mb-2 sm:mb-0">
+                Showing <span id="paginationStart">1</span>-<span id="paginationEnd">10</span> of <span id="paginationTotal">54</span> results
+            </div>
+            <div class="flex items-center space-x-2">
+                <button id="firstPageButton" class="p-2 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevrons-left w-4 h-4"><path d="m11 17-5-5 5-5"/><path d="m18 17-5-5 5-5"/></svg>
+                </button>
+                <button id="prevPageButton" class="p-2 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left w-4 h-4"><path d="m15 18-6-6 6-6"/></svg>
+                </button>
+                <span class="text-sm font-medium text-gray-700">
+                    Page <span id="currentPageDisplay">1</span> of <span id="totalPagesDisplay">6</span>
+                </span>
+                <button id="nextPageButton" class="p-2 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right w-4 h-4"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+                <button id="lastPageButton" class="p-2 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevrons-right w-4 h-4"><path d="m13 17 5-5-5-5"/><path d="m6 17 5-5-5-5"/></svg>
+                </button>
+                <div class="relative">
+                    <select id="itemsPerPageSelect" class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        <option value="5">5 per page</option>
+                        <option value="10">10 per page</option>
+                        <option value="20">20 per page</option>
+                        <option value="50">50 per page</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down w-4 h-4"><path d="m6 9 6 6 6-6"/></svg>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" id="closeViewModalBtn">
-                        <i class="fas fa-times"></i> Close
-                    </button>
-                    <button class="btn btn-primary" id="editFromViewBtn">
-                        <i class="fas fa-edit"></i> Edit
-                    </button>
-                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Confirmation Dialog -->
-    <div class="modal-overlay" id="confirmationOverlay">
-        <div class="modal confirmation-modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 id="confirmationTitle">Confirm Action</h2>
-                </div>
-                <div class="modal-body">
-                    <p id="confirmationMessage">Are you sure you want to proceed?</p>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" id="confirmationCancel">Cancel</button>
-                    <button class="btn btn-danger" id="confirmationConfirm">
-                        <i class="fas fa-check"></i> Confirm
+        <div id="advancedSearchModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+            <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden">
+                <div class="flex items-center justify-between p-4 bg-blue-700 text-white">
+                    <h2 class="text-xl font-semibold">Advanced Search</h2>
+                    <button id="closeAdvancedSearch" class="text-white hover:text-gray-200 focus:outline-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x w-6 h-6"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
                     </button>
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Advanced Search Modal -->
-    <div class="modal-overlay" id="advancedSearchOverlay">
-        <div class="modal advanced-search-modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2><i class="fas fa-search-plus"></i> Advanced Search</h2>
-                    <button class="close-btn" id="closeAdvancedSearch" aria-label="Close advanced search">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Search Options -->
-                    <div class="search-options">
-                        <div class="option-group">
-                            <label class="toggle-label">
-                                <input type="checkbox" id="caseSensitive">
-                                <span class="toggle-slider"></span>
-                                Case Sensitive
-                            </label>
+                <div class="p-6">
+                    <p class="text-gray-700 mb-4">Please Select A Column</p>
+                    <div id="advancedFilterRulesContainer">
                         </div>
-                        <div class="option-group">
-                            <label for="logicOperator">Logic:</label>
-                            <select id="logicOperator" class="form-select">
-                                <option value="AND">AND (All conditions)</option>
-                                <option value="OR">OR (Any condition)</option>
+
+                    <div class="flex justify-start gap-3 mt-4">
+                        <button id="addFilterRuleButton" class="flex items-center space-x-2 px-4 py-2 text-sm font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus w-4 h-4"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                            <span>Add Filter</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex justify-end p-4 bg-gray-100 border-t border-gray-200">
+                    <button id="applyAdvancedFiltersButton" class="px-6 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-all duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300 mr-3">
+                        Apply Filters
+                    </button>
+                    <button id="clearAdvancedFiltersButton" class="px-6 py-2 bg-gray-300 text-gray-800 rounded-lg shadow-md hover:bg-gray-400 transition-all duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                        Clear & Close
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="newGroupSidebar" class="fixed inset-0 bg-gray-600 bg-opacity-50 z-40 flex justify-end hidden">
+            <div id="sidebarContent" class="bg-white w-full sm:w-96 md:w-1/2 lg:w-1/3 xl:w-1/4 h-full shadow-2xl p-6 overflow-y-auto transform transition-transform ease-out duration-300 translate-x-full sidebar-transition">
+                <div class="flex items-center justify-between border-b pb-4 mb-6">
+                    <h2 class="text-xl font-semibold text-gray-800">Add New Function Group</h2>
+                    <button id="closeNewSidebar" class="text-gray-500 hover:text-gray-700 focus:outline-none p-1 rounded-full hover:bg-gray-100 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x w-6 h-6"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                    </button>
+                </div>
+
+                <form id="newGroupForm">
+                    <div class="mb-4">
+                        <label for="newGroupName" class="block text-sm font-medium text-gray-700 mb-1">
+                            Function Group Name <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="newGroupNameInput" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2" placeholder="e.g., 5000" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="newBrand" class="block text-sm font-medium text-gray-700 mb-1">
+                            Brand
+                        </label>
+                        <input type="text" id="newBrandInput" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2" placeholder="e.g., Brand C">
+                    </div>
+
+                    <div class="mb-6 flex items-center">
+                        <input type="checkbox" id="newIsActiveInput" checked class="rounded text-blue-600 focus:ring-blue-500 h-4 w-4">
+                        <label for="newIsActiveInput" class="ml-2 block text-sm text-gray-900">
+                            Is Active?
+                        </label>
+                    </div>
+
+                    <h3 class="text-md font-semibold text-gray-800 mb-3 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down w-4 h-4 mr-2"><path d="m6 9 6 6 6-6"/></svg>
+                        Function Group Operations
+                    </h3>
+
+                    <div id="newGroupOperationsContainer">
+                        <p class="text-gray-500 text-sm italic mb-4">No operations added yet.</p>
+                    </div>
+
+                    <button type="button" id="addOperationButton" class="flex items-center space-x-2 px-3 py-2 text-sm font-medium rounded-lg bg-gray-200 text-gray-800 hover:bg-gray-300 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-300 mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus w-4 h-4"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                        <span>Add Operation</span>
+                    </button>
+
+                    <div class="flex justify-end space-x-3 border-t pt-4">
+                        <button type="button" id="cancelNewGroupButton" class="px-5 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                            Cancel
+                        </button>
+                        <button type="submit" id="saveNewGroupButton" class="px-5 py-2 accent-bg text-white rounded-md hover:bg-blue-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                            Save Group
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="settingsSidebar" class="fixed inset-0 bg-gray-600 bg-opacity-50 z-40 flex justify-end hidden">
+            <div id="settingsSidebarContent" class="bg-white w-full sm:w-80 md:w-1/3 lg:w-1/4 h-full shadow-2xl p-6 overflow-y-auto transform transition-transform ease-out duration-300 translate-x-full sidebar-transition">
+                <div class="flex items-center justify-between border-b pb-4 mb-6">
+                    <h2 class="text-xl font-semibold text-gray-800">Settings</h2>
+                    <button id="closeSettingsSidebar" class="text-gray-500 hover:text-gray-700 focus:outline-none p-1 rounded-full hover:bg-gray-100 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x w-6 h-6"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                    </button>
+                </div>
+
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-palette mr-2"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12c0 2.2.7 4.3 2 6l-.6 1.9c-.2.5-.3 1-.3 1.6 0 .6.4 1.2 1 1.4.2.1.5.1.8 0l2-1c1.5.9 3.2 1.4 5 1.4 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
+                        THEMES
+                    </h3>
+                    <div id="themeOptions" class="space-y-3">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="theme" value="white" class="form-radio h-4 w-4 accent-text checkbox-color" checked>
+                            <span class="ml-2 text-gray-800">White</span>
+                            <span class="ml-auto w-4 h-4 rounded-full bg-blue-600 border border-gray-300"></span>
+                        </label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="theme" value="blue" class="form-radio h-4 w-4 accent-text checkbox-color">
+                            <span class="ml-2 text-gray-800">Blue</span>
+                            <span class="ml-auto w-4 h-4 rounded-full bg-sky-600 border border-gray-300"></span>
+                        </label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="theme" value="green" class="form-radio h-4 w-4 accent-text checkbox-color">
+                            <span class="ml-2 text-gray-800">Green</span>
+                            <span class="ml-auto w-4 h-4 rounded-full bg-green-600 border border-gray-300"></span>
+                        </label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="theme" value="purple" class="form-radio h-4 w-4 accent-text checkbox-color">
+                            <span class="ml-2 text-gray-800">Purple</span>
+                            <span class="ml-auto w-4 h-4 rounded-full bg-purple-600 border border-gray-300"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-checks mr-2"><path d="m3 10 2 2 4-4"/><path d="M10 16L12 18 16 14"/><path d="M17 7L19 9 21 7"/><path d="M14 10H3"/><path d="M21 16H10"/><path d="M21 7H10"/></svg>
+                        VIEW MODE
+                    </h3>
+                    <div id="viewModeOptions" class="space-y-3">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="viewMode" value="list" class="form-radio h-4 w-4 accent-text checkbox-color" checked>
+                            <span class="ml-2 text-gray-800">List View</span>
+                        </label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="viewMode" value="grid" class="form-radio h-4 w-4 accent-text checkbox-color">
+                            <span class="ml-2 text-gray-800">Grid View</span>
+                        </label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="viewMode" value="card" class="form-radio h-4 w-4 accent-text checkbox-color">
+                            <span class="ml-2 text-gray-800">Card View</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-type mr-2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" x2="15" y1="20" y2="20"/><line x1="12" x2="12" y1="4" y2="20"/></svg>
+                        FONTS
+                    </h3>
+                    <div id="fontOptions" class="space-y-3">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="font" value="inter" class="form-radio h-4 w-4 accent-text checkbox-color" checked>
+                            <span class="ml-2 text-gray-800">Inter (Default)</span>
+                        </label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="font" value="times-new-roman" class="form-radio h-4 w-4 accent-text checkbox-color">
+                            <span class="ml-2 text-gray-800 font-times-new-roman">Times New Roman</span>
+                        </label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="font" value="arial" class="form-radio h-4 w-4 accent-text checkbox-color">
+                            <span class="ml-2 text-gray-800 font-arial">Arial</span>
+                        </label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="font" value="helvetica" class="form-radio h-4 w-4 accent-text checkbox-color">
+                            <span class="ml-2 text-gray-800 font-helvetica">Helvetica</span>
+                        </label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="font" value="georgia" class="form-radio h-4 w-4 accent-text checkbox-color">
+                            <span class="ml-2 text-gray-800 font-georgia">Georgia</span>
+                        </label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="font" value="verdana" class="form-radio h-4 w-4 accent-text checkbox-color">
+                            <span class="ml-2 text-gray-800 font-verdana">Verdana</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-3 border-t pt-4">
+                    <button id="applySettingsButton" class="px-5 py-2 accent-bg text-white rounded-md hover:opacity-90 transition-colors duration-200 focus:outline-none focus:ring-2 accent-ring">
+                        Apply
+                    </button>
+                    <button id="resetSettingsButton" class="px-5 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                        Reset
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock data for the table
+        let data = [
+            {
+                id: 1,
+                functionGroupName: '1000',
+                brand: 'Brand 1',
+                isActive: true,
+                operations: [
+                    { id: 101, code: '01.00-1', description: 'Oil Pan Gasket Replacement', isActive: true },
+                    { id: 102, code: '30 Day', description: '30 Day Inspection Calgary', isActive: true },
+                    { id: 103, code: 'RN', description: 'REPAIR NUT MATING FACE', isActive: true },
+                ],
+            },
+            {
+                id: 2,
+                functionGroupName: '1100',
+                brand: '',
+                isActive: true,
+                operations: [
+                    { id: 201, code: 'OP-1', description: 'General Maintenance', isActive: true },
+                    { id: 202, code: 'OP-2', description: 'System Check', isActive: false },
+                ],
+            },
+            { id: 3, functionGroupName: '1200', brand: '', isActive: true, operations: [] },
+            { id: 4, functionGroupName: '1300', brand: '', isActive: true, operations: [] },
+            { id: 5, functionGroupName: '1400', brand: '', isActive: true, operations: [] },
+            {
+                id: 6,
+                functionGroupName: '2000',
+                brand: '',
+                isActive: true,
+                operations: [
+                    { id: 601, code: '2000-A', description: 'Engine Tune-up', isActive: true },
+                    { id: 602, code: '2000-B', description: 'Brake Inspection', isActive: true },
+                    { id: 603, code: '2000-C', description: 'Tire Rotation', isActive: true },
+                ],
+            },
+            { id: 7, functionGroupName: '2500', brand: '', isActive: true, operations: [] },
+            { id: 8, functionGroupName: '3000', brand: '', isActive: true, operations: [] },
+            { id: 9, functionGroupName: '3500', brand: '', isActive: true, operations: [] },
+            { id: 10, functionGroupName: '4000', brand: '', isActive: true, operations: [] },
+            { id: 11, functionGroupName: '4100', brand: 'Brand X', isActive: true, operations: [] },
+            { id: 12, functionGroupName: '4200', brand: '', isActive: false, operations: [] },
+            { id: 13, functionGroupName: '5000', brand: 'Brand Y', isActive: true, operations: [] },
+            { id: 14, functionGroupName: '5500', brand: '', isActive: true, operations: [] },
+            { id: 15, functionGroupName: '6000', brand: 'Brand Z', isActive: false, operations: [] },
+        ];
+
+        let selectedRows = [];
+        let filterFunctionName = '';
+        let filterBrand = '';
+        let currentPage = 1;
+        let itemsPerPage = 10;
+        let expandedRowId = null;
+
+        let sortColumn = null;
+        let sortDirection = 'asc'; // 'asc' or 'desc'
+
+        // Encapsulate global state for modals/sidebars
+        window.appState = {
+            showAdvancedSearchModal: false,
+            showNewSidebar: false,
+            showSettingsSidebar: false, // New state for settings sidebar
+            currentTheme: 'white', // Default theme
+            currentFont: 'inter', // Default font
+            currentViewMode: 'list', // Default view mode
+        };
+
+        let advancedFilterRules = [{ id: 1, column: '', operator: '', value: '', condition: 'AND' }];
+        let nextFilterRuleId = 2; // To ensure unique IDs for new filter rules
+
+        let newGroupOperations = []; // For the new group sidebar
+
+        // DOM Elements
+        const body = document.body;
+        const mainContentArea = document.getElementById('mainContentArea'); // Main area to switch between table/grid/card
+        const tableBody = document.getElementById('tableBody'); // This will be used for list view's tbody
+        const tableHeader = document.querySelector('#mainContentArea table thead'); // This will be used for list view's thead
+        const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+        const selectedRowsCountSpan = document.getElementById('selectedRowsCount');
+        const filterFunctionNameInput = document.getElementById('filterFunctionName');
+        const filterBrandInput = document.getElementById('filterBrand');
+        const itemsPerPageSelect = document.getElementById('itemsPerPageSelect');
+
+        const paginationStartSpan = document.getElementById('paginationStart');
+        const paginationEndSpan = document.getElementById('paginationEnd');
+        const paginationTotalSpan = document.getElementById('paginationTotal');
+        const currentPageDisplay = document.getElementById('currentPageDisplay');
+        const totalPagesDisplay = document.getElementById('totalPagesDisplay');
+        const firstPageButton = document.getElementById('firstPageButton');
+        const prevPageButton = document.getElementById('prevPageButton');
+        const nextPageButton = document.getElementById('nextPageButton');
+        const lastPageButton = document.getElementById('lastPageButton');
+
+        const deleteButton = document.getElementById('deleteButton');
+        const newButton = document.getElementById('newButton');
+        const refreshButton = document.getElementById('refreshButton');
+        const advancedSearchButton = document.getElementById('advancedSearchButton');
+        const exportButton = document.getElementById('exportButton');
+        const exportChevron = document.getElementById('exportChevron');
+        const exportOptions = document.getElementById('exportOptions');
+        const exportCsvButton = document.getElementById('exportCsvButton');
+        const exportExcelButton = document.getElementById('exportExcelButton');
+        const exportPdfButton = document.getElementById('exportPdfButton');
+
+        const advancedSearchModal = document.getElementById('advancedSearchModal');
+        const closeAdvancedSearchButton = document.getElementById('closeAdvancedSearch');
+        const advancedFilterRulesContainer = document.getElementById('advancedFilterRulesContainer');
+        const addFilterRuleButton = document.getElementById('addFilterRuleButton');
+        const applyAdvancedFiltersButton = document.getElementById('applyAdvancedFiltersButton');
+        const clearAdvancedFiltersButton = document.getElementById('clearAdvancedFiltersButton');
+
+        const newGroupSidebar = document.getElementById('newGroupSidebar');
+        const sidebarContent = document.getElementById('sidebarContent');
+        const closeNewSidebarButton = document.getElementById('closeNewSidebar');
+        const newGroupForm = document.getElementById('newGroupForm');
+        const newGroupNameInput = document.getElementById('newGroupNameInput');
+        const newBrandInput = document.getElementById('newBrandInput');
+        const newIsActiveInput = document.getElementById('newIsActiveInput');
+        const newGroupOperationsContainer = document.getElementById('newGroupOperationsContainer');
+        const addOperationButton = document.getElementById('addOperationButton');
+        const cancelNewGroupButton = document.getElementById('cancelNewGroupButton');
+        const saveNewGroupButton = document.getElementById('saveNewGroupButton');
+
+        // Settings sidebar elements
+        const settingsButton = document.getElementById('settingsButton');
+        const settingsSidebar = document.getElementById('settingsSidebar');
+        const settingsSidebarContent = document.getElementById('settingsSidebarContent');
+        const closeSettingsSidebarButton = document.getElementById('closeSettingsSidebar');
+        const themeOptions = document.getElementById('themeOptions');
+        const viewModeOptions = document.getElementById('viewModeOptions'); // New: View Mode Options
+        const fontOptions = document.getElementById('fontOptions');
+        const applySettingsButton = document.getElementById('applySettingsButton');
+        const resetSettingsButton = document.getElementById('resetSettingsButton');
+
+
+        // Icons
+        const icons = {
+            eye: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye w-5 h-5"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>',
+            eyeOff: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye-off w-5 h-5"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-10-7-10-7a18.06 18.06 0 0 1 5.47-2.55M12 10.16V12c0 1.1-.9 2-2 2H8"/><path d="M6 18c-3-7-4-10-4-10a18.07 18.07 0 0 1 4.7-3.71"/><path d="M18 6c3 7 4 10 4 10a18.07 18.07 0 0 0-4.7 3.71"/><line x1="2" x2="22" y1="2" y2="22"/></svg>',
+            chevronUp: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-up w-4 h-4 ml-1"><path d="m18 15-6-6-6 6"/></svg>',
+            chevronDown: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down w-4 h-4 ml-1"><path d="m6 9 6 6 6-6"/></svg>',
+            trash2: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2 w-5 h-5"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>',
+            plus: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus w-4 h-4"><path d="M12 5v14"/><path d="M5 12h14"/></svg>',
+            listIcon: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list mr-2"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>',
+            gridIcon: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-grid mr-2"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>',
+            cardIcon: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-stack mr-2"><path d="M12 17H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1l-1 1 1 1v2"/><path d="M7 17H5a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-2l-1-1-1-1h-2"/></svg>'
+        };
+
+        // Columns available for advanced search and sorting
+        const availableColumns = [
+            { value: 'functionGroupName', label: 'Function Group Name', type: 'text' },
+            { value: 'brand', label: 'Brand', type: 'text' },
+            { value: 'isActive', label: 'Is Active?', type: 'boolean' },
+            { value: 'id', label: 'ID', type: 'number' },
+        ];
+
+        // Operators based on column type
+        const getOperatorsForColumnType = (type) => {
+            switch (type) {
+                case 'text':
+                    return [
+                        { value: 'equals', label: 'Equals' },
+                        { value: 'contains', label: 'Contains' },
+                        { value: 'startsWith', label: 'Starts with' },
+                        { value: 'endsWith', label: 'Ends with' },
+                    ];
+                case 'number':
+                    return [
+                        { value: 'equals', label: 'Equals' },
+                        { value: 'greaterThan', label: 'Greater than' },
+                        { value: 'lessThan', label: 'Less than' },
+                    ];
+                case 'boolean':
+                    return [
+                        { value: 'isTrue', label: 'Is True' },
+                        { value: 'isFalse', label: 'Is False' },
+                    ];
+                default:
+                    return [];
+            }
+        };
+
+        // Function to apply advanced filters
+        const applyAdvancedFilters = (item, rules) => {
+            if (rules.length === 0) return true;
+
+            let overallResult = true;
+            let lastCondition = 'AND';
+
+            rules.forEach((rule, index) => {
+                if (!rule.column || !rule.operator) {
+                    return; // Skip incomplete rules
+                }
+
+                const columnInfo = availableColumns.find(col => col.value === rule.column);
+                if (!columnInfo) return;
+
+                let ruleResult = false;
+                const itemValue = item[rule.column];
+                const filterValue = rule.value;
+
+                switch (rule.operator) {
+                    case 'equals':
+                        ruleResult = String(itemValue).toLowerCase() === String(filterValue).toLowerCase();
+                        break;
+                    case 'contains':
+                        ruleResult = String(itemValue).toLowerCase().includes(String(filterValue).toLowerCase());
+                        break;
+                    case 'startsWith':
+                        ruleResult = String(itemValue).toLowerCase().startsWith(String(filterValue).toLowerCase());
+                        break;
+                    case 'endsWith':
+                        ruleResult = String(itemValue).toLowerCase().endsWith(String(filterValue).toLowerCase());
+                        break;
+                    case 'greaterThan':
+                        ruleResult = parseFloat(itemValue) > parseFloat(filterValue);
+                        break;
+                    case 'lessThan':
+                        ruleResult = parseFloat(itemValue) < parseFloat(filterValue);
+                        break;
+                    case 'isTrue':
+                        ruleResult = itemValue === true;
+                        break;
+                    case 'isFalse':
+                        ruleResult = itemValue === false;
+                        break;
+                    default:
+                        ruleResult = false;
+                }
+
+                if (index === 0) {
+                    overallResult = overallResult && ruleResult;
+                } else {
+                    if (lastCondition === 'AND') {
+                        overallResult = overallResult && ruleResult;
+                    } else if (lastCondition === 'OR') {
+                        overallResult = overallResult || ruleResult;
+                    }
+                }
+                lastCondition = rule.condition;
+            });
+            return overallResult;
+        };
+
+        // Function to process data (filter and sort)
+        const getProcessedData = () => {
+            let currentProcessedData = [...data]; // Create a shallow copy
+
+            // Apply basic filters
+            currentProcessedData = currentProcessedData.filter(item => {
+                const matchesFunctionName = filterFunctionName
+                    ? item.functionGroupName.toLowerCase().includes(filterFunctionName.toLowerCase())
+                    : true;
+                const matchesBrand = filterBrand
+                    ? item.brand.toLowerCase().includes(filterBrand.toLowerCase())
+                    : true;
+                return matchesFunctionName && matchesBrand;
+            });
+
+            // Apply advanced filters
+            currentProcessedData = currentProcessedData.filter(item =>
+                applyAdvancedFilters(item, advancedFilterRules.filter(rule => rule.column && rule.operator))
+            );
+
+            // Apply sorting
+            if (sortColumn) {
+                currentProcessedData.sort((a, b) => {
+                    const aValue = a[sortColumn];
+                    const bValue = b[sortColumn];
+
+                    if (typeof aValue === 'string' && typeof bValue === 'string') {
+                        return sortDirection === 'asc'
+                            ? aValue.localeCompare(bValue)
+                            : bValue.localeCompare(aValue);
+                    }
+                    if (typeof aValue === 'boolean' && typeof bValue === 'boolean') {
+                        return sortDirection === 'asc'
+                            ? (aValue === bValue ? 0 : (aValue ? -1 : 1))
+                            : (aValue === bValue ? 0 : (aValue ? 1 : -1));
+                    }
+                    return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
+                });
+            }
+
+            return currentProcessedData;
+        };
+
+        // --- View Rendering Functions ---
+
+        const renderListView = (currentItems) => {
+            // Ensure table structure is present
+            mainContentArea.innerHTML = `
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tl-lg">
+                                View
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <input type="checkbox" id="selectAllCheckbox" class="rounded checkbox-color focus:ring-blue-500">
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors duration-200" data-sort-column="functionGroupName">
+                                <div class="flex items-center">
+                                    Function Group Name
+                                    <span class="sort-icon ml-1"></span>
+                                </div>
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors duration-200" data-sort-column="brand">
+                                <div class="flex items-center">
+                                    Brand
+                                    <span class="sort-icon ml-1"></span>
+                                </div>
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tr-lg cursor-pointer hover:bg-gray-100 transition-colors duration-200" data-sort-column="isActive">
+                                <div class="flex items-center">
+                                    Is Active?
+                                    <span class="sort-icon ml-1"></span>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody" class="bg-white divide-y divide-gray-200"></tbody>
+                </table>
+            `;
+            const currentTableBody = document.getElementById('tableBody');
+            const currentSelectAllCheckbox = document.getElementById('selectAllCheckbox');
+
+            currentTableBody.innerHTML = ''; // Clear existing rows
+
+            if (currentItems.length === 0) {
+                const noResultsRow = document.createElement('tr');
+                noResultsRow.innerHTML = `
+                    <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                        No matching function groups found.
+                    </td>
+                `;
+                currentTableBody.appendChild(noResultsRow);
+            } else {
+                currentItems.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.classList.add(selectedRows.includes(item.id) ? 'bg-blue-50' : 'hover:bg-gray-50');
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            <button class="view-details-button text-blue-600 hover:text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-300 rounded-full p-1" data-id="${item.id}" title="${expandedRowId === item.id ? 'Hide Details' : 'View Details'}">
+                                ${expandedRowId === item.id ? icons.eyeOff : icons.eye}
+                            </button>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <input type="checkbox" class="row-checkbox rounded checkbox-color focus:ring-blue-500" data-id="${item.id}" ${selectedRows.includes(item.id) ? 'checked' : ''}>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            ${item.functionGroupName}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${item.brand || '-'}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${item.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                                ${item.isActive ? 'Yes' : 'No'}
+                            </span>
+                        </td>
+                    `;
+                    currentTableBody.appendChild(row);
+
+                    if (expandedRowId === item.id) {
+                        const detailRow = document.createElement('tr');
+                        detailRow.classList.add('bg-gray-100', 'border-b', 'border-gray-200');
+                        detailRow.innerHTML = `
+                            <td colspan="5" class="p-4">
+                                <div class="bg-white rounded-lg shadow-inner p-4 border border-gray-200">
+                                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Details for ${item.functionGroupName}</h3>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Function Group Name:</label>
+                                            <input type="text" value="${item.functionGroupName}" readonly class="block w-full rounded-md border-gray-300 bg-gray-50 text-gray-900 sm:text-sm p-2 cursor-not-allowed">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Brand:</label>
+                                            <input type="text" value="${item.brand || 'N/A'}" readonly class="block w-full rounded-md border-gray-300 bg-gray-50 text-gray-900 sm:text-sm p-2 cursor-not-allowed">
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input type="checkbox" ${item.isActive ? 'checked' : ''} readonly class="rounded checkbox-color focus:ring-blue-500 cursor-not-allowed">
+                                            <label class="ml-2 block text-sm font-medium text-gray-700">Is Active?</label>
+                                        </div>
+                                    </div>
+                                    <h4 class="text-md font-semibold text-gray-800 mb-3 flex items-center">
+                                        ${icons.chevronDown}
+                                        Function Group Operations
+                                    </h4>
+                                    ${item.operations && item.operations.length > 0 ? `
+                                    <div class="overflow-x-auto border border-gray-200 rounded-md">
+                                        <table class="min-w-full divide-y divide-gray-200">
+                                            <thead class="bg-gray-50">
+                                                <tr>
+                                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                        Code
+                                                    </th>
+                                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                        Description
+                                                    </th>
+                                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                        Is Active?
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="bg-white divide-y divide-gray-200">
+                                                ${item.operations.map(op => `
+                                                <tr class="hover:bg-gray-50">
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                        ${op.code}
+                                                    </td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        ${op.description}
+                                                    </td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${op.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                                                            ${op.isActive ? 'Yes' : 'No'}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                `).join('')}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    ` : `<p class="text-gray-500 text-sm italic">No operations found for this function group.</p>`}
+                                </div>
+                            </td>
+                        `;
+                        currentTableBody.appendChild(detailRow);
+                    }
+                });
+            }
+
+            // Re-attach event listeners for checkboxes and view buttons within the new table structure
+            currentSelectAllCheckbox.addEventListener('change', handleSelectAll);
+            currentTableBody.addEventListener('change', handleRowCheckboxChange);
+            currentTableBody.addEventListener('click', handleViewDetailsClick);
+
+            // Update sort icons for list view
+            document.querySelectorAll('#mainContentArea th[data-sort-column]').forEach(header => {
+                header.querySelector('.sort-icon').innerHTML = '';
+                if (sortColumn === header.dataset.sortColumn) {
+                    header.querySelector('.sort-icon').innerHTML = sortDirection === 'asc' ? icons.chevronUp : icons.chevronDown;
+                }
+            });
+        };
+
+        const renderGridView = (currentItems) => {
+            mainContentArea.innerHTML = `
+                <div id="gridContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4"></div>
+            `;
+            const gridContainer = document.getElementById('gridContainer');
+
+            if (currentItems.length === 0) {
+                gridContainer.innerHTML = '<p class="text-center text-gray-500 col-span-full">No matching function groups found.</p>';
+            } else {
+                currentItems.forEach(item => {
+                    const card = document.createElement('div');
+                    card.classList.add('bg-white', 'rounded-lg', 'shadow-md', 'p-4', 'border', 'border-gray-200', 'flex', 'flex-col', 'justify-between', 'transform', 'hover:scale-102', 'transition-transform', 'duration-200');
+                    card.innerHTML = `
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-lg font-semibold text-gray-900">${item.functionGroupName}</h3>
+                            <div class="flex items-center space-x-2">
+                                <input type="checkbox" class="row-checkbox rounded checkbox-color focus:ring-blue-500" data-id="${item.id}" ${selectedRows.includes(item.id) ? 'checked' : ''}>
+                                <button class="view-details-button text-blue-600 hover:text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-300 rounded-full p-1" data-id="${item.id}" title="${expandedRowId === item.id ? 'Hide Details' : 'View Details'}">
+                                    ${expandedRowId === item.id ? icons.eyeOff : icons.eye}
+                                </button>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-2">Brand: ${item.brand || '-'}</p>
+                        <p class="text-sm">Status: <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${item.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                            ${item.isActive ? 'Active' : 'Inactive'}
+                        </span></p>
+
+                        ${expandedRowId === item.id ? `
+                            <div class="mt-4 pt-4 border-t border-gray-200">
+                                <h4 class="text-md font-semibold text-gray-800 mb-3 flex items-center">
+                                    ${icons.chevronDown}
+                                    Operations
+                                </h4>
+                                ${item.operations && item.operations.length > 0 ? `
+                                <div class="overflow-x-auto border border-gray-200 rounded-md">
+                                    <table class="min-w-full divide-y divide-gray-200 text-sm">
+                                        <thead class="bg-gray-50">
+                                            <tr>
+                                                <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Code</th>
+                                                <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
+                                                <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Active?</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="bg-white divide-y divide-gray-200">
+                                            ${item.operations.map(op => `
+                                            <tr>
+                                                <td class="px-3 py-2 whitespace-nowrap">${op.code}</td>
+                                                <td class="px-3 py-2 whitespace-nowrap">${op.description}</td>
+                                                <td class="px-3 py-2 whitespace-nowrap">
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${op.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                                                        ${op.isActive ? 'Yes' : 'No'}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                ` : `<p class="text-gray-500 text-sm italic">No operations.</p>`}
+                            </div>
+                        ` : ''}
+                    `;
+                    gridContainer.appendChild(card);
+                });
+            }
+
+            // Re-attach event listeners for checkboxes and view buttons within the new grid structure
+            gridContainer.addEventListener('change', handleRowCheckboxChange);
+            gridContainer.addEventListener('click', handleViewDetailsClick);
+        };
+
+        const renderCardView = (currentItems) => {
+            mainContentArea.innerHTML = `
+                <div id="cardContainer" class="grid grid-cols-1 gap-6 p-4"></div>
+            `;
+            const cardContainer = document.getElementById('cardContainer');
+
+            if (currentItems.length === 0) {
+                cardContainer.innerHTML = '<p class="text-center text-gray-500 col-span-full">No matching function groups found.</p>';
+            } else {
+                currentItems.forEach(item => {
+                    const card = document.createElement('div');
+                    card.classList.add('bg-white', 'rounded-lg', 'shadow-lg', 'p-6', 'border', 'border-gray-200', 'flex', 'flex-col', 'justify-between', 'transform', 'hover:scale-101', 'transition-transform', 'duration-200');
+                    card.innerHTML = `
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-bold text-gray-900">${item.functionGroupName}</h3>
+                            <div class="flex items-center space-x-3">
+                                <input type="checkbox" class="row-checkbox rounded checkbox-color focus:ring-blue-500 h-5 w-5" data-id="${item.id}" ${selectedRows.includes(item.id) ? 'checked' : ''}>
+                                <button class="view-details-button text-blue-600 hover:text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-300 rounded-full p-2" data-id="${item.id}" title="${expandedRowId === item.id ? 'Hide Details' : 'View Details'}">
+                                    ${expandedRowId === item.id ? icons.eyeOff : icons.eye}
+                                </button>
+                            </div>
+                        </div>
+                        <p class="text-base text-gray-700 mb-2"><strong>Brand:</strong> ${item.brand || '-'}</p>
+                        <p class="text-base mb-4"><strong>Status:</strong> <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full ${item.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                            ${item.isActive ? 'Active' : 'Inactive'}
+                        </span></p>
+
+                        ${expandedRowId === item.id ? `
+                            <div class="mt-6 pt-6 border-t border-gray-200">
+                                <h4 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                                    ${icons.chevronDown}
+                                    Function Group Operations
+                                </h4>
+                                ${item.operations && item.operations.length > 0 ? `
+                                <div class="overflow-x-auto border border-gray-200 rounded-md">
+                                    <table class="min-w-full divide-y divide-gray-200 text-sm">
+                                        <thead class="bg-gray-50">
+                                            <tr>
+                                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Code</th>
+                                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
+                                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Active?</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="bg-white divide-y divide-gray-200">
+                                            ${item.operations.map(op => `
+                                            <tr>
+                                                <td class="px-4 py-2 whitespace-nowrap">${op.code}</td>
+                                                <td class="px-4 py-2 whitespace-nowrap">${op.description}</td>
+                                                <td class="px-4 py-2 whitespace-nowrap">
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${op.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                                                        ${op.isActive ? 'Yes' : 'No'}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                ` : `<p class="text-gray-500 text-base italic">No operations found for this group.</p>`}
+                            </div>
+                        ` : ''}
+                    `;
+                    cardContainer.appendChild(card);
+                });
+            }
+
+            // Re-attach event listeners for checkboxes and view buttons within the new card structure
+            cardContainer.addEventListener('change', handleRowCheckboxChange);
+            cardContainer.addEventListener('click', handleViewDetailsClick);
+        };
+
+
+        const renderData = () => {
+            // Hide/show table header based on view mode
+            if (window.appState.currentViewMode === 'list') {
+                tableHeader.classList.remove('hidden');
+                renderListView(getProcessedData().slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage));
+            } else {
+                tableHeader.classList.add('hidden'); // Hide thead for grid/card views
+                if (window.appState.currentViewMode === 'grid') {
+                    renderGridView(getProcessedData().slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage));
+                } else if (window.appState.currentViewMode === 'card') {
+                    renderCardView(getProcessedData().slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage));
+                }
+            }
+
+            const processedData = getProcessedData();
+            const totalPages = Math.ceil(processedData.length / itemsPerPage);
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const currentItems = processedData.slice(startIndex, endIndex);
+
+            // Update pagination display
+            paginationStartSpan.textContent = processedData.length > 0 ? startIndex + 1 : 0;
+            paginationEndSpan.textContent = Math.min(endIndex, processedData.length);
+            paginationTotalSpan.textContent = processedData.length;
+            currentPageDisplay.textContent = currentPage;
+            totalPagesDisplay.textContent = totalPages;
+
+            firstPageButton.disabled = currentPage === 1;
+            prevPageButton.disabled = currentPage === 1;
+            nextPageButton.disabled = currentPage === totalPages || totalPages === 0;
+            lastPageButton.disabled = currentPage === totalPages || totalPages === 0;
+
+            // Update select all checkbox state
+            selectAllCheckbox.checked = selectedRows.length > 0 && selectedRows.length === currentItems.filter(item => selectedRows.includes(item.id)).length;
+            selectAllCheckbox.disabled = currentItems.length === 0;
+
+            // Update delete button count
+            selectedRowsCountSpan.textContent = selectedRows.length;
+            deleteButton.disabled = selectedRows.length === 0;
+
+            // Update sort icons (only visible in list view, but logic applies to data)
+            document.querySelectorAll('th[data-sort-column] .sort-icon').forEach(iconSpan => iconSpan.innerHTML = '');
+            if (sortColumn && window.appState.currentViewMode === 'list') { // Only show sort icons in list view
+                const sortHeader = document.querySelector(`th[data-sort-column="${sortColumn}"] .sort-icon`);
+                if (sortHeader) {
+                    sortHeader.innerHTML = sortDirection === 'asc' ? icons.chevronUp : icons.chevronDown;
+                }
+            }
+        };
+
+        // Function to apply theme
+        const applyTheme = (themeName) => {
+            body.classList.remove('theme-white', 'theme-blue', 'theme-green', 'theme-purple');
+            body.classList.add(`theme-${themeName}`);
+            window.appState.currentTheme = themeName;
+            // Re-render table to apply checkbox color changes (important for new elements)
+            renderData();
+        };
+
+        // Function to apply font
+        const applyFont = (fontName) => {
+            body.classList.remove('font-inter', 'font-times-new-roman', 'font-arial', 'font-helvetica', 'font-georgia', 'font-verdana');
+            body.classList.add(`font-${fontName.replace(/\s+/g, '-').toLowerCase()}`);
+            window.appState.currentFont = fontName;
+        };
+
+        // Function to apply view mode
+        const applyViewMode = (viewMode) => {
+            window.appState.currentViewMode = viewMode;
+            renderData(); // Re-render the entire data display based on new view mode
+        };
+
+        // Event Handlers (separated for clarity and re-attachment)
+        const handleSelectAll = (e) => {
+            const currentVisibleItems = getProcessedData().slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+            if (e.target.checked) {
+                selectedRows = [...new Set([...selectedRows, ...currentVisibleItems.map(item => item.id)])];
+            } else {
+                selectedRows = selectedRows.filter(id => !currentVisibleItems.map(item => item.id).includes(id));
+            }
+            renderData();
+        };
+
+        const handleRowCheckboxChange = (e) => {
+            if (e.target.classList.contains('row-checkbox')) {
+                const id = parseInt(e.target.dataset.id);
+                if (e.target.checked) {
+                    selectedRows.push(id);
+                } else {
+                    selectedRows = selectedRows.filter(rowId => rowId !== id);
+                }
+                renderData();
+            }
+        };
+
+        const handleViewDetailsClick = (e) => {
+            if (e.target.closest('.view-details-button')) {
+                const button = e.target.closest('.view-details-button');
+                const id = parseInt(button.dataset.id);
+                expandedRowId = expandedRowId === id ? null : id;
+                renderData();
+            }
+        };
+
+        const handleSortClick = (e) => {
+            const header = e.currentTarget; // Use currentTarget as event listener is on the th
+            const column = header.dataset.sortColumn;
+            if (sortColumn === column) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortColumn = column;
+                sortDirection = 'asc';
+            }
+            renderData();
+        };
+
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            renderData(); // Initial render
+
+            // Apply initial theme and font based on appState (or localStorage if implemented)
+            applyTheme(window.appState.currentTheme);
+            applyFont(window.appState.currentFont);
+            applyViewMode(window.appState.currentViewMode); // Apply initial view mode
+
+            // Basic filter inputs
+            filterFunctionNameInput.addEventListener('input', (e) => {
+                filterFunctionName = e.target.value;
+                currentPage = 1;
+                renderData();
+            });
+
+            filterBrandInput.addEventListener('input', (e) => {
+                filterBrand = e.target.value;
+                currentPage = 1;
+                renderData();
+            });
+
+            // Pagination controls
+            firstPageButton.addEventListener('click', () => {
+                currentPage = 1;
+                renderData();
+            });
+            prevPageButton.addEventListener('click', () => {
+                currentPage = Math.max(1, currentPage - 1);
+                renderData();
+            });
+            nextPageButton.addEventListener('click', () => {
+                const totalPages = Math.ceil(getProcessedData().length / itemsPerPage);
+                currentPage = Math.min(totalPages, currentPage + 1);
+                renderData();
+            });
+            lastPageButton.addEventListener('click', () => {
+                currentPage = Math.ceil(getProcessedData().length / itemsPerPage);
+                renderData();
+            });
+            itemsPerPageSelect.addEventListener('change', (e) => {
+                itemsPerPage = parseInt(e.target.value);
+                currentPage = 1;
+                renderData();
+            });
+
+            // Select All / Row Checkbox (initial attachment)
+            selectAllCheckbox.addEventListener('change', handleSelectAll);
+
+            // Event delegation for row checkboxes and view buttons (will be re-attached by render functions)
+            // tableBody.addEventListener('change', handleRowCheckboxChange); // Removed, handled in renderListView
+            // tableBody.addEventListener('click', handleViewDetailsClick); // Removed, handled in renderListView/GridView/CardView
+
+
+            // Delete Button
+            deleteButton.addEventListener('click', () => {
+                if (selectedRows.length === 0) {
+                    console.log("No rows selected for deletion.");
+                    return;
+                }
+                data = data.filter(item => !selectedRows.includes(item.id));
+                selectedRows = [];
+                expandedRowId = null; // Collapse any expanded row after deletion
+                currentPage = 1; // Reset to first page
+                renderData();
+                console.log("Deleted rows.");
+            });
+
+            // Refresh Button
+            refreshButton.addEventListener('click', () => {
+                data = JSON.parse(JSON.stringify(initialData)); // Deep copy initial data
+                filterFunctionName = '';
+                filterBrand = '';
+                advancedFilterRules = [{ id: 1, column: '', operator: '', value: '', condition: 'AND' }];
+                nextFilterRuleId = 2;
+                currentPage = 1;
+                selectedRows = [];
+                expandedRowId = null;
+                sortColumn = null;
+                sortDirection = 'asc';
+                hideExportOptions();
+                hideNewSidebar();
+                hideSettingsSidebar(); // Close settings sidebar on refresh
+                renderData();
+                console.log("Data refreshed.");
+            });
+
+            // Column Sorting (Event Delegation on mainContentArea for robustness)
+            mainContentArea.addEventListener('click', (e) => {
+                const header = e.target.closest('th[data-sort-column]');
+                if (header) {
+                    handleSortClick({ currentTarget: header }); // Simulate event object
+                }
+            });
+
+            // Export Button and Options
+            exportButton.addEventListener('click', () => {
+                exportOptions.classList.toggle('hidden');
+                exportChevron.classList.toggle('rotate-180');
+            });
+
+            document.addEventListener('click', (e) => {
+                // Check if the click is outside the export button and options
+                if (!exportButton.contains(e.target) && !exportOptions.contains(e.target)) {
+                    hideExportOptions();
+                }
+            });
+
+            const hideExportOptions = () => {
+                exportOptions.classList.add('hidden');
+                exportChevron.classList.remove('rotate-180');
+            };
+
+            exportCsvButton.addEventListener('click', () => {
+                const csvContent = "data:text/csv;charset=utf-8,"
+                    + ["ID,Function Group Name,Brand,Is Active?"]
+                        .concat(getProcessedData().map(e => `${e.id},"${e.functionGroupName}","${e.brand}",${e.isActive ? 'Yes' : 'No'}`))
+                        .join("\n");
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "function_groups.csv");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                hideExportOptions();
+                console.log("Exported to CSV.");
+            });
+
+            exportExcelButton.addEventListener('click', () => {
+                const excelContent = "Simulated Excel data for Function Groups.";
+                const blob = new Blob([excelContent], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'function_groups.xlsx';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                hideExportOptions();
+                console.log("Exported to Excel (mock functionality).");
+            });
+
+            exportPdfButton.addEventListener('click', () => {
+                const pdfContent = "Simulated PDF data for Function Groups.";
+                const blob = new Blob([pdfContent], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'function_groups.pdf';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                hideExportOptions();
+                console.log("Exported to PDF (mock functionality).");
+            });
+
+            // Advanced Search Modal
+            advancedSearchButton.addEventListener('click', () => {
+                window.appState.showAdvancedSearchModal = true;
+                advancedSearchModal.classList.remove('hidden');
+                renderAdvancedFilterRules();
+            });
+
+            closeAdvancedSearchButton.addEventListener('click', () => {
+                window.appState.showAdvancedSearchModal = false;
+                advancedSearchModal.classList.add('hidden');
+            });
+
+            addFilterRuleButton.addEventListener('click', () => {
+                advancedFilterRules.push({ id: nextFilterRuleId++, column: '', operator: '', value: '', condition: 'AND' });
+                renderAdvancedFilterRules();
+            });
+
+            applyAdvancedFiltersButton.addEventListener('click', () => {
+                currentPage = 1;
+                window.appState.showAdvancedSearchModal = false;
+                advancedSearchModal.classList.add('hidden');
+                renderData();
+            });
+
+            clearAdvancedFiltersButton.addEventListener('click', () => {
+                advancedFilterRules = [{ id: 1, column: '', operator: '', value: '', condition: 'AND' }];
+                nextFilterRuleId = 2;
+                window.appState.showAdvancedSearchModal = false;
+                advancedSearchModal.classList.add('hidden');
+                renderData();
+            });
+
+            // Event delegation for changes within advanced filter rules
+            advancedFilterRulesContainer.addEventListener('change', (e) => {
+                const target = e.target;
+                const ruleElement = target.closest('.advanced-filter-rule');
+                if (!ruleElement) return;
+
+                const ruleId = parseInt(ruleElement.dataset.ruleId);
+                const ruleIndex = advancedFilterRules.findIndex(rule => rule.id === ruleId);
+                if (ruleIndex === -1) return;
+
+                if (target.classList.contains('rule-column-select')) {
+                    advancedFilterRules[ruleIndex].column = target.value;
+                    advancedFilterRules[ruleIndex].operator = ''; // Reset operator
+                    advancedFilterRules[ruleIndex].value = ''; // Reset value
+                } else if (target.classList.contains('rule-operator-select')) {
+                    advancedFilterRules[ruleIndex].operator = target.value;
+                    // Reset value if boolean operator is selected/deselected
+                    const columnType = availableColumns.find(col => col.value === advancedFilterRules[ruleIndex].column)?.type;
+                    if (columnType === 'boolean' && (target.value === 'isTrue' || target.value === 'isFalse')) {
+                        advancedFilterRules[ruleIndex].value = (target.value === 'isTrue');
+                    } else if (columnType === 'boolean' && !(target.value === 'isTrue' || target.value === 'isFalse')) {
+                        advancedFilterRules[ruleIndex].value = '';
+                    }
+                } else if (target.classList.contains('rule-value-input')) {
+                    const columnType = availableColumns.find(col => col.value === advancedFilterRules[ruleIndex].column)?.type;
+                    advancedFilterRules[ruleIndex].value = columnType === 'number' ? parseFloat(target.value) : target.value;
+                } else if (target.classList.contains('rule-value-select-boolean')) {
+                    advancedFilterRules[ruleIndex].value = target.value === 'true';
+                } else if (target.classList.contains('rule-condition-select')) {
+                    advancedFilterRules[ruleIndex].condition = target.value;
+                }
+                renderAdvancedFilterRules(); // Re-render to update dependent fields
+            });
+
+            advancedFilterRulesContainer.addEventListener('input', (e) => {
+                const target = e.target;
+                const ruleElement = target.closest('.advanced-filter-rule');
+                if (!ruleElement) return;
+
+                const ruleId = parseInt(ruleElement.dataset.ruleId);
+                const ruleIndex = advancedFilterRules.findIndex(rule => rule.id === ruleId);
+                if (ruleIndex === -1) return;
+
+                if (target.classList.contains('rule-value-input')) {
+                    const columnType = availableColumns.find(col => col.value === advancedFilterRules[ruleIndex].column)?.type;
+                    advancedFilterRules[ruleIndex].value = columnType === 'number' ? parseFloat(target.value) : target.value;
+                }
+            });
+
+            advancedFilterRulesContainer.addEventListener('click', (e) => {
+                if (e.target.closest('.remove-filter-rule-button')) {
+                    const button = e.target.closest('.remove-filter-rule-button');
+                    const ruleId = parseInt(button.dataset.ruleId);
+                    advancedFilterRules = advancedFilterRules.filter(rule => rule.id !== ruleId);
+                    renderAdvancedFilterRules();
+                }
+            });
+
+
+            const renderAdvancedFilterRules = () => {
+                advancedFilterRulesContainer.innerHTML = '';
+                advancedFilterRules.forEach((rule, index) => {
+                    const ruleDiv = document.createElement('div');
+                    ruleDiv.classList.add('grid', 'grid-cols-1', 'sm:grid-cols-5', 'gap-3', 'items-end', 'mb-4', 'p-3', 'border', 'border-gray-200', 'rounded-lg', 'bg-gray-50', 'advanced-filter-rule');
+                    ruleDiv.dataset.ruleId = rule.id;
+
+                    const columnInfo = availableColumns.find(col => col.value === rule.column);
+                    const currentColumnType = columnInfo ? columnInfo.type : null;
+                    const operators = getOperatorsForColumnType(currentColumnType);
+
+                    let valueInputHtml = '';
+                    if (currentColumnType === 'boolean') {
+                        valueInputHtml = `
+                            <select class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm p-2 rule-value-select-boolean" ${!rule.operator || (rule.operator !== 'isTrue' && rule.operator !== 'isFalse') ? 'disabled' : ''}>
+                                <option value="">- Select -</option>
+                                <option value="true" ${rule.value === true ? 'selected' : ''}>Yes</option>
+                                <option value="false" ${rule.value === false ? 'selected' : ''}>No</option>
+                            </select>
+                        `;
+                    } else {
+                        valueInputHtml = `
+                            <input type="${currentColumnType === 'number' ? 'number' : 'text'}" value="${rule.value}" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm p-2 rule-value-input" placeholder="Enter value" ${!rule.operator || rule.operator === 'isTrue' || rule.operator === 'isFalse' ? 'disabled' : ''}>
+                        `;
+                    }
+
+                    ruleDiv.innerHTML = `
+                        ${index > 0 ? `
+                        <div class="col-span-full sm:col-span-1">
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Condition</label>
+                            <select class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm p-2 rule-condition-select">
+                                <option value="AND" ${rule.condition === 'AND' ? 'selected' : ''}>AND</option>
+                                <option value="OR" ${rule.condition === 'OR' ? 'selected' : ''}>OR</option>
+                            </select>
+                        </div>
+                        ` : ''}
+                        <div class="${index === 0 ? 'col-span-full sm:col-span-2' : 'col-span-full sm:col-span-1'}">
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Select Column</label>
+                            <select class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm p-2 rule-column-select">
+                                <option value="">- Select -</option>
+                                ${availableColumns.map(col => `<option value="${col.value}" ${rule.column === col.value ? 'selected' : ''}>${col.label}</option>`).join('')}
                             </select>
                         </div>
 
-                    </div>
+                        <div class="col-span-full sm:col-span-1">
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Select Operator</label>
+                            <select class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm p-2 rule-operator-select" ${!rule.column ? 'disabled' : ''}>
+                                <option value="">- Select -</option>
+                                ${operators.map(op => `<option value="${op.value}" ${rule.operator === op.value ? 'selected' : ''}>${op.label}</option>`).join('')}
+                            </select>
+                        </div>
 
-                    <!-- Search Criteria -->
-                    <div class="search-criteria" id="searchCriteria">
-                        <div class="criteria-header">
-                            <h3>Search Criteria</h3>
-                            <button class="btn btn-sm btn-primary" id="addCriteriaBtn">
-                                <i class="fas fa-plus"></i> Add Criteria
+                        <div class="col-span-full sm:col-span-1">
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Value</label>
+                            ${valueInputHtml}
+                        </div>
+
+                        <div class="col-span-full sm:col-span-1 flex justify-end items-center">
+                            ${advancedFilterRules.length > 1 ? `
+                            <button type="button" class="p-2 rounded-md bg-red-500 text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 transition-all duration-200 remove-filter-rule-button" data-rule-id="${rule.id}" title="Remove Filter">
+                                ${icons.trash2}
+                            </button>
+                            ` : ''}
+                        </div>
+                    `;
+                    advancedFilterRulesContainer.appendChild(ruleDiv);
+                });
+            };
+
+            // New Group Sidebar functionality
+            newButton.addEventListener('click', () => {
+                window.appState.showNewSidebar = true; // Use window.appState
+                newGroupSidebar.classList.remove('hidden');
+                // Use setTimeout to allow the display:block to apply before transition
+                setTimeout(() => {
+                    sidebarContent.classList.remove('translate-x-full');
+                }, 10);
+                renderNewGroupOperations(); // Render initial state of operations
+            });
+
+            closeNewSidebarButton.addEventListener('click', hideNewSidebar);
+            cancelNewGroupButton.addEventListener('click', hideNewSidebar);
+
+            function hideNewSidebar() {
+                sidebarContent.classList.add('translate-x-full');
+                setTimeout(() => {
+                    newGroupSidebar.classList.add('hidden');
+                    // Reset form fields after closing
+                    newGroupNameInput.value = '';
+                    newBrandInput.value = '';
+                    newIsActiveInput.checked = true;
+                    newGroupOperations = [];
+                    renderNewGroupOperations(); // Clear operations display
+                }, 300); // Match transition duration
+            }
+
+            // Click outside sidebar to close
+            document.addEventListener('click', (event) => {
+                // Check if the click is outside the sidebar and not on the new button itself
+                if (window.appState.showNewSidebar && !sidebarContent.contains(event.target) && !newButton.contains(event.target)) {
+                    hideNewSidebar();
+                }
+            });
+
+            addOperationButton.addEventListener('click', () => {
+                newGroupOperations.push({ id: Date.now(), code: '', description: '', isActive: true });
+                renderNewGroupOperations();
+            });
+
+            newGroupOperationsContainer.addEventListener('click', (e) => {
+                if (e.target.closest('.remove-operation-button')) {
+                    const button = e.target.closest('.remove-operation-button');
+                    const opId = parseInt(button.dataset.opId);
+                    newGroupOperations = newGroupOperations.filter(op => op.id !== opId);
+                    renderNewGroupOperations();
+                }
+            });
+
+            newGroupOperationsContainer.addEventListener('input', (e) => {
+                const target = e.target;
+                const operationDiv = target.closest('.new-group-operation-item');
+                if (!operationDiv) return;
+
+                const opId = parseInt(operationDiv.dataset.opId);
+                const opIndex = newGroupOperations.findIndex(op => op.id === opId);
+                if (opIndex === -1) return;
+
+                if (target.classList.contains('op-code-input')) {
+                    newGroupOperations[opIndex].code = target.value;
+                } else if (target.classList.contains('op-description-input')) {
+                    newGroupOperations[opIndex].description = target.value;
+                } else if (target.classList.contains('op-is-active-checkbox')) {
+                    newGroupOperations[opIndex].isActive = target.checked;
+                }
+            });
+
+            const renderNewGroupOperations = () => {
+                newGroupOperationsContainer.innerHTML = '';
+                if (newGroupOperations.length === 0) {
+                    newGroupOperationsContainer.innerHTML = '<p class="text-gray-500 text-sm italic mb-4">No operations added yet.</p>';
+                    return;
+                }
+
+                newGroupOperations.forEach(op => {
+                    const opDiv = document.createElement('div');
+                    opDiv.classList.add('p-3', 'border', 'border-gray-200', 'rounded-lg', 'mb-4', 'bg-gray-50', 'new-group-operation-item');
+                    opDiv.dataset.opId = op.id;
+                    opDiv.innerHTML = `
+                        <div class="flex justify-end mb-2">
+                            <button type="button" class="remove-operation-button text-red-500 hover:text-red-700 focus:outline-none p-1 rounded-full hover:bg-red-100 transition-colors" data-op-id="${op.id}" title="Remove Operation">
+                                ${icons.trash2}
                             </button>
                         </div>
-                        <div class="criteria-list" id="criteriaList">
-                            <!-- Criteria items will be added dynamically -->
+                        <div class="mb-3">
+                            <label for="opCode-${op.id}" class="block text-xs font-medium text-gray-600 mb-1">Code</label>
+                            <input type="text" id="opCode-${op.id}" value="${op.code}" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm p-2 op-code-input" placeholder="e.g., OP-001">
                         </div>
-                    </div>
-
-                    <!-- Quick Filters -->
-                    <div class="quick-filters">
-                        <h3>Quick Filters</h3>
-                        <div class="filter-group">
-                            <label>Status:</label>
-                            <div class="radio-group">
-                                <label class="radio-label">
-                                    <input type="radio" name="statusFilter" value="all" checked>
-                                    <span class="radio-custom"></span>
-                                    All
-                                </label>
-                                <label class="radio-label">
-                                    <input type="radio" name="statusFilter" value="active">
-                                    <span class="radio-custom"></span>
-                                    Active Only
-                                </label>
-                                <label class="radio-label">
-                                    <input type="radio" name="statusFilter" value="inactive">
-                                    <span class="radio-custom"></span>
-                                    Inactive Only
-                                </label>
-                            </div>
+                        <div class="mb-3">
+                            <label for="opDesc-${op.id}" class="block text-xs font-medium text-gray-600 mb-1">Description</label>
+                            <input type="text" id="opDesc-${op.id}" value="${op.description}" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm p-2 op-description-input" placeholder="e.g., Daily Checkup">
                         </div>
-                        <div class="filter-group">
-                            <label>Has Brand:</label>
-                            <div class="radio-group">
-                                <label class="radio-label">
-                                    <input type="radio" name="brandFilter" value="all" checked>
-                                    <span class="radio-custom"></span>
-                                    All
-                                </label>
-                                <label class="radio-label">
-                                    <input type="radio" name="brandFilter" value="with">
-                                    <span class="radio-custom"></span>
-                                    With Brand
-                                </label>
-                                <label class="radio-label">
-                                    <input type="radio" name="brandFilter" value="without">
-                                    <span class="radio-custom"></span>
-                                    Without Brand
-                                </label>
-                            </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="opIsActive-${op.id}" ${op.isActive ? 'checked' : ''} class="rounded checkbox-color focus:ring-blue-500 h-4 w-4 op-is-active-checkbox">
+                            <label for="opIsActive-${op.id}" class="ml-2 block text-sm text-gray-900">
+                                Is Active?
+                            </label>
                         </div>
-                    </div>
+                    `;
+                    newGroupOperationsContainer.appendChild(opDiv);
+                });
+            };
 
-                    <!-- Search History -->
-                    <div class="search-history">
-                        <h3>Recent Searches</h3>
-                        <div class="history-list" id="searchHistoryList">
-                            <p class="no-history">No recent searches</p>
-                        </div>
-                    </div>
+            newGroupForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const newGroupName = newGroupNameInput.value.trim();
+                const newBrand = newBrandInput.value.trim();
+                const newIsActive = newIsActiveInput.checked;
 
-                    <!-- Results Preview -->
-                    <div class="results-preview" id="resultsPreview" style="display: none;">
-                        <div class="results-header">
-                            <span class="results-count" id="resultsCount">0 results found</span>
-                            <div class="dropdown" id="exportFilteredDropdown">
-                                <button class="btn btn-sm btn-secondary dropdown-toggle" id="exportFilteredBtn">
-                                    <i class="fas fa-download"></i> Export Results
-                                    <i class="fas fa-chevron-down dropdown-arrow"></i>
-                                </button>
-                                <div class="dropdown-menu" id="exportFilteredMenu">
-                                    <button class="dropdown-item" id="exportFilteredExcelBtn">
-                                        <i class="fas fa-file-excel"></i> Export as Excel
-                                    </button>
-                                    <button class="dropdown-item" id="exportFilteredPdfBtn">
-                                        <i class="fas fa-file-pdf"></i> Export as PDF
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" id="resetAdvancedSearch">
-                        <i class="fas fa-undo"></i> Reset
-                    </button>
-                    <button class="btn btn-secondary" id="cancelAdvancedSearch">Cancel</button>
-                    <button class="btn btn-primary" id="applyAdvancedSearch">
-                        <i class="fas fa-search"></i> Search
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+                if (!newGroupName) {
+                    // Using a simple alert for demonstration, replace with custom modal if needed
+                    alert("Function Group Name cannot be empty.");
+                    return;
+                }
 
+                const maxId = data.length > 0 ? Math.max(...data.map(item => item.id)) : 0;
+                const newId = maxId + 1;
 
+                const filteredOperations = newGroupOperations.filter(op => op.code.trim() || op.description.trim());
 
-    <!-- Toast Notifications -->
-    <div class="toast-container" id="toastContainer"></div>
+                const newGroup = {
+                    id: newId,
+                    functionGroupName: newGroupName,
+                    brand: newBrand,
+                    isActive: newIsActive,
+                    operations: filteredOperations,
+                };
 
-    <script src="script.js"></script>
+                data.push(newGroup);
+                hideNewSidebar();
+                currentPage = 1; // Reset to first page to see new item
+                renderData();
+                console.log("New Function Group Added:", newGroup);
+            });
+
+            // Settings Sidebar functionality
+            settingsButton.addEventListener('click', () => {
+                window.appState.showSettingsSidebar = true;
+                settingsSidebar.classList.remove('hidden');
+                setTimeout(() => {
+                    settingsSidebarContent.classList.remove('translate-x-full');
+                }, 10);
+                // Set initial radio button states
+                document.querySelector(`input[name="theme"][value="${window.appState.currentTheme}"]`).checked = true;
+                document.querySelector(`input[name="font"][value="${window.appState.currentFont}"]`).checked = true;
+                document.querySelector(`input[name="viewMode"][value="${window.appState.currentViewMode}"]`).checked = true; // Set initial view mode radio
+            });
+
+            closeSettingsSidebarButton.addEventListener('click', hideSettingsSidebar);
+
+            function hideSettingsSidebar() {
+                settingsSidebarContent.classList.add('translate-x-full');
+                setTimeout(() => {
+                    settingsSidebar.classList.add('hidden');
+                }, 300);
+            }
+
+            document.addEventListener('click', (event) => {
+                if (window.appState.showSettingsSidebar && !settingsSidebarContent.contains(event.target) && !settingsButton.contains(event.target)) {
+                    hideSettingsSidebar();
+                }
+            });
+
+            applySettingsButton.addEventListener('click', () => {
+                const selectedTheme = document.querySelector('input[name="theme"]:checked').value;
+                const selectedFont = document.querySelector('input[name="font"]:checked').value;
+                const selectedViewMode = document.querySelector('input[name="viewMode"]:checked').value; // Get selected view mode
+
+                applyTheme(selectedTheme);
+                applyFont(selectedFont);
+                applyViewMode(selectedViewMode); // Apply view mode
+
+                hideSettingsSidebar();
+            });
+
+            resetSettingsButton.addEventListener('click', () => {
+                applyTheme('white'); // Reset to default theme
+                applyFont('inter'); // Reset to default font
+                applyViewMode('list'); // Reset to default view mode
+                document.querySelector('input[name="theme"][value="white"]').checked = true;
+                document.querySelector('input[name="font"][value="inter"]').checked = true;
+                document.querySelector('input[name="viewMode"][value="list"]').checked = true; // Reset view mode radio
+                hideSettingsSidebar();
+            });
+
+            // Initial application of theme and font on load
+            applyTheme(window.appState.currentTheme);
+            applyFont(window.appState.currentFont);
+            applyViewMode(window.appState.currentViewMode); // Apply initial view mode on load
+        });
+    </script>
 </body>
 </html>
