@@ -1,0 +1,157 @@
+/* Print-specific styles - Advanced features beyond what's in modern-responsive.css */
+
+@media print {
+    /* Hide additional elements not covered in modern-responsive.css */
+    .help-toggle,
+    .chatbot-toggle,
+    .toc-toggle,
+    .bookmark-button,
+    .add-note-button,
+    .note-actions,
+    .print-button,
+    .page-navigation {
+        display: none !important;
+    }
+
+    /* Advanced page setup */
+    body {
+        font-size: 12pt;
+        line-height: 1.5;
+    }
+
+    /* Page breaks control */
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid;
+        page-break-inside: avoid;
+    }
+
+    section {
+        page-break-inside: avoid;
+    }
+
+    img, figure, table {
+        page-break-inside: avoid;
+        max-width: 100% !important;
+    }
+
+    /* Tables styling */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 15pt 0;
+    }
+
+    table, th, td {
+        border: 1pt solid #ccc;
+    }
+
+    th, td {
+        padding: 5pt;
+        text-align: left;
+    }
+
+    /* Table of contents */
+    .toc-container {
+        page-break-after: always;
+        border: 1pt solid #ccc;
+        padding: 10pt;
+        margin-bottom: 20pt;
+    }
+
+    .toc-content {
+        display: block !important;
+        max-height: none;
+    }
+
+    /* Breadcrumbs */
+    .breadcrumbs {
+        margin-bottom: 15pt;
+        font-size: 10pt;
+        color: #666;
+    }
+
+    /* Notes */
+    .notes-container {
+        border: 1pt solid #ccc;
+        padding: 10pt;
+        margin-top: 20pt;
+    }
+
+    .note-item {
+        border: 1pt solid #eee;
+        padding: 5pt;
+        margin-bottom: 10pt;
+    }
+
+    /* Version info */
+    .version-info {
+        font-size: 9pt;
+        color: #666;
+        margin-top: 10pt;
+    }
+
+    /* Add page numbers */
+    @page {
+        margin: 2cm;
+    }
+
+    @page:first {
+        margin-top: 3cm;
+    }
+
+    /* Add header with title */
+    @page {
+        @top-center {
+            content: "ERP System User Manual";
+            font-size: 10pt;
+            color: #666;
+        }
+    }
+
+    /* Add footer with page number */
+    @page {
+        @bottom-center {
+            content: "Page " counter(page);
+            font-size: 10pt;
+            color: #666;
+        }
+    }
+
+    /* Add date in footer */
+    @page {
+        @bottom-right {
+            content: "Printed: " attr(data-print-date);
+            font-size: 10pt;
+            color: #666;
+        }
+    }
+
+    /* Print title page */
+    .print-title-page {
+        display: block !important;
+        page-break-after: always;
+        text-align: center;
+        padding-top: 33%;
+    }
+
+    .print-title-page h1 {
+        font-size: 28pt;
+        margin-bottom: 20pt;
+    }
+
+    .print-title-page .version {
+        font-size: 14pt;
+        margin-bottom: 10pt;
+        color: #666;
+    }
+
+    .print-title-page .date {
+        font-size: 12pt;
+        color: #666;
+    }
+
+    /* Hide print title page in normal view */
+    .print-title-page {
+        display: none;
+    }
+}

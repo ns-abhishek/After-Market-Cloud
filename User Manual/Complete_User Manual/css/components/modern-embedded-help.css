@@ -1,0 +1,327 @@
+/* Modern Embedded Help CSS for ERP User Manual */
+
+/* Tooltips */
+.tooltip-container {
+    position: relative;
+    display: inline-block;
+    cursor: help;
+}
+
+.tooltip-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    background-color: var(--primary-color);
+    color: var(--light-text);
+    border-radius: 50%;
+    font-size: 0.7rem;
+    font-weight: bold;
+    margin-left: 4px;
+    cursor: help;
+}
+
+.tooltip-content {
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--card-bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 0.75rem 1rem;
+    width: 250px;
+    box-shadow: var(--box-shadow);
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    text-align: left;
+}
+
+.tooltip-content::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -8px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: var(--border-color) transparent transparent transparent;
+}
+
+.tooltip-container:hover .tooltip-content {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Inline Help */
+.inline-help {
+    background-color: var(--background-color);
+    border-left: 3px solid var(--primary-color);
+    padding: 1rem;
+    margin: 1.5rem 0;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+}
+
+.inline-help p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* Contextual Help Panel */
+.contextual-help-panel {
+    position: fixed;
+    top: 80px;
+    right: -350px;
+    width: 320px;
+    background-color: var(--card-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
+    box-shadow: var(--box-shadow-lg);
+    z-index: 1000;
+    transition: right 0.3s ease;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+}
+
+.contextual-help-panel.active {
+    right: 0;
+}
+
+.contextual-help-header {
+    background-color: var(--primary-color);
+    color: var(--light-text);
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.contextual-help-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--light-text);
+}
+
+.contextual-help-close {
+    background: transparent;
+    color: var(--light-text);
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.contextual-help-content {
+    padding: 1rem;
+}
+
+.contextual-help-toggle {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    background-color: var(--primary-color);
+    color: var(--light-text);
+    border: none;
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
+    padding: 0.75rem;
+    cursor: pointer;
+    z-index: 999;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-weight: 500;
+    box-shadow: var(--box-shadow);
+}
+
+/* Guided Tours */
+.guided-tour-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: none;
+}
+
+.guided-tour-overlay.active {
+    display: block;
+}
+
+.guided-tour-step {
+    position: absolute;
+    background-color: var(--card-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1.25rem;
+    box-shadow: var(--box-shadow-lg);
+    max-width: 300px;
+    z-index: 1001;
+}
+
+.guided-tour-step h4 {
+    margin-top: 0;
+    font-size: 1.1rem;
+}
+
+.guided-tour-step p {
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.guided-tour-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.guided-tour-progress {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.guided-tour-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--border-color);
+    margin: 0 4px;
+}
+
+.guided-tour-dot.active {
+    background-color: var(--primary-color);
+}
+
+/* Feedback Widget */
+.feedback-widget {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+#feedback-toggle {
+    background: var(--primary-color);
+    color: var(--light-text);
+    border: none;
+    border-radius: 30px;
+    padding: 0.75rem 1.25rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+#feedback-toggle:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.feedback-form {
+    position: absolute;
+    bottom: 60px;
+    right: 0;
+    width: 300px;
+    background-color: var(--card-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow-lg);
+    padding: 1.25rem;
+    transition: all 0.3s ease;
+}
+
+.feedback-form.hidden {
+    display: none;
+}
+
+.feedback-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.feedback-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.feedback-close {
+    background: transparent;
+    color: var(--text-secondary);
+    border: none;
+    font-size: 1rem;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.feedback-close:hover {
+    color: var(--primary-color);
+    background: transparent;
+    transform: none;
+}
+
+.rating {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem 0;
+}
+
+.rating-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    padding: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.rating-btn:hover {
+    color: var(--primary-color);
+    transform: scale(1.2);
+    background: transparent;
+}
+
+.rating-btn.active {
+    color: var(--primary-color);
+}
+
+.feedback-form textarea {
+    width: 100%;
+    height: 100px;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    resize: none;
+    margin-bottom: 1rem;
+}
+
+.submit-feedback {
+    width: 100%;
+    background-color: var(--primary-color);
+    color: var(--light-text);
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 0.75rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.submit-feedback:hover {
+    background-color: var(--light-text);
+    color: var(--primary-color);
+    box-shadow: 0 0 0 1px var(--primary-color);
+}

@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glossary - ERP System User Manual</title>
+    <!-- Modern UI Framework -->
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="css/core/modern-ui.css">
+    <link rel="stylesheet" href="css/core/modern-components.css">
+    <link rel="stylesheet" href="css/core/modern-layout.css">
+    <link rel="stylesheet" href="css/core/modern-responsive.css">
+
+    <!-- Layout CSS -->
+    <link rel="stylesheet" href="css/layout/footer.css">
+    <link rel="stylesheet" href="css/layout/collapsible-sidebar.css">
+    <link rel="stylesheet" href="css/layout/header-modifications.css">
+    <link rel="stylesheet" href="css/layout/sticky-header-nav.css">
+    <link rel="stylesheet" href="css/layout/centered-layout.css">
+
+    <!-- Components CSS -->
+    <link rel="stylesheet" href="css/components/modern-embedded-help.css">
+    <link rel="stylesheet" href="css/components/evenly-distributed-nav.css">
+    <link rel="stylesheet" href="css/components/enhanced-dropdown.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Print stylesheet (loaded only when printing) -->
+    <link rel="stylesheet" href="css/utilities/print.css" media="print">
+    <style>
+        /* Glossary specific styles */
+        .glossary-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+
+        .glossary-nav a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .glossary-nav a:hover {
+            background-color: var(--background-color);
+            border-color: var(--primary-color);
+        }
+
+        .glossary-nav a.active {
+            background-color: var(--primary-color);
+            color: var(--light-text);
+            border-color: var(--primary-color);
+        }
+
+        .glossary-section {
+            margin-bottom: 2rem;
+        }
+
+        .glossary-section h3 {
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .glossary-term {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .glossary-term:last-child {
+            border-bottom: none;
+        }
+
+        .glossary-term h4 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .glossary-term p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .glossary-search {
+            margin-bottom: 1.5rem;
+        }
+
+        .glossary-search input {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 3rem;
+            height: 3rem;
+            background-color: var(--primary-color);
+            color: var(--light-text);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="company-name">HCLSoftware</div>
+        <div class="logo-container">
+            <h1>ERP System <span class="text-gradient">User Manual</span></h1>
+        </div>
+        <div class="header-actions">
+            <div class="header-getting-started">
+                <a href="getting-started.html" class="header-getting-started-link">
+                    <i class="fas fa-rocket"></i> <span>Getting Started</span>
+                </a>
+            </div>
+            <div class="header-separator"></div>
+            <div class="search-container">
+                <div class="search-input-wrapper">
+                    <input type="text" id="search-input" placeholder="Search the manual..." aria-label="Search the manual">
+                    <button id="search-button" aria-label="Search"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="search-suggestions"></div>
+                <div class="search-filters">
+                    <span class="search-filter active" data-filter="all">All</span>
+                    <span class="search-filter" data-filter="docs">Documentation</span>
+                    <span class="search-filter" data-filter="videos">Videos</span>
+                    <span class="search-filter" data-filter="faq">FAQ</span>
+                </div>
+            </div>
+            <button id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Toggle dark/light theme">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button class="settings-toggle" aria-label="Settings">
+                <i class="fas fa-ellipsis-v"></i>
+            </button>
+            <div class="settings-menu">
+                <div class="settings-header">
+                    <h3>Settings</h3>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-section">
+                        <h4>Text Size</h4>
+                        <div class="accessibility-group">
+                            <span class="accessibility-label">Adjust font size</span>
+                            <button id="decrease-font" class="accessibility-btn" aria-label="Decrease font size"><i class="fas fa-minus"></i></button>
+                            <button id="increase-font" class="accessibility-btn" aria-label="Increase font size"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <h4>Font Family</h4>
+                        <div class="font-family-selector">
+                            <div class="font-option" data-font="sans-serif">
+                                <div class="font-preview" style="font-family: 'Inter', sans-serif;">Aa</div>
+                                <div class="font-info">
+                                    <span class="font-name">Sans-serif</span>
+                                    <span class="font-description">Clean, modern look (Inter)</span>
+                                </div>
+                            </div>
+                            <div class="font-option" data-font="serif">
+                                <div class="font-preview" style="font-family: 'Georgia', serif;">Aa</div>
+                                <div class="font-info">
+                                    <span class="font-name">Serif</span>
+                                    <span class="font-description">Traditional, readable (Georgia)</span>
+                                </div>
+                            </div>
+                            <div class="font-option" data-font="monospace">
+                                <div class="font-preview" style="font-family: 'Consolas', monospace;">Aa</div>
+                                <div class="font-info">
+                                    <span class="font-name">Monospace</span>
+                                    <span class="font-description">Fixed-width (Consolas)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <h4>Display</h4>
+                        <div class="contrast-toggle">
+                            <label for="toggle-contrast">High contrast</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggle-contrast">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <h4>Language</h4>
+                        <div class="language-selector-enhanced">
+                            <div class="language-current">
+                                <img src="assets/flags/en.png" alt="English flag">
+                                <span class="language-name">English</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="language-dropdown">
+                                <div class="language-option" data-lang="en">
+                                    <img src="assets/flags/en.png" alt="English flag">
+                                    <span class="language-name">English</span>
+                                </div>
+                                <div class="language-option" data-lang="es">
+                                    <img src="assets/flags/es.png" alt="Spanish flag">
+                                    <span class="language-name">Español</span>
+                                </div>
+                                <div class="language-option" data-lang="fr">
+                                    <img src="assets/flags/fr.png" alt="French flag">
+                                    <span class="language-name">Français</span>
+                                </div>
+                                <div class="language-option" data-lang="de">
+                                    <img src="assets/flags/de.png" alt="German flag">
+                                    <span class="language-name">Deutsch</span>
+                                </div>
+                                <div class="language-option" data-lang="zh">
+                                    <img src="assets/flags/zh.png" alt="Chinese flag">
+                                    <span class="language-name">中文</span>
+                                </div>
+                                <div class="language-option" data-lang="ja">
+                                    <img src="assets/flags/ja.png" alt="Japanese flag">
+                                    <span class="language-name">日本語</span>
+                                </div>
+                                <div class="language-option" data-lang="ar">
+                                    <img src="assets/flags/ar.png" alt="Arabic flag">
+                                    <span class="language-name">العربية</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle">Modules <i class="fas fa-chevron-down"></i></a>
+                    <div class="enhanced-dropdown">
+                        <div class="dropdown-header">ERP System Modules</div>
+                        <div class="enhanced-dropdown-item">
+                            <a href="modules/finance.html" class="enhanced-dropdown-link">
+                                <div class="module-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="module-content">
+                                    <div class="module-title">Finance</div>
+                                    <p class="module-description">Manage accounting, financial reporting, and budgeting</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="enhanced-dropdown-item">
+                            <a href="modules/hr.html" class="enhanced-dropdown-link">
+                                <div class="module-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="module-content">
+                                    <div class="module-title">Human Resources</div>
+                                    <p class="module-description">Handle employee records, payroll, and recruitment</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="enhanced-dropdown-item">
+                            <a href="modules/inventory.html" class="enhanced-dropdown-link">
+                                <div class="module-icon">
+                                    <i class="fas fa-boxes"></i>
+                                </div>
+                                <div class="module-content">
+                                    <div class="module-title">Inventory</div>
+                                    <p class="module-description">Track stock levels, orders, and warehouse management</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="enhanced-dropdown-item">
+                            <a href="modules/crm.html" class="enhanced-dropdown-link">
+                                <div class="module-icon">
+                                    <i class="fas fa-handshake"></i>
+                                </div>
+                                <div class="module-content">
+                                    <div class="module-title">CRM</div>
+                                    <p class="module-description">Manage customer relationships, leads, and opportunities</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="enhanced-dropdown-item">
+                            <a href="modules/manufacturing.html" class="enhanced-dropdown-link">
+                                <div class="module-icon">
+                                    <i class="fas fa-industry"></i>
+                                </div>
+                                <div class="module-content">
+                                    <div class="module-title">Manufacturing</div>
+                                    <p class="module-description">Control production processes and resource planning</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item"><a href="faq.html" class="nav-link">FAQ</a></li>
+                <li class="nav-item"><a href="glossary.html" class="nav-link active">Glossary</a></li>
+                <li class="nav-item"><a href="feedback.html" class="nav-link">Feedback</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container home-container">
+        <aside class="sidebar">
+            <!-- Print title page (only visible when printing) -->
+            <div class="print-title-page">
+                <h1>Glossary - ERP System User Manual</h1>
+                <div class="version">Version 4.2.0</div>
+                <div class="date">Printed: <script>document.write(new Date().toLocaleDateString())</script></div>
+            </div>
+
+            <!-- Table of Contents -->
+            <div class="toc-container">
+                <div class="toc-header">
+                    <h3>Contents</h3>
+                    <button class="toc-toggle" aria-expanded="true" aria-controls="toc-content">
+                        <i class="fas fa-chevron-up"></i>
+                    </button>
+                </div>
+                <div class="toc-content" id="toc-content">
+                    <ul class="toc-list">
+                        <li class="toc-item">
+                            <a href="#a" class="toc-link">A</a>
+                        </li>
+                        <li class="toc-item">
+                            <a href="#b" class="toc-link">B</a>
+                        </li>
+                        <li class="toc-item">
+                            <a href="#c" class="toc-link">C</a>
+                        </li>
+                        <li class="toc-item">
+                            <a href="#d" class="toc-link">D</a>
+                        </li>
+                        <li class="toc-item">
+                            <a href="#e" class="toc-link">E</a>
+                        </li>
+                        <li class="toc-item">
+                            <a href="#f" class="toc-link">F</a>
+                        </li>
+                        <!-- More letters would be added here -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Related Topics -->
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Related Topics</h3>
+                <ul class="sidebar-list">
+                    <li class="sidebar-item"><a href="faq.html" class="sidebar-link"><i class="fas fa-question-circle"></i> FAQ</a></li>
+                    <li class="sidebar-item"><a href="video-tutorials.html" class="sidebar-link"><i class="fas fa-play-circle"></i> Video Tutorials</a></li>
+                    <li class="sidebar-item"><a href="contact-support.html" class="sidebar-link"><i class="fas fa-headset"></i> Contact Support</a></li>
+                </ul>
+            </div>
+
+            <!-- Recently Viewed -->
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Recently Viewed</h3>
+                <ul id="recently-viewed" class="sidebar-list">
+                    <!-- Dynamically populated by JavaScript -->
+                </ul>
+            </div>
+        </aside>
+
+        <main>
+            <!-- Breadcrumbs -->
+            <div class="breadcrumbs">
+                <div class="breadcrumb-path">
+                    <div class="breadcrumb-item">
+                        <a href="index.html" class="breadcrumb-link">Home</a>
+                    </div>
+                    <div class="breadcrumb-item">
+                        <span class="breadcrumb-current">Glossary</span>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="page-actions">
+                    <span class="version-info">
+                        <i class="fas fa-code-branch"></i> Version 4.2.0
+                    </span>
+                    <button class="action-button bookmark-button" aria-label="Add bookmark">
+                        <i class="far fa-bookmark"></i>
+                    </button>
+                    <a href="#" class="action-button print-button">
+                        <i class="fas fa-print"></i> Print
+                    </a>
+                </div>
+            </div>
+
+            <section id="glossary-intro">
+                <h2 class="section-title">Glossary of Terms</h2>
+                <p>This glossary provides definitions for common terms and acronyms used throughout the ERP system and documentation.</p>
+
+                <div class="glossary-search">
+                    <input type="text" id="glossary-search" placeholder="Search glossary..." aria-label="Search glossary">
+                </div>
+
+                <div class="glossary-nav" id="glossary-nav">
+                    <a href="#a" class="active">A</a>
+                    <a href="#b">B</a>
+                    <a href="#c">C</a>
+                    <a href="#d">D</a>
+                    <a href="#e">E</a>
+                    <a href="#f">F</a>
+                    <a href="#g">G</a>
+                    <a href="#h">H</a>
+                    <a href="#i">I</a>
+                    <a href="#j">J</a>
+                    <a href="#k">K</a>
+                    <a href="#l">L</a>
+                    <a href="#m">M</a>
+                    <a href="#n">N</a>
+                    <a href="#o">O</a>
+                    <a href="#p">P</a>
+                    <a href="#q">Q</a>
+                    <a href="#r">R</a>
+                    <a href="#s">S</a>
+                    <a href="#t">T</a>
+                    <a href="#u">U</a>
+                    <a href="#v">V</a>
+                    <a href="#w">W</a>
+                    <a href="#x">X</a>
+                    <a href="#y">Y</a>
+                    <a href="#z">Z</a>
+                </div>
+            </section>
+
+            <!-- Sample glossary sections -->
+            <section id="a" class="glossary-section">
+                <h3>A</h3>
+
+                <div class="glossary-term">
+                    <h4>Accounts Payable (AP)</h4>
+                    <p>The amount of money a company owes to its creditors for goods and services purchased on credit. In the ERP system, Accounts Payable is a module that manages all vendor invoices, payments, and related transactions.</p>
+                </div>
+
+                <div class="glossary-term">
+                    <h4>Accounts Receivable (AR)</h4>
+                    <p>The amount of money owed to a company by its customers for goods and services delivered on credit. In the ERP system, Accounts Receivable is a module that manages all customer invoices, payments, and related transactions.</p>
+                </div>
+
+                <div class="glossary-term">
+                    <h4>Accrual Accounting</h4>
+                    <p>An accounting method where revenue and expenses are recorded when they are earned or incurred, regardless of when the money is actually received or paid.</p>
+                </div>
+
+                <div class="glossary-term">
+                    <h4>API (Application Programming Interface)</h4>
+                    <p>A set of rules and protocols that allows different software applications to communicate with each other. The ERP system provides APIs that enable integration with other business systems.</p>
+                </div>
+            </section>
+
+            <section id="b" class="glossary-section">
+                <h3>B</h3>
+
+                <div class="glossary-term">
+                    <h4>Balance Sheet</h4>
+                    <p>A financial statement that reports a company's assets, liabilities, and shareholders' equity at a specific point in time, providing a snapshot of the company's financial position.</p>
+                </div>
+
+                <div class="glossary-term">
+                    <h4>Batch Processing</h4>
+                    <p>A method of processing transactions where multiple transactions are collected and processed together as a single unit or batch, rather than processing each transaction individually in real-time.</p>
+                </div>
+
+                <div class="glossary-term">
+                    <h4>Bill of Materials (BOM)</h4>
+                    <p>A comprehensive list of raw materials, components, and assemblies required to construct, manufacture, or repair a product or service. The BOM includes quantities of each material needed and instructions for procurement and use.</p>
+                </div>
+            </section>
+
+            <!-- More glossary sections would be added here -->
+
+            <a href="#" class="back-to-top" id="back-to-top" aria-label="Back to top">
+                <i class="fas fa-arrow-up"></i>
+            </a>
+        </main>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact Support</h3>
+                <p>Need additional help? Our support team is available 24/7.</p>
+                <div class="footer-buttons">
+                    <a href="mailto:support@erpsystem.com" class="footer-btn">
+                        <i class="fas fa-envelope"></i>
+                        Email Support
+                    </a>
+                    <a href="tel:+18001234567" class="footer-btn">
+                        <i class="fas fa-phone-alt"></i>
+                        Call Support
+                    </a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="video-tutorials.html"><i class="fas fa-play-circle"></i> Video Tutorials</a></li>
+                    <li><a href="webinars.html"><i class="fas fa-laptop"></i> Webinars</a></li>
+                    <li><a href="downloads.html"><i class="fas fa-download"></i> Downloads</a></li>
+                    <li><a href="community.html"><i class="fas fa-users"></i> Community Forum</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul class="footer-links">
+                    <li><a href="terms.html"><i class="fas fa-file-contract"></i> Terms of Service</a></li>
+                    <li><a href="privacy.html"><i class="fas fa-shield-alt"></i> Privacy Policy</a></li>
+                    <li><a href="accessibility-statement.html"><i class="fas fa-universal-access"></i> Accessibility Statement</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 ERP System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div id="feedback-widget" class="feedback-widget">
+        <button id="feedback-toggle" aria-label="Give feedback">
+            <i class="fas fa-comment-alt"></i> Feedback
+        </button>
+        <div id="feedback-form" class="feedback-form hidden">
+            <div class="feedback-header">
+                <h3>Was this page helpful?</h3>
+                <button class="feedback-close" aria-label="Close feedback form">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="rating">
+                <button class="rating-btn" data-rating="1"><i class="far fa-frown"></i></button>
+                <button class="rating-btn" data-rating="2"><i class="far fa-meh"></i></button>
+                <button class="rating-btn" data-rating="3"><i class="far fa-smile"></i></button>
+            </div>
+            <textarea placeholder="Tell us how we can improve this page..."></textarea>
+            <button class="submit-feedback">
+                <i class="fas fa-paper-plane"></i> Submit Feedback
+            </button>
+        </div>
+    </div>
+
+    <!-- Modern UI JavaScript -->
+    <!-- JavaScript -->
+    <!-- Core JS -->
+    <script src="js/core/modern-ui.js"></script>
+
+    <!-- Layout JS -->
+    <script src="js/layout/collapsible-sidebar.js"></script>
+    <script src="js/layout/sticky-header-nav.js"></script>
+
+    <!-- Components JS -->
+    <script src="js/components/evenly-distributed-nav.js"></script>
+    <script src="js/components/enhanced-dropdown.js"></script>
+    <script>
+        // Glossary specific JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            // Glossary navigation
+            const glossaryNav = document.querySelectorAll('.glossary-nav a');
+
+            glossaryNav.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Remove active class from all links
+                    glossaryNav.forEach(l => l.classList.remove('active'));
+
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                });
+            });
+
+            // Glossary search functionality
+            const glossarySearch = document.getElementById('glossary-search');
+            const glossaryTerms = document.querySelectorAll('.glossary-term');
+            const glossarySections = document.querySelectorAll('.glossary-section');
+
+            if (glossarySearch) {
+                glossarySearch.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase();
+
+                    if (searchTerm === '') {
+                        // Show all terms and sections
+                        glossaryTerms.forEach(term => term.style.display = 'block');
+                        glossarySections.forEach(section => section.style.display = 'block');
+                        return;
+                    }
+
+                    // Hide all sections initially
+                    glossarySections.forEach(section => section.style.display = 'none');
+
+                    // Filter terms based on search
+                    let foundTerms = false;
+
+                    glossaryTerms.forEach(term => {
+                        const title = term.querySelector('h4').textContent.toLowerCase();
+                        const description = term.querySelector('p').textContent.toLowerCase();
+
+                        if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                            term.style.display = 'block';
+                            term.closest('.glossary-section').style.display = 'block';
+                            foundTerms = true;
+                        } else {
+                            term.style.display = 'none';
+                        }
+                    });
+
+                    // Show message if no terms found
+                    if (!foundTerms) {
+                        // Could add a "no results" message here
+                    }
+                });
+            }
+
+            // Back to top button
+            const backToTop = document.getElementById('back-to-top');
+
+            if (backToTop) {
+                window.addEventListener('scroll', function() {
+                    if (window.pageYOffset > 300) {
+                        backToTop.classList.add('visible');
+                    } else {
+                        backToTop.classList.remove('visible');
+                    }
+                });
+
+                backToTop.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

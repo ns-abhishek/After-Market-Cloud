@@ -1,0 +1,109 @@
+/* Sticky Header and Navigation CSS for ERP User Manual */
+
+/* Create a wrapper for both header and navigation */
+.sticky-header-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: var(--background-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Adjust header to be part of the fixed wrapper */
+header {
+    position: relative;
+    top: 0;
+    z-index: 1001;
+    width: 100%;
+    box-shadow: none;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Adjust main navigation to be part of the fixed wrapper */
+.main-nav {
+    position: relative;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    box-shadow: none;
+}
+
+/* Add padding to the body to prevent content from being hidden under the fixed header and nav */
+body {
+    padding-top: 108px; /* Combined height of header (60px) and nav (48px) */
+}
+
+/* Adjust dropdown positioning */
+.dropdown-menu,
+.enhanced-dropdown {
+    position: absolute;
+    top: 100%;
+}
+
+/* Ensure dropdowns appear above other content */
+.nav-item.dropdown:hover .enhanced-dropdown,
+.dropdown:hover .dropdown-menu {
+    z-index: 1002;
+}
+
+/* Adjust settings menu positioning */
+.settings-menu {
+    position: absolute;
+    top: 100%;
+    z-index: 1002;
+}
+
+/* Adjust search filters positioning */
+.search-filters {
+    position: absolute;
+    top: 100%;
+    z-index: 1002;
+}
+
+/* Adjust sidebar positioning */
+.sidebar {
+    top: 108px; /* Combined height of header and nav */
+    height: calc(100vh - 108px);
+    max-height: calc(100vh - 108px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    body {
+        padding-top: 100px; /* Slightly reduced for mobile */
+    }
+    
+    .sidebar {
+        top: 100px;
+        height: calc(100vh - 100px);
+        max-height: calc(100vh - 100px);
+    }
+}
+
+/* Transition for smooth scrolling experience */
+.sticky-header-wrapper {
+    transition: transform 0.3s ease;
+}
+
+/* Optional: Hide header on scroll down, show on scroll up */
+.sticky-header-wrapper.hide-on-scroll {
+    transform: translateY(-60px); /* Hide only the header, keep nav visible */
+}
+
+/* Optional: Hide both on scroll down for more screen space */
+.sticky-header-wrapper.hide-both-on-scroll {
+    transform: translateY(-108px); /* Hide both header and nav */
+}
+
+/* Print styles - don't show fixed elements when printing */
+@media print {
+    .sticky-header-wrapper {
+        position: relative;
+    }
+    
+    body {
+        padding-top: 0;
+    }
+}

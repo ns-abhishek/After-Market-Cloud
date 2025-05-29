@@ -1,0 +1,275 @@
+/* 
+ * Admin Search and Filter Components
+ * Modern, responsive design for search bars and filter controls
+ * Works in both light and dark themes
+ */
+
+:root {
+    --filter-panel-bg: var(--card-bg);
+    --filter-panel-border: var(--border-color);
+    --filter-tag-bg: rgba(0, 0, 0, 0.05);
+    --filter-tag-bg-dark: rgba(255, 255, 255, 0.1);
+    --filter-tag-text: var(--body-text);
+    --filter-active-color: var(--primary-color);
+    --filter-hover-bg: var(--light-gray);
+    --filter-dropdown-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Search and Filter Container */
+.admin-search-filter-container {
+    background-color: var(--filter-panel-bg);
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--card-shadow);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    transition: var(--theme-transition);
+}
+
+/* Search Bar Section */
+.admin-search-section {
+    padding: 1.25rem;
+    border-bottom: 1px solid var(--filter-panel-border);
+}
+
+.admin-search-bar {
+    position: relative;
+    width: 100%;
+}
+
+.admin-search-bar i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent-color);
+    font-size: 1.1rem;
+    transition: var(--theme-transition);
+}
+
+.admin-search-bar input {
+    width: 100%;
+    padding: 0.9rem 1rem 0.9rem 2.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    font-size: 1rem;
+    transition: var(--theme-transition);
+}
+
+.admin-search-bar input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="dark"] .admin-search-bar input:focus {
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+/* Filter Controls Section */
+.admin-filter-section {
+    padding: 1.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.admin-filter-section.collapsed {
+    display: none;
+}
+
+.admin-filter-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background-color: var(--light-gray);
+    border: none;
+    border-radius: var(--border-radius);
+    color: var(--body-text);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.admin-filter-toggle:hover {
+    background-color: var(--medium-gray);
+}
+
+.admin-filter-toggle i.toggle-icon {
+    transition: transform 0.3s ease;
+}
+
+.admin-filter-toggle.expanded i.toggle-icon {
+    transform: rotate(180deg);
+}
+
+.admin-filter-groups {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.admin-filter-group {
+    flex: 1;
+    min-width: 200px;
+}
+
+.admin-filter-group-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.admin-filter-select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    transition: var(--theme-transition);
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1rem;
+}
+
+.admin-filter-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="dark"] .admin-filter-select:focus {
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+.admin-filter-select.active {
+    border-color: var(--filter-active-color);
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+[data-theme="dark"] .admin-filter-select.active {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Filter Actions */
+.admin-filter-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+/* Active Filters Section */
+.admin-active-filters {
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--filter-panel-border);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.admin-active-filters.hidden {
+    display: none;
+}
+
+.active-filters-label {
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.active-filter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.filter-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.75rem;
+    background-color: var(--filter-tag-bg);
+    border-radius: 50px;
+    font-size: 0.85rem;
+    color: var(--filter-tag-text);
+    transition: var(--theme-transition);
+}
+
+[data-theme="dark"] .filter-tag {
+    background-color: var(--filter-tag-bg-dark);
+}
+
+.filter-tag-label {
+    font-weight: 500;
+}
+
+.filter-tag-remove {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--accent-color);
+    cursor: pointer;
+    font-size: 0.7rem;
+    transition: var(--transition);
+}
+
+.filter-tag-remove:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: var(--danger-color);
+}
+
+[data-theme="dark"] .filter-tag-remove:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.clear-all-filters {
+    margin-left: auto;
+    font-size: 0.85rem;
+    color: var(--accent-color);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.clear-all-filters:hover {
+    color: var(--danger-color);
+}
+
+/* Responsive Styles */
+@media (max-width: 767.98px) {
+    .admin-filter-groups {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .admin-filter-group {
+        width: 100%;
+    }
+    
+    .admin-filter-actions {
+        flex-direction: column;
+    }
+    
+    .admin-filter-actions .admin-button {
+        width: 100%;
+    }
+}

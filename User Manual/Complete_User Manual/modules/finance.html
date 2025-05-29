@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Module - ERP System User Manual</title>
+    <!-- Modern UI Framework -->
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="../css/core/modern-ui.css">
+    <link rel="stylesheet" href="../css/core/modern-components.css">
+    <link rel="stylesheet" href="../css/core/modern-layout.css">
+    <link rel="stylesheet" href="../css/core/modern-responsive.css">
+
+    <!-- Layout CSS -->
+    <link rel="stylesheet" href="../css/layout/footer.css">
+    <link rel="stylesheet" href="../css/layout/collapsible-sidebar.css">
+    <link rel="stylesheet" href="../css/layout/header-modifications.css">
+    <link rel="stylesheet" href="../css/layout/sticky-header-nav.css">
+    <link rel="stylesheet" href="../css/layout/centered-layout.css">
+
+    <!-- Components CSS -->
+    <link rel="stylesheet" href="../css/components/modern-embedded-help.css">
+    <link rel="stylesheet" href="../css/components/evenly-distributed-nav.css">
+    <link rel="stylesheet" href="../css/components/enhanced-dropdown.css">
+
+    <!-- Page-specific CSS -->
+    <link rel="stylesheet" href="../css/pages/improved-finance.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Print stylesheet (loaded only when printing) -->
+    <link rel="stylesheet" href="../css/utilities/print.css" media="print">
+</head>
+<body>
+
+
+    <header>
+        <div class="company-name">HCLSoftware</div>
+        <div class="logo-container">
+            <h1>ERP System <span class="text-gradient">User Manual</span></h1>
+        </div>
+        <div class="header-actions">
+            <div class="header-getting-started">
+                <a href="../getting-started.html" class="header-getting-started-link">
+                    <i class="fas fa-rocket"></i> <span>Getting Started</span>
+                </a>
+            </div>
+            <div class="header-separator"></div>
+            <div class="search-container">
+                <div class="search-input-wrapper">
+                    <input type="text" id="search-input" placeholder="Search the manual..." aria-label="Search the manual">
+                    <button id="search-button" aria-label="Search"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="search-suggestions"></div>
+                <div class="search-filters">
+                    <span class="search-filter active" data-filter="all">All</span>
+                    <span class="search-filter" data-filter="docs">Documentation</span>
+                    <span class="search-filter" data-filter="videos">Videos</span>
+                    <span class="search-filter" data-filter="faq">FAQ</span>
+                </div>
+            </div>
+            <button id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Toggle dark/light theme">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button class="settings-toggle" aria-label="Settings">
+                <i class="fas fa-ellipsis-v"></i>
+            </button>
+            <div class="settings-menu">
+                <div class="settings-header">
+                    <h3>Settings</h3>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-section">
+                        <h4>Text Size</h4>
+                        <div class="accessibility-group">
+                            <span class="accessibility-label">Adjust font size</span>
+                            <button id="decrease-font" class="accessibility-btn" aria-label="Decrease font size"><i class="fas fa-minus"></i></button>
+                            <button id="increase-font" class="accessibility-btn" aria-label="Increase font size"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <h4>Font Family</h4>
+                        <div class="font-family-selector">
+                            <div class="font-option" data-font="sans-serif">
+                                <div class="font-preview" style="font-family: 'Inter', sans-serif;">Aa</div>
+                                <div class="font-info">
+                                    <span class="font-name">Sans-serif</span>
+                                    <span class="font-description">Clean, modern look (Inter)</span>
+                                </div>
+                            </div>
+                            <div class="font-option" data-font="serif">
+                                <div class="font-preview" style="font-family: 'Georgia', serif;">Aa</div>
+                                <div class="font-info">
+                                    <span class="font-name">Serif</span>
+                                    <span class="font-description">Traditional, readable (Georgia)</span>
+                                </div>
+                            </div>
+                            <div class="font-option" data-font="monospace">
+                                <div class="font-preview" style="font-family: 'Consolas', monospace;">Aa</div>
+                                <div class="font-info">
+                                    <span class="font-name">Monospace</span>
+                                    <span class="font-description">Fixed-width (Consolas)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <h4>Display</h4>
+                        <div class="contrast-toggle">
+                            <label for="toggle-contrast">High contrast</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggle-contrast">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <h4>Language</h4>
+                        <div class="language-selector-enhanced">
+                            <div class="language-current">
+                                <img src="../assets/flags/en.png" alt="English flag">
+                                <span class="language-name">English</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="language-dropdown">
+                                <div class="language-option" data-lang="en">
+                                    <img src="../assets/flags/en.png" alt="English flag">
+                                    <span class="language-name">English</span>
+                                </div>
+                                <div class="language-option" data-lang="es">
+                                    <img src="../assets/flags/es.png" alt="Spanish flag">
+                                    <span class="language-name">Español</span>
+                                </div>
+                                <div class="language-option" data-lang="fr">
+                                    <img src="../assets/flags/fr.png" alt="French flag">
+                                    <span class="language-name">Français</span>
+                                </div>
+                                <div class="language-option" data-lang="de">
+                                    <img src="../assets/flags/de.png" alt="German flag">
+                                    <span class="language-name">Deutsch</span>
+                                </div>
+                                <div class="language-option" data-lang="zh">
+                                    <img src="../assets/flags/zh.png" alt="Chinese flag">
+                                    <span class="language-name">中文</span>
+                                </div>
+                                <div class="language-option" data-lang="ja">
+                                    <img src="../assets/flags/ja.png" alt="Japanese flag">
+                                    <span class="language-name">日本語</span>
+                                </div>
+                                <div class="language-option" data-lang="ar">
+                                    <img src="../assets/flags/ar.png" alt="Arabic flag">
+                                    <span class="language-name">العربية</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="../index.html" class="nav-link">Home</a></li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle active">Modules <i class="fas fa-chevron-down"></i></a>
+                    <div class="enhanced-dropdown">
+                        <div class="dropdown-header"><i class="fas fa-th-large"></i> ERP System Modules</div>
+                        <div class="enhanced-dropdown-item">
+                            <a href="finance.html" class="enhanced-dropdown-link active">
+                                <div class="module-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="module-content">
+                                    <div class="module-title">Finance</div>
+                                    <p class="module-description">Manage accounting, financial reporting, and budgeting</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="enhanced-dropdown-item">
+                            <a href="hr.html" class="enhanced-dropdown-link">
+                                <div class="module-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="module-content">
+                                    <div class="module-title">Human Resources</div>
+                                    <p class="module-description">Handle employee records, payroll, and recruitment</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="enhanced-dropdown-item">
+                            <a href="inventory.html" class="enhanced-dropdown-link">
+                                <div class="module-icon">
+                                    <i class="fas fa-boxes"></i>
+                                </div>
+                                <div class="module-content">
+                                    <div class="module-title">Inventory</div>
+                                    <p class="module-description">Track stock levels, orders, and warehouse management</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="enhanced-dropdown-item">
+                            <a href="crm.html" class="enhanced-dropdown-link">
+                                <div class="module-icon">
+                                    <i class="fas fa-handshake"></i>
+                                </div>
+                                <div class="module-content">
+                                    <div class="module-title">CRM</div>
+                                    <p class="module-description">Manage customer relationships, leads, and opportunities</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="enhanced-dropdown-item">
+                            <a href="manufacturing.html" class="enhanced-dropdown-link">
+                                <div class="module-icon">
+                                    <i class="fas fa-industry"></i>
+                                </div>
+                                <div class="module-content">
+                                    <div class="module-title">Manufacturing</div>
+                                    <p class="module-description">Control production processes and resource planning</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item"><a href="../faq.html" class="nav-link">FAQ</a></li>
+                <li class="nav-item"><a href="../glossary.html" class="nav-link">Glossary</a></li>
+                <li class="nav-item"><a href="../feedback.html" class="nav-link">Feedback</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container home-container">
+        <aside class="sidebar">
+            <!-- Print title page (only visible when printing) -->
+            <div class="print-title-page">
+                <h1>Finance Module - ERP System User Manual</h1>
+                <div class="version">Version 4.2.0</div>
+                <div class="date">Printed: <script>document.write(new Date().toLocaleDateString())</script></div>
+            </div>
+
+            <!-- Table of Contents -->
+            <div class="toc-container">
+                <div class="toc-header">
+                    <h3>Contents</h3>
+                    <button class="toc-toggle" aria-expanded="true" aria-controls="toc-content">
+                        <i class="fas fa-chevron-up"></i>
+                    </button>
+                </div>
+                <div class="toc-content" id="toc-content">
+                    <ul class="toc-list">
+                        <li class="toc-item">
+                            <a href="#overview" class="toc-link">Overview</a>
+                        </li>
+                        <li class="toc-item">
+                            <a href="#general-ledger" class="toc-link">General Ledger</a>
+                        </li>
+                        <li class="toc-item">
+                            <a href="#accounts-receivable" class="toc-link">Accounts Receivable</a>
+                        </li>
+                        <li class="toc-item">
+                            <a href="#accounts-payable" class="toc-link">Accounts Payable</a>
+                        </li>
+                        <li class="toc-item">
+                            <a href="#financial-reporting" class="toc-link">Financial Reporting</a>
+                        </li>
+                        <li class="toc-item">
+                            <a href="#budgeting" class="toc-link">Budgeting</a>
+                        </li>
+                        <li class="toc-item">
+                            <a href="#tax-management" class="toc-link">Tax Management</a>
+                        </li>
+                        <li class="toc-item">
+                            <a href="#asset-management" class="toc-link">Asset Management</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Related Topics -->
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Related Topics</h3>
+                <ul class="sidebar-list">
+                    <li class="sidebar-item"><a href="common-tasks.html#finance" class="sidebar-link"><i class="fas fa-tasks"></i> Common Finance Tasks</a></li>
+                    <li class="sidebar-item"><a href="../troubleshooting.html#finance" class="sidebar-link"><i class="fas fa-wrench"></i> Finance Troubleshooting</a></li>
+                    <li class="sidebar-item"><a href="../video-tutorials.html#finance" class="sidebar-link"><i class="fas fa-play-circle"></i> Finance Video Tutorials</a></li>
+                </ul>
+            </div>
+
+            <!-- Recently Viewed -->
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Recently Viewed</h3>
+                <ul id="recently-viewed" class="sidebar-list">
+                    <!-- Dynamically populated by JavaScript -->
+                </ul>
+            </div>
+        </aside>
+
+        <main id="main-content">
+            <!-- Breadcrumbs -->
+            <div class="breadcrumbs">
+                <div class="breadcrumb-path">
+                    <div class="breadcrumb-item">
+                        <a href="../index.html" class="breadcrumb-link">Home</a>
+                    </div>
+                    <div class="breadcrumb-item">
+                        <a href="../modules.html" class="breadcrumb-link">Modules</a>
+                    </div>
+                    <div class="breadcrumb-item">
+                        <span class="breadcrumb-current">Finance</span>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="page-actions">
+                    <span class="version-info">
+                        <i class="fas fa-code-branch"></i> Version 4.2.0
+                    </span>
+                    <button class="action-button bookmark-button" aria-label="Add bookmark">
+                        <i class="far fa-bookmark"></i>
+                    </button>
+                    <a href="#" class="action-button print-button">
+                        <i class="fas fa-print"></i> Print
+                    </a>
+                </div>
+            </div>
+
+            <!-- Finance Navigation -->
+            <div class="finance-navigation">
+                <div class="finance-nav-item active">
+                    <a href="#overview">
+                        <div class="finance-nav-marker">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <div class="finance-nav-label">Overview</div>
+                    </a>
+                </div>
+                <div class="finance-nav-item">
+                    <a href="#general-ledger">
+                        <div class="finance-nav-marker">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="finance-nav-label">General Ledger</div>
+                    </a>
+                </div>
+                <div class="finance-nav-item">
+                    <a href="#accounts-receivable">
+                        <div class="finance-nav-marker">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                        </div>
+                        <div class="finance-nav-label">Accounts Receivable</div>
+                    </a>
+                </div>
+                <div class="finance-nav-item">
+                    <a href="#accounts-payable">
+                        <div class="finance-nav-marker">
+                            <i class="fas fa-money-check-alt"></i>
+                        </div>
+                        <div class="finance-nav-label">Accounts Payable</div>
+                    </a>
+                </div>
+                <div class="finance-nav-item">
+                    <a href="#financial-reporting">
+                        <div class="finance-nav-marker">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <div class="finance-nav-label">Reporting</div>
+                    </a>
+                </div>
+                <div class="finance-nav-item">
+                    <a href="#budgeting">
+                        <div class="finance-nav-marker">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <div class="finance-nav-label">Budgeting</div>
+                    </a>
+                </div>
+                <div class="finance-nav-item">
+                    <a href="#tax-management">
+                        <div class="finance-nav-marker">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="finance-nav-label">Tax Management</div>
+                    </a>
+                </div>
+                <div class="finance-nav-item">
+                    <a href="#asset-management">
+                        <div class="finance-nav-marker">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="finance-nav-label">Asset Management</div>
+                    </a>
+                </div>
+            </div>
+
+            <section id="overview" class="finance-section">
+                <div class="section-header">
+                    <h2>Finance Module Overview</h2>
+                </div>
+                <p class="section-description">The Finance module is the central hub for all financial activities in your organization. It provides tools for managing accounting, financial reporting, budgeting, and financial analysis. This module integrates with other modules to provide a complete financial picture of your business operations.</p>
+
+                <div class="feature-cards">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-book"></i></div>
+                        <h3 class="feature-title">General Ledger</h3>
+                        <p class="feature-description">Manage your chart of accounts, journal entries, and financial transactions in one centralized system.</p>
+                        <a href="#general-ledger" class="step-nav-button">Learn More</a>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+                        <h3 class="feature-title">Accounts Receivable</h3>
+                        <p class="feature-description">Create and manage customer invoices, track payments, and monitor outstanding balances.</p>
+                        <a href="#accounts-receivable" class="step-nav-button">Learn More</a>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-money-check-alt"></i></div>
+                        <h3 class="feature-title">Accounts Payable</h3>
+                        <p class="feature-description">Process vendor bills, manage payments, and track expenses efficiently.</p>
+                        <a href="#accounts-payable" class="step-nav-button">Learn More</a>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-chart-bar"></i></div>
+                        <h3 class="feature-title">Financial Reporting</h3>
+                        <p class="feature-description">Generate financial statements and custom reports for better decision-making.</p>
+                        <a href="#financial-reporting" class="step-nav-button">Learn More</a>
+                    </div>
+                </div>
+
+                <div class="disclosure-container">
+                    <button class="disclosure-toggle" aria-expanded="false" aria-controls="additional-features">
+                        Additional Features <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div id="additional-features" class="disclosure-content">
+                        <div class="feature-cards">
+                            <div class="feature-card">
+                                <div class="feature-icon"><i class="fas fa-calculator"></i></div>
+                                <h3 class="feature-title">Budgeting</h3>
+                                <p class="feature-description">Create and manage budgets, track variances, and forecast future financial performance.</p>
+                                <a href="#budgeting" class="step-nav-button">Learn More</a>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon"><i class="fas fa-percentage"></i></div>
+                                <h3 class="feature-title">Tax Management</h3>
+                                <p class="feature-description">Manage tax rates, calculate taxes, and generate tax reports for compliance.</p>
+                                <a href="#tax-management" class="step-nav-button">Learn More</a>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon"><i class="fas fa-building"></i></div>
+                                <h3 class="feature-title">Asset Management</h3>
+                                <p class="feature-description">Track fixed assets, calculate depreciation, and manage asset lifecycle.</p>
+                                <a href="#asset-management" class="step-nav-button">Learn More</a>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon"><i class="fas fa-globe"></i></div>
+                                <h3 class="feature-title">Multi-Currency</h3>
+                                <p class="feature-description">Support for multiple currencies with automatic exchange rate calculations.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h3><i class="fas fa-info-circle"></i> Getting Started</h3>
+                    <p>If you're new to the Finance module, we recommend starting with the General Ledger section to understand the core financial structure, then exploring the other sections based on your specific needs.</p>
+                </div>
+
+                <div class="video-container">
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/example-finance" title="Finance Module Overview" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+
+                <div class="step-navigation">
+                    <a href="../getting-started.html" class="step-nav-button previous">
+                        <i class="fas fa-arrow-left"></i> Getting Started
+                    </a>
+                    <a href="#general-ledger" class="step-nav-button next">
+                        Continue to General Ledger <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </section>
+
+            <section id="general-ledger" class="finance-section">
+                <div class="section-header">
+                    <h2>General Ledger</h2>
+                </div>
+                <p class="section-description">The General Ledger is the foundation of your financial system, providing a complete record of all financial transactions. It serves as the central repository for all your accounting data and is essential for accurate financial reporting.</p>
+
+                <div class="disclosure-container">
+                    <button class="disclosure-toggle" aria-expanded="false" aria-controls="gl-overview-content">
+                        General Ledger Overview <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div id="gl-overview-content" class="disclosure-content">
+                        <p>The General Ledger module includes the following key components:</p>
+                        <ul>
+                            <li><strong>Chart of Accounts</strong> - The organizational structure for all financial accounts</li>
+                            <li><strong>Journal Entries</strong> - Records of financial transactions</li>
+                            <li><strong>Account Reconciliation</strong> - Tools to verify account balances</li>
+                            <li><strong>Financial Periods</strong> - Management of accounting periods</li>
+                            <li><strong>Trial Balance</strong> - Summary of account balances</li>
+                        </ul>
+
+                        <figure>
+                            <img src="../assets/finance-gl.jpg" alt="General Ledger Dashboard">
+                            <figcaption>General Ledger Dashboard showing account balances and recent transactions</figcaption>
+                        </figure>
+                    </div>
+                </div>
+
+                <h3><i class="fas fa-desktop"></i> Accessing the General Ledger</h3>
+                <div class="process-steps">
+                    <div class="process-step">
+                        <h3>Navigate to the General Ledger</h3>
+                        <p>From the main menu, select <strong>Finance</strong> > <strong>General Ledger</strong>. This will open the General Ledger dashboard with summary information.</p>
+                    </div>
+                    <div class="process-step">
+                        <h3>Explore the Dashboard</h3>
+                        <p>The dashboard displays key financial metrics, recent transactions, and account balances. You can customize this view based on your preferences.</p>
+                    </div>
+                    <div class="process-step">
+                        <h3>Use Filters for Specific Data</h3>
+                        <p>Use the filters at the top to narrow down the view by date range, account, or other criteria to focus on the information you need.</p>
+                    </div>
+                </div>
+
+                <h3><i class="fas fa-sitemap"></i> Chart of Accounts</h3>
+                <p>The Chart of Accounts is a hierarchical structure of all accounts used in your financial system. It organizes your financial data into categories like assets, liabilities, equity, revenue, and expenses, making it easier to track and report on your financial activities.</p>
+
+                <div class="disclosure-container">
+                    <button class="disclosure-toggle" aria-expanded="false" aria-controls="viewing-coa-content">
+                        Viewing the Chart of Accounts <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div id="viewing-coa-content" class="disclosure-content">
+                        <ol>
+                            <li>From the General Ledger dashboard, click on <strong>Chart of Accounts</strong> in the sidebar</li>
+                            <li>The system displays a hierarchical view of all accounts</li>
+                            <li>Click on any account to view its details and transaction history</li>
+                            <li>Use the search and filter options to find specific accounts</li>
+                            <li>You can expand or collapse account groups to see different levels of detail</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="disclosure-container">
+                    <button class="disclosure-toggle" aria-expanded="false" aria-controls="adding-account-content">
+                        Adding a New Account <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div id="adding-account-content" class="disclosure-content">
+                        <ol>
+                            <li>From the Chart of Accounts page, click the <strong>Add Account</strong> button</li>
+                            <li>Fill in the required fields:
+                                <ul>
+                                    <li>Account Number</li>
+                                    <li>Account Name</li>
+                                    <li>Account Type (Asset, Liability, Equity, Revenue, Expense)</li>
+                                    <li>Parent Account (if applicable)</li>
+                                    <li>Description</li>
+                                </ul>
+                            </li>
+                            <li>Click <strong>Save</strong> to create the account</li>
+                        </ol>
+
+                        <div class="tip-box">
+                            <h3><i class="fas fa-lightbulb"></i> Best Practice</h3>
+                            <p>Maintain a consistent numbering system for your accounts to make them easier to identify and organize. For example, use 1000-1999 for assets, 2000-2999 for liabilities, etc.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3><i class="fas fa-edit"></i> Journal Entries</h3>
+                <p>Journal entries are used to record financial transactions in the General Ledger. They are the building blocks of your accounting system and ensure that your financial records are accurate and complete.</p>
+
+                <div class="info-box">
+                    <h3><i class="fas fa-info-circle"></i> Understanding Debits and Credits</h3>
+                    <p>Every journal entry must balance, meaning the total debits must equal the total credits. This ensures that your accounting equation (Assets = Liabilities + Equity) remains in balance.</p>
+                </div>
+
+                <div class="disclosure-container">
+                    <button class="disclosure-toggle" aria-expanded="false" aria-controls="creating-journal-entry-content">
+                        Creating a Journal Entry <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div id="creating-journal-entry-content" class="disclosure-content">
+                        <div class="process-steps">
+                            <div class="process-step">
+                                <h3>Access Journal Entries</h3>
+                                <p>From the General Ledger dashboard, click on <strong>Journal Entries</strong> in the sidebar, then click the <strong>New Journal Entry</strong> button.</p>
+                            </div>
+                            <div class="process-step">
+                                <h3>Enter Header Information</h3>
+                                <p>Fill in the header information including Date, Reference Number, Description, and Source (optional).</p>
+                            </div>
+                            <div class="process-step">
+                                <h3>Add Line Items</h3>
+                                <p>Click <strong>Add Line</strong> to add transaction details. For each line, select an Account, enter Debit or Credit amount, add a description (optional), and select a department or cost center if applicable.</p>
+                            </div>
+                            <div class="process-step">
+                                <h3>Verify and Post</h3>
+                                <p>Ensure that total debits equal total credits, then click <strong>Save</strong> to save as draft or <strong>Post</strong> to post the journal entry.</p>
+                            </div>
+                        </div>
+
+                        <figure>
+                            <img src="../assets/journal-entry.jpg" alt="Journal Entry Form">
+                            <figcaption>Journal Entry Form with multiple line items</figcaption>
+                        </figure>
+
+                        <div class="warning-box">
+                            <h3><i class="fas fa-exclamation-triangle"></i> Important</h3>
+                            <p>Once a journal entry is posted, it cannot be deleted. If you need to reverse a posted entry, create a new journal entry with the opposite debits and credits.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="context-help">
+                    <a href="#" class="video-tutorial-link" data-video-id="dQw4w9WgXcQ" data-video-title="Creating Journal Entries">
+                        <i class="fas fa-play-circle"></i> Watch Video Tutorial: Creating Journal Entries
+                    </a>
+                </div>
+
+                <div class="step-navigation">
+                    <a href="#overview" class="step-nav-button previous">
+                        <i class="fas fa-arrow-left"></i> Back to Overview
+                    </a>
+                    <a href="#accounts-receivable" class="step-nav-button next">
+                        Continue to Accounts Receivable <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </section>
+
+            <section id="accounts-receivable" class="finance-section">
+                <div class="section-header">
+                    <h2>Accounts Receivable</h2>
+                </div>
+                <p class="section-description">The Accounts Receivable module helps you manage customer invoices, payments, and credit management. It provides tools to track money owed to your business and monitor customer payment history.</p>
+
+                <div class="finance-navigation">
+                    <div class="finance-nav-item">
+                        <a href="#customer-management">
+                            <div class="finance-nav-marker">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="finance-nav-label">Customer Management</div>
+                        </a>
+                    </div>
+                    <div class="finance-nav-item">
+                        <a href="#creating-invoices">
+                            <div class="finance-nav-marker">
+                                <i class="fas fa-file-invoice"></i>
+                            </div>
+                            <div class="finance-nav-label">Creating Invoices</div>
+                        </a>
+                    </div>
+                    <div class="finance-nav-item">
+                        <a href="#recording-payments">
+                            <div class="finance-nav-marker">
+                                <i class="fas fa-hand-holding-usd"></i>
+                            </div>
+                            <div class="finance-nav-label">Recording Payments</div>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="customer-management">
+                    <h3><i class="fas fa-users"></i> Customer Management</h3>
+                    <p>Before creating invoices, you need to set up customer records. This information will be used for invoicing, payment processing, and reporting.</p>
+
+                    <div class="disclosure-container">
+                        <button class="disclosure-toggle" aria-expanded="false" aria-controls="adding-customer-content">
+                            Adding a New Customer <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div id="adding-customer-content" class="disclosure-content">
+                            <div class="process-steps">
+                                <div class="process-step">
+                                    <h3>Access Customer Management</h3>
+                                    <p>Navigate to <strong>Finance</strong> > <strong>Accounts Receivable</strong> > <strong>Customers</strong> and click <strong>New Customer</strong>.</p>
+                                </div>
+                                <div class="process-step">
+                                    <h3>Enter Basic Information</h3>
+                                    <p>Fill in the customer's name, ID (generated automatically or entered manually), and contact information.</p>
+                                </div>
+                                <div class="process-step">
+                                    <h3>Add Address Details</h3>
+                                    <p>Enter the billing address and shipping address (if different) for the customer.</p>
+                                </div>
+                                <div class="process-step">
+                                    <h3>Set Financial Parameters</h3>
+                                    <p>Specify payment terms, credit limit, and tax information for the customer.</p>
+                                </div>
+                                <div class="process-step">
+                                    <h3>Save the Customer Record</h3>
+                                    <p>Review all information and click <strong>Save</strong> to create the customer record.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="creating-invoices">
+                    <h3><i class="fas fa-file-invoice"></i> Creating Invoices</h3>
+                    <p>Invoices are documents that request payment from customers for products or services provided. Creating accurate and timely invoices is essential for maintaining healthy cash flow.</p>
+
+                    <a href="#" class="context-link guide-trigger" data-guide-id="create-invoice">
+                        <i class="fas fa-play"></i> Interactive Guide: Creating an Invoice
+                    </a>
+
+                    <div class="disclosure-container">
+                        <button class="disclosure-toggle" aria-expanded="false" aria-controls="invoice-creation-steps">
+                            Step-by-Step Invoice Creation <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div id="invoice-creation-steps" class="disclosure-content">
+                            <div class="process-steps">
+                                <div class="process-step">
+                                    <h3>Access Invoice Creation</h3>
+                                    <p>Navigate to <strong>Finance</strong> > <strong>Accounts Receivable</strong> > <strong>Invoices</strong> and click <strong>New Invoice</strong>.</p>
+                                </div>
+                                <div class="process-step">
+                                    <h3>Select Customer and Enter Details</h3>
+                                    <p>Select a customer from the dropdown and fill in the invoice details including Invoice Date, Due Date, Invoice Number, Reference Number (optional), and Payment Terms.</p>
+                                </div>
+                                <div class="process-step">
+                                    <h3>Add Line Items</h3>
+                                    <p>Click <strong>Add Item</strong> to add products or services. For each item, select the product/service, enter quantity and price, add a description if needed, and select the applicable tax rate.</p>
+                                </div>
+                                <div class="process-step">
+                                    <h3>Apply Discounts or Charges</h3>
+                                    <p>Add any discounts or additional charges that apply to the invoice.</p>
+                                </div>
+                                <div class="process-step">
+                                    <h3>Review and Finalize</h3>
+                                    <p>Review the invoice total and click <strong>Save</strong> to save as draft or <strong>Post</strong> to finalize the invoice.</p>
+                                </div>
+                            </div>
+
+                            <div class="info-box">
+                                <h3><i class="fas fa-info-circle"></i> Invoice Status</h3>
+                                <p>Invoices can have different statuses:</p>
+                                <ul>
+                                    <li><strong>Draft</strong> - Invoice is saved but not yet sent to the customer</li>
+                                    <li><strong>Posted</strong> - Invoice is finalized and ready to be sent</li>
+                                    <li><strong>Sent</strong> - Invoice has been sent to the customer</li>
+                                    <li><strong>Partially Paid</strong> - Customer has made a partial payment</li>
+                                    <li><strong>Paid</strong> - Invoice has been fully paid</li>
+                                    <li><strong>Overdue</strong> - Payment deadline has passed without full payment</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="recording-payments">
+                    <h3><i class="fas fa-hand-holding-usd"></i> Recording Payments</h3>
+                    <p>When customers pay their invoices, you need to record these payments in the system to keep your accounts receivable up to date.</p>
+
+                    <div class="disclosure-container">
+                        <button class="disclosure-toggle" aria-expanded="false" aria-controls="key-concepts-content">
+                            Key Concepts <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div id="key-concepts-content" class="disclosure-content">
+                            <div class="feature-cards">
+                                <div class="feature-card">
+                                    <div class="feature-icon"><i class="fas fa-calendar-alt"></i></div>
+                                    <h3 class="feature-title">Payment Terms</h3>
+                                    <p class="feature-description">Payment terms define when payment is due (e.g., Net 30 means payment is due 30 days after the invoice date).</p>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon"><i class="fas fa-sort-numeric-up"></i></div>
+                                    <h3 class="feature-title">Invoice Numbering</h3>
+                                    <p class="feature-description">A systematic approach to assigning unique identifiers to invoices for easy tracking and reference.</p>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon"><i class="fas fa-credit-card"></i></div>
+                                    <h3 class="feature-title">Payment Methods</h3>
+                                    <p class="feature-description">Different ways customers can pay (e.g., credit card, bank transfer, check).</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="disclosure-container">
+                        <button class="disclosure-toggle" aria-expanded="false" aria-controls="payment-recording-steps">
+                            Recording a Payment <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div id="payment-recording-steps" class="disclosure-content">
+                            <div class="process-steps">
+                                <div class="process-step">
+                                    <h3>Access Payment Recording</h3>
+                                    <p>Navigate to <strong>Finance</strong> > <strong>Accounts Receivable</strong> > <strong>Payments</strong> and click <strong>New Payment</strong>.</p>
+                                </div>
+                                <div class="process-step">
+                                    <h3>Select Customer</h3>
+                                    <p>Select the customer who made the payment from the dropdown menu.</p>
+                                </div>
+                                <div class="process-step">
+                                    <h3>Enter Payment Details</h3>
+                                    <p>Enter the Payment Date, Payment Method, Reference Number (e.g., check number), and Amount.</p>
+                                </div>
+                                <div class="process-step">
+                                    <h3>Apply Payment to Invoices</h3>
+                                    <p>Select the invoices to which the payment should be applied. The system will automatically allocate the payment amount to the selected invoices.</p>
+                                </div>
+                                <div class="process-step">
+                                    <h3>Post the Payment</h3>
+                                    <p>Review the payment details and click <strong>Post Payment</strong> to record the transaction.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tip-box">
+                        <h3><i class="fas fa-lightbulb"></i> Pro Tip</h3>
+                        <p>You can set up automatic payment reminders for overdue invoices. Go to <strong>Finance</strong> > <strong>Settings</strong> > <strong>Payment Reminders</strong> to configure this feature.</p>
+                    </div>
+                </div>
+
+                <div class="step-navigation">
+                    <a href="#general-ledger" class="step-nav-button previous">
+                        <i class="fas fa-arrow-left"></i> Back to General Ledger
+                    </a>
+                    <a href="#accounts-payable" class="step-nav-button next">
+                        Continue to Accounts Payable <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Additional sections would continue here -->
+
+            <div class="next-prev-navigation">
+                <a href="../getting-started.html" class="prev-link"><i class="fas fa-arrow-left"></i> Getting Started</a>
+                <a href="hr.html" class="next-link">Human Resources <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact Support</h3>
+                <p>Need additional help? Our support team is available 24/7.</p>
+                <div class="footer-buttons">
+                    <a href="mailto:support@erpsystem.com" class="footer-btn">
+                        <i class="fas fa-envelope"></i>
+                        Email Support
+                    </a>
+                    <a href="tel:+18001234567" class="footer-btn">
+                        <i class="fas fa-phone-alt"></i>
+                        Call Support
+                    </a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="../video-tutorials.html"><i class="fas fa-play-circle"></i> Video Tutorials</a></li>
+                    <li><a href="../webinars.html"><i class="fas fa-laptop"></i> Webinars</a></li>
+                    <li><a href="../downloads.html"><i class="fas fa-download"></i> Downloads</a></li>
+                    <li><a href="../community.html"><i class="fas fa-users"></i> Community Forum</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul class="footer-links">
+                    <li><a href="../terms.html"><i class="fas fa-file-contract"></i> Terms of Service</a></li>
+                    <li><a href="../privacy.html"><i class="fas fa-shield-alt"></i> Privacy Policy</a></li>
+                    <li><a href="../accessibility-statement.html"><i class="fas fa-universal-access"></i> Accessibility Statement</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 ERP System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div id="feedback-widget" class="feedback-widget">
+        <button id="feedback-toggle" aria-label="Give feedback">
+            <i class="fas fa-comment-alt"></i> Feedback
+        </button>
+        <div id="feedback-form" class="feedback-form hidden">
+            <div class="feedback-header">
+                <h3>Was this page helpful?</h3>
+                <button class="feedback-close" aria-label="Close feedback form">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="rating">
+                <button class="rating-btn" data-rating="1"><i class="far fa-frown"></i></button>
+                <button class="rating-btn" data-rating="2"><i class="far fa-meh"></i></button>
+                <button class="rating-btn" data-rating="3"><i class="far fa-smile"></i></button>
+            </div>
+            <textarea placeholder="Tell us how we can improve this page..."></textarea>
+            <button class="submit-feedback">
+                <i class="fas fa-paper-plane"></i> Submit Feedback
+            </button>
+        </div>
+    </div>
+
+    <!-- Modern UI JavaScript -->
+    <!-- JavaScript -->
+    <!-- Core JS -->
+    <script src="../js/core/modern-ui.js"></script>
+
+    <!-- Layout JS -->
+    <script src="../js/layout/collapsible-sidebar.js"></script>
+    <script src="../js/layout/sticky-header-nav.js"></script>
+
+    <!-- Components JS -->
+    <script src="../js/components/evenly-distributed-nav.js"></script>
+    <script src="../js/components/enhanced-dropdown.js"></script>
+
+    <!-- Finance Module JavaScript -->
+    <script>
+        // Initialize disclosure toggles
+        document.addEventListener('DOMContentLoaded', function() {
+            const disclosureToggles = document.querySelectorAll('.disclosure-toggle');
+
+            disclosureToggles.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    const expanded = this.getAttribute('aria-expanded') === 'true';
+                    this.setAttribute('aria-expanded', !expanded);
+
+                    const contentId = this.getAttribute('aria-controls');
+                    const content = document.getElementById(contentId);
+
+                    if (expanded) {
+                        content.style.display = 'none';
+                    } else {
+                        content.style.display = 'block';
+                    }
+                });
+            });
+
+            // Smooth scroll for navigation
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+
+                        // Update active state in finance navigation
+                        if (this.closest('.finance-nav-item')) {
+                            document.querySelectorAll('.finance-nav-item').forEach(item => {
+                                item.classList.remove('active');
+                            });
+                            this.closest('.finance-nav-item').classList.add('active');
+                        }
+                    }
+                });
+            });
+
+            // Handle finance navigation active state on scroll
+            window.addEventListener('scroll', function() {
+                const sections = document.querySelectorAll('.finance-section');
+                const navItems = document.querySelectorAll('.finance-nav-item');
+
+                let currentSection = '';
+
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+
+                    if (window.pageYOffset >= sectionTop - 100 &&
+                        window.pageYOffset < sectionTop + sectionHeight - 100) {
+                        currentSection = '#' + section.getAttribute('id');
+                    }
+                });
+
+                if (currentSection) {
+                    navItems.forEach(item => {
+                        item.classList.remove('active');
+                        const link = item.querySelector('a');
+                        if (link && link.getAttribute('href') === currentSection) {
+                            item.classList.add('active');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

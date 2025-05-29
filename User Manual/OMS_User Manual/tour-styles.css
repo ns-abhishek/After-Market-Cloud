@@ -1,0 +1,367 @@
+/* Tour Styles */
+
+/* Tour Overlay */
+.tour-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    /* Keep blur effect but make it less intense */
+    backdrop-filter: blur(2px);
+    /* Ensure the overlay doesn't affect the highlighted element */
+    pointer-events: none;
+}
+
+.tour-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Tour Highlight */
+.tour-highlight {
+    position: absolute;
+    z-index: 9001;
+    border-radius: 4px;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Enhanced highlight with stronger border for better visibility */
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 0 2000px rgba(0, 0, 0, 0.7), 0 0 15px rgba(255, 255, 255, 0.7);
+    /* Create a "hole" in the overlay to ensure highlighted element is fully visible */
+    backdrop-filter: none;
+    filter: none;
+    background-color: transparent;
+    /* Use mix-blend-mode to ensure content remains visible */
+    mix-blend-mode: normal;
+    /* Ensure proper reset between steps */
+    will-change: opacity, transform, top, left, width, height;
+}
+
+.tour-highlight.active {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Tour Tooltip */
+.tour-tooltip {
+    position: absolute;
+    z-index: 9002;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow: hidden;
+}
+
+.tour-tooltip.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Tooltip Arrow Positions */
+.tour-tooltip::before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+}
+
+.tour-tooltip.position-top::before {
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 10px 10px 0 10px;
+    border-color: #ffffff transparent transparent transparent;
+}
+
+.tour-tooltip.position-right::before {
+    left: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 10px 10px 10px 0;
+    border-color: transparent #ffffff transparent transparent;
+}
+
+.tour-tooltip.position-bottom::before {
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 0 10px 10px 10px;
+    border-color: transparent transparent #ffffff transparent;
+}
+
+.tour-tooltip.position-left::before {
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 10px 0 10px 10px;
+    border-color: transparent transparent transparent #ffffff;
+}
+
+.tour-tooltip.position-bottom-left::before {
+    top: -10px;
+    left: 20px;
+    border-width: 0 10px 10px 10px;
+    border-color: transparent transparent #ffffff transparent;
+}
+
+.tour-tooltip.position-bottom-right::before {
+    top: -10px;
+    right: 20px;
+    border-width: 0 10px 10px 10px;
+    border-color: transparent transparent #ffffff transparent;
+}
+
+/* Tooltip Header */
+.tour-tooltip-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.tour-tooltip-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #000000;
+}
+
+.tour-close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #666666;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.tour-close-btn:hover {
+    background-color: #f0f0f0;
+}
+
+/* Tooltip Body */
+.tour-tooltip-body {
+    padding: 20px;
+}
+
+.tour-tooltip-body p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #333333;
+}
+
+/* Tooltip Footer */
+.tour-tooltip-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #f0f0f0;
+}
+
+/* Progress Bar */
+.tour-progress {
+    margin-bottom: 15px;
+}
+
+.tour-progress-text {
+    display: block;
+    font-size: 13px;
+    color: #666666;
+    margin-bottom: 5px;
+}
+
+.tour-progress-bar {
+    height: 4px;
+    background-color: #f0f0f0;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.tour-progress-indicator {
+    height: 100%;
+    background-color: #000000;
+    transition: width 0.3s ease;
+}
+
+/* Tour Controls */
+.tour-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tour-navigation {
+    display: flex;
+    gap: 10px;
+}
+
+.tour-btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tour-btn-skip {
+    background: none;
+    border: none;
+    color: #666666;
+}
+
+.tour-btn-skip:hover {
+    color: #000000;
+}
+
+.tour-btn-prev {
+    background-color: #f0f0f0;
+    border: none;
+    color: #333333;
+}
+
+.tour-btn-prev:hover {
+    background-color: #e0e0e0;
+}
+
+.tour-btn-prev:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.tour-btn-next {
+    background-color: #000000;
+    border: none;
+    color: #ffffff;
+}
+
+.tour-btn-next:hover {
+    background-color: #333333;
+}
+
+/* New Badge */
+.tour-new-badge {
+    display: inline-block;
+    background-color: #FF9800;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 12px;
+    margin-left: 8px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Tour Notification */
+.tour-notification {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 350px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    z-index: 9000;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+}
+
+.tour-notification.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.tour-notification-content {
+    padding: 20px;
+}
+
+.tour-notification-content h3 {
+    margin: 0 0 10px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #000000;
+}
+
+.tour-notification-content p {
+    margin: 0 0 15px 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333333;
+}
+
+.tour-notification-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.tour-start-btn {
+    padding: 8px 16px;
+    background-color: #000000;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.tour-start-btn:hover {
+    background-color: #333333;
+}
+
+.tour-dismiss-btn {
+    padding: 8px 16px;
+    background-color: transparent;
+    color: #666666;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.tour-dismiss-btn:hover {
+    color: #000000;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .tour-tooltip {
+        width: 280px !important;
+    }
+
+    .tour-notification {
+        width: calc(100% - 40px);
+        left: 20px;
+        right: 20px;
+    }
+}

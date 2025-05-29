@@ -1,0 +1,291 @@
+/**
+ * Action Buttons Redesign
+ * Modern, visually appealing action buttons for the Admin Panel
+ */
+
+:root {
+    --action-btn-size: 40px;
+    --action-btn-radius: 10px;
+    --action-btn-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --action-btn-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    --action-btn-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+    
+    /* Button colors */
+    --action-btn-bg: var(--card-bg, #ffffff);
+    --action-btn-text: var(--text-muted, #6b7280);
+    --action-btn-border: var(--border-color, #e5e7eb);
+    
+    /* Action specific colors */
+    --action-edit-color: #3b82f6;
+    --action-edit-bg: rgba(59, 130, 246, 0.1);
+    --action-view-color: #10b981;
+    --action-view-bg: rgba(16, 185, 129, 0.1);
+    --action-preview-color: #f59e0b;
+    --action-preview-bg: rgba(245, 158, 11, 0.1);
+    --action-history-color: #8b5cf6;
+    --action-history-bg: rgba(139, 92, 246, 0.1);
+    --action-add-color: #06b6d4;
+    --action-add-bg: rgba(6, 182, 212, 0.1);
+    --action-delete-color: #ef4444;
+    --action-delete-bg: rgba(239, 68, 68, 0.1);
+    --action-more-color: #6b7280;
+    --action-more-bg: rgba(107, 114, 128, 0.1);
+    --action-structure-color: #0ea5e9;
+    --action-structure-bg: rgba(14, 165, 233, 0.1);
+}
+
+/* Common Action Button Styles */
+.action-btn,
+.card-action-btn,
+.admin-page-actions .admin-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--action-btn-size);
+    height: var(--action-btn-size);
+    border-radius: var(--action-btn-radius);
+    background-color: var(--action-btn-bg);
+    color: var(--action-btn-text);
+    border: 1px solid var(--action-btn-border);
+    cursor: pointer;
+    transition: var(--action-btn-transition);
+    box-shadow: var(--action-btn-shadow);
+    overflow: hidden;
+    z-index: 1;
+}
+
+/* Hover and active states */
+.action-btn:hover,
+.card-action-btn:hover,
+.admin-page-actions .admin-button:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--action-btn-shadow-hover);
+}
+
+.action-btn:active,
+.card-action-btn:active,
+.admin-page-actions .admin-button:active {
+    transform: translateY(0);
+}
+
+/* Ripple effect */
+.action-btn::after,
+.card-action-btn::after,
+.admin-page-actions .admin-button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    transition: transform 0.5s, opacity 0.5s;
+    z-index: -1;
+}
+
+.action-btn:active::after,
+.card-action-btn:active::after,
+.admin-page-actions .admin-button:active::after {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+    transition: 0s;
+}
+
+/* Action specific styles */
+.action-btn.edit,
+.card-action-btn.edit {
+    color: var(--action-edit-color);
+    border-color: var(--action-edit-color);
+}
+
+.action-btn.edit:hover,
+.card-action-btn.edit:hover {
+    background-color: var(--action-edit-bg);
+}
+
+.action-btn.view,
+.card-action-btn.view {
+    color: var(--action-view-color);
+    border-color: var(--action-view-color);
+}
+
+.action-btn.view:hover,
+.card-action-btn.view:hover {
+    background-color: var(--action-view-bg);
+}
+
+.action-btn.preview,
+.card-action-btn.preview {
+    color: var(--action-preview-color);
+    border-color: var(--action-preview-color);
+}
+
+.action-btn.preview:hover,
+.card-action-btn.preview:hover {
+    background-color: var(--action-preview-bg);
+}
+
+.action-btn.history,
+.card-action-btn.history {
+    color: var(--action-history-color);
+    border-color: var(--action-history-color);
+}
+
+.action-btn.history:hover,
+.card-action-btn.history:hover {
+    background-color: var(--action-history-bg);
+}
+
+.action-btn.add {
+    color: var(--action-add-color);
+    border-color: var(--action-add-color);
+}
+
+.action-btn.add:hover {
+    background-color: var(--action-add-bg);
+}
+
+.action-btn.delete {
+    color: var(--action-delete-color);
+    border-color: var(--action-delete-color);
+}
+
+.action-btn.delete:hover {
+    background-color: var(--action-delete-bg);
+}
+
+/* More actions button */
+.action-btn:not(.edit):not(.view):not(.preview):not(.history):not(.add):not(.delete),
+.card-action-btn:not(.edit):not(.view):not(.preview):not(.history):not(.add):not(.delete) {
+    color: var(--action-more-color);
+    border-color: var(--action-more-color);
+}
+
+.action-btn:not(.edit):not(.view):not(.preview):not(.history):not(.add):not(.delete):hover,
+.card-action-btn:not(.edit):not(.view):not(.preview):not(.history):not(.add):not(.delete):hover {
+    background-color: var(--action-more-bg);
+}
+
+/* Admin page action buttons (Structure and Preview) */
+.admin-page-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 1rem;
+}
+
+.admin-page-actions .admin-button {
+    width: auto;
+    height: auto;
+    padding: 0.75rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    font-size: 0.95rem;
+    border-radius: var(--action-btn-radius);
+    box-shadow: var(--action-btn-shadow);
+    background-color: var(--action-btn-bg);
+    color: var(--action-btn-text);
+    border: 1px solid var(--action-btn-border);
+}
+
+.admin-page-actions .admin-button i {
+    font-size: 1.1rem;
+}
+
+/* Structure button */
+.admin-page-actions .admin-button:has(i.fa-sitemap),
+.admin-page-actions .admin-button:has(i.fa-file-alt) {
+    color: var(--action-structure-color);
+    border-color: var(--action-structure-color);
+}
+
+.admin-page-actions .admin-button:has(i.fa-sitemap):hover,
+.admin-page-actions .admin-button:has(i.fa-file-alt):hover {
+    background-color: var(--action-structure-bg);
+}
+
+/* Preview button */
+.admin-page-actions .admin-button:has(i.fa-eye) {
+    color: var(--action-preview-color);
+    border-color: var(--action-preview-color);
+}
+
+.admin-page-actions .admin-button:has(i.fa-eye):hover {
+    background-color: var(--action-preview-bg);
+}
+
+/* Tooltip styles */
+.action-btn[title]::before,
+.card-action-btn[title]::before {
+    content: attr(title);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    padding: 0.4rem 0.8rem;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-size: 0.75rem;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.action-btn[title]::after,
+.card-action-btn[title]::after {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 2px);
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    border-width: 6px 6px 0 6px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.action-btn[title]:hover::before,
+.action-btn[title]:hover::after,
+.card-action-btn[title]:hover::before,
+.card-action-btn[title]:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Dark theme adjustments */
+[data-theme="dark"] {
+    --action-btn-bg: var(--dark-gray, #374151);
+    --action-btn-border: var(--darker-gray, #1f2937);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .admin-page-actions {
+        flex-wrap: wrap;
+    }
+    
+    .admin-page-actions .admin-button {
+        flex: 1;
+        min-width: 120px;
+        justify-content: center;
+    }
+    
+    .item-actions {
+        display: flex;
+        gap: 8px;
+    }
+}

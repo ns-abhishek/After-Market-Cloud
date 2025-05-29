@@ -1,0 +1,132 @@
+/* Centered Layout CSS for ERP User Manual */
+
+/* Container with sidebar */
+.container.home-container {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    position: relative;
+}
+
+/* Sidebar positioning in centered layout */
+.home-container .sidebar {
+    position: fixed;
+    top: 108px; /* Position below the main navigation menu (60px header + 48px nav) */
+    left: 0;
+    height: calc(100vh - 108px); /* Adjust height to account for header and nav */
+    max-height: calc(100vh - 108px); /* Adjust height to account for header and nav */
+    width: 250px;
+    flex-shrink: 0;
+    z-index: 100;
+    transform: translateX(-250px);
+    transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.4s ease;
+}
+
+/* Main content in centered layout */
+.home-container main {
+    flex: 1;
+    min-width: 0; /* Prevent flex item from overflowing */
+    padding: 1rem 0;
+    max-width: 100%; /* Full width by default since sidebar is hidden */
+    transition: max-width 0.4s cubic-bezier(0.25, 0.1, 0.25, 1),
+                padding-left 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* Adjustments for collapsible sidebar */
+.sidebar-hover-area {
+    position: fixed;
+    top: 108px; /* Position below the main navigation menu (60px header + 48px nav) */
+    left: 0;
+    width: 20px;
+    height: calc(100vh - 108px); /* Adjust height to account for header and nav */
+    z-index: 98;
+}
+
+.sidebar-tab {
+    position: fixed;
+    top: calc(108px + (100vh - 108px) / 2); /* Center vertically in the available space below nav */
+    left: 0;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 60px;
+    z-index: 99;
+}
+
+/* When sidebar is visible */
+.home-container .sidebar.visible {
+    transform: translateX(0);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* When sidebar is visible, adjust main content */
+.home-container .sidebar.visible + main {
+    padding-left: 270px; /* 250px sidebar width + 20px spacing */
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .home-container .sidebar.visible + main {
+        padding-left: 260px; /* Slightly less padding on medium screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .container.home-container {
+        flex-direction: column;
+    }
+
+    .home-container .sidebar {
+        width: 280px;
+        transform: translateX(-280px);
+        top: 100px; /* Adjusted for mobile header + nav height */
+        height: calc(100vh - 100px); /* Adjusted for mobile header + nav height */
+        max-height: calc(100vh - 100px); /* Adjusted for mobile header + nav height */
+    }
+
+    .home-container .sidebar.visible {
+        transform: translateX(0);
+    }
+
+    .sidebar-hover-area {
+        top: 100px; /* Adjusted for mobile header + nav height */
+        height: calc(100vh - 100px); /* Adjusted for mobile header + nav height */
+    }
+
+    .sidebar-tab {
+        top: calc(100px + (100vh - 100px) / 2); /* Adjusted for mobile header + nav height */
+    }
+
+    .home-container .sidebar.visible + main {
+        padding-left: 0; /* No padding on mobile, sidebar overlays content */
+    }
+
+    .home-container main {
+        padding: 1rem 0;
+        max-width: 100%;
+    }
+}
+
+/* Print styles */
+@media print {
+    .container.home-container {
+        display: block;
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .home-container .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        max-height: none;
+        margin-right: 0;
+        page-break-inside: avoid;
+    }
+
+    .home-container main {
+        max-width: 100%;
+        padding: 0;
+    }
+}

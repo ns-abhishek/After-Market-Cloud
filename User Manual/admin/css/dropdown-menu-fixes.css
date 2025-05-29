@@ -1,0 +1,449 @@
+/**
+ * Dropdown Menu Enhancements
+ * Enhanced styling for the Filter and Sort dropdown menus in the Documentation Manager
+ */
+
+:root {
+    --dropdown-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    --dropdown-shadow-hover: 0 12px 28px rgba(0, 0, 0, 0.2);
+    --dropdown-header-bg: rgba(0, 0, 0, 0.02);
+    --dropdown-footer-bg: rgba(0, 0, 0, 0.02);
+    --dropdown-item-hover: rgba(var(--doc-primary-rgb, 37, 99, 235), 0.08);
+    --dropdown-item-active: rgba(var(--doc-primary-rgb, 37, 99, 235), 0.12);
+    --dropdown-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --dropdown-border-radius: 12px;
+    --dropdown-item-radius: 8px;
+}
+
+/* Ensure the toolbar has a proper z-index that's below the admin header but above content */
+.documentation-toolbar {
+    position: relative;
+    z-index: 90; /* Lower than admin header (100) and horizontal menu (99) */
+}
+
+.documentation-toolbar-actions {
+    position: relative;
+}
+
+/* Common dropdown styles - with improved positioning */
+.filter-dropdown,
+.sort-dropdown {
+    position: absolute; /* Keep absolute positioning relative to parent */
+    top: calc(100% + 12px);
+    right: 0;
+    background-color: var(--card-bg);
+    border-radius: var(--dropdown-border-radius);
+    box-shadow: var(--dropdown-shadow);
+    z-index: 95; /* Higher than toolbar (90) but lower than admin header (100) */
+    display: none;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    transform-origin: top right;
+    transition: var(--dropdown-transition);
+    max-height: 80vh; /* Prevent dropdowns from being too tall */
+    overflow-y: auto; /* Allow scrolling within the dropdown */
+}
+
+/* Filter dropdown specific styles */
+.filter-dropdown {
+    width: 320px;
+}
+
+/* Sort dropdown specific styles */
+.sort-dropdown {
+    width: 280px;
+}
+
+/* Dropdown headers */
+.filter-header,
+.sort-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--dropdown-header-bg);
+}
+
+.filter-header h4,
+.sort-header h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-header h4::before {
+    content: '\f0b0';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    color: var(--doc-primary);
+    font-size: 0.9em;
+}
+
+.sort-header h4::before {
+    content: '\f0dc';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    color: var(--doc-primary);
+    font-size: 0.9em;
+}
+
+.filter-close-btn,
+.sort-close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 1rem;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--dropdown-transition);
+}
+
+.filter-close-btn:hover,
+.sort-close-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: var(--text-color);
+}
+
+/* Dropdown bodies */
+.filter-body,
+.sort-body {
+    padding: 1.25rem;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* Filter groups */
+.filter-group {
+    margin-bottom: 1.5rem;
+}
+
+.filter-group:last-child {
+    margin-bottom: 0;
+}
+
+.filter-group h5 {
+    margin: 0 0 0.75rem 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Filter checkboxes */
+.filter-checkbox {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+    padding: 0.5rem;
+    border-radius: var(--dropdown-item-radius);
+    transition: var(--dropdown-transition);
+    cursor: pointer;
+}
+
+.filter-checkbox:last-child {
+    margin-bottom: 0;
+}
+
+.filter-checkbox:hover {
+    background-color: var(--dropdown-item-hover);
+}
+
+.filter-checkbox input {
+    margin-right: 0.75rem;
+    cursor: pointer;
+    accent-color: var(--doc-primary);
+    width: 18px;
+    height: 18px;
+}
+
+/* Sort options */
+.sort-option {
+    padding: 0.85rem 1rem;
+    cursor: pointer;
+    border-radius: var(--dropdown-item-radius);
+    transition: var(--dropdown-transition);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.sort-option:last-child {
+    margin-bottom: 0;
+}
+
+.sort-option:hover {
+    background-color: var(--dropdown-item-hover);
+    transform: translateX(4px);
+}
+
+.sort-option:active {
+    background-color: var(--dropdown-item-active);
+}
+
+.sort-option i {
+    width: 20px;
+    text-align: center;
+    color: var(--doc-primary);
+    font-size: 0.9em;
+}
+
+/* Dropdown footers */
+.filter-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    background-color: var(--dropdown-footer-bg);
+}
+
+/* Footer buttons */
+.filter-apply-btn,
+.filter-reset-btn {
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--dropdown-item-radius);
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: var(--dropdown-transition);
+}
+
+.filter-apply-btn {
+    background-color: var(--doc-primary);
+    color: white;
+}
+
+.filter-apply-btn:hover {
+    background-color: var(--doc-secondary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.filter-apply-btn:active {
+    transform: translateY(0);
+}
+
+.filter-reset-btn {
+    background-color: var(--light-gray);
+    color: var(--text-color);
+}
+
+.filter-reset-btn:hover {
+    background-color: var(--medium-gray);
+    transform: translateY(-2px);
+}
+
+.filter-reset-btn:active {
+    transform: translateY(0);
+}
+
+/* Add a backdrop for better visibility - with reduced opacity and limited scope */
+.dropdown-backdrop {
+    position: absolute; /* Changed from fixed to absolute */
+    top: -20px; /* Extend slightly above the toolbar */
+    left: -20px;
+    width: calc(100% + 40px); /* Cover the entire toolbar area plus some padding */
+    height: calc(100vh); /* Limit height to viewport */
+    background-color: rgba(0, 0, 0, 0.05); /* Further reduced opacity */
+    z-index: 92; /* Between toolbar (90) and dropdowns (95) */
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none; /* Allow clicks to pass through except for dropdowns */
+}
+
+.dropdown-backdrop.show {
+    display: block;
+    opacity: 1;
+    pointer-events: auto; /* Re-enable pointer events when shown */
+}
+
+/* Ensure the dropdowns are visible with enhanced animations */
+.filter-dropdown.show,
+.sort-dropdown.show {
+    display: block;
+    animation: dropdownOpen 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Improved dropdown animations */
+@keyframes dropdownOpen {
+    0% {
+        opacity: 0;
+        transform: scale(0.95) translateY(-10px);
+    }
+    70% {
+        opacity: 1;
+        transform: scale(1.02) translateY(2px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Ensure the filter and sort buttons have proper positioning and styling */
+#filter-btn,
+#sort-btn {
+    position: relative;
+    z-index: 93; /* Higher than backdrop (92) but lower than dropdowns (95) */
+}
+
+#filter-btn::after,
+#sort-btn::after {
+    content: '';
+    position: absolute;
+    bottom: -6px; /* Moved closer to button */
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 80%;
+    height: 3px;
+    background-color: var(--doc-primary);
+    transition: transform 0.3s ease;
+    border-radius: 3px;
+}
+
+#filter-btn.active::after,
+#sort-btn.active::after {
+    transform: translateX(-50%) scaleX(1);
+}
+
+/* Ensure the buttons are clickable */
+#filter-btn.active,
+#sort-btn.active {
+    z-index: 94; /* Higher than normal buttons (93) but still below dropdowns (95) */
+}
+
+/* Ensure the documentation grid stays below the dropdowns but is still interactive */
+.documentation-grid {
+    position: relative;
+    z-index: 50; /* Lower than toolbar but still interactive */
+}
+
+/* Scrollbar styling for dropdown bodies */
+.filter-body::-webkit-scrollbar,
+.sort-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.filter-body::-webkit-scrollbar-track,
+.sort-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.filter-body::-webkit-scrollbar-thumb,
+.sort-body::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+.filter-body::-webkit-scrollbar-thumb:hover,
+.sort-body::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Dark theme adjustments */
+[data-theme="dark"] .filter-dropdown,
+[data-theme="dark"] .sort-dropdown {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    border-color: var(--darker-gray);
+}
+
+[data-theme="dark"] .filter-header,
+[data-theme="dark"] .sort-header,
+[data-theme="dark"] .filter-footer {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="dark"] .filter-close-btn:hover,
+[data-theme="dark"] .sort-close-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .filter-checkbox:hover,
+[data-theme="dark"] .sort-option:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .filter-checkbox:active,
+[data-theme="dark"] .sort-option:active {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .filter-body::-webkit-scrollbar-thumb,
+[data-theme="dark"] .sort-body::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .filter-body::-webkit-scrollbar-thumb:hover,
+[data-theme="dark"] .sort-body::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .filter-dropdown,
+    .sort-dropdown {
+        width: 100%;
+        left: 0;
+        right: 0;
+        top: calc(100% + 8px);
+        max-height: 60vh; /* Reduced height for mobile */
+        border-radius: var(--dropdown-border-radius);
+        animation: slideUpMobile 0.3s ease-out;
+        position: absolute; /* Ensure it stays with parent */
+    }
+
+    .filter-body,
+    .sort-body {
+        max-height: 40vh; /* Reduced height for mobile */
+    }
+
+    /* Adjust backdrop for mobile */
+    .dropdown-backdrop {
+        width: 100%;
+        left: 0;
+        top: 0;
+        height: 100%;
+        position: absolute;
+    }
+
+    /* Ensure toolbar actions container has proper positioning */
+    .documentation-toolbar-actions {
+        position: relative;
+        z-index: 100;
+    }
+
+    @keyframes slideUpMobile {
+        from {
+            transform: translateY(10px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+}

@@ -1,0 +1,479 @@
+/**
+ * Responsive Styles for User Manual Admin
+ * This file contains responsive styles for all admin pages
+ */
+
+/* Base responsive variables */
+:root {
+    /* Standard breakpoints for consistent responsive behavior */
+    --mobile-breakpoint: 576px;
+    --tablet-breakpoint: 768px;
+    --laptop-breakpoint: 992px;
+    --desktop-breakpoint: 1200px;
+    --large-desktop-breakpoint: 1440px;
+
+    /* Responsive spacing units */
+    --spacing-unit: 1rem;
+    --spacing-unit-sm: 0.5rem;
+    --spacing-unit-lg: 1.5rem;
+
+    /* Responsive font sizes */
+    --base-font-size: 16px;
+    --base-font-size-sm: 14px;
+    --base-font-size-lg: 18px;
+}
+
+/* ===== Global Responsive Styles ===== */
+
+/* Mobile menu toggle button */
+.mobile-menu-toggle {
+    display: none;
+}
+
+@media (max-width: calc(var(--tablet-breakpoint) - 0.02px)) {
+    .mobile-menu-toggle {
+        display: flex;
+        margin-right: auto;
+    }
+
+    .admin-nav {
+        position: fixed;
+        top: var(--admin-header-height);
+        left: -100%;
+        width: 80%;
+        max-width: 300px;
+        height: calc(100vh - var(--admin-header-height));
+        background-color: var(--card-bg);
+        box-shadow: var(--box-shadow);
+        z-index: 1000;
+        transition: left 0.3s ease;
+        overflow-y: auto;
+    }
+
+    .admin-nav.mobile-nav-open {
+        left: 0;
+    }
+
+    .admin-nav ul {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .admin-nav li {
+        width: 100%;
+    }
+
+    .admin-nav a {
+        width: 100%;
+        padding: 1rem;
+        border-bottom: 1px solid var(--border-color);
+        border-left: 3px solid transparent;
+    }
+
+    .admin-nav li.active a {
+        border-bottom: 1px solid var(--border-color);
+        border-left: 3px solid var(--primary-color);
+    }
+}
+
+/* Responsive table styles */
+@media (max-width: calc(var(--tablet-breakpoint) - 0.02px)) {
+    .responsive-table thead {
+        display: none;
+    }
+
+    .responsive-table tbody tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: var(--card-border-radius);
+    }
+
+    .responsive-table tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem;
+        text-align: right;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .responsive-table tbody td:last-child {
+        border-bottom: none;
+    }
+
+    .responsive-table tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        margin-right: auto;
+        text-align: left;
+    }
+
+    .responsive-table .action-buttons {
+        justify-content: flex-end;
+    }
+}
+
+/* Extra small devices (phones, less than 576px) */
+@media (max-width: calc(var(--mobile-breakpoint) - 0.02px)) {
+    body {
+        font-size: var(--base-font-size-sm);
+    }
+
+    .admin-container {
+        grid-template-rows: auto 1fr;
+    }
+
+    /* Header responsive styles */
+    .admin-header {
+        padding: 0.5rem;
+        flex-direction: column;
+        height: auto;
+    }
+
+    .logo {
+        width: 100%;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+    }
+
+    .logo-text {
+        font-size: 0.9rem;
+    }
+
+    .logo-text h1 {
+        font-size: 1.2rem;
+    }
+
+    .header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    /* Dropdown positioning */
+    .admin-dropdown-menu,
+    .notifications-dropdown {
+        width: 100%;
+        left: 0;
+        right: 0;
+    }
+
+    /* Navigation responsive styles */
+    .admin-horizontal-menu {
+        overflow-x: auto;
+        height: auto;
+    }
+
+    .admin-nav ul {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 5px;
+    }
+
+    .admin-nav a {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .admin-nav a i {
+        margin-right: 0.25rem;
+    }
+
+    /* Main content responsive styles */
+    .admin-main-content {
+        padding: 1rem;
+        height: auto;
+    }
+
+    .admin-page-header h2 {
+        font-size: 1.5rem;
+    }
+
+    /* Stats cards responsive */
+    .admin-stats-container,
+    .analytics-stats-container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    /* Tables responsive */
+    .admin-content-table-container {
+        overflow-x: auto;
+    }
+
+    .admin-content-table th,
+    .admin-content-table td {
+        padding: 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    /* Forms responsive */
+    .form-row {
+        flex-direction: column;
+    }
+
+    .form-group.half {
+        width: 100%;
+    }
+
+    /* Action buttons */
+    .admin-content-actions {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .admin-search-bar {
+        width: 100%;
+    }
+
+    .admin-filter-actions {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.5rem;
+    }
+
+    .admin-select {
+        width: 100%;
+    }
+
+    /* Media library responsive */
+    .media-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Analytics charts responsive */
+    .analytics-charts-container {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-container {
+        height: 250px;
+    }
+
+    /* Structure page responsive */
+    .structure-container {
+        flex-direction: column;
+    }
+
+    .structure-sidebar,
+    .structure-content {
+        width: 100%;
+    }
+}
+
+/* Small devices (tablets, 576px and up) */
+@media (min-width: var(--mobile-breakpoint)) and (max-width: calc(var(--tablet-breakpoint) - 0.02px)) {
+    /* Header responsive styles */
+    .admin-header {
+        padding: 0 1rem;
+    }
+
+    .logo-text h1 {
+        font-size: 1.4rem;
+    }
+
+    /* Navigation responsive styles */
+    .admin-nav ul {
+        overflow-x: auto;
+    }
+
+    .admin-nav a {
+        padding: 0 0.75rem;
+    }
+
+    /* Stats cards responsive */
+    .admin-stats-container,
+    .analytics-stats-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Media library responsive */
+    .media-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Analytics charts responsive */
+    .analytics-charts-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: var(--tablet-breakpoint)) and (max-width: calc(var(--laptop-breakpoint) - 0.02px)) {
+    /* Stats cards responsive */
+    .admin-stats-container,
+    .analytics-stats-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Media library responsive */
+    .media-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    /* Analytics charts responsive */
+    .analytics-charts-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Structure page responsive */
+    .structure-sidebar {
+        width: 35%;
+    }
+
+    .structure-content {
+        width: 65%;
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: var(--laptop-breakpoint)) and (max-width: calc(var(--desktop-breakpoint) - 0.02px)) {
+    /* Stats cards responsive */
+    .admin-stats-container,
+    .analytics-stats-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    /* Media library responsive */
+    .media-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: var(--desktop-breakpoint)) {
+    /* Stats cards responsive */
+    .admin-stats-container,
+    .analytics-stats-container {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    /* Media library responsive */
+    .media-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+/* ===== Specific Component Responsive Styles ===== */
+
+/* Responsive tabs */
+@media (max-width: calc(var(--tablet-breakpoint) - 0.02px)) {
+    .admin-tabs {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .admin-tab {
+        flex: 1 1 calc(50% - 0.5rem);
+        font-size: 0.9rem;
+        padding: 0.5rem;
+    }
+}
+
+/* Responsive date range selector */
+@media (max-width: calc(var(--tablet-breakpoint) - 0.02px)) {
+    .analytics-date-range {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .date-range-options {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .date-range-btn {
+        flex: 1 1 calc(50% - 0.5rem);
+        text-align: center;
+    }
+
+    .date-range-custom {
+        flex-direction: column;
+        width: 100%;
+    }
+}
+
+/* Responsive roles & permissions */
+@media (max-width: calc(var(--laptop-breakpoint) - 0.02px)) {
+    .roles-container {
+        flex-direction: column;
+    }
+
+    .roles-list,
+    .permissions-editor {
+        width: 100%;
+    }
+}
+
+/* Responsive editor */
+@media (max-width: calc(var(--tablet-breakpoint) - 0.02px)) {
+    .editor-toolbar {
+        flex-wrap: wrap;
+        gap: 0.25rem;
+    }
+
+    .editor-tool {
+        padding: 0.25rem;
+        font-size: 0.9rem;
+    }
+
+    .editor-content {
+        min-height: 200px;
+    }
+}
+
+/* Responsive image editor */
+@media (max-width: calc(var(--laptop-breakpoint) - 0.02px)) {
+    .image-editor-container {
+        flex-direction: column;
+    }
+
+    .image-editor-sidebar,
+    .image-editor-main {
+        width: 100%;
+    }
+}
+
+/* Responsive activity timeline */
+@media (max-width: calc(var(--tablet-breakpoint) - 0.02px)) {
+    .timeline-item {
+        padding-left: 2rem;
+    }
+
+    .timeline-icon {
+        width: 30px;
+        height: 30px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Responsive quick actions */
+@media (max-width: calc(var(--tablet-breakpoint) - 0.02px)) {
+    .admin-quick-actions {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Responsive pagination */
+@media (max-width: calc(var(--mobile-breakpoint) - 0.02px)) {
+    .admin-pagination {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+/* Responsive notifications */
+@media (max-width: calc(var(--mobile-breakpoint) - 0.02px)) {
+    .notifications-dropdown {
+        position: fixed;
+        top: var(--admin-header-height);
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+}
+
+/* Login page responsive styles - Removed */

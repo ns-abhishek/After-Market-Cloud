@@ -1,0 +1,227 @@
+/**
+ * Preview Buttons Redesign
+ * Extends the action-buttons-redesign.css styles for the Preview section
+ */
+
+/* Preview section specific variables */
+:root {
+    --preview-btn-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --preview-btn-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    --preview-btn-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+    
+    /* Button colors for preview section */
+    --preview-compare-color: #8b5cf6;
+    --preview-compare-bg: rgba(139, 92, 246, 0.1);
+    --preview-device-color: #06b6d4;
+    --preview-device-bg: rgba(6, 182, 212, 0.1);
+    --preview-edit-color: #3b82f6;
+    --preview-edit-bg: rgba(59, 130, 246, 0.1);
+}
+
+/* Enhance the admin-page-actions buttons in the Preview section */
+.admin-page-actions .admin-button {
+    transition: var(--preview-btn-transition);
+    position: relative;
+    overflow: hidden;
+    z-index: 90; /* Below admin header (100) */
+}
+
+.admin-page-actions .admin-button:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--preview-btn-shadow-hover);
+}
+
+.admin-page-actions .admin-button:active {
+    transform: translateY(0);
+}
+
+/* Add ripple effect */
+.admin-page-actions .admin-button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    transition: transform 0.5s, opacity 0.5s;
+    z-index: -1;
+}
+
+.admin-page-actions .admin-button:active::after {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+    transition: 0s;
+}
+
+/* Preview Controls buttons */
+.preview-actions .admin-button {
+    width: auto;
+    height: auto;
+    padding: 0.75rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    font-size: 0.95rem;
+    border-radius: var(--action-btn-radius);
+    box-shadow: var(--action-btn-shadow);
+    background-color: var(--action-btn-bg);
+    color: var(--action-btn-text);
+    border: 1px solid var(--action-btn-border);
+    transition: var(--preview-btn-transition);
+    position: relative;
+    overflow: hidden;
+    z-index: 90; /* Below admin header (100) */
+}
+
+.preview-actions .admin-button i {
+    font-size: 1.1rem;
+}
+
+.preview-actions .admin-button:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--preview-btn-shadow-hover);
+}
+
+.preview-actions .admin-button:active {
+    transform: translateY(0);
+}
+
+/* Add ripple effect to preview action buttons */
+.preview-actions .admin-button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    transition: transform 0.5s, opacity 0.5s;
+    z-index: -1;
+}
+
+.preview-actions .admin-button:active::after {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+    transition: 0s;
+}
+
+/* Compare versions button */
+.preview-actions .admin-button:has(i.fa-code-compare) {
+    color: var(--preview-compare-color);
+    border-color: var(--preview-compare-color);
+}
+
+.preview-actions .admin-button:has(i.fa-code-compare):hover {
+    background-color: var(--preview-compare-bg);
+}
+
+/* Device preview button */
+.preview-actions .admin-button:has(i.fa-mobile-alt) {
+    color: var(--preview-device-color);
+    border-color: var(--preview-device-color);
+}
+
+.preview-actions .admin-button:has(i.fa-mobile-alt):hover {
+    background-color: var(--preview-device-bg);
+}
+
+/* Edit button */
+.preview-actions .admin-button:has(i.fa-edit) {
+    color: var(--preview-edit-color);
+    border-color: var(--preview-edit-color);
+}
+
+.preview-actions .admin-button:has(i.fa-edit):hover {
+    background-color: var(--preview-edit-bg);
+}
+
+/* Preview frame action buttons */
+.preview-frame-action {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--action-btn-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--action-btn-bg);
+    color: var(--action-btn-text);
+    border: 1px solid var(--action-btn-border);
+    cursor: pointer;
+    transition: var(--preview-btn-transition);
+    box-shadow: var(--action-btn-shadow);
+    overflow: hidden;
+    z-index: 1;
+}
+
+.preview-frame-action:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--preview-btn-shadow-hover);
+    background-color: var(--preview-device-bg);
+    color: var(--preview-device-color);
+    border-color: var(--preview-device-color);
+}
+
+.preview-frame-action:active {
+    transform: translateY(0);
+}
+
+.preview-frame-action.active {
+    background-color: var(--preview-device-color);
+    color: white;
+    border-color: var(--preview-device-color);
+}
+
+/* Add ripple effect to frame action buttons */
+.preview-frame-action::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    transition: transform 0.5s, opacity 0.5s;
+    z-index: -1;
+}
+
+.preview-frame-action:active::after {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+    transition: 0s;
+}
+
+/* Dark theme adjustments */
+[data-theme="dark"] .preview-actions .admin-button,
+[data-theme="dark"] .preview-frame-action {
+    --action-btn-bg: var(--dark-gray, #374151);
+    --action-btn-border: var(--darker-gray, #1f2937);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .preview-actions {
+        flex-wrap: wrap;
+        width: 100%;
+    }
+    
+    .preview-actions .admin-button {
+        flex: 1;
+        min-width: 120px;
+        justify-content: center;
+    }
+    
+    .preview-frame-actions {
+        gap: 8px;
+    }
+}

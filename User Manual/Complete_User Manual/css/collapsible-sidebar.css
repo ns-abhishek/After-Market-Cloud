@@ -1,0 +1,223 @@
+/* Collapsible Sidebar CSS for ERP User Manual */
+
+/* Container adjustments for collapsible sidebar */
+.container {
+    position: relative;
+    transition: margin-left 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* Sidebar adjustments - hidden by default */
+.sidebar {
+    position: fixed;
+    top: 108px; /* Position below the main navigation menu (60px header + 48px nav) */
+    left: 0;
+    height: calc(100vh - 108px); /* Adjust height to account for header and nav */
+    width: 250px;
+    transform: translateX(-250px);
+    transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.4s ease;
+    z-index: 100;
+    box-shadow: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: var(--card-bg-color);
+    border-right: 1px solid var(--border-color);
+}
+
+/* Sidebar tab indicator - always visible */
+.sidebar-tab {
+    position: fixed;
+    top: calc(108px + (100vh - 108px) / 2); /* Center vertically in the available space below nav */
+    left: 0;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 60px;
+    background-color: var(--primary-color);
+    border-radius: 0 4px 4px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--light-text);
+    cursor: pointer;
+    z-index: 99;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(var(--primary-color-rgb, 0, 123, 255), 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 6px rgba(var(--primary-color-rgb, 0, 123, 255), 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(var(--primary-color-rgb, 0, 123, 255), 0);
+    }
+}
+
+.sidebar-tab i {
+    font-size: 1rem;
+    transition: transform 0.3s ease;
+    margin-right: 5px;
+}
+
+.sidebar-tab-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.sidebar-tab:hover {
+    width: 80px;
+    background-color: var(--primary-color-dark, var(--primary-color));
+}
+
+.sidebar-tab:hover .sidebar-tab-label {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Sidebar hover area - for hover activation */
+.sidebar-hover-area {
+    position: fixed;
+    top: 108px; /* Position below the main navigation menu (60px header + 48px nav) */
+    left: 0;
+    width: 20px;
+    height: calc(100vh - 108px); /* Adjust height to account for header and nav */
+    z-index: 98;
+}
+
+/* Sidebar states */
+.sidebar.visible {
+    transform: translateX(0);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-tab.sidebar-visible i {
+    transform: rotate(180deg);
+}
+
+.sidebar-tab.sidebar-visible {
+    width: 80px;
+}
+
+.sidebar-tab.sidebar-visible .sidebar-tab-label {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Main content adjustments */
+main {
+    transition: padding-left 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), width 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+    width: 100%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 280px;
+        transform: translateX(-280px);
+        top: 100px; /* Adjusted for mobile header + nav height */
+        height: calc(100vh - 100px); /* Adjusted for mobile header + nav height */
+    }
+
+    .sidebar.visible {
+        transform: translateX(0);
+    }
+
+    .sidebar-hover-area {
+        top: 100px; /* Adjusted for mobile header + nav height */
+        height: calc(100vh - 100px); /* Adjusted for mobile header + nav height */
+    }
+
+    .sidebar-tab {
+        top: calc(100px + (100vh - 100px) / 2); /* Adjusted for mobile header + nav height */
+    }
+
+    main {
+        padding-left: 1rem;
+    }
+}
+
+/* Animation for sidebar content */
+.sidebar-section {
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition-delay: 0s;
+}
+
+.sidebar.visible .sidebar-section {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Staggered animation for sidebar sections */
+.sidebar.visible .sidebar-section:nth-child(1) {
+    transition-delay: 0.1s;
+}
+
+.sidebar.visible .sidebar-section:nth-child(2) {
+    transition-delay: 0.15s;
+}
+
+.sidebar.visible .sidebar-section:nth-child(3) {
+    transition-delay: 0.2s;
+}
+
+.sidebar.visible .sidebar-section:nth-child(4) {
+    transition-delay: 0.25s;
+}
+
+/* Print styles - show sidebar when printing */
+@media print {
+    .sidebar {
+        position: relative;
+        transform: translateX(0);
+        width: 100%;
+        height: auto;
+        overflow: visible;
+        box-shadow: none;
+        border-right: none;
+        page-break-inside: avoid;
+    }
+
+    .sidebar-tab,
+    .sidebar-hover-area {
+        display: none;
+    }
+
+    .sidebar-section {
+        opacity: 1;
+        transform: none;
+    }
+
+    main {
+        width: 100%;
+        padding-left: 1rem;
+    }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    .sidebar,
+    .sidebar-tab,
+    .sidebar-section,
+    main,
+    .container {
+        transition-duration: 0.1s;
+    }
+
+    .sidebar-tab {
+        animation: none;
+    }
+
+    .sidebar-tab-label {
+        transition: none;
+    }
+}

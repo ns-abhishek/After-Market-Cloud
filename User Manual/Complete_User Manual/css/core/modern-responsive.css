@@ -1,0 +1,424 @@
+/* Modern Responsive CSS for ERP User Manual */
+
+/* Base responsive variables */
+:root {
+    /* Standard breakpoints for consistent responsive behavior */
+    --mobile-breakpoint: 576px;
+    --tablet-breakpoint: 768px;
+    --laptop-breakpoint: 992px;
+    --desktop-breakpoint: 1200px;
+    --large-desktop-breakpoint: 1440px;
+
+    /* Responsive spacing units */
+    --spacing-unit: 1rem;
+    --spacing-unit-sm: 0.5rem;
+    --spacing-unit-lg: 1.5rem;
+
+    /* Responsive font sizes */
+    --base-font-size: 16px;
+    --base-font-size-sm: 14px;
+    --base-font-size-lg: 18px;
+}
+
+/* Base responsive settings */
+html {
+    font-size: var(--base-font-size);
+}
+
+/* Extra Large Screens (1440px and up) */
+@media (min-width: var(--large-desktop-breakpoint)) {
+    .container {
+        max-width: 1360px;
+    }
+}
+
+/* Large Screens (1200px and up) */
+@media (min-width: var(--desktop-breakpoint)) and (max-width: calc(var(--large-desktop-breakpoint) - 0.02px)) {
+    .container {
+        max-width: 1140px;
+    }
+}
+
+/* Medium Screens (992px and up) */
+@media (min-width: var(--laptop-breakpoint)) and (max-width: calc(var(--desktop-breakpoint) - 0.02px)) {
+    .sidebar {
+        width: 230px;
+    }
+}
+
+/* Small Screens (768px and up) */
+@media (min-width: var(--tablet-breakpoint)) and (max-width: calc(var(--laptop-breakpoint) - 0.02px)) {
+    html {
+        font-size: calc(var(--base-font-size-sm) + 1px);
+    }
+
+    .sidebar {
+        width: 200px;
+    }
+
+    header {
+        padding: 0.5rem 0.75rem;
+    }
+
+    .logo-container h1 {
+        font-size: 1.1rem;
+    }
+
+    .search-container {
+        max-width: 250px;
+    }
+
+    .card-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .topic-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .next-steps-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    main {
+        padding: 0.75rem 1rem;
+    }
+}
+
+/* Extra Small Screens (576px and up) */
+@media (min-width: var(--mobile-breakpoint)) and (max-width: calc(var(--tablet-breakpoint) - 0.02px)) {
+    html {
+        font-size: var(--base-font-size-sm);
+    }
+
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        margin-bottom: 0;
+        position: static;
+        max-height: none;
+        height: auto;
+        border-right: none;
+        border-top: 1px solid var(--border-color);
+    }
+
+    header {
+        padding: 0.5rem 0.75rem;
+    }
+
+    .logo-container h1 {
+        font-size: 1rem;
+    }
+
+    .search-container {
+        max-width: 200px;
+    }
+
+    .nav-menu {
+        flex-wrap: wrap;
+    }
+
+    .nav-link {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    .dropdown-menu {
+        position: static;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        box-shadow: none;
+        border: none;
+        border-left: 2px solid var(--primary-color);
+        border-radius: 0;
+        margin-left: 1rem;
+        display: none;
+    }
+
+    .dropdown.active .dropdown-menu {
+        display: block;
+    }
+
+    .card-container {
+        grid-template-columns: 1fr;
+    }
+
+    .topic-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .next-steps-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .breadcrumbs {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .page-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .user-type-buttons {
+        flex-direction: column;
+    }
+
+    .user-role {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    main {
+        padding: 0.75rem;
+        max-width: 100%;
+    }
+
+    .settings-menu {
+        width: 100%;
+    }
+}
+
+/* Mobile Screens (575px and down) */
+@media (max-width: calc(var(--mobile-breakpoint) - 0.02px)) {
+    html {
+        font-size: var(--base-font-size-sm);
+    }
+
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        margin-bottom: 0;
+        position: static;
+        max-height: none;
+        height: auto;
+        border-right: none;
+        border-top: 1px solid var(--border-color);
+    }
+
+    header {
+        padding: 0.5rem;
+        height: auto;
+    }
+
+    .logo-container {
+        flex: 1;
+    }
+
+    .logo-container h1 {
+        font-size: 1rem;
+    }
+
+    .search-container {
+        max-width: 100%;
+        margin-top: 0.5rem;
+        order: 3;
+        width: 100%;
+    }
+
+    .header-actions {
+        order: 2;
+    }
+
+    .nav-container {
+        padding: 0;
+    }
+
+    .nav-menu {
+        flex-direction: column;
+    }
+
+    .nav-item {
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .nav-link {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    .nav-link.active::after {
+        display: none;
+    }
+
+    .nav-link.active {
+        background-color: var(--background-color);
+        font-weight: 600;
+    }
+
+    .dropdown-menu {
+        position: static;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        box-shadow: none;
+        border: none;
+        border-left: 2px solid var(--primary-color);
+        border-radius: 0;
+        margin-left: 1rem;
+        display: none;
+    }
+
+    .dropdown.active .dropdown-menu {
+        display: block;
+    }
+
+    .card-container {
+        grid-template-columns: 1fr;
+    }
+
+    .topic-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .next-steps-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .breadcrumbs {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .page-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .footer-section {
+        width: 100%;
+    }
+
+    .user-type-buttons {
+        flex-direction: column;
+    }
+
+    .user-role {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    main {
+        padding: 0.5rem;
+        max-width: 100%;
+    }
+
+    .settings-menu {
+        width: 100%;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .accessibility-controls,
+    .main-nav,
+    .sidebar,
+    .feedback-widget,
+    .search-container,
+    .page-actions,
+    footer {
+        display: none !important;
+    }
+
+    .container {
+        display: block;
+        width: 100%;
+        padding: 0;
+    }
+
+    main {
+        width: 100%;
+    }
+
+    body {
+        font-size: 12pt;
+        line-height: 1.5;
+        color: #000;
+        background: #fff;
+    }
+
+    a {
+        color: #000;
+        text-decoration: underline;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid;
+        page-break-inside: avoid;
+    }
+
+    img {
+        max-width: 100% !important;
+        page-break-inside: avoid;
+    }
+
+    .print-title-page {
+        display: block;
+        text-align: center;
+        margin-bottom: 2cm;
+    }
+
+    table {
+        page-break-inside: avoid;
+    }
+
+    tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+}
+
+/* High Contrast Mode */
+.high-contrast {
+    --primary-color: #000000;
+    --primary-light: #000000;
+    --primary-dark: #000000;
+    --secondary-color: #000000;
+    --accent-color: #000000;
+    --background-color: #ffffff;
+    --card-bg-color: #ffffff;
+    --text-color: #000000;
+    --text-secondary: #000000;
+    --light-text: #ffffff;
+    --border-color: #000000;
+
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.high-contrast * {
+    border-color: var(--border-color) !important;
+}
+
+.high-contrast a,
+.high-contrast button,
+.high-contrast .btn,
+.high-contrast .nav-link,
+.high-contrast .sidebar-link,
+.high-contrast .toc-link {
+    color: var(--text-color) !important;
+}
+
+.high-contrast button,
+.high-contrast .btn,
+.high-contrast .nav-link.active,
+.high-contrast .sidebar-link:hover,
+.high-contrast .toc-link.active {
+    background-color: var(--text-color) !important;
+    color: var(--light-text) !important;
+}

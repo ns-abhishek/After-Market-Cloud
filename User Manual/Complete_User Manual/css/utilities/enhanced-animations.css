@@ -1,0 +1,412 @@
+/* Enhanced Animations and Spacing for ERP User Manual */
+
+/* Respect user preferences for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .featured-card:hover,
+    .update-card:hover,
+    .step-card:hover,
+    .roadmap-item:hover,
+    .roadmap-item:hover .roadmap-number,
+    .roadmap-item:hover .roadmap-details {
+        transform: none !important;
+    }
+
+    .featured-card:hover .featured-card-img img {
+        transform: none !important;
+    }
+
+    .animate-in,
+    .animate-in.visible,
+    .title-animate::after,
+    .title-animate.visible::after {
+        transition: none !important;
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+        width: 60px !important;
+    }
+
+    .scroll-indicator {
+        display: none !important;
+    }
+}
+
+/* Class for JavaScript to apply when reduced motion is detected */
+.reduced-motion *,
+.reduced-motion *::before,
+.reduced-motion *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+}
+
+/* Page-wide animations */
+.home-container main {
+    animation: fadeIn 0.8s ease-out;
+}
+
+.section-title {
+    position: relative;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background-color: var(--primary-color);
+    animation: widthGrow 1s ease-out forwards;
+}
+
+@keyframes widthGrow {
+    from { width: 0; }
+    to { width: 60px; }
+}
+
+/* Improved spacing for all sections */
+section {
+    margin-bottom: 0;
+    padding: 1.5rem 0;
+}
+
+/* Add more space between section title and content */
+.section-title {
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    letter-spacing: -0.5px;
+}
+
+/* Add more space between paragraphs */
+p {
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+}
+
+/* Enhanced Featured Topics Section */
+.featured-topics {
+    margin-bottom: 0;
+}
+
+.featured-cards {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 1.5rem;
+    overflow-x: auto;
+    padding: 1.5rem 0.5rem;
+    scrollbar-width: thin;
+    -ms-overflow-style: none;
+    scroll-behavior: smooth;
+}
+
+.featured-card {
+    flex: 0 0 auto;
+    width: 320px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    background-color: var(--card-bg-color);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    animation: fadeInUp 0.6s ease-out backwards;
+}
+
+.featured-card:nth-child(1) { animation-delay: 0.1s; }
+.featured-card:nth-child(2) { animation-delay: 0.2s; }
+.featured-card:nth-child(3) { animation-delay: 0.3s; }
+
+.featured-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.featured-card-content {
+    padding: 1.5rem;
+}
+
+.featured-card-img img {
+    transition: transform 0.7s ease;
+}
+
+.featured-card:hover .featured-card-img img {
+    transform: scale(1.08);
+}
+
+/* Enhanced Recent Updates Section */
+.updates-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 1.5rem;
+    padding: 1.5rem 0.5rem;
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
+}
+
+.update-card {
+    flex: 0 0 auto;
+    width: 360px;
+    background-color: var(--card-bg-color);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    animation: fadeInUp 0.6s ease-out backwards;
+}
+
+.update-card:nth-child(1) { animation-delay: 0.2s; }
+.update-card:nth-child(2) { animation-delay: 0.3s; }
+.update-card:nth-child(3) { animation-delay: 0.4s; }
+
+.update-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.update-title {
+    margin-bottom: 1rem;
+}
+
+.update-content {
+    margin-bottom: 1.5rem;
+}
+
+.update-links {
+    gap: 1.5rem;
+}
+
+/* Enhanced Next Steps Section */
+.steps-horizontal-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.step-card {
+    background-color: var(--card-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1.75rem;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    animation: fadeInUp 0.6s ease-out backwards;
+}
+
+.step-card:nth-child(1) { animation-delay: 0.1s; }
+.step-card:nth-child(2) { animation-delay: 0.2s; }
+.step-card:nth-child(3) { animation-delay: 0.3s; }
+.step-card:nth-child(4) { animation-delay: 0.4s; }
+
+.step-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.step-card:hover .step-icon {
+    transform: scale(1.1);
+    background-color: var(--primary-color);
+    color: var(--light-text);
+}
+
+.step-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: var(--background-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.25rem;
+    font-size: 1.75rem;
+    color: var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+.step-title {
+    margin-bottom: 1rem;
+}
+
+.step-text {
+    margin-bottom: 1.5rem;
+}
+
+/* Enhanced Implementation Roadmap Section */
+.roadmap-container {
+    margin-top: 2.5rem;
+}
+
+.roadmap-horizontal {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding: 2rem 0.5rem;
+    position: relative;
+}
+
+.roadmap-horizontal::before {
+    content: '';
+    position: absolute;
+    top: 45px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: var(--border-color);
+    z-index: 0;
+    animation: widthGrow 1.5s ease-out forwards;
+}
+
+.roadmap-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+    animation: fadeInUp 0.8s ease-out backwards;
+}
+
+.roadmap-item:nth-child(1) { animation-delay: 0.2s; }
+.roadmap-item:nth-child(2) { animation-delay: 0.4s; }
+.roadmap-item:nth-child(3) { animation-delay: 0.6s; }
+.roadmap-item:nth-child(4) { animation-delay: 0.8s; }
+.roadmap-item:nth-child(5) { animation-delay: 1s; }
+
+.roadmap-number {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: var(--light-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 1.25rem;
+    border: 3px solid var(--card-bg-color);
+    transition: all 0.3s ease;
+    box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.03);
+}
+
+.roadmap-item:hover .roadmap-number {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 8px rgba(0, 0, 0, 0.05);
+}
+
+.roadmap-details {
+    background-color: var(--card-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1.25rem;
+    width: 100%;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.roadmap-item:hover .roadmap-details {
+    transform: translateY(5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+}
+
+.roadmap-title {
+    margin-bottom: 0.75rem;
+}
+
+.roadmap-text {
+    margin-bottom: 1rem;
+}
+
+/* Scroll animations for horizontal sections */
+@keyframes scrollIndicator {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(10px); }
+}
+
+/* Scroll indicator styling */
+.scroll-indicator {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: var(--primary-color);
+    color: var(--light-text);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.scroll-indicator:hover {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.scroll-indicator.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.scroll-indicator.hidden {
+    display: none;
+}
+
+/* Animation classes for intersection observer */
+.animate-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.animate-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.title-animate::after {
+    width: 0;
+    transition: width 0.8s ease-out;
+}
+
+.title-animate.visible::after {
+    width: 60px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .steps-horizontal-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .featured-card, .update-card {
+        width: 85%;
+        min-width: 280px;
+    }
+
+    .steps-horizontal-grid {
+        grid-template-columns: 1fr;
+    }
+}

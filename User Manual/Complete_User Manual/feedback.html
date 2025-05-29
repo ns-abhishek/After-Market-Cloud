@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - ERP System User Manual</title>
+    <!-- Modern UI Framework -->
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="css/core/modern-ui.css">
+    <link rel="stylesheet" href="css/core/modern-components.css">
+    <link rel="stylesheet" href="css/core/modern-layout.css">
+    <link rel="stylesheet" href="css/core/modern-responsive.css">
+
+    <!-- Layout CSS -->
+    <link rel="stylesheet" href="css/layout/footer.css">
+    <link rel="stylesheet" href="css/layout/collapsible-sidebar.css">
+    <link rel="stylesheet" href="css/layout/header-modifications.css">
+    <link rel="stylesheet" href="css/layout/sticky-header-nav.css">
+    <link rel="stylesheet" href="css/layout/centered-layout.css">
+
+    <!-- Components CSS -->
+    <link rel="stylesheet" href="css/components/modern-embedded-help.css">
+    <link rel="stylesheet" href="css/components/evenly-distributed-nav.css">
+    <link rel="stylesheet" href="css/components/enhanced-dropdown.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Print stylesheet (loaded only when printing) -->
+    <link rel="stylesheet" href="css/utilities/print.css" media="print">
+    <style>
+        /* Feedback specific styles */
+        .feedback-form-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .feedback-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .feedback-option {
+            flex: 1;
+            min-width: 200px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .feedback-option:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-4px);
+            box-shadow: var(--box-shadow);
+        }
+
+        .feedback-option.active {
+            border-color: var(--primary-color);
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        .feedback-option i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .feedback-option h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+        }
+
+        .feedback-option p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .feedback-form-fields {
+            margin-top: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-secondary {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--light-text);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-color-dark);
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            margin-top: 2rem;
+        }
+
+        .success-message.active {
+            display: block;
+        }
+
+        .success-message i {
+            font-size: 3rem;
+            color: #28a745;
+            margin-bottom: 1rem;
+        }
+
+        .success-message h3 {
+            margin: 0 0 1rem 0;
+        }
+
+        .success-message p {
+            margin: 0 0 1.5rem 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="company-name">HCLSoftware</div>
+        <div class="logo-container">
+            <h1>ERP System <span class="text-gradient">User Manual</span></h1>
+        </div>
+        <div class="header-actions">
+            <div class="header-getting-started">
+                <a href="getting-started.html" class="header-getting-started-link">
+                    <i class="fas fa-rocket"></i> <span>Getting Started</span>
+                </a>
+            </div>
+            <div class="header-separator"></div>
+            <div class="search-container">
+                <div class="search-input-wrapper">
+                    <input type="text" id="search-input" placeholder="Search the manual..." aria-label="Search the manual">
+                    <button id="search-button" aria-label="Search"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="search-suggestions"></div>
+                <div class="search-filters">
+                    <span class="search-filter active" data-filter="all">All</span>
+                    <span class="search-filter" data-filter="docs">Documentation</span>
+                    <span class="search-filter" data-filter="videos">Videos</span>
+                    <span class="search-filter" data-filter="faq">FAQ</span>
+                </div>
+            </div>
+            <button id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Toggle dark/light theme">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button class="settings-toggle" aria-label="Settings">
+                <i class="fas fa-ellipsis-v"></i>
+            </button>
+            <div class="settings-menu">
+                <div class="settings-header">
+                    <h3>Settings</h3>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-section">
+                        <h4>Text Size</h4>
+                        <div class="accessibility-group">
+                            <span class="accessibility-label">Adjust font size</span>
+                            <button id="decrease-font" class="accessibility-btn" aria-label="Decrease font size"><i class="fas fa-minus"></i></button>
+                            <button id="increase-font" class="accessibility-btn" aria-label="Increase font size"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <h4>Font Family</h4>
+                        <div class="font-family-selector">
+                            <div class="font-option" data-font="sans-serif">
+                                <div class="font-preview" style="font-family: 'Inter', sans-serif;">Aa</div>
+                                <div class="font-info">
+                                    <span class="font-name">Sans-serif</span>
+                                    <span class="font-description">Clean, modern look (Inter)</span>
+                                </div>
+                            </div>
+                            <div class="font-option" data-font="serif">
+                                <div class="font-preview" style="font-family: 'Georgia', serif;">Aa</div>
+                                <div class="font-info">
+                                    <span class="font-name">Serif</span>
+                                    <span class="font-description">Traditional, readable (Georgia)</span>
+                                </div>
+                            </div>
+                            <div class="font-option" data-font="monospace">
+                                <div class="font-preview" style="font-family: 'Consolas', monospace;">Aa</div>
+                                <div class="font-info">
+                                    <span class="font-name">Monospace</span>
+                                    <span class="font-description">Fixed-width (Consolas)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <h4>Display</h4>
+                        <div class="contrast-toggle">
+                            <label for="toggle-contrast">High contrast</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggle-contrast">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <h4>Language</h4>
+                        <div class="language-selector-enhanced">
+                            <div class="language-current">
+                                <img src="assets/flags/en.png" alt="English flag">
+                                <span class="language-name">English</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="language-dropdown">
+                                <div class="language-option" data-lang="en">
+                                    <img src="assets/flags/en.png" alt="English flag">
+                                    <span class="language-name">English</span>
+                                </div>
+                                <div class="language-option" data-lang="es">
+                                    <img src="assets/flags/es.png" alt="Spanish flag">
+                                    <span class="language-name">Español</span>
+                                </div>
+                                <div class="language-option" data-lang="fr">
+                                    <img src="assets/flags/fr.png" alt="French flag">
+                                    <span class="language-name">Français</span>
+                                </div>
+                                <div class="language-option" data-lang="de">
+                                    <img src="assets/flags/de.png" alt="German flag">
+                                    <span class="language-name">Deutsch</span>
+                                </div>
+                                <div class="language-option" data-lang="zh">
+                                    <img src="assets/flags/zh.png" alt="Chinese flag">
+                                    <span class="language-name">中文</span>
+                                </div>
+                                <div class="language-option" data-lang="ja">
+                                    <img src="assets/flags/ja.png" alt="Japanese flag">
+                                    <span class="language-name">日本語</span>
+                                </div>
+                                <div class="language-option" data-lang="ar">
+                                    <img src="assets/flags/ar.png" alt="Arabic flag">
+                                    <span class="language-name">العربية</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle">Modules <i class="fas fa-chevron-down"></i></a>
+                    <div class="enhanced-dropdown">
+                        <div class="dropdown-header">ERP System Modules</div>
+                        <div class="enhanced-dropdown-item">
+                            <a href="modules/finance.html" class="enhanced-dropdown-link">
+                                <div class="module-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="module-content">
+                                    <div class="module-title">Finance</div>
+                                    <p class="module-description">Manage accounting, financial reporting, and budgeting</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="enhanced-dropdown-item">
+                            <a href="modules/hr.html" class="enhanced-dropdown-link">
+                                <div class="module-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="module-content">
+                                    <div class="module-title">Human Resources</div>
+                                    <p class="module-description">Handle employee records, payroll, and recruitment</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="enhanced-dropdown-item">
+                            <a href="modules/inventory.html" class="enhanced-dropdown-link">
+                                <div class="module-icon">
+                                    <i class="fas fa-boxes"></i>
+                                </div>
+                                <div class="module-content">
+                                    <div class="module-title">Inventory</div>
+                                    <p class="module-description">Track stock levels, orders, and warehouse management</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="enhanced-dropdown-item">
+                            <a href="modules/crm.html" class="enhanced-dropdown-link">
+                                <div class="module-icon">
+                                    <i class="fas fa-handshake"></i>
+                                </div>
+                                <div class="module-content">
+                                    <div class="module-title">CRM</div>
+                                    <p class="module-description">Manage customer relationships, leads, and opportunities</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="enhanced-dropdown-item">
+                            <a href="modules/manufacturing.html" class="enhanced-dropdown-link">
+                                <div class="module-icon">
+                                    <i class="fas fa-industry"></i>
+                                </div>
+                                <div class="module-content">
+                                    <div class="module-title">Manufacturing</div>
+                                    <p class="module-description">Control production processes and resource planning</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item"><a href="faq.html" class="nav-link">FAQ</a></li>
+                <li class="nav-item"><a href="glossary.html" class="nav-link">Glossary</a></li>
+                <li class="nav-item"><a href="feedback.html" class="nav-link active">Feedback</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container home-container">
+        <aside class="sidebar">
+            <!-- Print title page (only visible when printing) -->
+            <div class="print-title-page">
+                <h1>Feedback - ERP System User Manual</h1>
+                <div class="version">Version 4.2.0</div>
+                <div class="date">Printed: <script>document.write(new Date().toLocaleDateString())</script></div>
+            </div>
+
+            <!-- Table of Contents -->
+            <div class="toc-container">
+                <div class="toc-header">
+                    <h3>Contents</h3>
+                    <button class="toc-toggle" aria-expanded="true" aria-controls="toc-content">
+                        <i class="fas fa-chevron-up"></i>
+                    </button>
+                </div>
+                <div class="toc-content" id="toc-content">
+                    <ul class="toc-list">
+                        <li class="toc-item">
+                            <a href="#feedback-intro" class="toc-link">Introduction</a>
+                        </li>
+                        <li class="toc-item">
+                            <a href="#feedback-form" class="toc-link">Feedback Form</a>
+                        </li>
+                        <li class="toc-item">
+                            <a href="#other-ways" class="toc-link">Other Ways to Provide Feedback</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Related Topics -->
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Related Topics</h3>
+                <ul class="sidebar-list">
+                    <li class="sidebar-item"><a href="faq.html" class="sidebar-link"><i class="fas fa-question-circle"></i> FAQ</a></li>
+                    <li class="sidebar-item"><a href="contact-support.html" class="sidebar-link"><i class="fas fa-headset"></i> Contact Support</a></li>
+                    <li class="sidebar-item"><a href="community.html" class="sidebar-link"><i class="fas fa-users"></i> Community Forum</a></li>
+                </ul>
+            </div>
+
+            <!-- Recently Viewed -->
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Recently Viewed</h3>
+                <ul id="recently-viewed" class="sidebar-list">
+                    <!-- Dynamically populated by JavaScript -->
+                </ul>
+            </div>
+        </aside>
+
+        <main>
+            <!-- Breadcrumbs -->
+            <div class="breadcrumbs">
+                <div class="breadcrumb-path">
+                    <div class="breadcrumb-item">
+                        <a href="index.html" class="breadcrumb-link">Home</a>
+                    </div>
+                    <div class="breadcrumb-item">
+                        <span class="breadcrumb-current">Feedback</span>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="page-actions">
+                    <span class="version-info">
+                        <i class="fas fa-code-branch"></i> Version 4.2.0
+                    </span>
+                    <button class="action-button bookmark-button" aria-label="Add bookmark">
+                        <i class="far fa-bookmark"></i>
+                    </button>
+                    <a href="#" class="action-button print-button">
+                        <i class="fas fa-print"></i> Print
+                    </a>
+                </div>
+            </div>
+
+            <section id="feedback-intro">
+                <h2 class="section-title">Provide Feedback</h2>
+                <p>Your feedback is valuable to us! Help us improve the ERP system and documentation by sharing your thoughts, suggestions, or reporting issues you've encountered.</p>
+            </section>
+
+            <section id="feedback-form" class="feedback-form-container">
+                <h3>What type of feedback would you like to provide?</h3>
+
+                <div class="feedback-options">
+                    <div class="feedback-option" data-type="suggestion">
+                        <i class="fas fa-lightbulb"></i>
+                        <h3>Suggestion</h3>
+                        <p>Share ideas for new features or improvements</p>
+                    </div>
+
+                    <div class="feedback-option" data-type="issue">
+                        <i class="fas fa-bug"></i>
+                        <h3>Report an Issue</h3>
+                        <p>Let us know about problems or errors</p>
+                    </div>
+
+                    <div class="feedback-option" data-type="documentation">
+                        <i class="fas fa-book"></i>
+                        <h3>Documentation Feedback</h3>
+                        <p>Help us improve the user manual</p>
+                    </div>
+                </div>
+
+                <div class="feedback-form-fields">
+                    <form id="feedback-form-element">
+                        <div class="form-group">
+                            <label for="feedback-type">Feedback Type</label>
+                            <select id="feedback-type" name="feedback-type" required>
+                                <option value="">Select a feedback type</option>
+                                <option value="suggestion">Suggestion</option>
+                                <option value="issue">Report an Issue</option>
+                                <option value="documentation">Documentation Feedback</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="feedback-subject">Subject</label>
+                            <input type="text" id="feedback-subject" name="feedback-subject" placeholder="Brief description of your feedback" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="feedback-details">Details</label>
+                            <textarea id="feedback-details" name="feedback-details" placeholder="Please provide as much detail as possible..." required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="feedback-email">Your Email (optional)</label>
+                            <input type="email" id="feedback-email" name="feedback-email" placeholder="Enter your email if you'd like us to follow up">
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="reset" class="btn-secondary">Clear Form</button>
+                            <button type="submit" class="btn-primary">Submit Feedback</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="success-message" id="success-message">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Thank You for Your Feedback!</h3>
+                    <p>We appreciate you taking the time to provide feedback. Your input helps us improve the ERP system and documentation for everyone.</p>
+                    <button class="btn-primary" id="submit-another">Submit Another Feedback</button>
+                </div>
+            </section>
+
+            <section id="other-ways">
+                <h3>Other Ways to Provide Feedback</h3>
+                <p>In addition to this form, you can also provide feedback through:</p>
+                <ul>
+                    <li><a href="contact-support.html">Contacting our support team</a></li>
+                    <li><a href="community.html">Participating in our community forum</a></li>
+                    <li>Using the feedback widget available on every page of the documentation</li>
+                    <li>Reaching out to your account manager or customer success representative</li>
+                </ul>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact Support</h3>
+                <p>Need additional help? Our support team is available 24/7.</p>
+                <div class="footer-buttons">
+                    <a href="mailto:support@erpsystem.com" class="footer-btn">
+                        <i class="fas fa-envelope"></i>
+                        Email Support
+                    </a>
+                    <a href="tel:+18001234567" class="footer-btn">
+                        <i class="fas fa-phone-alt"></i>
+                        Call Support
+                    </a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="video-tutorials.html"><i class="fas fa-play-circle"></i> Video Tutorials</a></li>
+                    <li><a href="webinars.html"><i class="fas fa-laptop"></i> Webinars</a></li>
+                    <li><a href="downloads.html"><i class="fas fa-download"></i> Downloads</a></li>
+                    <li><a href="community.html"><i class="fas fa-users"></i> Community Forum</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul class="footer-links">
+                    <li><a href="terms.html"><i class="fas fa-file-contract"></i> Terms of Service</a></li>
+                    <li><a href="privacy.html"><i class="fas fa-shield-alt"></i> Privacy Policy</a></li>
+                    <li><a href="accessibility-statement.html"><i class="fas fa-universal-access"></i> Accessibility Statement</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 ERP System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div id="feedback-widget" class="feedback-widget">
+        <button id="feedback-toggle" aria-label="Give feedback">
+            <i class="fas fa-comment-alt"></i> Feedback
+        </button>
+        <div id="feedback-form" class="feedback-form hidden">
+            <div class="feedback-header">
+                <h3>Was this page helpful?</h3>
+                <button class="feedback-close" aria-label="Close feedback form">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="rating">
+                <button class="rating-btn" data-rating="1"><i class="far fa-frown"></i></button>
+                <button class="rating-btn" data-rating="2"><i class="far fa-meh"></i></button>
+                <button class="rating-btn" data-rating="3"><i class="far fa-smile"></i></button>
+            </div>
+            <textarea placeholder="Tell us how we can improve this page..."></textarea>
+            <button class="submit-feedback">
+                <i class="fas fa-paper-plane"></i> Submit Feedback
+            </button>
+        </div>
+    </div>
+
+    <!-- Modern UI JavaScript -->
+    <!-- JavaScript -->
+    <!-- Core JS -->
+    <script src="js/core/modern-ui.js"></script>
+
+    <!-- Layout JS -->
+    <script src="js/layout/collapsible-sidebar.js"></script>
+    <script src="js/layout/sticky-header-nav.js"></script>
+
+    <!-- Components JS -->
+    <script src="js/components/evenly-distributed-nav.js"></script>
+    <script src="js/components/enhanced-dropdown.js"></script>
+    <script>
+        // Feedback specific JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            // Feedback option selection
+            const feedbackOptions = document.querySelectorAll('.feedback-option');
+            const feedbackTypeSelect = document.getElementById('feedback-type');
+
+            feedbackOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove active class from all options
+                    feedbackOptions.forEach(opt => opt.classList.remove('active'));
+
+                    // Add active class to clicked option
+                    this.classList.add('active');
+
+                    // Update select value
+                    feedbackTypeSelect.value = this.dataset.type;
+                });
+            });
+
+            // Form submission
+            const feedbackForm = document.getElementById('feedback-form-element');
+            const successMessage = document.getElementById('success-message');
+            const submitAnother = document.getElementById('submit-another');
+
+            if (feedbackForm) {
+                feedbackForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    // In a real implementation, you would send the form data to a server here
+                    // For this example, we'll just show the success message
+
+                    // Hide form
+                    feedbackForm.style.display = 'none';
+
+                    // Show success message
+                    successMessage.classList.add('active');
+                });
+            }
+
+            if (submitAnother) {
+                submitAnother.addEventListener('click', function() {
+                    // Reset form
+                    feedbackForm.reset();
+                    feedbackOptions.forEach(opt => opt.classList.remove('active'));
+
+                    // Hide success message
+                    successMessage.classList.remove('active');
+
+                    // Show form
+                    feedbackForm.style.display = 'block';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
