@@ -4,835 +4,368 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HCL Software - Warehouse Management System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="modern-styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-    <link rel="stylesheet" href="warehouse-styles.css">
 </head>
 <body>
-    <div class="wms-container">
-        <!-- Header -->
-        <header class="wms-header">
+    <div class="app-container">
+        <!-- Top Header -->
+        <header class="top-header">
             <div class="header-left">
-                <div class="logo-section">
-                    <div class="logo-icon">
-                        <i class="fas fa-warehouse"></i>
-                    </div>
-                    <div class="logo-text">
-                        <h1>HCL Software</h1>
-                        <span>Warehouse Management System</span>
-                    </div>
+                <div class="logo">
+                    <span class="logo-text">HCL Software</span>
                 </div>
-                <div class="search-section">
-                    <div class="search-container">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" placeholder="Search for reports..." class="search-input">
-                    </div>
+            </div>
+            <div class="header-center">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" placeholder="Search for reports..." class="search-input" id="globalSearch">
                 </div>
             </div>
             <div class="header-right">
-                <div class="welcome-info">
-                    <span class="welcome-text">Welcome: Admin</span>
+                <div class="user-info">
+                    <span class="welcome-text">Welcome : Admin - </span>
                     <span class="branch-info">Branch 11</span>
-                </div>
-                <div class="header-actions">
-                    <button class="header-btn" id="themeToggle" title="Toggle Theme">
-                        <i class="fas fa-moon"></i>
+                    <button class="settings-btn" title="Settings">
+                        <i class="fas fa-cog"></i>
                     </button>
-                    <button class="header-btn" id="notificationBtn" title="Notifications">
-                        <i class="fas fa-bell"></i>
-                    </button>
-                    <button class="header-btn" id="helpBtn" title="Help">
-                        <i class="fas fa-question-circle"></i>
-                    </button>
-                    <div class="user-profile">
-                        <img src="https://via.placeholder.com/32x32/4A90E2/FFFFFF?text=A" alt="Admin" class="user-avatar">
-                    </div>
                 </div>
             </div>
         </header>
 
-        <!-- Sidebar Navigation -->
-        <aside class="wms-sidebar">
-            <nav class="sidebar-nav">
-                <div class="nav-section">
-                    <div class="nav-item active" id="warehouseNavItem" onclick="openModule('warehouse')">
-                        <i class="fas fa-warehouse"></i>
-                        <span>Warehouse</span>
-                    </div>
-                    <div class="nav-item" id="serviceInvoiceNavItem" onclick="openModule('service-invoice-return')">
-                        <i class="fas fa-file-invoice"></i>
-                        <span>Service Invoice Return</span>
-                    </div>
-                    <div class="nav-item" id="serviceTypeNavItem" onclick="openModule('service-type')">
-                        <i class="fas fa-cogs"></i>
-                        <span>Service Type</span>
-                    </div>                 
-                </div>
+        <!-- Navigation Breadcrumb -->
+        <div class="nav-breadcrumb">
+            <div class="breadcrumb-item active">Service Invoice Return</div>
+            <div class="breadcrumb-item">Service Type</div>
+            <div class="breadcrumb-item">Movement Type</div>
+        </div>
 
-                <div class="nav-section">
-                    <div class="nav-section-title">Management</div>
-                    <div class="nav-item">
-                        <i class="fas fa-question-circle"></i>
+        <!-- Action Bar -->
+        <div class="action-bar">
+            <div class="action-icons">
+                <button class="action-btn" id="editBtn" title="Edit">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="action-btn" id="deleteBtn" title="Delete">
+                    <i class="fas fa-trash"></i>
+                </button>
+                <button class="action-btn" id="calendarBtn" title="Calendar">
+                    <i class="fas fa-calendar"></i>
+                </button>
+                <button class="action-btn" id="reportBtn" title="Reports">
+                    <i class="fas fa-chart-bar"></i>
+                </button>
+                <button class="action-btn" id="settingsBtn" title="Settings">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <button class="action-btn" id="homeBtn" title="Home">
+                    <i class="fas fa-home"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-item" data-module="helpdesk">
+                        <i class="fas fa-chevron-down"></i>
                         <span>HELPDESK</span>
                     </div>
-                    <div class="nav-item">
-                        <i class="fas fa-puzzle-piece"></i>
+                    <div class="sidebar-item" data-module="parts">
+                        <i class="fas fa-chevron-down"></i>
                         <span>PARTS</span>
                     </div>
-                    <div class="nav-item">
-                        <i class="fas fa-wrench"></i>
+                    <div class="sidebar-item active" data-module="service">
+                        <i class="fas fa-chevron-down"></i>
                         <span>SERVICE</span>
                     </div>
-                    <div class="nav-item">
-                        <i class="fas fa-tasks"></i>
+                    <div class="sidebar-item" data-module="tams">
+                        <i class="fas fa-chevron-down"></i>
                         <span>TAMS</span>
                     </div>
-                    <div class="nav-item">
-                        <i class="fas fa-calendar-alt"></i>
+                    <div class="sidebar-item" data-module="bay-scheduler">
+                        <i class="fas fa-chevron-down"></i>
                         <span>BAY SCHEDULER</span>
                     </div>
-                    <div class="nav-item">
-                        <i class="fas fa-microchip"></i>
+                    <div class="sidebar-item" data-module="core">
+                        <i class="fas fa-chevron-down"></i>
                         <span>CORE</span>
                     </div>
-                    <div class="nav-item">
-                        <i class="fas fa-chart-bar"></i>
+                    <div class="sidebar-item" data-module="dashboard">
+                        <i class="fas fa-chevron-down"></i>
                         <span>DASHBOARD</span>
                     </div>
-                    <div class="nav-item">
-                        <i class="fas fa-file-alt"></i>
+                    <div class="sidebar-item" data-module="kpi-report">
+                        <i class="fas fa-chevron-down"></i>
                         <span>KPI REPORT</span>
                     </div>
-                    <div class="nav-item">
-                        <i class="fas fa-handshake"></i>
+                    <div class="sidebar-item" data-module="contract-management">
+                        <i class="fas fa-chevron-down"></i>
                         <span>CONTRACT MANAGEMENT</span>
                     </div>
-                    <div class="nav-item">
-                        <i class="fas fa-database"></i>
+                    <div class="sidebar-item" data-module="digital-catalogue">
+                        <i class="fas fa-chevron-down"></i>
                         <span>DIGITAL CATALOGUE</span>
                     </div>
-                    <div class="nav-item">
-                        <i class="fas fa-undo"></i>
-                        <span>REMAN</span>
+                    <div class="sidebar-item" data-module="reiman">
+                        <i class="fas fa-chevron-down"></i>
+                        <span>REIMAN</span>
                     </div>
-                    <div class="nav-item">
-                        <i class="fas fa-tools"></i>
+                    <div class="sidebar-item" data-module="special-tools">
+                        <i class="fas fa-chevron-down"></i>
                         <span>SPECIAL TOOLS</span>
                     </div>
-                    <div class="nav-item">
-                        <i class="fas fa-clipboard-list"></i>
+                    <div class="sidebar-item" data-module="order-management">
+                        <i class="fas fa-chevron-down"></i>
                         <span>ORDER MANAGEMENT</span>
                     </div>
-                    <div class="nav-item">
-                        <i class="fas fa-concierge-bell"></i>
+                    <div class="sidebar-item" data-module="field-service">
+                        <i class="fas fa-chevron-down"></i>
                         <span>FIELD SERVICE</span>
                     </div>
-                    <div class="nav-item">
-                        <i class="fas fa-shield-alt"></i>
+                    <div class="sidebar-item" data-module="warranty">
+                        <i class="fas fa-chevron-down"></i>
                         <span>WARRANTY</span>
                     </div>
-                    <div class="nav-item">
-                        <i class="fas fa-shopping-cart"></i>
+                    <div class="sidebar-item" data-module="sales">
+                        <i class="fas fa-chevron-down"></i>
                         <span>SALES</span>
                     </div>
                 </div>
-            </nav>
-        </aside>
+            </aside>
 
-        <!-- Main Content Area -->
-        <main class="wms-main">
-            <!-- Warehouse Management Section -->
-            <div class="warehouse-section" id="warehouseSection">
-                <div class="section-header">
-                    <h2>Ware House</h2>
-                </div>
-
-                <!-- Warehouse Controls -->
-                <div class="warehouse-controls">
-                    <div class="control-row">
-                        <div class="control-group">
-                            <label for="branch-select">Branch:</label>
-                            <select id="branch-select" class="control-select">
-                                <option value="branch-11">Branch 11</option>
-                                <option value="branch-12">Branch 12</option>
-                                <option value="branch-13">Branch 13</option>
+            <!-- Main Content Area -->
+            <main class="content-area">
+                <!-- Content Header -->
+                <div class="content-header">
+                    <div class="content-title">
+                        <h2>Ware House</h2>
+                    </div>
+                    <div class="content-filters">
+                        <div class="filter-group">
+                            <label>Branch:</label>
+                            <select class="filter-select">
+                                <option>Branch 1</option>
+                                <option>Branch 2</option>
+                                <option>Branch 3</option>
                             </select>
                         </div>
-                        <div class="control-group">
-                            <label for="warehouse-type">Warehouse Type:</label>
-                            <select id="warehouse-type" class="control-select">
-                                <option value="parts">Parts</option>
-                                <option value="service">Service</option>
-                                <option value="main">Main</option>
+                        <div class="filter-group">
+                            <label>Warehouse Type:</label>
+                            <select class="filter-select">
+                                <option>Parts</option>
+                                <option>Service</option>
+                                <option>Returns</option>
                             </select>
                         </div>
                     </div>
                 </div>
 
-                <!-- Action Toolbar -->
-                <div class="action-toolbar">
-                    <div class="toolbar-left">
-                        <button class="action-btn primary" onclick="addWarehouse()">
-                            <i class="fas fa-plus"></i>
-                            Add
-                        </button>
-                        <button class="action-btn danger" onclick="deleteWarehouse()">
-                            <i class="fas fa-trash"></i>
-                            Delete
-                        </button>
-                        <button class="action-btn success" onclick="saveWarehouse()">
-                            <i class="fas fa-save"></i>
-                            Save
-                        </button>
-                        <button class="action-btn info" onclick="advancedSearch()">
-                            <i class="fas fa-search-plus"></i>
-                            Advance Search
-                        </button>
-                        <button class="action-btn secondary" onclick="exportData()">
-                            <i class="fas fa-download"></i>
-                            Export
-                        </button>
-                        <button class="action-btn" onclick="refreshData()">
-                            <i class="fas fa-sync-alt"></i>
-                            Refresh
-                        </button>
-                    </div>
-                    <div class="toolbar-right">
-                        <div class="view-options">
-                            <button class="view-btn active" onclick="setView('grid')">
-                                <i class="fas fa-th"></i>
-                            </button>
-                            <button class="view-btn" onclick="setView('list')">
-                                <i class="fas fa-list"></i>
-                            </button>
-                        </div>
-                    </div>
+                <!-- Action Buttons -->
+                <div class="content-actions">
+                    <button class="action-button primary" id="addBtn">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                    <button class="action-button" id="deleteBtn">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                    <button class="action-button" id="saveBtn">
+                        <i class="fas fa-save"></i> Save
+                    </button>
+                    <button class="action-button" id="advanceSearchBtn">
+                        <i class="fas fa-search"></i> Advance Search
+                    </button>
+                    <button class="action-button" id="exportBtn">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                    <button class="action-button" id="refreshBtn">
+                        <i class="fas fa-sync"></i> Refresh
+                    </button>
+                    <button class="action-button" id="settingsBtn">
+                        <i class="fas fa-cog"></i>
+                    </button>
                 </div>
 
-                <!-- Data Grid -->
-                <div class="data-grid-container">
-                    <div class="grid-header">
-                        <div class="grid-actions">
-                            <button class="grid-action-btn" onclick="editSelected()">
-                                <i class="fas fa-edit"></i>
-                                Edit
-                            </button>
-                            <button class="grid-action-btn" onclick="deleteSelected()">
-                                <i class="fas fa-trash"></i>
-                                Delete
-                            </button>
+                <!-- Data Table -->
+                <div class="data-table-container">
+                    <div class="table-header">
+                        <div class="table-actions">
+                            <button class="table-btn" id="editTableBtn">Edit</button>
+                            <button class="table-btn" id="deleteTableBtn">Delete</button>
                         </div>
-                        <div class="grid-info">
-                            <span>Name</span>
-                            <span class="sort-icon"><i class="fas fa-sort"></i></span>
+                        <div class="table-columns">
+                            <span class="column-header">Name *</span>
+                            <span class="column-header">Is Default?</span>
+                            <span class="column-header">Is Active?</span>
+                            <span class="column-header">Is Visible?</span>
                         </div>
                     </div>
 
-                    <div class="data-grid">
-                        <table class="warehouse-table">
-                            <thead>
-                                <tr id="warehouseTableHeader">
-                                    <th class="row-drag-col">
-                                        <i class="fas fa-arrows-alt" title="Drag to reorder rows"></i>
-                                    </th>
-                                    <th class="checkbox-col">
-                                        <input type="checkbox" id="selectAll" onchange="toggleSelectAll()">
-                                    </th>
-                                    <th class="draggable-column edit-col">
-                                        <div class="column-content">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                            Edit
-                                        </div>
-                                    </th>
-                                    <th class="draggable-column delete-col">
-                                        <div class="column-content">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                            Delete
-                                        </div>
-                                    </th>
-                                    <th class="draggable-column name-col">
-                                        <div class="column-content">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                            Name
-                                            <i class="fas fa-sort"></i>
-                                        </div>
-                                    </th>
-                                    <th class="draggable-column status-col">
-                                        <div class="column-content">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                            Is Default?
-                                        </div>
-                                    </th>
-                                    <th class="draggable-column status-col">
-                                        <div class="column-content">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                            Is Active?
-                                        </div>
-                                    </th>
-                                    <th class="draggable-column status-col">
-                                        <div class="column-content">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                            Is Visible?
-                                        </div>
-                                    </th>
-                                </tr>
-                            </thead>
+                    <div class="data-table">
+                        <table class="modern-table" id="warehouseTable">
                             <tbody id="warehouseTableBody">
-                                <tr class="draggable-row">
-                                    <td class="row-drag-handle">
-                                        <i class="fas fa-grip-vertical row-drag-icon"></i>
+                                <tr class="table-row" data-id="1">
+                                    <td class="action-cell">
+                                        <button class="row-action-btn" onclick="openModule('service-invoice-return')">
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </button>
                                     </td>
-                                    <td><input type="checkbox" class="row-checkbox"></td>
-                                    <td><button class="table-btn edit-btn"><i class="fas fa-edit"></i></button></td>
-                                    <td><button class="table-btn delete-btn"><i class="fas fa-trash"></i></button></td>
-                                    <td class="name-cell">177N-17/N</td>
-                                    <td><label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label></td>
-                                    <td><label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label></td>
-                                    <td><label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label></td>
+                                    <td class="checkbox-cell">
+                                        <input type="checkbox" class="row-checkbox">
+                                    </td>
+                                    <td class="name-cell">2008-2008</td>
+                                    <td class="status-cell">
+                                        <span class="status-badge yes">Yes</span>
+                                    </td>
+                                    <td class="status-cell">
+                                        <span class="status-badge yes">Yes</span>
+                                    </td>
+                                    <td class="status-cell">
+                                        <span class="status-badge yes">Yes</span>
+                                    </td>
                                 </tr>
-                                <tr class="draggable-row">
-                                    <td class="row-drag-handle">
-                                        <i class="fas fa-grip-vertical row-drag-icon"></i>
+                                <tr class="table-row" data-id="2">
+                                    <td class="action-cell">
+                                        <button class="row-action-btn" onclick="openModule('parts-management')">
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </button>
                                     </td>
-                                    <td><input type="checkbox" class="row-checkbox"></td>
-                                    <td><button class="table-btn edit-btn"><i class="fas fa-edit"></i></button></td>
-                                    <td><button class="table-btn delete-btn"><i class="fas fa-trash"></i></button></td>
-                                    <td class="name-cell">177N-MID/1</td>
-                                    <td><label class="toggle-switch"><input type="checkbox"><span class="slider"></span></label></td>
-                                    <td><label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label></td>
-                                    <td><label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label></td>
+                                    <td class="checkbox-cell">
+                                        <input type="checkbox" class="row-checkbox">
+                                    </td>
+                                    <td class="name-cell">2009-MO91</td>
+                                    <td class="status-cell">
+                                        <span class="status-badge no">No</span>
+                                    </td>
+                                    <td class="status-cell">
+                                        <span class="status-badge yes">Yes</span>
+                                    </td>
+                                    <td class="status-cell">
+                                        <span class="status-badge yes">Yes</span>
+                                    </td>
                                 </tr>
-                                <tr class="draggable-row">
-                                    <td class="row-drag-handle">
-                                        <i class="fas fa-grip-vertical row-drag-icon"></i>
+                                <tr class="table-row" data-id="3">
+                                    <td class="action-cell">
+                                        <button class="row-action-btn" onclick="openModule('inventory-management')">
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </button>
                                     </td>
-                                    <td><input type="checkbox" class="row-checkbox"></td>
-                                    <td><button class="table-btn edit-btn"><i class="fas fa-edit"></i></button></td>
-                                    <td><button class="table-btn delete-btn"><i class="fas fa-trash"></i></button></td>
-                                    <td class="name-cell">177N-MID/2</td>
-                                    <td><label class="toggle-switch"><input type="checkbox"><span class="slider"></span></label></td>
-                                    <td><label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label></td>
-                                    <td><label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label></td>
+                                    <td class="checkbox-cell">
+                                        <input type="checkbox" class="row-checkbox">
+                                    </td>
+                                    <td class="name-cell">2010-MO12</td>
+                                    <td class="status-cell">
+                                        <span class="status-badge no">No</span>
+                                    </td>
+                                    <td class="status-cell">
+                                        <span class="status-badge yes">Yes</span>
+                                    </td>
+                                    <td class="status-cell">
+                                        <span class="status-badge yes">Yes</span>
+                                    </td>
                                 </tr>
-                                <tr class="draggable-row">
-                                    <td class="row-drag-handle">
-                                        <i class="fas fa-grip-vertical row-drag-icon"></i>
+                                <tr class="table-row" data-id="4">
+                                    <td class="action-cell">
+                                        <button class="row-action-btn" onclick="openModule('warranty-management')">
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </button>
                                     </td>
-                                    <td><input type="checkbox" class="row-checkbox"></td>
-                                    <td><button class="table-btn edit-btn"><i class="fas fa-edit"></i></button></td>
-                                    <td><button class="table-btn delete-btn"><i class="fas fa-trash"></i></button></td>
-                                    <td class="name-cell">177N-MID/3</td>
-                                    <td><label class="toggle-switch"><input type="checkbox"><span class="slider"></span></label></td>
-                                    <td><label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label></td>
-                                    <td><label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label></td>
+                                    <td class="checkbox-cell">
+                                        <input type="checkbox" class="row-checkbox">
+                                    </td>
+                                    <td class="name-cell">2010-MO13</td>
+                                    <td class="status-cell">
+                                        <span class="status-badge no">No</span>
+                                    </td>
+                                    <td class="status-cell">
+                                        <span class="status-badge yes">Yes</span>
+                                    </td>
+                                    <td class="status-cell">
+                                        <span class="status-badge yes">Yes</span>
+                                    </td>
                                 </tr>
-                                <tr class="draggable-row">
-                                    <td class="row-drag-handle">
-                                        <i class="fas fa-grip-vertical row-drag-icon"></i>
+                                <tr class="table-row" data-id="5">
+                                    <td class="action-cell">
+                                        <button class="row-action-btn" onclick="openModule('field-service')">
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </button>
                                     </td>
-                                    <td><input type="checkbox" class="row-checkbox"></td>
-                                    <td><button class="table-btn edit-btn"><i class="fas fa-edit"></i></button></td>
-                                    <td><button class="table-btn delete-btn"><i class="fas fa-trash"></i></button></td>
-                                    <td class="name-cell">177N-FTO/J</td>
-                                    <td><label class="toggle-switch"><input type="checkbox"><span class="slider"></span></label></td>
-                                    <td><label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label></td>
-                                    <td><label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label></td>
+                                    <td class="checkbox-cell">
+                                        <input type="checkbox" class="row-checkbox">
+                                    </td>
+                                    <td class="name-cell">2008-PROJ</td>
+                                    <td class="status-cell">
+                                        <span class="status-badge no">No</span>
+                                    </td>
+                                    <td class="status-cell">
+                                        <span class="status-badge yes">Yes</span>
+                                    </td>
+                                    <td class="status-cell">
+                                        <span class="status-badge yes">Yes</span>
+                                    </td>
                                 </tr>
-                                <tr class="draggable-row">
-                                    <td class="row-drag-handle">
-                                        <i class="fas fa-grip-vertical row-drag-icon"></i>
+                                <tr class="table-row" data-id="6">
+                                    <td class="action-cell">
+                                        <button class="row-action-btn" onclick="openModule('sales-management')">
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </button>
                                     </td>
-                                    <td><input type="checkbox" class="row-checkbox"></td>
-                                    <td><button class="table-btn edit-btn"><i class="fas fa-edit"></i></button></td>
-                                    <td><button class="table-btn delete-btn"><i class="fas fa-trash"></i></button></td>
-                                    <td class="name-cell">177N-WARR</td>
-                                    <td><label class="toggle-switch"><input type="checkbox"><span class="slider"></span></label></td>
-                                    <td><label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label></td>
-                                    <td><label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label></td>
+                                    <td class="checkbox-cell">
+                                        <input type="checkbox" class="row-checkbox">
+                                    </td>
+                                    <td class="name-cell">2008-WARR</td>
+                                    <td class="status-cell">
+                                        <span class="status-badge no">No</span>
+                                    </td>
+                                    <td class="status-cell">
+                                        <span class="status-badge yes">Yes</span>
+                                    </td>
+                                    <td class="status-cell">
+                                        <span class="status-badge yes">Yes</span>
+                                    </td>
                                 </tr>
-                                <tr class="draggable-row">
-                                    <td class="row-drag-handle">
-                                        <i class="fas fa-grip-vertical row-drag-icon"></i>
+                                <tr class="table-row" data-id="7">
+                                    <td class="action-cell">
+                                        <button class="row-action-btn" onclick="openModule('reports')">
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </button>
                                     </td>
-                                    <td><input type="checkbox" class="row-checkbox"></td>
-                                    <td><button class="table-btn edit-btn"><i class="fas fa-edit"></i></button></td>
-                                    <td><button class="table-btn delete-btn"><i class="fas fa-trash"></i></button></td>
-                                    <td class="name-cell">Customer X Stock WH</td>
-                                    <td><label class="toggle-switch"><input type="checkbox"><span class="slider"></span></label></td>
-                                    <td><label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label></td>
-                                    <td><label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label></td>
-                                </tr>
-                                <tr class="draggable-row">
-                                    <td class="row-drag-handle">
-                                        <i class="fas fa-grip-vertical row-drag-icon"></i>
+                                    <td class="checkbox-cell">
+                                        <input type="checkbox" class="row-checkbox">
                                     </td>
-                                    <td><input type="checkbox" class="row-checkbox"></td>
-                                    <td><button class="table-btn edit-btn"><i class="fas fa-edit"></i></button></td>
-                                    <td><button class="table-btn delete-btn"><i class="fas fa-trash"></i></button></td>
-                                    <td class="name-cell">test WH-01</td>
-                                    <td><label class="toggle-switch"><input type="checkbox"><span class="slider"></span></label></td>
-                                    <td><label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label></td>
-                                    <td><label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label></td>
-                                </tr>
-                                <tr class="draggable-row">
-                                    <td class="row-drag-handle">
-                                        <i class="fas fa-grip-vertical row-drag-icon"></i>
+                                    <td class="name-cell">2004</td>
+                                    <td class="status-cell">
+                                        <span class="status-badge no">No</span>
                                     </td>
-                                    <td><input type="checkbox" class="row-checkbox"></td>
-                                    <td><button class="table-btn edit-btn"><i class="fas fa-edit"></i></button></td>
-                                    <td><button class="table-btn delete-btn"><i class="fas fa-trash"></i></button></td>
-                                    <td class="name-cell">WH001</td>
-                                    <td><label class="toggle-switch"><input type="checkbox"><span class="slider"></span></label></td>
-                                    <td><label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label></td>
-                                    <td><label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label></td>
-                                </tr>
-                                <tr class="draggable-row">
-                                    <td class="row-drag-handle">
-                                        <i class="fas fa-grip-vertical row-drag-icon"></i>
+                                    <td class="status-cell">
+                                        <span class="status-badge no">No</span>
                                     </td>
-                                    <td><input type="checkbox" class="row-checkbox"></td>
-                                    <td><button class="table-btn edit-btn"><i class="fas fa-edit"></i></button></td>
-                                    <td><button class="table-btn delete-btn"><i class="fas fa-trash"></i></button></td>
-                                    <td class="name-cell">WH401</td>
-                                    <td><label class="toggle-switch"><input type="checkbox"><span class="slider"></span></label></td>
-                                    <td><label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label></td>
-                                    <td><label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label></td>
+                                    <td class="status-cell">
+                                        <span class="status-badge no">No</span>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                </div>
 
-                <!-- Pagination -->
-                <div class="pagination-container">
-                    <div class="pagination-info">
-                        <span>Page 1 of 1</span>
-                        <span class="separator">|</span>
-                        <span>10 of 10</span>
-                    </div>
-                    <div class="pagination-controls">
-                        <button class="pagination-btn" onclick="goToPage('first')" disabled>
-                            <i class="fas fa-angle-double-left"></i>
-                        </button>
-                        <button class="pagination-btn" onclick="goToPage('prev')" disabled>
-                            <i class="fas fa-angle-left"></i>
-                        </button>
-                        <select class="page-select">
-                            <option value="10">10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                        </select>
-                        <button class="pagination-btn" onclick="goToPage('next')" disabled>
-                            <i class="fas fa-angle-right"></i>
-                        </button>
-                        <button class="pagination-btn" onclick="goToPage('last')" disabled>
-                            <i class="fas fa-angle-double-right"></i>
-                        </button>
-                    </div>
-                    <div class="pagination-status">
-                        <span>View 1 - 10 of 10</span>
-                        <div class="status-actions">
-                            <span>Activate Windows</span>
-                            <span>Go to Settings to activate Windows</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Service Invoice Return Section -->
-            <div class="service-invoice-section" id="serviceInvoiceSection" style="display: none;">
-                <!-- Breadcrumb Navigation -->
-                <div class="breadcrumb-nav">
-                    <button class="breadcrumb-btn" onclick="openModule('warehouse')">
-                        <i class="fas fa-arrow-left"></i>
-                        Back to Warehouse
-                    </button>
-                    <span class="breadcrumb-separator">/</span>
-                    <span class="breadcrumb-current">Service Invoice Return</span>
-                </div>
-
-                <div class="section-header">
-                    <h2>Service Invoice Return</h2>
-                    <div class="header-actions">
-                        <button class="action-btn primary" onclick="addNewServiceInvoice()">
-                            <i class="fas fa-plus"></i>
-                            New
-                        </button>
-                        <button class="action-btn" onclick="refreshServiceData()">
-                            <i class="fas fa-sync-alt"></i>
-                            Refresh
-                        </button>
-                        <button class="action-btn info" onclick="advancedSearchService()">
-                            <i class="fas fa-search-plus"></i>
-                            Advance Search
-                        </button>
-                        <button class="action-btn secondary" onclick="exportServiceData()">
-                            <i class="fas fa-download"></i>
-                            Export
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Service Invoice Toolbar -->
-                <div class="service-toolbar">
-                    <div class="toolbar-left">
-                        <button class="toolbar-btn" onclick="toggleColumnCustomization()">
-                            <i class="fas fa-columns"></i>
-                            Columns
-                        </button>
-                        <button class="toolbar-btn" onclick="toggleSelectAllService()">
-                            <i class="fas fa-check-square"></i>
-                            Select All
-                        </button>
-                    </div>
-                    <div class="toolbar-right">
-                        <div class="search-container">
-                            <i class="fas fa-search search-icon"></i>
-                            <input type="text" placeholder="Search service invoices..." class="search-input" id="serviceSearchInput">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Service Invoice Data Grid -->
-                <div class="data-grid-container">
-                    <div class="data-grid">
-                        <table class="service-invoice-table" id="serviceInvoiceTable">
-                            <thead>
-                                <tr id="serviceTableHeader" class="sortable-header">
-                                    <th class="row-drag-col">
-                                        <i class="fas fa-arrows-alt" title="Drag to reorder rows"></i>
-                                    </th>
-                                    <th class="checkbox-col">
-                                        <input type="checkbox" id="selectAllService" onchange="toggleSelectAllService()">
-                                    </th>
-                                    <th class="draggable-column" data-column="view">
-                                        <span class="column-content">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                            View
-                                        </span>
-                                    </th>
-                                    <th class="draggable-column" data-column="serviceInvoiceReturn">
-                                        <span class="column-content">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                            Service Invoice Return #
-                                        </span>
-                                    </th>
-                                    <th class="draggable-column" data-column="customerInvoice">
-                                        <span class="column-content">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                            Customer Invoice #
-                                        </span>
-                                    </th>
-                                    <th class="draggable-column" data-column="serviceInvoiceReturnDate">
-                                        <span class="column-content">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                            Service Invoice Return Date
-                                        </span>
-                                    </th>
-                                    <th class="draggable-column" data-column="isFullReturn">
-                                        <span class="column-content">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                            Is Full Return
-                                        </span>
-                                    </th>
-                                    <th class="draggable-column" data-column="serial">
-                                        <span class="column-content">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                            Serial #
-                                        </span>
-                                    </th>
-                                    <th class="draggable-column" data-column="model">
-                                        <span class="column-content">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                            Model
-                                        </span>
-                                    </th>
-                                    <th class="draggable-column" data-column="name">
-                                        <span class="column-content">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                            Name
-                                        </span>
-                                    </th>
-                                    <th class="draggable-column" data-column="generatedThrough">
-                                        <span class="column-content">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                            Generated Through
-                                        </span>
-                                    </th>
-                                    <th class="draggable-column" data-column="creditIRN">
-                                        <span class="column-content">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                            Credit IRN #
-                                        </span>
-                                    </th>
-                                    <th class="draggable-column" data-column="creditIRNDate">
-                                        <span class="column-content">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                            Credit IRN Generated Date
-                                        </span>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody id="serviceInvoiceTableBody">
-                                <!-- Table rows will be populated by JavaScript -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Service Invoice Pagination -->
-                <div class="pagination-container">
-                    <div class="pagination-info">
-                        <span>Page <span id="serviceCurrentPage">1</span> of <span id="serviceTotalPages">3</span></span>
-                        <span class="separator">|</span>
-                        <span><span id="serviceTotalRecords">26</span> records</span>
-                    </div>
-                    <div class="pagination-controls">
-                        <button class="pagination-btn" onclick="goToServicePage('first')">
-                            <i class="fas fa-angle-double-left"></i>
-                        </button>
-                        <button class="pagination-btn" onclick="goToServicePage('prev')">
-                            <i class="fas fa-angle-left"></i>
-                        </button>
-                        <select class="page-select" id="servicePageSize" onchange="changeServicePageSize()">
-                            <option value="10" selected>10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                        </select>
-                        <button class="pagination-btn" onclick="goToServicePage('next')">
-                            <i class="fas fa-angle-right"></i>
-                        </button>
-                        <button class="pagination-btn" onclick="goToServicePage('last')">
-                            <i class="fas fa-angle-double-right"></i>
-                        </button>
-                    </div>
-                    <div class="pagination-status">
-                        <span>View <span id="serviceViewStart">1</span> - <span id="serviceViewEnd">10</span> of <span id="serviceViewTotal">26</span></span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Service Type Section -->
-            <div class="service-type-section" id="serviceTypeSection" style="display: none;">
-                <!-- Breadcrumb Navigation -->
-                <div class="breadcrumb-nav">
-                    <button class="breadcrumb-btn" onclick="openModule('warehouse')">
-                        <i class="fas fa-arrow-left"></i>
-                        Back to Warehouse
-                    </button>
-                    <span class="breadcrumb-separator">/</span>
-                    <span class="breadcrumb-current">Service Type</span>
-                </div>
-
-                <div class="section-header">
-                    <h2>Service Type</h2>
-                    <div class="header-actions">
-                        <button class="action-btn primary" onclick="addNewServiceType()">
-                            <i class="fas fa-plus"></i>
-                            New
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Service Type Toolbar -->
-                <div class="service-toolbar">
-                    <div class="toolbar-left">
-                        <button class="toolbar-btn" onclick="deleteSelectedServiceTypes()">
-                            <i class="fas fa-trash"></i>
-                            Delete
-                        </button>
-                        <button class="toolbar-btn" onclick="advancedSearchServiceType()">
-                            <i class="fas fa-search-plus"></i>
-                            Advance Search
-                        </button>
-                        <button class="toolbar-btn" onclick="exportServiceTypeData()">
-                            <i class="fas fa-download"></i>
-                            Export
-                        </button>
-                        <button class="toolbar-btn" onclick="refreshServiceTypeData()">
-                            <i class="fas fa-sync-alt"></i>
-                            Refresh
-                        </button>
-                    </div>
-                    <div class="toolbar-right">
-                        <div class="search-container">
-                            <i class="fas fa-search search-icon"></i>
-                            <input type="text" id="serviceTypeSearchInput" class="search-input" placeholder="Search service types...">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Service Type Data Grid -->
-                <div class="data-grid-container">
-                    <div class="data-grid">
-                        <table class="service-type-table">
-                            <thead>
-                                <tr id="serviceTypeTableHeader">
-                                    <th class="row-drag-col">
-                                        <i class="fas fa-arrows-alt" title="Drag to reorder rows"></i>
-                                    </th>
-                                    <th class="checkbox-col">
-                                        <input type="checkbox" id="selectAllServiceType" onchange="toggleSelectAllServiceType()">
-                                    </th>
-                                    <th class="draggable-column">
-                                        <div class="column-content">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                            View
-                                        </div>
-                                    </th>
-                                    <th class="draggable-column">
-                                        <div class="column-content">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                            Delete
-                                        </div>
-                                    </th>
-                                    <th class="draggable-column">
-                                        <div class="column-content">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                            Service Type Name
-                                        </div>
-                                    </th>
-                                    <th class="draggable-column">
-                                        <div class="column-content">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                            Is Mandatory?
-                                        </div>
-                                    </th>
-                                    <th class="draggable-column">
-                                        <div class="column-content">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                            Is Warranty?
-                                        </div>
-                                    </th>
-                                    <th class="draggable-column">
-                                        <div class="column-content">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                            Is Insurance?
-                                        </div>
-                                    </th>
-                                    <th class="draggable-column">
-                                        <div class="column-content">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                            Service Due Reading
-                                        </div>
-                                    </th>
-                                    <th class="draggable-column">
-                                        <div class="column-content">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                            Service Due Days
-                                        </div>
-                                    </th>
-                                    <th class="draggable-column">
-                                        <div class="column-content">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                            Is Consider For Demand?
-                                        </div>
-                                    </th>
-                                    <th class="draggable-column">
-                                        <div class="column-content">
-                                            <i class="fas fa-grip-vertical drag-handle"></i>
-                                            Is Active?
-                                        </div>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody id="serviceTypeTableBody">
-                                <!-- Data will be populated by JavaScript -->
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Service Type Pagination -->
+                    <!-- Pagination -->
                     <div class="pagination-container">
                         <div class="pagination-info">
-                            <span>Page <span id="serviceTypeCurrentPage">1</span> of <span id="serviceTypeTotalPages">1</span></span>
-                            <span class="separator">|</span>
-                            <span><span id="serviceTypeTotalRecords">0</span> records</span>
+                            <span>Page <select id="pageSelect"><option>1</option></select> of <span id="totalPages">1</span></span>
                         </div>
                         <div class="pagination-controls">
-                            <button class="pagination-btn" onclick="goToServiceTypePage('first')">
-                                <i class="fas fa-angle-double-left"></i>
-                            </button>
-                            <button class="pagination-btn" onclick="goToServiceTypePage('prev')">
-                                <i class="fas fa-angle-left"></i>
-                            </button>
-                            <select class="page-select" id="serviceTypePageSize" onchange="changeServiceTypePageSize()">
-                                <option value="10">10</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                            </select>
-                            <button class="pagination-btn" onclick="goToServiceTypePage('next')">
-                                <i class="fas fa-angle-right"></i>
-                            </button>
-                            <button class="pagination-btn" onclick="goToServiceTypePage('last')">
-                                <i class="fas fa-angle-double-right"></i>
-                            </button>
-                        </div>
-                        <div class="pagination-status">
-                            <span>View <span id="serviceTypeViewStart">1</span> - <span id="serviceTypeViewEnd">10</span> of <span id="serviceTypeViewTotal">0</span></span>
+                            <span>View 1 - 7 of 7</span>
                         </div>
                     </div>
                 </div>
-            </div>
-        </main>
-
-        <!-- Footer -->
-        <footer class="wms-footer">
-            <div class="footer-content">
-                <div class="footer-left">
-                    <p>&copy; 2024 HCL Software. All rights reserved.</p>
-                </div>
-                <div class="footer-right">
-                    <span>Version 2.4.0</span>
-                    <span class="separator">|</span>
-                    <a href="#" onclick="openHelp()">Help</a>
-                    <span class="separator">|</span>
-                    <a href="#" onclick="openSupport()">Support</a>
-                </div>
-            </div>
-        </footer>
-    </div>
-
-    <!-- Modal Windows -->
-    <div id="moduleModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modalTitle">Module</h3>
-                <button class="modal-close" onclick="closeModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <iframe id="modalFrame" src="" frameborder="0"></iframe>
-            </div>
+            </main>
         </div>
+
+        <!-- Notification Container -->
+        <div id="notificationContainer" class="notification-container"></div>
     </div>
 
-    <!-- Service Invoice Detail Modal -->
-    <div id="serviceDetailModal" class="modal">
-        <div class="modal-content large-modal">
-            <div class="modal-header">
-                <h3>Service Invoice Return Details</h3>
-                <div class="modal-actions">
-                    <button class="modal-btn" onclick="editServiceRecord()">Edit</button>
-                    <button class="modal-btn" onclick="printServiceRecord()">Print</button>
-                    <button class="modal-btn" onclick="viewServiceRecord()">View</button>
-                    <button class="modal-btn" onclick="nextServiceRecord()">Next</button>
-                    <button class="modal-btn" onclick="lastServiceRecord()">Last</button>
-                    <button class="modal-btn" onclick="printServiceRecord()">Print</button>
-                    <button class="modal-close" onclick="closeServiceDetailModal()">&times;</button>
-                </div>
-            </div>
-            <div class="modal-body">
-                <div class="service-detail-form" id="serviceDetailForm">
-                    <!-- Form content will be populated by JavaScript -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Scripts -->
-    <script src="warehouse-app.js"></script>
+    <script src="modern-app.js"></script>
 </body>
 </html>

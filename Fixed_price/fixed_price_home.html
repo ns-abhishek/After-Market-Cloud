@@ -3,1154 +3,581 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HCLSoftware Service Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Fixed Price Project Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6; /* Light gray background */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f7f6;
+            color: #333;
+            min-height: 100vh;
         }
-        /* Custom scrollbar for the sidebar */
-        .sidebar-scroll {
-            scrollbar-width: thin;
-            scrollbar-color: #cbd5e1 #f1f5f9;
+        .dashboard-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 32px 24px;
         }
-        .sidebar-scroll::-webkit-scrollbar {
-            width: 8px;
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 32px;
+            font-size: 2.5em;
         }
-        .sidebar-scroll::-webkit-scrollbar-track {
-            background: #f1f5f9;
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        .summary-card {
+            background: #fff;
             border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            padding: 24px 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        .sidebar-scroll::-webkit-scrollbar-thumb {
-            background-color: #cbd5e1;
+        .summary-card .label {
+            font-size: 1em;
+            color: #888;
+            margin-bottom: 8px;
+        }
+        .summary-card .value {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        .summary-card .sub-value {
+            font-size: 1em;
+            color: #aaa;
+        }
+        .main-chart-card {
+            background: #fff;
             border-radius: 10px;
-            border: 2px solid #f1f5f9;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+        }
+        .card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            padding: 24px 20px;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+        .section-header {
+            font-size: 1.2em;
+            color: #2c3e50;
+            margin-bottom: 16px;
+            font-weight: bold;
+        }
+        .card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .card ul li {
+            padding: 8px 0;
+            border-bottom: 1px dashed #eee;
+        }
+        .card ul li:last-child {
+            border-bottom: none;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 0;
+        }
+        th, td {
+            padding: 8px 6px;
+            text-align: left;
+        }
+        th {
+            background: #f4f7f6;
+            font-weight: 600;
+            color: #555;
+        }
+        tr:nth-child(even) {
+            background: #fafbfc;
+        }
+        .status-green { color: #28a745; font-weight: bold; }
+        .status-yellow { color: #ffc107; font-weight: bold; }
+        .status-red { color: #dc3545; font-weight: bold; }
+        @media (max-width: 1100px) {
+            .main-grid { grid-template-columns: 1fr; }
+            .summary-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 700px) {
+            .summary-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
-<body class="flex flex-col min-h-screen">
-    <header class="bg-white shadow-sm py-4 px-6 flex items-center justify-between sticky top-0 z-50">
-        <div class="flex items-center space-x-4">
-            <h1 class="text-2xl font-semibold text-gray-800">HCLSoftware</h1>
-        </div>
-
-        <div class="relative flex-grow max-w-md mx-8">
-            <input type="text" placeholder="Search for menu..." class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700 placeholder-gray-400 text-sm">
-            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-            </svg>
-        </div>
-
-        <div class="flex items-center space-x-6">
-            <div class="flex items-center space-x-4 text-gray-600">
-                <svg class="w-6 h-6 cursor-pointer hover:text-blue-600 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                </svg>
-                <svg class="w-6 h-6 cursor-pointer hover:text-blue-600 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                </svg>
-                <svg class="w-6 h-6 cursor-pointer hover:text-blue-600 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                </svg>
-                <svg class="w-6 h-6 cursor-pointer hover:text-blue-600 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m0 0l7 7m-2 2v-6a1 1 0 00-1-1H9a1 1 0 00-1 1v6"></path>
-                </svg>
-            </div>
-            <div class="text-right text-sm">
-                <p class="text-gray-700 font-medium">Welcome: Admin</p>
-                <p class="text-gray-500">Branch 11</p>
-            </div>
-        </div>
-    </header>
-
-    <div class="flex flex-grow">
-        <aside class="w-64 bg-gray-800 text-white flex flex-col p-4 shadow-lg overflow-y-auto sidebar-scroll">
-            <nav class="space-y-2">
-                    <div class="mb-6">
-    <button id="freqToggle" class="flex items-center justify-between w-full px-3 py-2 text-xs font-bold uppercase tracking-wider text-gray-300 bg-gray-700 rounded hover:bg-gray-600 focus:outline-none">
-        <span>Frequently Used</span>
-        <svg id="freqChevron" class="w-4 h-4 ml-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-        </svg>
-    </button>
-    <nav id="freqLinks" class="space-y-2 mt-2">
-        <a href="#" class="flex items-center justify-between p-3 text-sm font-semibold text-gray-800 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors duration-200 shadow">
-            <span>Service Invoice Return</span>
-            <span class="bg-white text-blue-600 text-xs px-2 py-0.5 rounded-full font-bold ml-2">★</span>
-        </a>
-        <a href="#" class="flex items-center justify-between p-3 text-sm font-semibold text-gray-800 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors duration-200 shadow">
-            <span>Service Type</span>
-            <span class="bg-white text-blue-600 text-xs px-2 py-0.5 rounded-full font-bold ml-2">★</span>
-        </a>
-        <a href="#" class="flex items-center justify-between p-3 text-sm font-semibold text-gray-800 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors duration-200 shadow">
-            <span>Movement Type</span>
-            <span class="bg-white text-blue-600 text-xs px-2 py-0.5 rounded-full font-bold ml-2">★</span>
-        </a>
-            </nav>
-        </div>
-
-                <ul class="space-y-1">
-                    <li>
-                        <a href="#" class="flex items-center justify-between p-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white transition-colors duration-200">
-                            HELPDESK
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center justify-between p-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white transition-colors duration-200">
-                            PARTS
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center justify-between p-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white transition-colors duration-200">
-                            SERVICE
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center justify-between p-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white transition-colors duration-200">
-                            TAMS
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center p-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white transition-colors duration-200">
-                            BAY SCHEDULER
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center p-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white transition-colors duration-200">
-                            CORE
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center p-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white transition-colors duration-200">
-                            DASHBOARD
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center p-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white transition-colors duration-200">
-                            KPI REPORT
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center p-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white transition-colors duration-200">
-                            CONTRACT MANAGEMENT
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center p-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white transition-colors duration-200">
-                            DIGITAL CATALOGUE
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center p-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white transition-colors duration-200">
-                            REMAN
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center p-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white transition-colors duration-200">
-                            SPECIAL TOOLS
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center p-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white transition-colors duration-200">
-                            ORDER MANAGEMENT
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center p-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white transition-colors duration-200">
-                            FIELD SERVICE
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center p-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white transition-colors duration-200">
-                            WARRANTY
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center p-2 text-sm text-gray-300 rounded-md hover:bg-gray-700 hover:text-white transition-colors duration-200">
-                            SALES
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </aside>
-
-        <main class="flex-grow p-6 bg-gray-100 overflow-auto">
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-xl font-semibold text-gray-800">Fixed Price</h2>
-                    
-                </div>
-                
-    <div class="flex items-center justify-between mb-6 text-sm text-gray-600">
-    <!-- Search bar on the left -->
-    <input
-        id="tableSearch"
-        type="text"
-        placeholder="Search Service Menu..."
-        class="px-3 py-1.5 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-        onkeyup="filterTable()"
-        style="width: 320px;"
-    />
-    <!-- Buttons on the right -->
-    <div class="flex items-center space-x-4">
-        <span class="mr-2">
-        <svg class="w-5 h-5 cursor-pointer star-action text-gray-400 transition-colors duration-200"
-            fill="currentColor" viewBox="0 0 20 20" data-action="Fixed Price">
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.784.57-1.838-.196-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.05 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z"/>
-        </svg>
-    </span>
-        <button class="flex items-center px-3 py-1.5 rounded-md border border-gray-300 transition-colors duration-200 hover:bg-blue-600 hover:text-white">
-            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004 16.087V12m6.201 4.261a1 1 0 001.4 0l3-3a1 1 0 000-1.4l-3-3a1 1 0 00-1.4 0l-3 3a1 1 0 000 1.4l3 3z"></path></svg>
-            Refresh
-        </button>
-        <button class="flex items-center px-3 py-1.5 rounded-md border border-gray-300 transition-colors duration-200 hover:bg-blue-600 hover:text-white">
-            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 21h7a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-            Advance Search
-        </button>
-        <button class="flex items-center px-3 py-1.5 rounded-md border border-gray-300 transition-colors duration-200 hover:bg-blue-600 hover:text-white">
-            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-            Export
-        </button>
-        <button class="flex items-center px-3 py-1.5 rounded-md border border-gray-300 transition-colors duration-200 hover:bg-blue-600 hover:text-white">
-            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-            Delete
-        </button>
-        <button class="flex items-center px-3 py-1.5 rounded-md border border-gray-300 transition-colors duration-200 hover:bg-blue-600 hover:text-white">
-            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-            New
-        </button>
-    </div>
-</div>
-                <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">View</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-    <input type="checkbox" id="selectAll" class="form-checkbox h-4 w-4 text-blue-600 rounded" />
-    Delete
-</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service Menu Code</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service Menu Name</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CAD Value</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">USD Value</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Effective From</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Effective To</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <svg class="w-5 h-5 cursor-pointer text-blue-500 hover:text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                    </svg>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded row-checkbox">
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">SM01.0D V-G</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">LEVEL ONE ENGINE LUBE SERVICES</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">495</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">395</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">21 Nov 2018</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">31 Mar 2022</td>
-                            </tr>
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <svg class="w-5 h-5 cursor-pointer text-blue-500 hover:text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                    </svg>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded row-checkbox">
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">SM01.1D-V-G</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">LEVEL TWO ENGINE LUBE SERVICE</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">595</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">495</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">21-Nov-2018</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">31-Mar-2022</td>
-                            </tr>
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <svg class="w-5 h-5 cursor-pointer text-blue-500 hover:text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                    </svg>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded row-checkbox">
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">SM12.3</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">AIR SERVICE</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">475</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">445</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">21-Nov-2018</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">31-Mar-2022</td>
-                            </tr>
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <svg class="w-5 h-5 cursor-pointer text-blue-500 hover:text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                    </svg>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded row-checkbox">
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">SM05.0</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">COOLANT FLUSH</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">1550</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">1400</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">21-Nov-2018</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">31-Mar-2027</td>
-                            </tr>
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <svg class="w-5 h-5 cursor-pointer text-blue-500 hover:text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                    </svg>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded row-checkbox">
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">SM06.0</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">CHARGING SYSTEM INSPECTION/SERV</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">550</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">510</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">21 Nov 2018</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">31 Mar 2022</td>
-                            </tr>
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <svg class="w-5 h-5 cursor-pointer text-blue-500 hover:text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                    </svg>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded row-checkbox">
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">SM016.0</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">SUSPENSION INSPECTION</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">225</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">205</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">21-Nov-2018</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">31-Mar-2022</td>
-                            </tr>
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <svg class="w-5 h-5 cursor-pointer text-blue-500 hover:text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                    </svg>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded row-checkbox">
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">SM01.01</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">TENSIONER AND PULLEY INSPECTION</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">135</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">129</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">21-Nov-2018</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">31-Mar-2022</td>
-                            </tr>
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <svg class="w-5 h-5 cursor-pointer text-blue-500 hover:text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                    </svg>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded row-checkbox">
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">SM14.05</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">POWER STEERING SERVICE</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">255</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">245</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">21-Nov-2018</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">31-Mar-2072</td>
-                            </tr>
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <svg class="w-5 h-5 cursor-pointer text-blue-500 hover:text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                    </svg>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded row-checkbox">
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">SM07.1</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">ALLISON TRANS SERVICE</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">800</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">700</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">21 Nov 2018</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">31 Mar 2022</td>
-                            </tr>
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <svg class="w-5 h-5 cursor-pointer text-blue-500 hover:text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                    </svg>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded row-checkbox">
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">SM12.4</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">BRAKE INSPECTION</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">535</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">505</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">21-Nov-2018</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">31-Mar-2022</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="flex items-center justify-between mt-6 text-sm text-gray-600">
-                    <div class="flex items-center space-x-2">
-                        <button class="p-2 rounded-md border border-gray-300 hover:bg-gray-50 transition-colors duration-200">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path>
-                            </svg>
-                        </button>
-                        <button class="p-2 rounded-md border border-gray-300 hover:bg-gray-50 transition-colors duration-200">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                            </svg>
-                        </button>
-                        <span class="px-3 py-1.5 rounded-md bg-blue-500 text-white">1</span>
-                        <span class="px-3 py-1.5 rounded-md border border-gray-300">...</span>
-                        <span class="px-3 py-1.5 rounded-md border border-gray-300">1010</span>
-                        <button class="p-2 rounded-md border border-gray-300 hover:bg-gray-50 transition-colors duration-200">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                            </svg>
-                        </button>
-                        <button class="p-2 rounded-md border border-gray-300 hover:bg-gray-50 transition-colors duration-200">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M6 5l7 7-7 7"></path>
-                            </svg>
-                        </button>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <span>View 1-10 of 91</span>
-                        <select class="px-2 py-1.5 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option>10</option>
-                            <option>20</option>
-                            <option>50</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-    <div id="viewModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto relative">
-        <div id="modalContent"></div>
-    </div>
-</div>
-
-        
-
-
-    <script>
-     
-
-   const viewWindowTemplate = (data, title = null) => `
- <div class="p-6">
-    <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-gray-800">${title ? title : data.code}</h2>
-        <div class="flex space-x-3">
-            <button id="editButton" class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Edit</button>
-            <button id="saveButton" class="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 transition-colors duration-200 shadow-md hidden">Save</button>
-            <button id="clearButton" class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Clear</button>
-            <button id="exitButton" class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Exit</button>
-        </div>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 mb-6">
-        <!-- ...your existing fields... -->
-        <div class="flex flex-col">
-            <label class="text-sm font-medium text-gray-700 mb-1">Service Menu Code <span class="text-red-500">*</span></label>
-            <input type="text" id="serviceMenuCode" value="${data.code}" class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 text-sm bg-gray-50" readonly>
-        </div>
-        <div class="flex flex-col">
-            <label class="text-sm font-medium text-gray-700 mb-1">Charge To <span class="text-red-500">*</span></label>
-            <select id="chargeTo" class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 text-sm bg-white">
-                <option>Invoice</option>
-                <option>Option 2</option>
-                <option>Option 3</option>
-                </select>
-        </div>
-        <div class="flex flex-col">
-            <label class="text-sm font-medium text-gray-700 mb-1">Service Menu Name <span class="text-red-500">*</span></label>
-            <input type="text" id="serviceMenuName" value="${data.name}" class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 text-sm bg-gray-50" readonly>
-        </div>
-        <div class="flex flex-col">
-            <label class="text-sm font-medium text-gray-700 mb-1">CAD Value</label>
-            <input type="text" id="cadValue" value="${data.cad}" class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 text-sm text-right bg-gray-50" readonly>
-        </div>
-        <div class="flex flex-col">
-            <label class="text-sm font-medium text-gray-700 mb-1">Effective From <span class="text-red-500">*</span></label>
-            <input type="text" id="effectiveFrom" value="${data.effectiveFrom}" class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 text-sm bg-white">
-        </div>
-        <div class="flex flex-col">
-            <label class="text-sm font-medium text-gray-700 mb-1">USD Value <span class="text-red-500">*</span></label>
-            <input type="text" id="usdValue" value="${data.usd}" class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 text-sm text-right bg-gray-50" readonly>
-        </div>
-        <div class="flex flex-col">
-            <label class="text-sm font-medium text-gray-700 mb-1">Complaint Details</label>
-            <input type="text" id="complaintDetails" value="${data.complaint}" class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 text-sm bg-gray-50" readonly>
-        </div>
-        <div class="flex flex-col">
-            <label class="text-sm font-medium text-gray-700 mb-1">Effective To</label>
-            <input type="text" id="effectiveTo" value="${data.effectiveTo}" class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 text-sm bg-white">
-        </div>
-        <div class="flex flex-col col-span-1 md:col-span-2">
-            <label class="text-sm font-medium text-gray-700 mb-1">Cause Of Failure :</label>
-            <textarea id="causeOfFailure" rows="2" class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 text-sm resize-y"></textarea>
-        </div>
-        <div class="flex flex-col col-span-1 md:col-span-2">
-            <label class="text-sm font-medium text-gray-700 mb-1">Corrective Action :</label>
-            <textarea id="correctiveAction" rows="3" class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 text-sm resize-y">Change engine oil filters and oil. Change fuel filters. Check Engine Coolant Level, PH Level and freeze point. Inspect Engine air filter. Inspect all bolts. Grease drive line U-joints. Grease Kingpins. Grease Tie rod ends.</textarea>
-        </div>
-        <div class="flex flex-col col-span-1 md:col-span-2">
-            <label class="text-sm font-medium text-gray-700 mb-1">Remarks</label>
-            <textarea id="remarks" rows="1" class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 text-sm resize-y">Detroit engine with generic filters $55.00</textarea>
-        </div>
-         </div>
-    <!-- Collapsible Dropdowns (headers only, no content box) -->
-    <div class="space-y-2 mt-6">
+<body>
+    <div class="dashboard-container">
+        <h1>Fixed Price Project Dashboard</h1>
+        <!-- Summary Section -->
+         <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
     <div>
-        <button id="assetToggle" class="flex items-center justify-between w-full px-3 py-2 text-sm font-bold text-gray-700 bg-gray-100 rounded border border-gray-200 hover:bg-gray-200 focus:outline-none">
-            <span>Asset Details</span>
-            <svg id="assetChevron" class="w-5 h-5 ml-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-        </button>
-        <div id="assetContent" class="mt-2" style="display: block;">
+        <label for="serviceCodeSelect" style="font-weight:bold;">Select Service Code:</label>
+        <select id="serviceCodeSelect" style="padding:6px 12px; border-radius:4px; border:1px solid #ccc;">
+            <option value="A001">A001</option>
+            <option value="B002">B002</option>
+            <option value="C003">C003</option>
+        </select>
+    </div>
+    <button id="milestonesBtn" style="padding:8px 18px; border-radius:5px; border:none; background:#007bff; color:#fff; font-weight:bold; cursor:pointer;", onclick="openDashboardModal('milestonesCard')">
+        Milestones
+    </button>
+    <button id="risksBtn" style="padding:8px 18px; border-radius:5px; border:none; background:#ffc107; color:#333; font-weight:bold; cursor:pointer;", onclick="openDashboardModal('risksCard')">
+        Risks & Issues
+    </button>
+    <button id="teamBtn" style="padding:8px 18px; border-radius:5px; border:none; background:#28a745; color:#fff; font-weight:bold; cursor:pointer;", onclick="openDashboardModal('teamCard')">
+        Team & Contacts
+    </button>
+</div>
+        <div class="summary-grid">
+            <div class="summary-card">
+                <div class="label">Total Fixed Price</div>
+                <div class="value">$1,000,000</div>
+                <div class="sub-value">Contract Value</div>
+            </div>
+            <div class="summary-card">
+                <div class="label">Budget Consumed</div>
+                <div class="value">$750,000</div>
+                <div class="sub-value">75% Used</div>
+            </div>
+            <div class="summary-card">
+                <div class="label">Earned Value</div>
+                <div class="value">$700,000</div>
+                <div class="sub-value">EV as of May 2025</div>
+            </div>
+            <div class="summary-card">
+                <div class="label">Time Elapsed</div>
+                <div class="value">80%</div>
+                <div class="sub-value">Project Duration</div>
+            </div>
+        </div>
+        <!-- Main Chart -->
+        <div class="main-chart-card">
+            <div class="section-header">Budget vs. Actuals vs. Earned Value Over Time</div>
+            <canvas id="financialChart" height="80"></canvas>
+        </div>
+        <!-- Main Cards Grid -->
+        <div class="main-grid">
             
-    <!-- 1. Header Section -->
-<div class="flex items-center justify-between mb-4">
-    <input
-        id="assetTableSearch"
-        type="text"
-        placeholder="Search assets..."
-        class="px-3 py-1.5 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm w-64"
-        onkeyup="filterAssetTable()"
-    />
-    <button id="assetRefreshBtn" class="p-2 rounded-full bg-gray-200 hover:bg-blue-500 hover:text-white transition-colors" title="Refresh">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004 16.087V12m6.201 4.261a1 1 0 001.4 0l3-3a1 1 0 000-1.4l-3-3a1 1 0 00-1.4 0l-3 3a1 1 0 000 1.4l3 3z"></path>
-        </svg>
-    </button>
-</div>
-    <!-- 3. Table Section -->
-    <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm mb-4">
-        <table id="assetTable" class="min-w-full divide-y divide-gray-200 text-sm">
-            <thead class="bg-gray-50">
-                <tr>
-                    <th class="px-4 py-2 text-left font-semibold text-gray-700">Brand</th>
-                    <th class="px-4 py-2 text-left font-semibold text-gray-700">Asset Type</th>
-                    <th class="px-4 py-2 text-left font-semibold text-gray-700">Model</th>
-                </tr>
-            </thead>
-            <tbody id="assetTableBody" class="bg-white divide-y divide-gray-200">
-                  <tr>
-        <td class="px-4 py-2">Brand 3</td>
-        <td class="px-4 py-2">Coach</td>
-        <td class="px-4 py-2">Model 16</td>
-    </tr>
-    <tr>
-        <td class="px-4 py-2">Brand 3</td>
-        <td class="px-4 py-2">Coach</td>
-        <td class="px-4 py-2">Model 19</td>
-    </tr>
-    <tr>
-        <td class="px-4 py-2">Brand 3</td>
-        <td class="px-4 py-2">Motorhome</td>
-        <td class="px-4 py-2">Model 15</td>
-    </tr>
-</tbody>
-        </table>
-        <div id="assetNoData" class="text-center text-gray-500 py-4 hidden">No assets found.</div>
-    </div>
-    <!-- 4. Pagination Section -->
-    <div class="flex items-center justify-between text-sm">
-        <div class="flex items-center space-x-1">
-            <button id="assetFirstPage" class="p-1 rounded border border-gray-300 hover:bg-blue-100 disabled:opacity-50" title="First Page">&laquo;</button>
-            <button id="assetPrevPage" class="p-1 rounded border border-gray-300 hover:bg-blue-100 disabled:opacity-50" title="Previous Page">&lt;</button>
-            <span id="assetPageInfo" class="mx-2">Page 1 of 4</span>
-            <button id="assetNextPage" class="p-1 rounded border border-gray-300 hover:bg-blue-100 disabled:opacity-50" title="Next Page">&gt;</button>
-            <button id="assetLastPage" class="p-1 rounded border border-gray-300 hover:bg-blue-100 disabled:opacity-50" title="Last Page">&raquo;</button>
-        </div>
-        <div class="flex items-center space-x-2">
-            <span id="assetViewInfo"></span>
-            <label for="assetItemsPerPage" class="ml-2">Items per page:</label>
-            <select id="assetItemsPerPage" class="px-2 py-1 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="3">3</option>
-                <option value="5" selected>5</option>
-                <option value="10">10</option>
-            </select>
-        </div>
-        </div>
+            
+            <div class="card">
+                <div class="section-header">Asset Details</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Asset</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Server Rack</td>
+                            <td><span class="status-green">Deployed</span></td>
+                        </tr>
+                        <tr>
+                            <td>Test Devices</td>
+                            <td><span class="status-yellow">In Use</span></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+            <div class="card">
+                <div class="section-header">Change Requests</div>
+                <ul>
+                    <li>Open: 3</li>
+                    <li>Approved: 2 ($50,000)</li>
+                    <li>Rejected: 1</li>
+                </ul>
+            </div>
+            
+            <!-- ...existing cards... -->
+<div class="card" id="milestonesCard">
+    <div class="section-header">Attachment Details</div>
+    <ul id="attachmentDetailsList" style="padding:0; margin:0;"></ul>
+    <p style="font-size: 0.95em; color: #777; margin-top: 12px;">
+        Access control applies to sensitive documents.
+    </p>
+</div>
+<div class="card">
+    <div class="section-header">Miscellaneous Details</div>
+    <ul id="miscDetailsList"></ul>
+</div>
+        </div>
     </div>
-    <div>
-        <button id="operationToggle" class="flex items-center justify-between w-full px-3 py-2 text-sm font-bold text-gray-700 bg-gray-100 rounded border border-gray-200 hover:bg-gray-200 focus:outline-none">
-            <span>Operation Details</span>
-            <svg id="operationChevron" class="w-5 h-5 ml-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-        </button>
-        <div id="operationContent" class="mt-2 w-full mb-6" style="display: block;">
-    <!-- Search and refresh row -->
-    <div class="flex items-center justify-between mb-4">
-        <input
-            id="operationTableSearch"
-            type="text"
-            placeholder="Search operations..."
-            class="px-3 py-1.5 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm w-64"
-            onkeyup="filterOperationTable()"
-        />
-        <button id="operationRefreshBtn" class="p-2 rounded-full bg-gray-200 hover:bg-blue-500 hover:text-white transition-colors" title="Refresh">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004 16.087V12m6.201 4.261a1 1 0 001.4 0l3-3a1 1 0 000-1.4l-3-3a1 1 0 00-1.4 0l-3 3a1 1 0 000 1.4l3 3z"></path>
-            </svg>
-        </button>
-    </div>
-    <div class="overflow-x-auto w-full rounded-lg border border-gray-200 shadow-sm mb-4">
-        <table id="operationTable" class="w-full divide-y divide-gray-200 text-sm">
-            <thead class="bg-gray-50">
-                <tr>
-                    <th class="px-4 py-2 text-left font-semibold text-gray-700">Operation Code <span class="text-red-500">*</span></th>
-                    <th class="px-4 py-2 text-left font-semibold text-gray-700">Operation Description</th>
-                    <th class="px-4 py-2 text-left font-semibold text-gray-700">Operation Time</th>
-                    <th class="px-4 py-2 text-left font-semibold text-gray-700">Qty <span class="text-red-500">*</span></th>
-                </tr>
-            </thead>
-            <tbody id="operationTableBody" class="bg-white divide-y divide-gray-200">
-    <tr>
-        <td class="px-4 py-2">
-            <a href="#" class="text-blue-600 underline operation-link" data-opcode="OP001">OP001</a>
-        </td>
-        <td class="px-4 py-2">Engine Oil Change</td>
-        <td class="px-4 py-2">1.5 hr</td>
-        <td class="px-4 py-2">1</td>
-    </tr>
-    <tr>
-        <td class="px-4 py-2">
-            <a href="#" class="text-blue-600 underline operation-link" data-opcode="OP002">OP002</a>
-        </td>
-        <td class="px-4 py-2">Brake Inspection</td>
-        <td class="px-4 py-2">1.0 hr</td>
-        <td class="px-4 py-2">2</td>
-    </tr>
-    <tr>
-        <td class="px-4 py-2">
-            <a href="#" class="text-blue-600 underline operation-link" data-opcode="OP003">OP003</a>
-        </td>
-        <td class="px-4 py-2">Coolant Flush</td>
-        <td class="px-4 py-2">2.0 hr</td>
-        <td class="px-4 py-2">1</td>
-    </tr>
-</tbody>
-        </table>
-        <div id="operationNoData" class="text-center text-gray-500 py-4 hidden">No operations found.</div>
+    <div id="dashboardModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); z-index:9999; align-items:center; justify-content:center;">
+    <div id="dashboardModalContent" style="background:#fff; border-radius:10px; max-width:500px; width:90%; padding:32px 24px; position:relative; box-shadow:0 4px 24px rgba(0,0,0,0.15);">
+        <button onclick="closeDashboardModal()" style="position:absolute; top:12px; right:16px; background:none; border:none; font-size:1.5em; color:#888; cursor:pointer;">&times;</button>
+        <div id="dashboardModalBody"></div>
     </div>
 </div>
-        
-    <div>
-        <button id="partToggle" class="flex items-center justify-between w-full px-3 py-2 text-sm font-bold text-gray-700 bg-gray-100 rounded border border-gray-200 hover:bg-gray-200 focus:outline-none">
-            <span>Part Details</span>
-            <svg id="partChevron" class="w-5 h-5 ml-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-        </button>
-        <div id="partContent" class="mt-2" style="display: block;"></div>
+<template id="teamContactsTemplate">
+    <div class="section-header">Team & Contacts</div>
+    <table style="width:100%; font-size:0.98em;">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Organization</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Jane Doe</td>
+                <td>Project Manager</td>
+                <td><a href="mailto:jane.doe@example.com">jane.doe@example.com</a></td>
+                <td>+1-555-123-4567</td>
+                <td>Vendor</td>
+            </tr>
+            <tr>
+                <td>John Smith</td>
+                <td>Client Lead</td>
+                <td><a href="mailto:john.smith@client.com">john.smith@client.com</a></td>
+                <td>+1-555-234-5678</td>
+                <td>Client</td>
+            </tr>
+            <tr>
+                <td>Alex Lee</td>
+                <td>Development Lead</td>
+                <td><a href="mailto:alex.lee@example.com">alex.lee@example.com</a></td>
+                <td>+1-555-345-6789</td>
+                <td>Vendor</td>
+            </tr>
+            <tr>
+                <td>Sarah Chen</td>
+                <td>QA Lead</td>
+                <td><a href="mailto:sarah.chen@example.com">sarah.chen@example.com</a></td>
+                <td>+1-555-456-7890</td>
+                <td>Vendor</td>
+            </tr>
+            <tr>
+                <td>Robert Green</td>
+                <td>Key Stakeholder</td>
+                <td><a href="mailto:robert.green@corp.com">robert.green@corp.com</a></td>
+                <td>+1-555-567-8901</td>
+                <td>Client</td>
+            </tr>
+        </tbody>
+    </table>
+    <p style="font-size: 0.95em; color: #777; margin-top: 12px;">
+        For urgent matters, please refer to the project communication plan.
+    </p>
+</template>
+<template id="risksIssuesTemplate">
+    <div class="section-header">Risks & Issues</div>
+    <table style="width:100%; font-size:0.98em; margin-bottom:18px;">
+        <thead>
+            <tr>
+                <th>Risk/Issue</th>
+                <th>Severity</th>
+                <th>Status</th>
+                <th>Owner</th>
+                <th>Mitigation</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Resource Availability</td>
+                <td><span class="status-yellow">Medium</span></td>
+                <td>Open</td>
+                <td>Jane Doe</td>
+                <td>Cross-train team, hire backup</td>
+            </tr>
+            <tr>
+                <td>Scope Creep</td>
+                <td><span class="status-red">High</span></td>
+                <td>Open</td>
+                <td>John Smith</td>
+                <td>Strict change control</td>
+            </tr>
+            <tr>
+                <td>Vendor Delay</td>
+                <td><span class="status-green">Low</span></td>
+                <td>Closed</td>
+                <td>Alex Lee</td>
+                <td>Weekly vendor review</td>
+            </tr>
+        </tbody>
+    </table>
+    <div style="margin-top:12px;">
+        <canvas id="risksBarChartModal" height="120"></canvas>
     </div>
- <div>
-        <button id="laborToggle" class="flex items-center justify-between w-full px-3 py-2 text-sm font-bold text-gray-700 bg-gray-100 rounded border border-gray-200 hover:bg-gray-200 focus:outline-none">
-            <span>Labor Charge Details</span>
-            <svg id="laborChevron" class="w-5 h-5 ml-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-        </button>
-        <div id="laborContent" class="mt-2" style="display: block;"></div>
-    </div>
-    <div>
-        <button id="miscToggle" class="flex items-center justify-between w-full px-3 py-2 text-sm font-bold text-gray-700 bg-gray-100 rounded border border-gray-200 hover:bg-gray-200 focus:outline-none">
-            <span>Miscellaneous Details</span>
-            <svg id="miscChevron" class="w-5 h-5 ml-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-        </button>
-        <div id="miscContent" class="mt-2" style="display: block;"></div>
-    </div>
- <div>
-        <button id="attachmentToggle" class="flex items-center justify-between w-full px-3 py-2 text-sm font-bold text-gray-700 bg-gray-100 rounded border border-gray-200 hover:bg-gray-200 focus:outline-none">
-            <span>Attachment Details</span>
-            <svg id="attachmentChevron" class="w-5 h-5 ml-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-        </button>
-        <div id="attachmentContent" class="mt-2" style="display: block;"></div>
-    </div>
-</div>
-`;
- //Helper for dropdown headers only (no content box)
-function dropdownHeader(title) {
-    return `
-    <div class="bg-gray-100 p-3 rounded-md border border-gray-200 flex justify-between items-center cursor-pointer">
-        <span class="font-medium text-gray-700">${title}</span>
-        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-        </svg>
-    `;
-}
-      
-
-
-    const freqToggle = document.getElementById('freqToggle');
-    const freqLinks = document.getElementById('freqLinks');
-    const freqChevron = document.getElementById('freqChevron');
-    let freqOpen = true;
-    freqToggle.addEventListener('click', () => {
-        freqOpen = !freqOpen;
-        freqLinks.style.display = freqOpen ? 'block' : 'none';
-        freqChevron.style.transform = freqOpen ? 'rotate(0deg)' : 'rotate(-90deg)';
-    });
-function filterAssetTable() {
-    const input = document.getElementById("assetTableSearch");
-    const filter = input.value.toLowerCase();
-    const table = document.getElementById("assetTable");
-    const trs = table.querySelectorAll("tbody tr");
-    trs.forEach(tr => {
-        const text = tr.textContent.toLowerCase();
-        tr.style.display = text.includes(filter) ? "" : "none";
-    });
-}
-function filterOperationTable() {
-    const input = document.getElementById("operationTableSearch");
-    const filter = input.value.toLowerCase();
-    const table = document.getElementById("operationTable");
-    if (!table) return;
-    const trs = table.querySelectorAll("tbody tr");
-    trs.forEach(tr => {
-        const text = tr.textContent.toLowerCase();
-        tr.style.display = text.includes(filter) ? "" : "none";
-    });
-}
-// Collapsible section helper
-function collapsibleSection(title, id, content) {
-    return `
-    <div class="bg-gray-100 p-3 rounded-md border border-gray-200 collapsible-header flex justify-between items-center cursor-pointer" data-target="${id}">
-        <span class="font-medium text-gray-700">${title}</span>
-        <svg class="w-5 h-5 text-gray-600 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-        </svg>
-    </div>
-    <div id="${id}" class="collapsible-content p-3 bg-white border border-gray-200 rounded-md text-sm text-gray-700 max-h-0 overflow-hidden transition-all duration-300">
-        ${content}
-    </div>
-    `;
-}
-    // Add this for table search functionality
-    function filterTable() {
-        const input = document.getElementById("tableSearch");
-        const filter = input.value.toLowerCase();
-        const table = document.querySelector("table");
-        const trs = table.querySelectorAll("tbody tr");
-        trs.forEach(tr => {
-            const tds = tr.querySelectorAll("td");
-            let text = "";
-            if (tds.length >= 8) {
-                text =
-                    (tds[2].textContent + " " + tds[3].textContent + " " +
-                    tds[4].textContent + " " + tds[5].textContent + " " +
-                    tds[6].textContent + " " + tds[7].textContent).toLowerCase();
-            }
-            tr.style.display = text.includes(filter) ? "" : "none";
-        });
+</template>
+<template id="milestonesTemplate">
+    <div class="section-header">Milestones</div>
+    <table style="width:100%; font-size:0.98em;">
+        <thead>
+            <tr>
+                <th>Milestone</th>
+                <th>Target Date</th>
+                <th>Status</th>
+                <th>Owner</th>
+                <th>Comments</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Design Complete</td>
+                <td>2025-02-15</td>
+                <td><span class="status-green">✔ Completed</span></td>
+                <td>Jane Doe</td>
+                <td>All design documents approved</td>
+            </tr>
+            <tr>
+                <td>Development Complete</td>
+                <td>2025-04-10</td>
+                <td><span class="status-yellow">In Progress</span></td>
+                <td>Alex Lee</td>
+                <td>Backend 90% done, UI ongoing</td>
+            </tr>
+            <tr>
+                <td>Testing</td>
+                <td>2025-05-05</td>
+                <td><span class="status-yellow">Upcoming</span></td>
+                <td>Sarah Chen</td>
+                <td>Test plan ready, resources assigned</td>
+            </tr>
+            <tr>
+                <td>Go-Live</td>
+                <td>2025-06-01</td>
+                <td><span class="status-red">Pending</span></td>
+                <td>John Smith</td>
+                <td>Awaiting client sign-off</td>
+            </tr>
+        </tbody>
+    </table>
+</template>
+<script>
+        const serviceDetails = {
+    A001: {
+        attachments: [
+            { type: "PDF", icon: "📄", color: "#dc3545", name: "Scope Document", size: "1.2 MB" },
+            { type: "DOCX", icon: "📝", color: "#007bff", name: "Design Spec", size: "2.5 MB" },
+            { type: "XLSX", icon: "📊", color: "#28a745", name: "Test Plan", size: "800 KB" },
+            { type: "PDF", icon: "📄", color: "#dc3545", name: "Risk Register", size: "500 KB" }
+        ],
+        misc: [
+            "Client Feedback Score (Last Month): 4.2/5.0",
+            "Regulatory Compliance: All certifications obtained",
+            "Third-Party Vendor Contracts: 3 active",
+            "Travel Expenses (Current Phase): $5,500",
+            "Training Hours Completed: 80 hours",
+            "Contingency Utilization: 15% used"
+        ]
+    },
+    B002: {
+        attachments: [
+            { type: "PDF", icon: "📄", color: "#dc3545", name: "Statement of Work", size: "1.0 MB" },
+            { type: "DOCX", icon: "📝", color: "#007bff", name: "Architecture Doc", size: "1.8 MB" }
+        ],
+        misc: [
+            "Client Feedback Score (Last Month): 4.8/5.0",
+            "Regulatory Compliance: Pending",
+            "Third-Party Vendor Contracts: 2 active",
+            "Travel Expenses (Current Phase): $3,200",
+            "Training Hours Completed: 60 hours",
+            "Contingency Utilization: 10% used"
+        ]
+    },
+    C003: {
+        attachments: [
+            { type: "PDF", icon: "📄", color: "#dc3545", name: "Final Report", size: "2.0 MB" }
+        ],
+        misc: [
+            "Client Feedback Score (Last Month): 4.0/5.0",
+            "Regulatory Compliance: All certifications obtained",
+            "Third-Party Vendor Contracts: 1 active",
+            "Travel Expenses (Current Phase): $2,000",
+            "Training Hours Completed: 40 hours",
+            "Contingency Utilization: 5% used"
+        ]
     }
+};
 
-    // Select All functionality for Delete column
-    document.getElementById('selectAll').addEventListener('change', function() {
-        const checked = this.checked;
-        document.querySelectorAll('.row-checkbox').forEach(cb => {
-            cb.checked = checked;
-        });
-    });
-    document.querySelectorAll('.collapsible-header').forEach(header => {
-    header.addEventListener('click', function() {
-        const targetId = header.getAttribute('data-target');
-        const content = document.getElementById(targetId);
-        const icon = header.querySelector('svg');
-        if (content.classList.contains('max-h-0')) {
-            content.classList.remove('max-h-0');
-            content.classList.add('max-h-96');
-            icon.classList.add('rotate-90');
-        } else {
-            content.classList.add('max-h-0');
-            content.classList.remove('max-h-96');
-            icon.classList.remove('rotate-90');
-        }
-    });
-});
-
-
-
-    // Delete selected rows when Delete button is clicked
-    document.querySelectorAll('button').forEach(btn => {
-        if (btn.textContent.trim() === 'Delete') {
-            btn.addEventListener('click', function() {
-                const table = document.querySelector("table");
-                const trs = table.querySelectorAll("tbody tr");
-                trs.forEach(tr => {
-                    const checkbox = tr.querySelector('.row-checkbox');
-                    if (checkbox && checkbox.checked) {
-                        tr.remove();
+        // Example Chart.js line chart for Budget vs Actual vs Earned Value
+        const ctx = document.getElementById('financialChart').getContext('2d');
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+        datasets: [
+            {
+                label: 'Budget',
+                data: [200000, 400000, 600000, 800000, 1000000],
+                borderColor: '#007bff',
+                backgroundColor: 'rgba(0,123,255,0.08)',
+                fill: false,
+                tension: 0.3
+            },
+            {
+                label: 'Actual',
+                data: [180000, 350000, 500000, 700000, 750000],
+                borderColor: '#dc3545',
+                backgroundColor: 'rgba(220,53,69,0.08)',
+                fill: false,
+                tension: 0.3
+            },
+            {
+                label: 'Earned Value',
+                data: [150000, 300000, 450000, 600000, 700000],
+                borderColor: '#28a745',
+                backgroundColor: 'rgba(40,167,69,0.08)',
+                fill: false,
+                tension: 0.3
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { position: 'top' },
+            tooltip: {
+                enabled: true,
+                callbacks: {
+                    title: function(context) {
+                        // Show the month
+                        return 'Month: ' + context[0].label;
+                    },
+                    label: function(context) {
+                        // Show the dataset label and value with currency formatting
+                        return context.dataset.label + ': $' + context.parsed.y.toLocaleString();
                     }
-                });
-                // Uncheck the select all after delete
-                const selectAll = document.getElementById('selectAll');
-                if (selectAll) selectAll.checked = false;
-            });
-        }
-    });
-    // Update pagination info and button states
-function updateAssetPagination() {
-    const total = assetFiltered.length;
-    const totalPages = Math.max(1, Math.ceil(total / assetItemsPerPage));
-    const pageInfo = document.getElementById('assetPageInfo');
-    const viewInfo = document.getElementById('assetViewInfo');
-    pageInfo.textContent = `Page ${assetCurrentPage} of ${totalPages}`;
-    const start = total === 0 ? 0 : (assetCurrentPage - 1) * assetItemsPerPage + 1;
-    const end = Math.min(assetCurrentPage * assetItemsPerPage, total);
-    viewInfo.textContent = `View ${start}-${end} of ${total}`;
-
-    document.getElementById('assetFirstPage').disabled = assetCurrentPage === 1;
-    document.getElementById('assetPrevPage').disabled = assetCurrentPage === 1;
-    document.getElementById('assetNextPage').disabled = assetCurrentPage === totalPages || total === 0;
-    document.getElementById('assetLastPage').disabled = assetCurrentPage === totalPages || total === 0;
-}
-// Filter logic
-function filterAssets() {
-    const brand = document.getElementById('assetBrandFilter').value.trim().toLowerCase();
-    const type = document.getElementById('assetTypeFilter').value.trim().toLowerCase();
-    const model = document.getElementById('assetModelFilter').value.trim().toLowerCase();
-    assetFiltered = assetData.filter(asset =>
-        asset.brand.toLowerCase().includes(brand) &&
-        asset.type.toLowerCase().includes(type) &&
-        asset.model.toLowerCase().includes(model)
-    );
-    assetCurrentPage = 1;
-    renderAssetTable();
-}
-
-
-  // Modal functionality for view icon
-   document.querySelectorAll('tbody .w-5.h-5.cursor-pointer').forEach(icon => {
-    icon.addEventListener('click', function () {
-        const tr = icon.closest('tr');
-        const tds = tr.querySelectorAll('td');
-        const data = {
-            code: tds[2].textContent.trim(),
-            name: tds[3].textContent.trim(),
-            cad: tds[4].textContent.trim() + '.00',
-            usd: tds[5].textContent.trim() + '.00',
-            effectiveFrom: tds[6].textContent.trim(),
-            effectiveTo: tds[7].textContent.trim(),
-            complaint: tds[3].textContent.trim()
-        };
-        document.getElementById('modalContent').innerHTML = viewWindowTemplate(data);
-        document.getElementById('viewModal').classList.remove('hidden');
-       const assetToggle = document.getElementById('assetToggle');
-const assetContent = document.getElementById('assetContent');
-if (assetToggle && assetContent) {
-    assetToggle.addEventListener('click', function () {
-        const isOpen = assetContent.style.display !== 'none';
-        assetContent.style.display = isOpen ? 'none' : 'block';
-        assetToggle.classList.toggle('bg-blue-600', !isOpen); // Add blue background when open
-        assetToggle.classList.toggle('text-white', !isOpen);  // Add white text when open
-        assetToggle.classList.toggle('text-gray-700', isOpen); // Restore gray text when closed
-        assetToggle.classList.toggle('bg-gray-100', isOpen);   // Restore gray background when closed
-    });
-}
-const operationToggle = document.getElementById('operationToggle');
-const operationContent = document.getElementById('operationContent');
-const operationChevron = document.getElementById('operationChevron');
-if (operationToggle && operationContent && operationChevron) {
-    operationToggle.addEventListener('click', function () {
-        const isOpen = operationContent.style.display !== 'none';
-        operationContent.style.display = isOpen ? 'none' : 'block';
-        operationChevron.style.transform = isOpen ? 'rotate(-90deg)' : 'rotate(0deg)';
-    });
-}const laborToggle = document.getElementById('laborToggle');
-const laborContent = document.getElementById('laborContent');
-const laborChevron = document.getElementById('laborChevron');
-if (laborToggle && laborContent && laborChevron) {
-    laborToggle.addEventListener('click', function () {
-        const isOpen = laborContent.style.display !== 'none';
-        laborContent.style.display = isOpen ? 'none' : 'block';
-        laborChevron.style.transform = isOpen ? 'rotate(-90deg)' : 'rotate(0deg)';
-    });
-}
-const miscToggle = document.getElementById('miscToggle');
-const miscContent = document.getElementById('miscContent');
-const miscChevron = document.getElementById('miscChevron');
-if (miscToggle && miscContent && miscChevron) {
-    miscToggle.addEventListener('click', function () {
-        const isOpen = miscContent.style.display !== 'none';
-        miscContent.style.display = isOpen ? 'none' : 'block';
-        miscChevron.style.transform = isOpen ? 'rotate(-90deg)' : 'rotate(0deg)';
-    });
-}
-
-const partToggle = document.getElementById('partToggle');
-const partContent = document.getElementById('partContent');
-const partChevron = document.getElementById('partChevron');
-if (partToggle && partContent && partChevron) {
-    partToggle.addEventListener('click', function () {
-        const isOpen = partContent.style.display !== 'none';
-        partContent.style.display = isOpen ? 'none' : 'block';
-        partChevron.style.transform = isOpen ? 'rotate(-90deg)' : 'rotate(0deg)';
-    });
-}
-const attachmentToggle = document.getElementById('attachmentToggle');
-const attachmentContent = document.getElementById('attachmentContent');
-const attachmentChevron = document.getElementById('attachmentChevron');
-if (attachmentToggle && attachmentContent && attachmentChevron) {
-    attachmentToggle.addEventListener('click', function () {
-        const isOpen = attachmentContent.style.display !== 'none';
-        attachmentContent.style.display = isOpen ? 'none' : 'block';
-        attachmentChevron.style.transform = isOpen ? 'rotate(-90deg)' : 'rotate(0deg)';
-    });
-}
-        // Collapsible logic
-         document.querySelectorAll('.collapsible-header').forEach(header => {
-            header.addEventListener('click', function() {
-                const targetId = header.getAttribute('data-target');
-                const content = document.getElementById(targetId);
-                const icon = header.querySelector('svg');
-                if (content.classList.contains('max-h-0')) {
-                    content.classList.remove('max-h-0');
-                    content.classList.add('max-h-96');
-                    icon.classList.add('rotate-90');
-                } else {
-                    content.classList.add('max-h-0');
-                    content.classList.remove('max-h-96');
-                    icon.classList.remove('rotate-90');
                 }
-            });
-        });
-
-            // Add Exit button handler inside the modal content
-              const exitBtn = document.getElementById('exitButton');
-        if (exitBtn) {
-            exitBtn.onclick = function() {
-                document.getElementById('viewModal').classList.add('hidden');
-            };
-        }
-    });
-});
-    // Optional: Close modal when clicking outside the modal content
-    document.getElementById('viewModal').addEventListener('click', function (e) {
-        if (e.target === this) {
-            this.classList.add('hidden');
-        }
-    });
-
-    document.getElementById('closeModal').addEventListener('click', function () {
-        document.getElementById('viewModal').classList.add('hidden');
-    });
-    // Optional: Close modal when clicking outside the modal content
-    document.getElementById('viewModal').addEventListener('click', function (e) {
-        if (e.target === this) {
-            this.classList.add('hidden');
-        }
-    });
-    document.querySelectorAll('.star-action').forEach(star => {
-    star.addEventListener('click', function (e) {
-        e.stopPropagation();
-        const action = this.getAttribute('data-action');
-        const freqLinks = document.getElementById('freqLinks');
-        const existing = freqLinks.querySelector(`[data-action="${action}"]`);
-
-        // Toggle bookmark state
-        if (this.classList.contains('text-blue-500')) {
-            this.classList.remove('text-blue-500');
-            this.classList.add('text-gray-400');
-            if (existing) existing.remove();
-        } else {
-            this.classList.add('text-blue-500');
-            this.classList.remove('text-gray-400');
-            if (!existing) {
-                const a = document.createElement('a');
-                a.href = "#";
-                a.setAttribute('data-action', action);
-                a.className = "flex items-center justify-between p-3 text-sm font-semibold text-gray-800 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors duration-200 shadow";
-                a.innerHTML = `
-                    <span>${action}</span>
-                    <span class="bg-white text-blue-600 text-xs px-2 py-0.5 rounded-full font-bold ml-2">★</span>
-                `;
-                freqLinks.appendChild(a);
             }
+        },
+        scales: {
+            y: { beginAtZero: true }
         }
-    });
-});
-   document.querySelectorAll('.operation-link').forEach(link => {
-    link.addEventListener('click', function(e) {
-        e.preventDefault();
-        const tr = this.closest('tr');
-        const tds = tr.querySelectorAll('td');
-        const data = {
-            code: tds[0].innerText.trim(),
-            name: tds[1].innerText.trim(),
-            cad: '', // Fill with actual value if available
-            usd: '', // Fill with actual value if available
-            effectiveFrom: '', // Fill with actual value if available
-            effectiveTo: '', // Fill with actual value if available
-            complaint: tds[1].innerText.trim()
-        };
-        // Pass "opperationsss" as the title
-        document.getElementById('modalContent').innerHTML = viewWindowTemplate(data, "opperationsss");
-        document.getElementById('viewModal').classList.remove('hidden');
-
-        // Attach exit button handler
-        const exitBtn = document.getElementById('exitButton');
-        if (exitBtn) {
-            exitBtn.onclick = function() {
-                document.getElementById('viewModal').classList.add('hidden');
-            };
-        }
-    });
-});
-    document.querySelectorAll('tbody .w-5.h-5.cursor-pointer').forEach(icon => {
-    icon.addEventListener('click', function () {
-        const tr = icon.closest('tr');
-        const tds = tr.querySelectorAll('td');
-        const data = {
-            code: tds[2].textContent.trim(),
-            name: tds[3].textContent.trim(),
-            cad: tds[4].textContent.trim() + '.00',
-            usd: tds[5].textContent.trim() + '.00',
-            effectiveFrom: tds[6].textContent.trim(),
-            effectiveTo: tds[7].textContent.trim(),
-            complaint: tds[3].textContent.trim()
-        };
-        document.getElementById('modalContent').innerHTML = viewWindowTemplate(data);
-        document.getElementById('viewModal').classList.remove('hidden');
-
-        // Collapsible logic
-        document.querySelectorAll('.collapsible-header').forEach(header => {
-            header.addEventListener('click', function() {
-                const targetId = header.getAttribute('data-target');
-                const content = document.getElementById(targetId);
-                const icon = header.querySelector('svg');if (content.classList.contains('max-h-0')) {
-                    content.classList.remove('max-h-0');
-                    content.classList.add('max-h-96');
-                    icon.classList.add('rotate-90');
-                } else {
-                    content.classList.add('max-h-0');
-                    content.classList.remove('max-h-96');
-                    icon.classList.remove('rotate-90');
-                }
-            });
-        });
-        // Exit button handler
-        const exitBtn = document.getElementById('exitButton');
-        if (exitBtn) {
-            exitBtn.onclick = function() {
-                document.getElementById('viewModal').classList.add('hidden');
-            };
-        }
-    });
-});
-document.addEventListener('DOMContentLoaded', function () {
-    // --- Asset Details Search and Table ---
-    const assetSingleSearch = document.getElementById('assetSingleSearch');
-    if (assetSingleSearch) {
-        assetSingleSearch.addEventListener('input', function () {
-            const filter = assetSingleSearch.value.trim().toLowerCase();
-            assetFiltered = assetData.filter(asset =>
-                asset.brand.toLowerCase().includes(filter) ||
-                asset.type.toLowerCase().includes(filter) ||
-                asset.model.toLowerCase().includes(filter)
-            );
-            assetCurrentPage = 1;
-            renderAssetTable();
-        });
-        document.getElementById('assetItemsPerPage').addEventListener('change', function () {
-            assetItemsPerPage = parseInt(this.value, 10);
-            assetCurrentPage = 1;
-            renderAssetTable();
-        });
-        document.getElementById('assetRefreshBtn').addEventListener('click', function () {
-    // Clear the search input
-    const searchInput = document.getElementById('assetTableSearch');
-    if (searchInput) searchInput.value = '';
-
-    // Show all rows in the table
-    const table = document.getElementById('assetTable');
-    const trs = table.querySelectorAll('tbody tr');
-    trs.forEach(tr => {
-        tr.style.display = '';
-    });
-
-    // Optionally, reset pagination here if you use it
-});
-        document.getElementById('assetFirstPage').addEventListener('click', function () {
-            assetCurrentPage = 1;
-            renderAssetTable();
-        });
-        document.getElementById('assetPrevPage').addEventListener('click', function () {
-            if (assetCurrentPage > 1) {
-                assetCurrentPage--;
-                renderAssetTable();
-            }
-        });
-        document.getElementById('assetNextPage').addEventListener('click', function () {
-            const totalPages = Math.max(1, Math.ceil(assetFiltered.length / assetItemsPerPage));
-            if (assetCurrentPage < totalPages) {
-                assetCurrentPage++;
-                renderAssetTable();
-            }
-        });
-        document.getElementById('assetLastPage').addEventListener('click', function () {
-            assetCurrentPage = Math.max(1, Math.ceil(assetFiltered.length / assetItemsPerPage));
-            renderAssetTable();
-        });
-        // Render the table on page load
-        renderAssetTable();
     }
 });
+function renderDetails(code) {
+    // Render attachments
+    const att = serviceDetails[code]?.attachments || [];
+    let attHtml = att.map(file => `
+        <li style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px dashed #eee;">
+            <button onclick="alert('Simulating download of ${file.name} ${file.type}');" title="Download ${file.type}" style="background:none; border:none; cursor:pointer; padding:0; margin-right:10px;">
+                <span style="font-size:1.4em; color:${file.color};">${file.icon}</span>
+            </button>
+            <span>
+                ${file.name} <span style="color:#888; font-size:0.95em;">(${file.type}, ${file.size})</span>
+            </span>
+        </li>
+    `).join('');
+    document.getElementById('attachmentDetailsList').innerHTML = attHtml;
 
-    // Edit button (you can add your logic here)
-    document.getElementById('editModal').addEventListener('click', function () {
-        alert('Edit functionality not implemented.');
+    // Render miscellaneous
+    const misc = serviceDetails[code]?.misc || [];
+    let miscHtml = misc.map(item => `<li>${item}</li>`).join('');
+    document.getElementById('miscDetailsList').innerHTML = miscHtml;
+}
+document.addEventListener('DOMContentLoaded', function() {
+    const select = document.getElementById('serviceCodeSelect');
+    renderDetails(select.value);
+    select.addEventListener('change', function() {
+        renderDetails(this.value);
     });
-    
-</script>
+});
+function openDashboardModal(cardId) {
+    if (cardId === 'teamCard') {
+        var template = document.getElementById('teamContactsTemplate');
+        document.getElementById('dashboardModalBody').innerHTML = template.innerHTML;
+        document.getElementById('dashboardModal').style.display = 'flex';
+        return;
+    }
+    if (cardId === 'risksCard') {
+        var template = document.getElementById('risksIssuesTemplate');
+        document.getElementById('dashboardModalBody').innerHTML = template.innerHTML;
+        document.getElementById('dashboardModal').style.display = 'flex';
+        // Draw the bar chart in the modal
+        setTimeout(function() {
+            const risksBarCtx = document.getElementById('risksBarChartModal').getContext('2d');
+            new Chart(risksBarCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Resource Availability', 'Scope Creep', 'Vendor Delay'],
+                    datasets: [{
+                        label: 'Severity (1=Low, 2=Medium, 3=High)',
+                        data: [2, 3, 1], // Medium, High, Low
+                        backgroundColor: [
+                            '#ffc107', // Medium
+                            '#dc3545', // High
+                            '#28a745'  // Low
+                        ]
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const sev = ['Low', 'Medium', 'High'];
+                                    return 'Severity: ' + sev[context.raw - 1];
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            min: 0,
+                            max: 3,
+                            ticks: {
+                                stepSize: 1,
+                                callback: function(value) {
+                                    if (value === 1) return 'Low';
+                                    if (value === 2) return 'Medium';
+                                    if (value === 3) return 'High';
+                                    return '';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }, 100);
+        return;
+    }
+    var card = document.getElementById(cardId);
+    if (card) {
+        var content = card.innerHTML;
+        document.getElementById('dashboardModalBody').innerHTML = content;
+        document.getElementById('dashboardModal').style.display = 'flex';
+    }
+    if (cardId === 'milestonesCard') {
+        var template = document.getElementById('milestonesTemplate');
+        document.getElementById('dashboardModalBody').innerHTML = template.innerHTML;
+        document.getElementById('dashboardModal').style.display = 'flex';
+        return;
+    }
+    var card = document.getElementById(cardId);
+    if (card) {
+        var content = card.innerHTML;
+        document.getElementById('dashboardModalBody').innerHTML = content;
+        document.getElementById('dashboardModal').style.display = 'flex';
+    }
+
+}
+function closeDashboardModal() {
+    document.getElementById('dashboardModal').style.display = 'none';
+}
+    </script>
 </body>
 </html>

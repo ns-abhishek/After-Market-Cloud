@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Invoice Return - Enhanced</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <link rel="stylesheet" href="service-invoice-return-enhanced.css">
+</head>
+<body>
+    <div class="sir-container">
+        <!-- Header -->
+        <header class="sir-header">
+            <div class="header-left">
+                <h1>Service Invoice Return</h1>
+            </div>
+            <div class="header-right">
+                <button class="header-btn primary" onclick="addNew()">
+                    <i class="fas fa-plus"></i>
+                    New
+                </button>
+                <button class="header-btn" onclick="refreshData()">
+                    <i class="fas fa-sync-alt"></i>
+                    Refresh
+                </button>
+                <button class="header-btn" onclick="advancedSearch()">
+                    <i class="fas fa-search-plus"></i>
+                    Advance Search
+                </button>
+                <button class="header-btn" onclick="exportData()">
+                    <i class="fas fa-download"></i>
+                    Export
+                </button>
+                <button class="header-btn danger" onclick="closeWindow()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="sir-main">
+            <!-- Toolbar -->
+            <div class="sir-toolbar">
+                <div class="toolbar-left">
+                    <button class="toolbar-btn" onclick="toggleColumnPanel()">
+                        <i class="fas fa-columns"></i>
+                        Columns
+                    </button>
+                    <button class="toolbar-btn" onclick="toggleSelectAll()">
+                        <i class="fas fa-check-square"></i>
+                        Select All
+                    </button>
+                </div>
+                <div class="toolbar-right">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search..." id="searchInput" onkeyup="searchTable()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Table -->
+            <div class="table-container">
+                <table class="sir-table" id="sirTable">
+                    <thead>
+                        <tr id="tableHeader" class="sortable-header">
+                            <th class="checkbox-col">
+                                <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll()">
+                            </th>
+                            <th class="draggable-column" data-column="view">
+                                <span class="column-content">
+                                    <i class="fas fa-grip-vertical drag-handle"></i>
+                                    View
+                                </span>
+                            </th>
+                            <th class="draggable-column" data-column="serviceInvoiceReturn">
+                                <span class="column-content">
+                                    <i class="fas fa-grip-vertical drag-handle"></i>
+                                    Service Invoice Return #
+                                </span>
+                            </th>
+                            <th class="draggable-column" data-column="customerInvoice">
+                                <span class="column-content">
+                                    <i class="fas fa-grip-vertical drag-handle"></i>
+                                    Customer Invoice #
+                                </span>
+                            </th>
+                            <th class="draggable-column" data-column="serviceInvoiceReturnDate">
+                                <span class="column-content">
+                                    <i class="fas fa-grip-vertical drag-handle"></i>
+                                    Service Invoice Return Date
+                                </span>
+                            </th>
+                            <th class="draggable-column" data-column="isFullReturn">
+                                <span class="column-content">
+                                    <i class="fas fa-grip-vertical drag-handle"></i>
+                                    Is Full Return
+                                </span>
+                            </th>
+                            <th class="draggable-column" data-column="serial">
+                                <span class="column-content">
+                                    <i class="fas fa-grip-vertical drag-handle"></i>
+                                    Serial #
+                                </span>
+                            </th>
+                            <th class="draggable-column" data-column="model">
+                                <span class="column-content">
+                                    <i class="fas fa-grip-vertical drag-handle"></i>
+                                    Model
+                                </span>
+                            </th>
+                            <th class="draggable-column" data-column="name">
+                                <span class="column-content">
+                                    <i class="fas fa-grip-vertical drag-handle"></i>
+                                    Name
+                                </span>
+                            </th>
+                            <th class="draggable-column" data-column="generatedThrough">
+                                <span class="column-content">
+                                    <i class="fas fa-grip-vertical drag-handle"></i>
+                                    Generated Through
+                                </span>
+                            </th>
+                            <th class="draggable-column" data-column="creditIRN">
+                                <span class="column-content">
+                                    <i class="fas fa-grip-vertical drag-handle"></i>
+                                    Credit IRN #
+                                </span>
+                            </th>
+                            <th class="draggable-column" data-column="creditIRNDate">
+                                <span class="column-content">
+                                    <i class="fas fa-grip-vertical drag-handle"></i>
+                                    Credit IRN Generated Date
+                                </span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Table rows will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination-container">
+                <div class="pagination-info">
+                    <span>Page <span id="currentPage">1</span> of <span id="totalPages">3</span></span>
+                    <span class="separator">|</span>
+                    <span><span id="totalRecords">26</span> records</span>
+                </div>
+                <div class="pagination-controls">
+                    <button class="pagination-btn" onclick="goToPage('first')">
+                        <i class="fas fa-angle-double-left"></i>
+                    </button>
+                    <button class="pagination-btn" onclick="goToPage('prev')">
+                        <i class="fas fa-angle-left"></i>
+                    </button>
+                    <select class="page-select" id="pageSize" onchange="changePageSize()">
+                        <option value="10" selected>10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select>
+                    <button class="pagination-btn" onclick="goToPage('next')">
+                        <i class="fas fa-angle-right"></i>
+                    </button>
+                    <button class="pagination-btn" onclick="goToPage('last')">
+                        <i class="fas fa-angle-double-right"></i>
+                    </button>
+                </div>
+                <div class="pagination-status">
+                    <span>View <span id="viewStart">1</span> - <span id="viewEnd">10</span> of <span id="viewTotal">26</span></span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Detail Modal -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Service Invoice Return Details</h3>
+                <div class="modal-actions">
+                    <button class="modal-btn" onclick="editRecord()">Edit</button>
+                    <button class="modal-btn" onclick="printRecord()">Print</button>
+                    <button class="modal-btn" onclick="viewRecord()">View</button>
+                    <button class="modal-btn" onclick="nextRecord()">Next</button>
+                    <button class="modal-btn" onclick="lastRecord()">Last</button>
+                    <button class="modal-btn" onclick="printRecord()">Print</button>
+                    <button class="modal-close" onclick="closeDetailModal()">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="detail-form">
+                    <!-- Form content will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Column Customization Panel -->
+    <div class="column-panel" id="columnPanel">
+        <div class="panel-header">
+            <h3>Customize Columns</h3>
+            <button class="panel-close" onclick="toggleColumnPanel()">&times;</button>
+        </div>
+        <div class="panel-body">
+            <div class="column-list" id="columnList">
+                <!-- Column items will be populated by JavaScript -->
+            </div>
+            <div class="panel-actions">
+                <button class="btn primary" onclick="applyColumnChanges()">Apply</button>
+                <button class="btn secondary" onclick="resetColumns()">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="service-invoice-return-enhanced.js"></script>
+</body>
+</html>

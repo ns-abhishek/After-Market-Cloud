@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Invoice Return - HCL Software</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo-container">
+                    <div class="logo-icon">
+                        <i class="fas fa-cube"></i>
+                    </div>
+                    <div class="app-title">
+                        <h1>HCL Software</h1>
+                        <span class="app-subtitle">Warehouse Management System</span>
+                    </div>
+                </div>
+            </div>
+            <div class="header-center">
+                <div class="global-search">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" placeholder="Global search..." class="global-search-input" id="globalSearchInput">
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="header-actions">
+                    <button class="header-btn" id="themeToggle" title="Toggle Theme">
+                        <i class="fas fa-moon" id="themeIcon"></i>
+                    </button>
+                    <button class="header-btn" id="notificationBtn" title="Notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <div class="user-menu">
+                        <button class="user-avatar" id="userMenuBtn">
+                            <img src="https://via.placeholder.com/32x32/4A90E2/FFFFFF?text=U" alt="User" class="avatar-img">
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Title -->
+        <div class="page-title-container">
+            <h1 class="page-title">Service Invoice Return</h1>
+            <button class="new-btn" id="newBtn">
+                <i class="fas fa-plus"></i> New
+            </button>
+        </div>
+
+        <div class="main-container">
+            <!-- Sidebar -->
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-content">
+                    <div class="sidebar-section">
+                        <!-- Dashboard Item -->
+                        <div class="sidebar-item" data-section="dashboard">
+                            <i class="fas fa-tachometer-alt sidebar-icon"></i>
+                            <span>DASHBOARD</span>
+                        </div>
+
+                        <!-- Warehouse Dropdown -->
+                        <div class="sidebar-item dropdown-item active" data-section="warehouse">
+                            <i class="fas fa-chevron-down sidebar-arrow"></i>
+                            <i class="fas fa-warehouse sidebar-icon"></i>
+                            <span>WAREHOUSE</span>
+                        </div>
+                        <div class="sidebar-submenu active" id="warehouseSubmenu">
+                            <div class="submenu-item" data-action="warehouse-management">
+                                <i class="fas fa-boxes"></i>
+                                <span>Warehouse Management</span>
+                            </div>
+                            <div class="submenu-item active" data-action="service-invoice-return">
+                                <i class="fas fa-file-invoice"></i>
+                                <span>Service Invoice Return</span>
+                            </div>
+                            <div class="submenu-item" data-action="inventory-control">
+                                <i class="fas fa-clipboard-list"></i>
+                                <span>Inventory Control</span>
+                            </div>
+                            <div class="submenu-item" data-action="stock-movements">
+                                <i class="fas fa-exchange-alt"></i>
+                                <span>Stock Movements</span>
+                            </div>
+                            <div class="submenu-item" data-action="location-management">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Location Management</span>
+                            </div>
+                            <div class="submenu-item" data-action="warehouse-reports">
+                                <i class="fas fa-chart-bar"></i>
+                                <span>Warehouse Reports</span>
+                            </div>
+                            <div class="submenu-item" data-action="warehouse-settings">
+                                <i class="fas fa-cog"></i>
+                                <span>Warehouse Settings</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <h1 class="page-title">Service Invoice Return</h1>
+                    <div class="page-actions">
+                        <button class="btn btn-primary" id="newBtn">
+                            <i class="fas fa-plus"></i>
+                            New
+                        </button>
+                        <button class="btn btn-secondary" id="refreshBtn">
+                            <i class="fas fa-sync-alt"></i>
+                            Refresh
+                        </button>
+                        <button class="btn btn-info" id="advanceSearchBtn">
+                            <i class="fas fa-search-plus"></i>
+                            Advance Search
+                        </button>
+                        <button class="btn btn-success" id="exportBtn">
+                            <i class="fas fa-file-export"></i>
+                            Export
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Data Table -->
+                <div class="table-container">
+                    <div class="table-wrapper">
+                        <table class="data-table service-invoice-table" id="serviceInvoiceTable">
+                            <thead>
+                                <tr>
+                                    <th class="checkbox-column">
+                                        <input type="checkbox" id="selectAll" class="table-checkbox">
+                                    </th>
+                                    <th class="sortable" data-sort="view">
+                                        <div class="th-content">
+                                            <span>View</span>
+                                            <i class="fas fa-sort sort-icon"></i>
+                                        </div>
+                                    </th>
+                                    <th class="sortable" data-sort="serviceInvoiceReturn">
+                                        <div class="th-content">
+                                            <span>Service Invoice Return #</span>
+                                            <i class="fas fa-sort sort-icon"></i>
+                                        </div>
+                                    </th>
+                                    <th class="sortable" data-sort="customerInvoice">
+                                        <div class="th-content">
+                                            <span>Customer Invoice #</span>
+                                            <i class="fas fa-sort sort-icon"></i>
+                                        </div>
+                                    </th>
+                                    <th class="sortable" data-sort="serviceInvoiceReturnDate">
+                                        <div class="th-content">
+                                            <span>Service Invoice Return Date</span>
+                                            <i class="fas fa-sort sort-icon"></i>
+                                        </div>
+                                    </th>
+                                    <th class="sortable" data-sort="isFullReturn">
+                                        <div class="th-content">
+                                            <span>Is Full Return</span>
+                                            <i class="fas fa-sort sort-icon"></i>
+                                        </div>
+                                    </th>
+                                    <th class="sortable" data-sort="serial">
+                                        <div class="th-content">
+                                            <span>Serial #</span>
+                                            <i class="fas fa-sort sort-icon"></i>
+                                        </div>
+                                    </th>
+                                    <th class="sortable" data-sort="model">
+                                        <div class="th-content">
+                                            <span>Model</span>
+                                            <i class="fas fa-sort sort-icon"></i>
+                                        </div>
+                                    </th>
+                                    <th class="sortable" data-sort="name">
+                                        <div class="th-content">
+                                            <span>Name</span>
+                                            <i class="fas fa-sort sort-icon"></i>
+                                        </div>
+                                    </th>
+                                    <th class="sortable" data-sort="generatedThrough">
+                                        <div class="th-content">
+                                            <span>Generated Through</span>
+                                            <i class="fas fa-sort sort-icon"></i>
+                                        </div>
+                                    </th>
+                                    <th class="sortable" data-sort="creditIrn">
+                                        <div class="th-content">
+                                            <span>Credit IRN #</span>
+                                            <i class="fas fa-sort sort-icon"></i>
+                                        </div>
+                                    </th>
+                                    <th class="sortable" data-sort="creditIrnGeneratedDate">
+                                        <div class="th-content">
+                                            <span>Credit IRN Generated Date</span>
+                                            <i class="fas fa-sort sort-icon"></i>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="serviceInvoiceTableBody" class="sortable-table">
+                                <!-- Table rows will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination-container">
+                    <div class="pagination-info">
+                        <span id="paginationInfo">View 1 - 10 of 26</span>
+                        <div class="items-per-page">
+                            <label>Page</label>
+                            <select id="currentPageSelect">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                            <span>of 3</span>
+                            <select id="itemsPerPage">
+                                <option value="10" selected>10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="pagination-controls">
+                        <button class="pagination-btn" id="firstBtn" title="First Page">
+                            <i class="fas fa-angle-double-left"></i>
+                        </button>
+                        <button class="pagination-btn" id="prevBtn" title="Previous Page">
+                            <i class="fas fa-angle-left"></i>
+                        </button>
+                        <button class="pagination-btn" id="nextBtn" title="Next Page">
+                            <i class="fas fa-angle-right"></i>
+                        </button>
+                        <button class="pagination-btn" id="lastBtn" title="Last Page">
+                            <i class="fas fa-angle-double-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <script src="service-invoice-return.js"></script>
+</body>
+</html>

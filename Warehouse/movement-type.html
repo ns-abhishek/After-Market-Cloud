@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movement Type - HCL Software</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="movement-type-styles.css">
+</head>
+<body>
+    <div class="movement-type-container">
+        <!-- Header -->
+        <header class="page-header">
+            <div class="header-content">
+                <h1 class="page-title">Movement Type</h1>
+                <button class="btn-floating btn-large waves-effect waves-light orange new-btn" id="newBtn">
+                    <i class="material-icons">add</i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Action Bar -->
+        <div class="action-bar">
+            <div class="action-buttons">
+                <!-- Add Dropdown -->
+                <a class="dropdown-trigger btn waves-effect waves-light green" href="#!" data-target="addDropdown">
+                    <i class="material-icons left">add</i>Add
+                    <i class="material-icons right">arrow_drop_down</i>
+                </a>
+                <ul id="addDropdown" class="dropdown-content">
+                    <li><a href="#!" onclick="handleAction('add-single')">Add Single Entry</a></li>
+                    <li><a href="#!" onclick="handleAction('add-bulk')">Add Bulk Entries</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#!" onclick="handleAction('add-template')">Use Template</a></li>
+                </ul>
+
+                <!-- Delete Dropdown -->
+                <a class="dropdown-trigger btn waves-effect waves-light red" href="#!" data-target="deleteDropdown">
+                    <i class="material-icons left">delete</i>Delete
+                    <i class="material-icons right">arrow_drop_down</i>
+                </a>
+                <ul id="deleteDropdown" class="dropdown-content">
+                    <li><a href="#!" onclick="handleAction('delete-selected')">Delete Selected</a></li>
+                    <li><a href="#!" onclick="handleAction('delete-all')">Delete All</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#!" onclick="handleAction('delete-inactive')">Delete Inactive</a></li>
+                </ul>
+
+                <!-- Save Dropdown -->
+                <a class="dropdown-trigger btn waves-effect waves-light blue" href="#!" data-target="saveDropdown">
+                    <i class="material-icons left">save</i>Save
+                    <i class="material-icons right">arrow_drop_down</i>
+                </a>
+                <ul id="saveDropdown" class="dropdown-content">
+                    <li><a href="#!" onclick="handleAction('save-all')">Save All Changes</a></li>
+                    <li><a href="#!" onclick="handleAction('save-selected')">Save Selected</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#!" onclick="handleAction('save-draft')">Save as Draft</a></li>
+                </ul>
+
+                <!-- Advance Search Dropdown -->
+                <a class="dropdown-trigger btn waves-effect waves-light purple" href="#!" data-target="searchDropdown">
+                    <i class="material-icons left">search</i>Advance Search
+                    <i class="material-icons right">arrow_drop_down</i>
+                </a>
+                <ul id="searchDropdown" class="dropdown-content">
+                    <li><a href="#!" onclick="handleAction('search-company')">Search by Company</a></li>
+                    <li><a href="#!" onclick="handleAction('search-description')">Search by Description</a></li>
+                    <li><a href="#!" onclick="handleAction('search-active')">Search Active Only</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#!" onclick="handleAction('search-advanced')">Advanced Filters</a></li>
+                </ul>
+
+                <!-- Export Dropdown -->
+                <a class="dropdown-trigger btn waves-effect waves-light teal" href="#!" data-target="exportDropdown">
+                    <i class="material-icons left">file_download</i>Export
+                    <i class="material-icons right">arrow_drop_down</i>
+                </a>
+                <ul id="exportDropdown" class="dropdown-content">
+                    <li><a href="#!" onclick="handleAction('export-csv')">Export as CSV</a></li>
+                    <li><a href="#!" onclick="handleAction('export-excel')">Export as Excel</a></li>
+                    <li><a href="#!" onclick="handleAction('export-pdf')">Export as PDF</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#!" onclick="handleAction('export-selected')">Export Selected Only</a></li>
+                </ul>
+
+                <!-- Refresh Dropdown -->
+                <a class="dropdown-trigger btn waves-effect waves-light cyan" href="#!" data-target="refreshDropdown">
+                    <i class="material-icons left">refresh</i>Refresh
+                    <i class="material-icons right">arrow_drop_down</i>
+                </a>
+                <ul id="refreshDropdown" class="dropdown-content">
+                    <li><a href="#!" onclick="handleAction('refresh-all')">Refresh All Data</a></li>
+                    <li><a href="#!" onclick="handleAction('refresh-company')">Refresh by Company</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#!" onclick="handleAction('auto-refresh')">Enable Auto Refresh</a></li>
+                </ul>
+
+                <!-- Settings Dropdown -->
+                <a class="dropdown-trigger btn waves-effect waves-light grey darken-2" href="#!" data-target="settingsDropdown">
+                    <i class="material-icons left">settings</i>
+                    <i class="material-icons right">arrow_drop_down</i>
+                </a>
+                <ul id="settingsDropdown" class="dropdown-content">
+                    <li><a href="#!" onclick="handleAction('column-settings')">Column Settings</a></li>
+                    <li><a href="#!" onclick="handleAction('view-settings')">View Settings</a></li>
+                    <li><a href="#!" onclick="handleAction('filter-settings')">Filter Settings</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#!" onclick="handleAction('reset-settings')">Reset to Default</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="table-container">
+            <table class="striped responsive-table movement-type-table" id="movementTypeTable">
+                <thead>
+                    <tr>
+                        <th class="edit-col">Edit</th>
+                        <th class="delete-col">Delete</th>
+                        <th class="company-col">Company</th>
+                        <th class="description-col">Description <i class="material-icons tiny">arrow_upward</i></th>
+                        <th class="is-active-col">Is Active?</th>
+                    </tr>
+                </thead>
+                <tbody id="movementTypeTableBody">
+                    <tr class="table-row">
+                        <td class="edit-cell">
+                            <a class="btn-floating btn-small waves-effect waves-light orange">
+                                <i class="material-icons">edit</i>
+                            </a>
+                        </td>
+                        <td class="delete-cell">
+                            <label>
+                                <input type="checkbox" class="filled-in row-checkbox" />
+                                <span></span>
+                            </label>
+                        </td>
+                        <td class="company-cell">HCL_AMP</td>
+                        <td class="description-cell">Fast</td>
+                        <td class="is-active-cell">
+                            <div class="switch">
+                                <label>
+                                    <input type="checkbox" checked>
+                                    <span class="lever"></span>
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="table-row">
+                        <td class="edit-cell">
+                            <a class="btn-floating btn-small waves-effect waves-light orange">
+                                <i class="material-icons">edit</i>
+                            </a>
+                        </td>
+                        <td class="delete-cell">
+                            <label>
+                                <input type="checkbox" class="filled-in row-checkbox" />
+                                <span></span>
+                            </label>
+                        </td>
+                        <td class="company-cell">HCL_AMP</td>
+                        <td class="description-cell">Medium</td>
+                        <td class="is-active-cell">
+                            <div class="switch">
+                                <label>
+                                    <input type="checkbox" checked>
+                                    <span class="lever"></span>
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="table-row">
+                        <td class="edit-cell">
+                            <a class="btn-floating btn-small waves-effect waves-light orange">
+                                <i class="material-icons">edit</i>
+                            </a>
+                        </td>
+                        <td class="delete-cell">
+                            <label>
+                                <input type="checkbox" class="filled-in row-checkbox" />
+                                <span></span>
+                            </label>
+                        </td>
+                        <td class="company-cell">HCL_AMP</td>
+                        <td class="description-cell">Slow</td>
+                        <td class="is-active-cell">
+                            <div class="switch">
+                                <label>
+                                    <input type="checkbox" checked>
+                                    <span class="lever"></span>
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination-container">
+            <div class="pagination-left">
+                <span class="pagination-text">Page</span>
+                <select class="browser-default page-select" id="pageSelect">
+                    <option value="1">1</option>
+                </select>
+                <span class="pagination-text">of 1</span>
+                <a class="btn-floating btn-small waves-effect waves-light" id="prevBtn">
+                    <i class="material-icons">chevron_left</i>
+                </a>
+                <a class="btn-floating btn-small waves-effect waves-light" id="nextBtn">
+                    <i class="material-icons">chevron_right</i>
+                </a>
+                <select class="browser-default rows-select" id="rowsSelect">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
+            <div class="pagination-right">
+                <span class="view-info">View 1 - 3 of 3</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Materialize JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="movement-type-app.js"></script>
+</body>
+</html>
