@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipment Management - Aftermarket Software</title>
+
+    <!-- Google Material Design Lite -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.grey-blue.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <style>
+        /* Base styles */
+        :root {
+            --primary-color: #212529;
+            --secondary-color: #f5f5f5;
+            --accent-color: #757575;
+            --border-color: #e0e0e0;
+            --hover-color: #e9e9e9;
+            --shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --border-radius: 4px;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --info-color: #2196f3;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--secondary-color);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .app-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            height: 64px;
+        }
+
+        .app-title {
+            font-size: 20px;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 16px;
+            padding: 8px;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .back-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Main content */
+        .main-content {
+            margin-top: 64px;
+            padding: 16px;
+            max-width: 1600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Equipment grid */
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .equipment-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .equipment-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .equipment-header {
+            background: linear-gradient(135deg, var(--primary-color), #343a40);
+            color: white;
+            padding: 20px;
+            position: relative;
+        }
+
+        .equipment-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .equipment-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .equipment-status {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background-color: var(--success-color);
+        }
+
+        .status-maintenance {
+            background-color: var(--warning-color);
+        }
+
+        .status-inactive {
+            background-color: var(--error-color);
+        }
+
+        .equipment-body {
+            padding: 20px;
+        }
+
+        .equipment-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .equipment-actions {
+            display: flex;
+            gap: 8px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        .action-btn:hover {
+            opacity: 0.8;
+        }
+
+        /* Warranty indicator */
+        .warranty-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            font-size: 14px;
+        }
+
+        .warranty-active {
+            background-color: #e8f5e8;
+            color: var(--success-color);
+        }
+
+        .warranty-expired {
+            background-color: #ffebee;
+            color: var(--error-color);
+        }
+
+        .warranty-expiring {
+            background-color: #fff3e0;
+            color: var(--warning-color);
+        }
+
+        /* Search and filters */
+        .search-filters {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .search-row {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .search-input {
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(33, 37, 41, 0.1);
+        }
+
+        .filter-select {
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            background-color: white;
+            cursor: pointer;
+            min-width: 150px;
+        }
+
+        .add-equipment-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 12px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .add-equipment-btn:hover {
+            background-color: #343a40;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--accent-color);
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .equipment-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-row {
+                grid-template-columns: 1fr;
+            }
+
+            .equipment-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <button class="back-button" onclick="history.back()">
+                <i class="material-icons">arrow_back</i>
+            </button>
+            <h1 class="app-title">Equipment Management</h1>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Search and Filters -->
+        <div class="search-filters">
+            <div class="search-row">
+                <input type="text" class="search-input" id="equipmentSearch" placeholder="Search equipment by model, serial number, or location...">
+                <select class="filter-select" id="statusFilter">
+                    <option value="">All Status</option>
+                    <option value="Active">Active</option>
+                    <option value="Maintenance">Maintenance</option>
+                    <option value="Inactive">Inactive</option>
+                </select>
+                <button class="add-equipment-btn" id="addEquipmentBtn">
+                    <i class="material-icons">add</i>
+                    Add Equipment
+                </button>
+            </div>
+        </div>
+
+        <!-- Equipment Grid -->
+        <div id="equipmentGrid" class="equipment-grid">
+            <!-- Equipment cards will be populated here -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <i class="material-icons">precision_manufacturing</i>
+            <h3>No Equipment Found</h3>
+            <p>No equipment matches your current filters.</p>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="navigation-utils.js"></script>
+    <script src="data-service.js"></script>
+    <script src="equipment-management.js"></script>
+</body>
+</html>

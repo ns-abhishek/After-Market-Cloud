@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theme Configuration - Disruptive Aftermarket</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="responsive-framework.css">
+    <link rel="stylesheet" href="light-theme.css">
+    <script src="global-config.js"></script>
+
+    <style>
+        /* Theme Configurator Specific Styles */
+        .theme-configurator {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+        }
+
+        .config-header {
+            background: var(--color-surface);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+        }
+
+        .config-title {
+            font-size: var(--font-size-2xl);
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: var(--spacing);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing);
+        }
+
+        .config-description {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-base);
+        }
+
+        .config-section {
+            background: var(--color-surface);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+        }
+
+        .section-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing);
+        }
+
+        .section-description {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .config-item {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing);
+        }
+
+        .config-label {
+            font-weight: 500;
+            color: var(--color-text);
+            font-size: var(--font-size-sm);
+        }
+
+        .config-control {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing);
+        }
+
+        .theme-option {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-md);
+            border: 2px solid var(--color-border);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all var(--transition-duration) var(--transition-timing);
+            background: var(--color-background);
+        }
+
+        .theme-option:hover {
+            border-color: var(--color-primary);
+            background: var(--color-hover);
+        }
+
+        .theme-option.active {
+            border-color: var(--color-primary);
+            background: var(--color-accent);
+        }
+
+        .theme-preview {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--border-radius);
+            margin-right: var(--spacing-md);
+            display: flex;
+            overflow: hidden;
+        }
+
+        .theme-preview-light {
+            background: linear-gradient(45deg, #ffffff 50%, #f8fafc 50%);
+        }
+
+        .theme-preview-dark {
+            background: linear-gradient(45deg, #0f172a 50%, #1e293b 50%);
+        }
+
+        .theme-preview-auto {
+            background: linear-gradient(45deg, #ffffff 25%, #0f172a 25%, #0f172a 50%, #ffffff 50%, #ffffff 75%, #0f172a 75%);
+        }
+
+        .theme-info h4 {
+            font-weight: 500;
+            color: var(--color-text);
+            margin-bottom: 2px;
+        }
+
+        .theme-info p {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+        }
+
+        .font-option {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-md);
+            border: 2px solid var(--color-border);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all var(--transition-duration) var(--transition-timing);
+            background: var(--color-background);
+        }
+
+        .font-option:hover {
+            border-color: var(--color-primary);
+            background: var(--color-hover);
+        }
+
+        .font-option.active {
+            border-color: var(--color-primary);
+            background: var(--color-accent);
+        }
+
+        .font-sample {
+            font-size: var(--font-size-lg);
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .font-name {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+        }
+
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing);
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--color-border);
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            cursor: pointer;
+            border: 2px solid var(--color-background);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            cursor: pointer;
+            border: 2px solid var(--color-background);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--color-border);
+            transition: var(--transition-duration) var(--transition-timing);
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: var(--color-background);
+            transition: var(--transition-duration) var(--transition-timing);
+            border-radius: 50%;
+            box-shadow: var(--shadow-sm);
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--color-primary);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: var(--spacing);
+            justify-content: flex-end;
+            margin-top: var(--spacing-lg);
+            padding-top: var(--spacing-lg);
+            border-top: 1px solid var(--color-border);
+        }
+
+        .btn {
+            padding: var(--spacing) var(--spacing-lg);
+            border-radius: var(--border-radius);
+            border: none;
+            cursor: pointer;
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            transition: all var(--transition-duration) var(--transition-timing);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing);
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-secondary);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-light);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--color-background);
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-hover);
+        }
+
+        .preview-section {
+            background: var(--color-surface);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+        }
+
+        .preview-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .preview-card {
+            background: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .preview-card h4 {
+            color: var(--color-text);
+            margin-bottom: var(--spacing);
+        }
+
+        .preview-card p {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+            margin-bottom: var(--spacing);
+        }
+
+        .preview-button {
+            background: var(--color-primary);
+            color: var(--color-secondary);
+            border: none;
+            padding: var(--spacing) var(--spacing-md);
+            border-radius: var(--border-radius);
+            font-size: var(--font-size-sm);
+            cursor: pointer;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .theme-configurator {
+                padding: var(--spacing);
+            }
+
+            .config-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .preview-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-configurator">
+        <!-- Header -->
+        <div class="config-header">
+            <div style="display: flex; align-items: center; gap: var(--spacing); margin-bottom: var(--spacing);">
+                <button class="back-button" title="Go Back" onclick="goBack()" style="background: none; border: none; padding: 8px; border-radius: 8px; cursor: pointer; color: var(--color-text-secondary); transition: all 0.2s; display: flex; align-items: center; justify-content: center;">
+                    <i class="material-icons">arrow_back</i>
+                </button>
+                <h1 class="config-title" style="margin: 0;">
+                    <i class="material-icons">palette</i>
+                    Theme Configuration
+                </h1>
+            </div>
+            <p class="config-description">
+                Customize the appearance and behavior of your application. Changes are applied instantly and saved automatically.
+            </p>
+        </div>
+
+        <!-- Theme Selection -->
+        <div class="config-section">
+            <h2 class="section-title">
+                <i class="material-icons">color_lens</i>
+                Color Theme
+            </h2>
+            <p class="section-description">Choose your preferred color scheme</p>
+
+            <div class="config-control">
+                <div class="theme-option" data-theme="light">
+                    <div class="theme-preview theme-preview-light"></div>
+                    <div class="theme-info">
+                        <h4>Light Theme</h4>
+                        <p>Clean and bright interface</p>
+                    </div>
+                </div>
+
+                <div class="theme-option" data-theme="dark">
+                    <div class="theme-preview theme-preview-dark"></div>
+                    <div class="theme-info">
+                        <h4>Dark Theme</h4>
+                        <p>Easy on the eyes in low light</p>
+                    </div>
+                </div>
+
+                <div class="theme-option" data-theme="auto">
+                    <div class="theme-preview theme-preview-auto"></div>
+                    <div class="theme-info">
+                        <h4>Auto (System)</h4>
+                        <p>Follows your system preference</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Font Configuration -->
+        <div class="config-section">
+            <h2 class="section-title">
+                <i class="material-icons">text_fields</i>
+                Typography
+            </h2>
+            <p class="section-description">Configure fonts and text appearance</p>
+
+            <div class="config-grid">
+                <div class="config-item">
+                    <label class="config-label">Font Family</label>
+                    <div class="config-control">
+                        <div class="font-option" data-font="inter">
+                            <div>
+                                <div class="font-sample" style="font-family: 'Inter', sans-serif;">Inter</div>
+                                <div class="font-name">Modern and readable</div>
+                            </div>
+                        </div>
+
+                        <div class="font-option" data-font="roboto">
+                            <div>
+                                <div class="font-sample" style="font-family: 'Roboto', sans-serif;">Roboto</div>
+                                <div class="font-name">Google's material design font</div>
+                            </div>
+                        </div>
+
+                        <div class="font-option" data-font="poppins">
+                            <div>
+                                <div class="font-sample" style="font-family: 'Poppins', sans-serif;">Poppins</div>
+                                <div class="font-name">Friendly and approachable</div>
+                            </div>
+                        </div>
+
+                        <div class="font-option" data-font="system">
+                            <div>
+                                <div class="font-sample" style="font-family: system-ui, sans-serif;">System</div>
+                                <div class="font-name">Your system's default font</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="config-item">
+                    <label class="config-label">Font Size</label>
+                    <div class="slider-container">
+                        <input type="range" min="0" max="2" value="1" class="slider" id="fontSizeSlider">
+                        <div class="slider-labels">
+                            <span>Small</span>
+                            <span>Medium</span>
+                            <span>Large</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Layout Configuration -->
+        <div class="config-section">
+            <h2 class="section-title">
+                <i class="material-icons">view_quilt</i>
+                Layout & Spacing
+            </h2>
+            <p class="section-description">Adjust the density and spacing of interface elements</p>
+
+            <div class="config-grid">
+                <div class="config-item">
+                    <label class="config-label">Interface Density</label>
+                    <div class="slider-container">
+                        <input type="range" min="0" max="2" value="1" class="slider" id="densitySlider">
+                        <div class="slider-labels">
+                            <span>Compact</span>
+                            <span>Comfortable</span>
+                            <span>Spacious</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="config-item">
+                    <label class="config-label">Animations</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="animationsToggle" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preview Section -->
+        <div class="preview-section">
+            <h2 class="section-title">
+                <i class="material-icons">preview</i>
+                Live Preview
+            </h2>
+            <p class="section-description">See how your changes look in real-time</p>
+
+            <div class="preview-content">
+                <div class="preview-card">
+                    <h4>Sample Card</h4>
+                    <p>This is how cards will appear with your current settings.</p>
+                    <button class="preview-button">Action Button</button>
+                </div>
+
+                <div class="preview-card">
+                    <h4>Another Example</h4>
+                    <p>Text and spacing adjust based on your preferences.</p>
+                    <button class="preview-button">Secondary Action</button>
+                </div>
+
+                <div class="preview-card">
+                    <h4>Typography Sample</h4>
+                    <p>Font family and size changes are reflected here immediately.</p>
+                    <button class="preview-button">Test Button</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="btn btn-secondary" onclick="resetToDefaults()">
+                <i class="material-icons">restore</i>
+                Reset to Defaults
+            </button>
+            <button class="btn btn-secondary" onclick="exportSettings()">
+                <i class="material-icons">download</i>
+                Export Settings
+            </button>
+            <button class="btn btn-primary" onclick="saveSettings()">
+                <i class="material-icons">save</i>
+                Save Configuration
+            </button>
+        </div>
+    </div>
+
+    <script src="theme-configurator.js"></script>
+</body>
+</html>

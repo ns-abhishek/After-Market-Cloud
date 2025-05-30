@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chart Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .chart-canvas {
+            position: relative;
+            height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chart.js Test</h1>
+    
+    <div class="chart-container">
+        <h3>Test Line Chart</h3>
+        <div class="chart-canvas">
+            <canvas id="testChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Chart.js version:', Chart.version);
+            
+            const ctx = document.getElementById('testChart');
+            if (!ctx) {
+                console.error('Canvas not found');
+                return;
+            }
+
+            const testChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+                    datasets: [{
+                        label: 'Test Data',
+                        data: [10, 20, 15, 25, 30],
+                        borderColor: '#059669',
+                        backgroundColor: 'rgba(5, 150, 105, 0.1)',
+                        borderWidth: 2,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            console.log('Test chart created successfully');
+        });
+    </script>
+</body>
+</html>

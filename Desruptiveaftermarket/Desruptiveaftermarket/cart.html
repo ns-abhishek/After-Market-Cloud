@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Aftermarket Software</title>
+
+    <!-- Google Material Design Lite -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.grey-blue.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    
+    <!-- Catalog Styles -->
+    <link rel="stylesheet" href="catalog-styles.css">
+    
+    <style>
+        /* Cart specific styles */
+        .cart-container {
+            padding: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .cart-title {
+            font-size: 24px;
+            font-weight: 500;
+            margin: 0;
+        }
+        
+        .cart-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .cart-empty {
+            text-align: center;
+            padding: 48px 0;
+        }
+        
+        .cart-empty-icon {
+            font-size: 64px;
+            color: var(--secondary-color);
+            margin-bottom: 16px;
+        }
+        
+        .cart-empty-message {
+            font-size: 18px;
+            color: var(--secondary-color);
+            margin-bottom: 24px;
+        }
+        
+        .cart-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 24px;
+        }
+        
+        .cart-table th {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 500;
+        }
+        
+        .cart-table td {
+            padding: 16px 12px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+        
+        .cart-product {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .cart-product-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+            background-color: var(--accent-color);
+        }
+        
+        .cart-product-info {
+            flex: 1;
+        }
+        
+        .cart-product-name {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .cart-product-category {
+            font-size: 12px;
+            color: var(--secondary-color);
+        }
+        
+        .cart-quantity {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            width: fit-content;
+        }
+        
+        .cart-quantity-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--accent-color);
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .cart-quantity-btn:hover {
+            background-color: var(--hover-color);
+        }
+        
+        .cart-quantity-input {
+            width: 40px;
+            height: 32px;
+            border: none;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            -moz-appearance: textfield;
+        }
+        
+        .cart-quantity-input::-webkit-outer-spin-button,
+        .cart-quantity-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        .cart-price {
+            font-weight: 500;
+        }
+        
+        .cart-total {
+            font-weight: 600;
+        }
+        
+        .cart-remove-btn {
+            background: none;
+            border: none;
+            color: var(--secondary-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .cart-remove-btn:hover {
+            color: #dc3545;
+        }
+        
+        .cart-summary {
+            background-color: var(--light-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .cart-summary-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-top: 0;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .cart-summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        
+        .cart-summary-label {
+            color: var(--secondary-color);
+        }
+        
+        .cart-summary-value {
+            font-weight: 500;
+        }
+        
+        .cart-summary-total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .checkout-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            text-decoration: none;
+        }
+        
+        .checkout-btn:hover {
+            background-color: var(--dark-color);
+        }
+        
+        .continue-shopping {
+            display: inline-block;
+            margin-top: 16px;
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .continue-shopping:hover {
+            text-decoration: underline;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .cart-product {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            
+            .cart-product-image {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .cart-table th:nth-child(3),
+            .cart-table td:nth-child(3) {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .cart-table thead {
+                display: none;
+            }
+            
+            .cart-table, 
+            .cart-table tbody, 
+            .cart-table tr, 
+            .cart-table td {
+                display: block;
+                width: 100%;
+            }
+            
+            .cart-table tr {
+                margin-bottom: 16px;
+                border: 1px solid var(--border-color);
+                border-radius: var(--border-radius);
+                padding: 16px;
+            }
+            
+            .cart-table td {
+                padding: 8px 0;
+                border: none;
+                text-align: right;
+                position: relative;
+                padding-left: 50%;
+            }
+            
+            .cart-table td:before {
+                content: attr(data-label);
+                position: absolute;
+                left: 0;
+                width: 45%;
+                font-weight: 500;
+                text-align: left;
+            }
+            
+            .cart-product {
+                flex-direction: row;
+                padding-left: 0;
+            }
+            
+            .cart-actions {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer">
+        <header class="mdl-layout__header">
+            <div class="mdl-layout__header-row">
+                <span class="mdl-layout-title">Shopping Cart</span>
+                <div class="mdl-layout-spacer"></div>
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+                    <label class="mdl-button mdl-js-button mdl-button--icon" for="fixed-header-drawer-exp">
+                        <i class="material-icons">search</i>
+                    </label>
+                    <div class="mdl-textfield__expandable-holder">
+                        <input class="mdl-textfield__input" type="text" name="sample" id="fixed-header-drawer-exp" placeholder="Search across application...">
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="mdl-layout__drawer">
+            <span class="mdl-layout-title">Menu</span>
+            <nav class="mdl-navigation">
+                <a class="mdl-navigation__link" href="index.html"><i class="material-icons">dashboard</i> Dashboard</a>
+                <a class="mdl-navigation__link" href="index.html#employees"><i class="material-icons">people</i> Employees</a>
+                <a class="mdl-navigation__link" href="index.html#customers"><i class="material-icons">business</i> Customers</a>
+                <a class="mdl-navigation__link" href="index.html#parts"><i class="material-icons">build</i> Parts</a>
+                <a class="mdl-navigation__link" href="party-grid-material.html"><i class="material-icons">group_work</i> Party</a>
+                <a class="mdl-navigation__link" href="catalog.html"><i class="material-icons">shopping_cart</i> Catalog</a>
+                <a class="mdl-navigation__link active" href="cart.html"><i class="material-icons">shopping_basket</i> Cart</a>
+            </nav>
+        </div>
+
+        <main class="mdl-layout__content">
+            <div class="cart-container">
+                <!-- Cart Header -->
+                <div class="cart-header">
+                    <h1 class="cart-title">Shopping Cart</h1>
+                    <div class="cart-actions">
+                        <button class="mdl-button mdl-js-button mdl-button--raised" id="clearCartBtn">
+                            <i class="material-icons">remove_shopping_cart</i> Clear Cart
+                        </button>
+                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="updateCartBtn">
+                            <i class="material-icons">refresh</i> Update Cart
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Cart Content -->
+                <div id="cartContent">
+                    <!-- Cart will be populated by JavaScript -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="catalog-data.js"></script>
+    <script src="cart.js"></script>
+</body>
+</html>

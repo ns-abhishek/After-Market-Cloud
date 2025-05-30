@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - Aftermarket Software</title>
+
+    <!-- Google Material Design Lite -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.grey-blue.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <style>
+        /* Base styles */
+        :root {
+            --primary-color: #212529;
+            --secondary-color: #f5f5f5;
+            --accent-color: #757575;
+            --border-color: #e0e0e0;
+            --hover-color: #e9e9e9;
+            --shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --border-radius: 4px;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --info-color: #2196f3;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--secondary-color);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .profile-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .profile-header {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .profile-avatar-edit {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 36px;
+            height: 36px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .profile-avatar-edit:hover {
+            background-color: var(--hover-color);
+        }
+
+        .profile-info {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .profile-role {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+
+        .profile-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .profile-detail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .profile-detail i {
+            color: var(--accent-color);
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .profile-action {
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .primary-action {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        .primary-action:hover {
+            background-color: #343a40;
+        }
+
+        .secondary-action {
+            background-color: white;
+            color: var(--primary-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .secondary-action:hover {
+            background-color: var(--hover-color);
+        }
+
+        .profile-tabs {
+            display: flex;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .profile-tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            flex: 1;
+            text-align: center;
+            border-bottom: 3px solid transparent;
+        }
+
+        .profile-tab:hover {
+            background-color: var(--hover-color);
+        }
+
+        .profile-tab.active {
+            border-bottom-color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .profile-content {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            animation: slideInUp 0.5s ease;
+        }
+
+        .profile-section {
+            margin-bottom: 30px;
+        }
+
+        .profile-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .profile-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-section-title {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .profile-section-action {
+            background: none;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .profile-section-action:hover {
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(33, 37, 41, 0.1);
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .form-col {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .profile-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 20px;
+            }
+
+            .profile-details {
+                justify-content: center;
+            }
+
+            .profile-tabs {
+                flex-wrap: wrap;
+            }
+
+            .profile-tab {
+                flex-basis: 50%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-avatar">
+                JD
+                <div class="profile-avatar-edit">
+                    <i class="material-icons">edit</i>
+                </div>
+            </div>
+            <div class="profile-info">
+                <h1 class="profile-name" data-i18n="user_name">John Doe</h1>
+                <div class="profile-role" data-i18n="user_role">Administrator</div>
+                <div class="profile-details">
+                    <div class="profile-detail">
+                        <i class="material-icons">email</i>
+                        <span>john.doe@example.com</span>
+                    </div>
+                    <div class="profile-detail">
+                        <i class="material-icons">phone</i>
+                        <span>+1 (555) 123-4567</span>
+                    </div>
+                    <div class="profile-detail">
+                        <i class="material-icons">location_on</i>
+                        <span>New York, USA</span>
+                    </div>
+                </div>
+            </div>
+            <div class="profile-actions">
+                <button class="profile-action primary-action">
+                    <i class="material-icons">save</i>
+                    <span data-i18n="save_changes">Save Changes</span>
+                </button>
+                <button class="profile-action secondary-action">
+                    <i class="material-icons">lock</i>
+                    <span data-i18n="change_password">Change Password</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Profile Tabs -->
+        <div class="profile-tabs">
+            <div class="profile-tab active" data-tab="personal" data-i18n="personal_info">Personal Info</div>
+            <div class="profile-tab" data-tab="company" data-i18n="company_info">Company Info</div>
+            <div class="profile-tab" data-tab="preferences" data-i18n="preferences">Preferences</div>
+            <div class="profile-tab" data-tab="security" data-i18n="security">Security</div>
+        </div>
+
+        <!-- Profile Content -->
+        <div class="profile-content" id="profileContent">
+            <!-- Personal Info Section -->
+            <div class="profile-section" id="personalInfo">
+                <div class="profile-section-header">
+                    <h2 class="profile-section-title" data-i18n="personal_info">Personal Information</h2>
+                    <button class="profile-section-action">
+                        <i class="material-icons">edit</i>
+                    </button>
+                </div>
+                <form>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label" data-i18n="first_name">First Name</label>
+                                <input type="text" class="form-input" value="John">
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label" data-i18n="last_name">Last Name</label>
+                                <input type="text" class="form-input" value="Doe">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label" data-i18n="email">Email</label>
+                                <input type="email" class="form-input" value="john.doe@example.com">
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label" data-i18n="phone">Phone</label>
+                                <input type="tel" class="form-input" value="+1 (555) 123-4567">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="address">Address</label>
+                        <input type="text" class="form-input" value="123 Main St, Apt 4B">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label" data-i18n="city">City</label>
+                                <input type="text" class="form-input" value="New York">
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label" data-i18n="state">State</label>
+                                <input type="text" class="form-input" value="NY">
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label class="form-label" data-i18n="zip">ZIP Code</label>
+                                <input type="text" class="form-input" value="10001">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="country">Country</label>
+                        <input type="text" class="form-input" value="United States">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="data-service.js"></script>
+    <script src="security-service.js"></script>
+    <script src="translations.js"></script>
+    <script src="navigation-controller.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            if (!SecurityService.isLoggedIn()) {
+                // Redirect to login page
+                if (typeof NavigationController !== 'undefined') {
+                    NavigationController.navigateTo('LOGIN');
+                } else {
+                    window.location.href = 'login.html';
+                }
+                return;
+            }
+
+            // Initialize language
+            initLanguage();
+
+            // Load user profile data
+            loadUserProfileData();
+
+            // Set up tab switching
+            const tabs = document.querySelectorAll('.profile-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+
+                    // Handle tab content switching
+                    const tabName = this.getAttribute('data-tab');
+                    switchTab(tabName);
+                });
+            });
+
+            // Set up form submission
+            setupFormSubmission();
+
+            // Set up security features
+            setupSecurityFeatures();
+
+            // Log user activity
+            SecurityService.logAuditEvent('PAGE_VIEW', { page: 'profile' });
+        });
+
+        // Function to set up security features
+        function setupSecurityFeatures() {
+            // Add back button to return to dashboard
+            const profileContainer = document.querySelector('.profile-container');
+            if (profileContainer) {
+                const backButton = document.createElement('button');
+                backButton.className = 'back-button';
+                backButton.style.background = 'none';
+                backButton.style.border = 'none';
+                backButton.style.color = 'var(--accent-color)';
+                backButton.style.cursor = 'pointer';
+                backButton.style.display = 'flex';
+                backButton.style.alignItems = 'center';
+                backButton.style.gap = '8px';
+                backButton.style.marginBottom = '16px';
+                backButton.style.transition = 'var(--transition)';
+
+                backButton.innerHTML = `
+                    <i class="material-icons">arrow_back</i>
+                    <span data-i18n="back_to_dashboard">Back to Dashboard</span>
+                `;
+
+                backButton.addEventListener('click', function() {
+                    if (typeof NavigationController !== 'undefined') {
+                        NavigationController.navigateTo('DASHBOARD');
+                    } else {
+                        window.location.href = 'party-portal.html';
+                    }
+                });
+
+                profileContainer.insertBefore(backButton, profileContainer.firstChild);
+            }
+
+            // Add logout button
+            const profileActions = document.querySelector('.profile-actions');
+            if (profileActions) {
+                const logoutButton = document.createElement('button');
+                logoutButton.className = 'profile-action secondary-action';
+                logoutButton.style.backgroundColor = 'transparent';
+                logoutButton.style.color = 'var(--error-color)';
+                logoutButton.style.border = '1px solid var(--error-color)';
+
+                logoutButton.innerHTML = `
+                    <i class="material-icons">exit_to_app</i>
+                    <span data-i18n="logout">Logout</span>
+                `;
+
+                logoutButton.addEventListener('click', function() {
+                    // Confirm logout
+                    if (typeof NavigationController !== 'undefined') {
+                        NavigationController.confirmAction(
+                            'Are you sure you want to log out?',
+                            function() {
+                                // Log audit event
+                                SecurityService.logAuditEvent('LOGOUT', {
+                                    username: SecurityService.getCurrentUser()?.username
+                                });
+
+                                // Perform logout
+                                SecurityService.logout();
+
+                                // Navigate to login page
+                                if (typeof NavigationController !== 'undefined') {
+                                    NavigationController.navigateTo('LOGIN');
+                                } else {
+                                    window.location.href = 'login.html';
+                                }
+                            }
+                        );
+                    } else {
+                        if (confirm('Are you sure you want to log out?')) {
+                            // Perform logout
+                            SecurityService.logout();
+
+                            // Navigate to login page
+                            window.location.href = 'login.html';
+                        }
+                    }
+                });
+
+                profileActions.appendChild(logoutButton);
+            }
+        }
+
+        // Function to initialize language
+        function initLanguage() {
+            // Get preferred language from data service or use browser language
+            let preferredLanguage = 'en';
+
+            if (typeof DataService !== 'undefined') {
+                preferredLanguage = DataService.getLanguagePreference();
+            } else {
+                preferredLanguage = localStorage.getItem('preferredLanguage') ||
+                                   navigator.language.split('-')[0] ||
+                                   'en';
+            }
+
+            // Translate the UI
+            translateUI(preferredLanguage);
+        }
+
+        // Function to load user profile data
+        function loadUserProfileData() {
+            // Get current user from SecurityService
+            const currentUser = SecurityService.getCurrentUser();
+
+            if (currentUser) {
+                // Set avatar initials
+                const avatar = document.querySelector('.profile-avatar');
+                if (avatar) {
+                    avatar.textContent = `${currentUser.firstName.charAt(0)}${currentUser.lastName.charAt(0)}`;
+                }
+
+                // Set profile name and role
+                const profileName = document.querySelector('.profile-name');
+                if (profileName) {
+                    profileName.textContent = `${currentUser.firstName} ${currentUser.lastName}`;
+                }
+
+                const profileRole = document.querySelector('.profile-role');
+                if (profileRole) {
+                    profileRole.textContent = currentUser.role;
+                }
+
+                // Set contact details
+                const profileDetails = document.querySelectorAll('.profile-detail');
+                if (profileDetails.length >= 3) {
+                    profileDetails[0].querySelector('span').textContent = currentUser.email;
+                    profileDetails[1].querySelector('span').textContent = currentUser.phone || '+1 (555) 123-4567';
+                    profileDetails[2].querySelector('span').textContent = `${currentUser.city || 'New York'}, ${currentUser.country || 'United States'}`;
+                }
+
+                // Set form values
+                const firstNameInput = document.querySelector('input[value="John"]');
+                if (firstNameInput) firstNameInput.value = currentUser.firstName;
+
+                const lastNameInput = document.querySelector('input[value="Doe"]');
+                if (lastNameInput) lastNameInput.value = currentUser.lastName;
+
+                const emailInput = document.querySelector('input[value="john.doe@example.com"]');
+                if (emailInput) emailInput.value = currentUser.email;
+
+                const phoneInput = document.querySelector('input[value="+1 (555) 123-4567"]');
+                if (phoneInput) phoneInput.value = currentUser.phone || '+1 (555) 123-4567';
+
+                const addressInput = document.querySelector('input[value="123 Main St, Apt 4B"]');
+                if (addressInput) addressInput.value = currentUser.address || '123 Main St, Apt 4B';
+
+                const cityInput = document.querySelector('input[value="New York"]');
+                if (cityInput) cityInput.value = currentUser.city || 'New York';
+
+                const stateInput = document.querySelector('input[value="NY"]');
+                if (stateInput) stateInput.value = currentUser.state || 'NY';
+
+                const zipInput = document.querySelector('input[value="10001"]');
+                if (zipInput) zipInput.value = currentUser.zip || '10001';
+
+                const countryInput = document.querySelector('input[value="United States"]');
+                if (countryInput) countryInput.value = currentUser.country || 'United States';
+
+                // Add security information to security tab
+                const securityTab = document.querySelector('.profile-tab[data-tab="security"]');
+                if (securityTab) {
+                    // Add a badge to indicate MFA status
+                    if (currentUser.mfaEnabled) {
+                        const mfaBadge = document.createElement('span');
+                        mfaBadge.style.backgroundColor = 'var(--success-color)';
+                        mfaBadge.style.color = 'white';
+                        mfaBadge.style.padding = '2px 6px';
+                        mfaBadge.style.borderRadius = '10px';
+                        mfaBadge.style.fontSize = '10px';
+                        mfaBadge.style.marginLeft = '8px';
+                        mfaBadge.textContent = 'MFA';
+                        securityTab.appendChild(mfaBadge);
+                    }
+                }
+            } else {
+                // Fallback to DataService if SecurityService doesn't have user data
+                if (typeof DataService !== 'undefined') {
+                    const userProfile = DataService.getUserProfile();
+
+                    // Set avatar initials
+                    const avatar = document.querySelector('.profile-avatar');
+                    if (avatar) {
+                        avatar.textContent = `${userProfile.firstName.charAt(0)}${userProfile.lastName.charAt(0)}`;
+                    }
+
+                    // Set profile name and role
+                    const profileName = document.querySelector('.profile-name');
+                    if (profileName) {
+                        profileName.textContent = `${userProfile.firstName} ${userProfile.lastName}`;
+                    }
+
+                    const profileRole = document.querySelector('.profile-role');
+                    if (profileRole) {
+                        profileRole.textContent = userProfile.role;
+                    }
+
+                    // Set contact details
+                    const profileDetails = document.querySelectorAll('.profile-detail');
+                    if (profileDetails.length >= 3) {
+                        profileDetails[0].querySelector('span').textContent = userProfile.email;
+                        profileDetails[1].querySelector('span').textContent = userProfile.phone;
+                        profileDetails[2].querySelector('span').textContent = `${userProfile.city}, ${userProfile.country}`;
+                    }
+
+                    // Set form values
+                    const firstNameInput = document.querySelector('input[value="John"]');
+                    if (firstNameInput) firstNameInput.value = userProfile.firstName;
+
+                    const lastNameInput = document.querySelector('input[value="Doe"]');
+                    if (lastNameInput) lastNameInput.value = userProfile.lastName;
+
+                    const emailInput = document.querySelector('input[value="john.doe@example.com"]');
+                    if (emailInput) emailInput.value = userProfile.email;
+
+                    const phoneInput = document.querySelector('input[value="+1 (555) 123-4567"]');
+                    if (phoneInput) phoneInput.value = userProfile.phone;
+
+                    const addressInput = document.querySelector('input[value="123 Main St, Apt 4B"]');
+                    if (addressInput) addressInput.value = userProfile.address;
+
+                    const cityInput = document.querySelector('input[value="New York"]');
+                    if (cityInput) cityInput.value = userProfile.city;
+
+                    const stateInput = document.querySelector('input[value="NY"]');
+                    if (stateInput) stateInput.value = userProfile.state;
+
+                    const zipInput = document.querySelector('input[value="10001"]');
+                    if (zipInput) zipInput.value = userProfile.zip;
+
+                    const countryInput = document.querySelector('input[value="United States"]');
+                    if (countryInput) countryInput.value = userProfile.country;
+                }
+            }
+        }
+
+        // Function to switch tabs
+        function switchTab(tabName) {
+            const profileContent = document.getElementById('profileContent');
+
+            if (tabName === 'personal') {
+                // Personal info tab is already loaded by default
+                return;
+            }
+
+            // Get user profile data
+            let userProfile = null;
+            if (typeof DataService !== 'undefined') {
+                userProfile = DataService.getUserProfile();
+            }
+
+            // Create content based on tab
+            let content = '';
+
+            switch (tabName) {
+                case 'company':
+                    content = `
+                        <div class="profile-section">
+                            <div class="profile-section-header">
+                                <h2 class="profile-section-title" data-i18n="company_info">Company Information</h2>
+                                <button class="profile-section-action">
+                                    <i class="material-icons">edit</i>
+                                </button>
+                            </div>
+                            <form>
+                                <div class="form-group">
+                                    <label class="form-label" data-i18n="company_name">Company Name</label>
+                                    <input type="text" class="form-input" value="${userProfile ? userProfile.company.name : 'Acme Corporation'}">
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-col">
+                                        <div class="form-group">
+                                            <label class="form-label" data-i18n="position">Position</label>
+                                            <input type="text" class="form-input" value="${userProfile ? userProfile.company.position : 'IT Manager'}">
+                                        </div>
+                                    </div>
+                                    <div class="form-col">
+                                        <div class="form-group">
+                                            <label class="form-label" data-i18n="department">Department</label>
+                                            <input type="text" class="form-input" value="${userProfile ? userProfile.company.department : 'Information Technology'}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" data-i18n="company_address">Company Address</label>
+                                    <input type="text" class="form-input" value="${userProfile ? userProfile.company.address : '456 Business Ave'}">
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-col">
+                                        <div class="form-group">
+                                            <label class="form-label" data-i18n="city">City</label>
+                                            <input type="text" class="form-input" value="${userProfile ? userProfile.company.city : 'New York'}">
+                                        </div>
+                                    </div>
+                                    <div class="form-col">
+                                        <div class="form-group">
+                                            <label class="form-label" data-i18n="state">State</label>
+                                            <input type="text" class="form-input" value="${userProfile ? userProfile.company.state : 'NY'}">
+                                        </div>
+                                    </div>
+                                    <div class="form-col">
+                                        <div class="form-group">
+                                            <label class="form-label" data-i18n="zip">ZIP Code</label>
+                                            <input type="text" class="form-input" value="${userProfile ? userProfile.company.zip : '10002'}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-col">
+                                        <div class="form-group">
+                                            <label class="form-label" data-i18n="country">Country</label>
+                                            <input type="text" class="form-input" value="${userProfile ? userProfile.company.country : 'United States'}">
+                                        </div>
+                                    </div>
+                                    <div class="form-col">
+                                        <div class="form-group">
+                                            <label class="form-label" data-i18n="phone">Phone</label>
+                                            <input type="tel" class="form-input" value="${userProfile ? userProfile.company.phone : '+1 (555) 987-6543'}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" data-i18n="website">Website</label>
+                                    <input type="url" class="form-input" value="${userProfile ? userProfile.company.website : 'www.acmecorp.com'}">
+                                </div>
+                            </form>
+                        </div>
+                    `;
+                    break;
+
+                case 'preferences':
+                    content = `
+                        <div class="profile-section">
+                            <div class="profile-section-header">
+                                <h2 class="profile-section-title" data-i18n="preferences">Preferences</h2>
+                            </div>
+                            <form>
+                                <div class="form-group">
+                                    <label class="form-label" data-i18n="language">Language</label>
+                                    <select class="form-input" id="userLanguage">
+                                        <option value="en" ${userProfile && userProfile.preferences.language === 'en' ? 'selected' : ''}>English</option>
+                                        <option value="es" ${userProfile && userProfile.preferences.language === 'es' ? 'selected' : ''}>Español</option>
+                                        <option value="fr" ${userProfile && userProfile.preferences.language === 'fr' ? 'selected' : ''}>Français</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" data-i18n="theme">Theme</label>
+                                    <select class="form-input" id="userTheme">
+                                        <option value="light" ${userProfile && userProfile.preferences.theme === 'light' ? 'selected' : ''}>Light</option>
+                                        <option value="dark" ${userProfile && userProfile.preferences.theme === 'dark' ? 'selected' : ''}>Dark</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" data-i18n="notifications">Notification Preferences</label>
+                                    <div style="margin-top: 10px;">
+                                        <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                                            <input type="checkbox" ${userProfile && userProfile.preferences.notifications.email ? 'checked' : ''}>
+                                            <span data-i18n="email_notifications">Email Notifications</span>
+                                        </label>
+                                        <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                                            <input type="checkbox" ${userProfile && userProfile.preferences.notifications.sms ? 'checked' : ''}>
+                                            <span data-i18n="sms_notifications">SMS Notifications</span>
+                                        </label>
+                                        <label style="display: flex; align-items: center; gap: 10px;">
+                                            <input type="checkbox" ${userProfile && userProfile.preferences.notifications.app ? 'checked' : ''}>
+                                            <span data-i18n="app_notifications">In-App Notifications</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    `;
+                    break;
+
+                case 'security':
+                    // Get current user from SecurityService
+                    const securityUser = SecurityService.getCurrentUser();
+
+                    content = `
+                        <div class="profile-section">
+                            <div class="profile-section-header">
+                                <h2 class="profile-section-title" data-i18n="security">Security</h2>
+                            </div>
+                            <form>
+                                <div class="form-group">
+                                    <label class="form-label" data-i18n="change_password">Change Password</label>
+                                    <div class="form-row" style="margin-top: 10px;">
+                                        <div class="form-col">
+                                            <div class="form-group">
+                                                <label class="form-label" data-i18n="current_password">Current Password</label>
+                                                <input type="password" class="form-input" id="currentPassword">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-col">
+                                            <div class="form-group">
+                                                <label class="form-label" data-i18n="new_password">New Password</label>
+                                                <input type="password" class="form-input" id="newPassword">
+                                            </div>
+                                        </div>
+                                        <div class="form-col">
+                                            <div class="form-group">
+                                                <label class="form-label" data-i18n="confirm_password">Confirm Password</label>
+                                                <input type="password" class="form-input" id="confirmPassword">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="margin-top: 10px;">
+                                        <button type="button" id="changePasswordBtn" class="profile-action primary-action" style="padding: 8px 16px; background-color: var(--primary-color); color: white; border: none; border-radius: var(--border-radius); cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+                                            <i class="material-icons">save</i>
+                                            <span data-i18n="change_password">Change Password</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" data-i18n="two_factor_authentication">Two-Factor Authentication</label>
+                                    <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
+                                        <label class="switch" style="position: relative; display: inline-block; width: 60px; height: 34px;">
+                                            <input type="checkbox" id="mfaToggle" ${securityUser && securityUser.mfaEnabled ? 'checked' : ''} style="opacity: 0; width: 0; height: 0;">
+                                            <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px;"></span>
+                                        </label>
+                                        <span id="mfaStatus">${securityUser && securityUser.mfaEnabled ? 'Enabled' : 'Disabled'}</span>
+                                    </div>
+                                    <p style="margin-top: 10px; color: var(--accent-color);" data-i18n="two_factor_description">Two-factor authentication adds an extra layer of security to your account by requiring more than just a password to sign in.</p>
+
+                                    <!-- MFA Setup Section (initially hidden) -->
+                                    <div id="mfaSetupSection" style="margin-top: 20px; display: none;">
+                                        <h3 style="font-size: 16px; margin-bottom: 10px;">Set Up Two-Factor Authentication</h3>
+
+                                        <div style="margin-bottom: 20px;">
+                                            <label style="display: block; margin-bottom: 10px;">Choose Authentication Method:</label>
+                                            <div style="display: flex; gap: 10px;">
+                                                <label style="display: flex; align-items: center; gap: 8px;">
+                                                    <input type="radio" name="mfaMethod" value="app" checked>
+                                                    <span>Authenticator App</span>
+                                                </label>
+                                                <label style="display: flex; align-items: center; gap: 8px;">
+                                                    <input type="radio" name="mfaMethod" value="sms">
+                                                    <span>SMS</span>
+                                                </label>
+                                                <label style="display: flex; align-items: center; gap: 8px;">
+                                                    <input type="radio" name="mfaMethod" value="email">
+                                                    <span>Email</span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div id="appMfaSetup">
+                                            <p style="margin-bottom: 10px;">1. Install an authenticator app like Google Authenticator or Microsoft Authenticator on your mobile device.</p>
+                                            <p style="margin-bottom: 10px;">2. Scan the QR code below with your authenticator app:</p>
+
+                                            <div id="qrCodeContainer" style="text-align: center; margin: 20px 0; padding: 20px; border: 1px solid var(--border-color); border-radius: var(--border-radius);">
+                                                <img id="qrCodeImage" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=otpauth://totp/AftermarketSoftware:${securityUser ? securityUser.username : 'user'}?secret=ABCDEFGHIJKLMNOP&issuer=AftermarketSoftware" alt="QR Code" style="max-width: 200px;">
+                                            </div>
+
+                                            <p style="margin-bottom: 10px;">3. Enter the 6-digit code from your authenticator app:</p>
+                                            <input type="text" id="verificationCode" class="form-input" style="max-width: 200px; letter-spacing: 4px; font-size: 18px; text-align: center;" placeholder="000000" maxlength="6">
+                                        </div>
+
+                                        <div style="margin-top: 20px;">
+                                            <button type="button" id="verifyMfaSetupBtn" class="profile-action primary-action" style="padding: 8px 16px; background-color: var(--primary-color); color: white; border: none; border-radius: var(--border-radius); cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+                                                <i class="material-icons">check</i>
+                                                <span>Verify and Enable</span>
+                                            </button>
+                                            <button type="button" id="cancelMfaSetupBtn" class="profile-action secondary-action" style="padding: 8px 16px; background-color: transparent; color: var(--accent-color); border: 1px solid var(--border-color); border-radius: var(--border-radius); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; margin-left: 10px;">
+                                                <i class="material-icons">close</i>
+                                                <span>Cancel</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" data-i18n="security_info">Security Information</label>
+                                    <div style="margin-top: 10px;">
+                                        <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border-color);">
+                                            <span data-i18n="last_password_change">Last Password Change</span>
+                                            <span>${securityUser ? new Date(securityUser.passwordLastChanged).toLocaleDateString() : '2023-01-15'}</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border-color);">
+                                            <span data-i18n="last_login">Last Login</span>
+                                            <span>${securityUser ? new Date(securityUser.lastLogin).toLocaleString() : '2023-07-10 14:30'}</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; padding: 10px 0;">
+                                            <span data-i18n="account_status">Account Status</span>
+                                            <span style="color: ${securityUser && securityUser.isActive ? 'var(--success-color)' : 'var(--error-color)'}">
+                                                ${securityUser && securityUser.isActive ? 'Active' : 'Inactive'}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" data-i18n="data_privacy">Data Privacy</label>
+                                    <div style="margin-top: 10px;">
+                                        <button type="button" id="exportDataBtn" class="profile-action secondary-action" style="padding: 8px 16px; background-color: transparent; color: var(--primary-color); border: 1px solid var(--border-color); border-radius: var(--border-radius); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; margin-right: 10px;">
+                                            <i class="material-icons">cloud_download</i>
+                                            <span data-i18n="export_my_data">Export My Data</span>
+                                        </button>
+                                        <button type="button" id="deleteAccountBtn" class="profile-action secondary-action" style="padding: 8px 16px; background-color: transparent; color: var(--error-color); border: 1px solid var(--error-color); border-radius: var(--border-radius); cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+                                            <i class="material-icons">delete_forever</i>
+                                            <span data-i18n="delete_account">Delete My Account</span>
+                                        </button>
+                                    </div>
+                                    <p style="margin-top: 10px; color: var(--accent-color);" data-i18n="data_privacy_description">You have the right to access, export, or delete your personal data. Deleting your account will permanently remove all your data from our systems.</p>
+                                </div>
+                            </form>
+                        </div>
+                    `;
+                    break;
+
+                default:
+                    content = `<div style="text-align: center; padding: 50px;"><h2 data-i18n="${tabName}_info">${tabName.charAt(0).toUpperCase() + tabName.slice(1)} Information</h2><p>This tab content is under development.</p></div>`;
+            }
+
+            // Update content
+            profileContent.innerHTML = content;
+
+            // Translate the newly added content
+            translateUI(localStorage.getItem('preferredLanguage') || 'en');
+        }
+
+        // Function to set up form submission
+        function setupFormSubmission() {
+            // Save changes button
+            const saveChangesBtn = document.querySelector('.primary-action');
+            if (saveChangesBtn) {
+                saveChangesBtn.addEventListener('click', function() {
+                    // Get form values
+                    const firstNameInput = document.querySelector('input[value="John"]');
+                    const lastNameInput = document.querySelector('input[value="Doe"]');
+                    const emailInput = document.querySelector('input[value="john.doe@example.com"]');
+                    const phoneInput = document.querySelector('input[value="+1 (555) 123-4567"]');
+                    const addressInput = document.querySelector('input[value="123 Main St, Apt 4B"]');
+                    const cityInput = document.querySelector('input[value="New York"]');
+                    const stateInput = document.querySelector('input[value="NY"]');
+                    const zipInput = document.querySelector('input[value="10001"]');
+                    const countryInput = document.querySelector('input[value="United States"]');
+
+                    // Get values safely
+                    const firstName = firstNameInput ? firstNameInput.value : 'John';
+                    const lastName = lastNameInput ? lastNameInput.value : 'Doe';
+                    const email = emailInput ? emailInput.value : 'john.doe@example.com';
+                    const phone = phoneInput ? phoneInput.value : '+1 (555) 123-4567';
+                    const address = addressInput ? addressInput.value : '123 Main St, Apt 4B';
+                    const city = cityInput ? cityInput.value : 'New York';
+                    const state = stateInput ? stateInput.value : 'NY';
+                    const zip = zipInput ? zipInput.value : '10001';
+                    const country = countryInput ? countryInput.value : 'United States';
+
+                    // Update user profile
+                    if (typeof DataService !== 'undefined') {
+                        const userProfile = DataService.getUserProfile();
+
+                        // Update profile data
+                        userProfile.firstName = firstName;
+                        userProfile.lastName = lastName;
+                        userProfile.email = email;
+                        userProfile.phone = phone;
+                        userProfile.address = address;
+                        userProfile.city = city;
+                        userProfile.state = state;
+                        userProfile.zip = zip;
+                        userProfile.country = country;
+
+                        // Save updated profile
+                        DataService.saveUserProfile(userProfile);
+
+                        // Update displayed profile data
+                        loadUserProfileData();
+
+                        // Show success message
+                        if (typeof NavigationController !== 'undefined') {
+                            NavigationController.showNotification('Profile updated successfully', 'success');
+                        } else {
+                            alert('Profile updated successfully');
+                        }
+
+                        // Log audit event
+                        SecurityService.logAuditEvent('PROFILE_UPDATED', {
+                            username: SecurityService.getCurrentUser()?.username
+                        });
+                    }
+                });
+            }
+
+            // Change password button
+            const changePasswordBtn = document.querySelector('.secondary-action');
+            if (changePasswordBtn) {
+                changePasswordBtn.addEventListener('click', function() {
+                    // Switch to security tab
+                    const securityTab = document.querySelector('.profile-tab[data-tab="security"]');
+                    if (securityTab) {
+                        securityTab.click();
+                    }
+                });
+            }
+
+            // Avatar edit button
+            const avatarEditBtn = document.querySelector('.profile-avatar-edit');
+            if (avatarEditBtn) {
+                avatarEditBtn.addEventListener('click', function() {
+                    if (typeof NavigationController !== 'undefined') {
+                        NavigationController.showNotification('Avatar upload functionality would open here', 'info');
+                    } else {
+                        alert('Avatar upload functionality would open here');
+                    }
+                });
+            }
+
+            // Set up security tab functionality when the tab is clicked
+            const securityTab = document.querySelector('.profile-tab[data-tab="security"]');
+            if (securityTab) {
+                securityTab.addEventListener('click', function() {
+                    // Wait for the tab content to be loaded
+                    setTimeout(setupSecurityTabFunctionality, 100);
+                });
+            }
+        }
+
+        // Function to set up security tab functionality
+        function setupSecurityTabFunctionality() {
+            // Set up MFA toggle
+            const mfaToggle = document.getElementById('mfaToggle');
+            if (mfaToggle) {
+                mfaToggle.addEventListener('change', function() {
+                    const mfaSetupSection = document.getElementById('mfaSetupSection');
+                    const currentUser = SecurityService.getCurrentUser();
+
+                    if (this.checked) {
+                        // If MFA is already enabled, no need to show setup
+                        if (currentUser && currentUser.mfaEnabled) {
+                            return;
+                        }
+
+                        // Show MFA setup section
+                        if (mfaSetupSection) {
+                            mfaSetupSection.style.display = 'block';
+                        }
+                    } else {
+                        // Hide MFA setup section
+                        if (mfaSetupSection) {
+                            mfaSetupSection.style.display = 'none';
+                        }
+
+                        // If MFA is enabled, disable it
+                        if (currentUser && currentUser.mfaEnabled) {
+                            // Confirm disabling MFA
+                            if (typeof NavigationController !== 'undefined') {
+                                NavigationController.confirmAction(
+                                    'Are you sure you want to disable two-factor authentication? This will make your account less secure.',
+                                    function() {
+                                        // Disable MFA
+                                        SecurityService.disableMfa(currentUser.id);
+
+                                        // Update UI
+                                        document.getElementById('mfaStatus').textContent = 'Disabled';
+
+                                        // Show notification
+                                        NavigationController.showNotification('Two-factor authentication has been disabled.', 'warning');
+
+                                        // Log audit event
+                                        SecurityService.logAuditEvent('MFA_DISABLED', {
+                                            username: currentUser.username
+                                        });
+                                    },
+                                    function() {
+                                        // User cancelled, revert toggle
+                                        mfaToggle.checked = true;
+                                    }
+                                );
+                            } else {
+                                if (confirm('Are you sure you want to disable two-factor authentication? This will make your account less secure.')) {
+                                    // Disable MFA
+                                    SecurityService.disableMfa(currentUser.id);
+
+                                    // Update UI
+                                    document.getElementById('mfaStatus').textContent = 'Disabled';
+
+                                    // Show notification
+                                    alert('Two-factor authentication has been disabled.');
+
+                                    // Log audit event
+                                    SecurityService.logAuditEvent('MFA_DISABLED', {
+                                        username: currentUser.username
+                                    });
+                                } else {
+                                    // User cancelled, revert toggle
+                                    mfaToggle.checked = true;
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Set up MFA method selection
+            const mfaMethodRadios = document.querySelectorAll('input[name="mfaMethod"]');
+            if (mfaMethodRadios.length > 0) {
+                mfaMethodRadios.forEach(radio => {
+                    radio.addEventListener('change', function() {
+                        const appMfaSetup = document.getElementById('appMfaSetup');
+
+                        // Show/hide appropriate setup instructions based on method
+                        if (this.value === 'app') {
+                            if (appMfaSetup) {
+                                appMfaSetup.style.display = 'block';
+                            }
+                        } else {
+                            if (appMfaSetup) {
+                                appMfaSetup.style.display = 'none';
+                            }
+
+                            // For SMS and Email, we would show different setup instructions
+                            // For this demo, we'll just show a message
+                            if (typeof NavigationController !== 'undefined') {
+                                NavigationController.showNotification(`${this.value.toUpperCase()} authentication setup would be shown here.`, 'info');
+                            } else {
+                                alert(`${this.value.toUpperCase()} authentication setup would be shown here.`);
+                            }
+                        }
+                    });
+                });
+            }
+
+            // Set up verify MFA button
+            const verifyMfaSetupBtn = document.getElementById('verifyMfaSetupBtn');
+            if (verifyMfaSetupBtn) {
+                verifyMfaSetupBtn.addEventListener('click', function() {
+                    const verificationCode = document.getElementById('verificationCode').value.trim();
+                    const currentUser = SecurityService.getCurrentUser();
+
+                    if (!verificationCode) {
+                        if (typeof NavigationController !== 'undefined') {
+                            NavigationController.showNotification('Please enter the verification code.', 'error');
+                        } else {
+                            alert('Please enter the verification code.');
+                        }
+                        return;
+                    }
+
+                    if (!/^\d{6}$/.test(verificationCode)) {
+                        if (typeof NavigationController !== 'undefined') {
+                            NavigationController.showNotification('Please enter a valid 6-digit code.', 'error');
+                        } else {
+                            alert('Please enter a valid 6-digit code.');
+                        }
+                        return;
+                    }
+
+                    // Get selected MFA method
+                    const selectedMethod = document.querySelector('input[name="mfaMethod"]:checked').value;
+
+                    // Enable MFA
+                    if (currentUser) {
+                        const result = SecurityService.enableMfa(currentUser.id, selectedMethod);
+
+                        if (result.success) {
+                            // Update UI
+                            document.getElementById('mfaStatus').textContent = 'Enabled';
+                            document.getElementById('mfaSetupSection').style.display = 'none';
+
+                            // Show notification
+                            if (typeof NavigationController !== 'undefined') {
+                                NavigationController.showNotification('Two-factor authentication has been enabled successfully.', 'success');
+                            } else {
+                                alert('Two-factor authentication has been enabled successfully.');
+                            }
+
+                            // Add MFA badge to security tab if it doesn't exist
+                            const securityTab = document.querySelector('.profile-tab[data-tab="security"]');
+                            if (securityTab && !securityTab.querySelector('.mfa-badge')) {
+                                const mfaBadge = document.createElement('span');
+                                mfaBadge.className = 'mfa-badge';
+                                mfaBadge.style.backgroundColor = 'var(--success-color)';
+                                mfaBadge.style.color = 'white';
+                                mfaBadge.style.padding = '2px 6px';
+                                mfaBadge.style.borderRadius = '10px';
+                                mfaBadge.style.fontSize = '10px';
+                                mfaBadge.style.marginLeft = '8px';
+                                mfaBadge.textContent = 'MFA';
+                                securityTab.appendChild(mfaBadge);
+                            }
+                        } else {
+                            // Show error
+                            if (typeof NavigationController !== 'undefined') {
+                                NavigationController.showNotification(result.message || 'Failed to enable two-factor authentication.', 'error');
+                            } else {
+                                alert(result.message || 'Failed to enable two-factor authentication.');
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Set up cancel MFA setup button
+            const cancelMfaSetupBtn = document.getElementById('cancelMfaSetupBtn');
+            if (cancelMfaSetupBtn) {
+                cancelMfaSetupBtn.addEventListener('click', function() {
+                    // Hide MFA setup section
+                    document.getElementById('mfaSetupSection').style.display = 'none';
+
+                    // Uncheck MFA toggle
+                    const mfaToggle = document.getElementById('mfaToggle');
+                    if (mfaToggle) {
+                        mfaToggle.checked = false;
+                    }
+                });
+            }
+
+            // Set up change password button
+            const changePasswordBtn = document.getElementById('changePasswordBtn');
+            if (changePasswordBtn) {
+                changePasswordBtn.addEventListener('click', function() {
+                    const currentPassword = document.getElementById('currentPassword').value;
+                    const newPassword = document.getElementById('newPassword').value;
+                    const confirmPassword = document.getElementById('confirmPassword').value;
+
+                    // Validate inputs
+                    if (!currentPassword) {
+                        if (typeof NavigationController !== 'undefined') {
+                            NavigationController.showNotification('Please enter your current password.', 'error');
+                        } else {
+                            alert('Please enter your current password.');
+                        }
+                        return;
+                    }
+
+                    if (!newPassword) {
+                        if (typeof NavigationController !== 'undefined') {
+                            NavigationController.showNotification('Please enter a new password.', 'error');
+                        } else {
+                            alert('Please enter a new password.');
+                        }
+                        return;
+                    }
+
+                    if (newPassword !== confirmPassword) {
+                        if (typeof NavigationController !== 'undefined') {
+                            NavigationController.showNotification('New password and confirmation do not match.', 'error');
+                        } else {
+                            alert('New password and confirmation do not match.');
+                        }
+                        return;
+                    }
+
+                    // In a real app, we would verify the current password and update it
+                    // For this demo, we'll just show a success message
+                    if (typeof NavigationController !== 'undefined') {
+                        NavigationController.showNotification('Password changed successfully.', 'success');
+                    } else {
+                        alert('Password changed successfully.');
+                    }
+
+                    // Clear password fields
+                    document.getElementById('currentPassword').value = '';
+                    document.getElementById('newPassword').value = '';
+                    document.getElementById('confirmPassword').value = '';
+
+                    // Log audit event
+                    SecurityService.logAuditEvent('PASSWORD_CHANGED', {
+                        username: SecurityService.getCurrentUser()?.username
+                    });
+                });
+            }
+
+            // Set up export data button
+            const exportDataBtn = document.getElementById('exportDataBtn');
+            if (exportDataBtn) {
+                exportDataBtn.addEventListener('click', function() {
+                    const currentUser = SecurityService.getCurrentUser();
+
+                    if (currentUser) {
+                        // In a real app, we would generate and download a data export
+                        // For this demo, we'll just show a success message
+                        if (typeof NavigationController !== 'undefined') {
+                            NavigationController.showNotification('Your data export has been prepared. Downloading...', 'success');
+                        } else {
+                            alert('Your data export has been prepared. Downloading...');
+                        }
+
+                        // Log audit event
+                        SecurityService.logAuditEvent('DATA_EXPORTED', {
+                            username: currentUser.username
+                        });
+                    }
+                });
+            }
+
+            // Set up delete account button
+            const deleteAccountBtn = document.getElementById('deleteAccountBtn');
+            if (deleteAccountBtn) {
+                deleteAccountBtn.addEventListener('click', function() {
+                    const currentUser = SecurityService.getCurrentUser();
+
+                    if (currentUser) {
+                        // Confirm account deletion
+                        if (typeof NavigationController !== 'undefined') {
+                            NavigationController.confirmAction(
+                                'Are you sure you want to delete your account? This action cannot be undone and will permanently delete all your data.',
+                                function() {
+                                    // In a real app, we would handle the account deletion process
+                                    // For this demo, we'll just show a success message and log out
+
+                                    // Log audit event
+                                    SecurityService.logAuditEvent('ACCOUNT_DELETED', {
+                                        username: currentUser.username
+                                    });
+
+                                    // Show notification
+                                    NavigationController.showNotification('Your account has been scheduled for deletion. You will be logged out now.', 'warning');
+
+                                    // Log out after a delay
+                                    setTimeout(function() {
+                                        SecurityService.logout();
+                                        NavigationController.navigateTo('LOGIN');
+                                    }, 3000);
+                                }
+                            );
+                        } else {
+                            if (confirm('Are you sure you want to delete your account? This action cannot be undone and will permanently delete all your data.')) {
+                                // Log audit event
+                                SecurityService.logAuditEvent('ACCOUNT_DELETED', {
+                                    username: currentUser.username
+                                });
+
+                                // Show notification
+                                alert('Your account has been scheduled for deletion. You will be logged out now.');
+
+                                // Log out
+                                SecurityService.logout();
+                                window.location.href = 'login.html';
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

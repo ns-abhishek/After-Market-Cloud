@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoices - Aftermarket Software</title>
+
+    <!-- Google Material Design Lite -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.grey-blue.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <style>
+        /* Base styles */
+        :root {
+            --primary-color: #212529;
+            --secondary-color: #f5f5f5;
+            --accent-color: #757575;
+            --border-color: #e0e0e0;
+            --hover-color: #e9e9e9;
+            --shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --border-radius: 4px;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --info-color: #2196f3;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--secondary-color);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .invoices-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 500;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .back-button:hover {
+            color: var(--primary-color);
+        }
+
+        .action-button {
+            padding: 8px 16px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .action-button:hover {
+            background-color: #343a40;
+        }
+
+        .invoices-grid {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            animation: slideInUp 0.5s ease;
+        }
+
+        .grid-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .grid-title {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .grid-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .grid-action-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--accent-color);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .grid-action-button:hover {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        .invoices-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .invoices-table th,
+        .invoices-table td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .invoices-table th {
+            background-color: var(--secondary-color);
+            font-weight: 500;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            color: var(--primary-color);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .invoices-table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        .invoices-table tbody tr:hover {
+            background-color: var(--hover-color);
+        }
+
+        .invoices-table tbody tr:nth-child(even) {
+            background-color: rgba(245, 245, 245, 0.5);
+        }
+
+        .invoices-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .status-paid {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-pending {
+            background-color: rgba(33, 150, 243, 0.1);
+            color: var(--info-color);
+        }
+
+        .status-overdue {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--error-color);
+        }
+
+        .action-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--accent-color);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .action-icon:hover {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .invoices-table th:nth-child(n+5),
+            .invoices-table td:nth-child(n+5) {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="invoices-container">
+        <div class="page-header">
+            <button class="back-button" id="backToDashboard">
+                <i class="material-icons">arrow_back</i>
+                <span data-i18n="back_to_dashboard">Back to Dashboard</span>
+            </button>
+            <h1 class="page-title" data-i18n="invoices">Invoices</h1>
+            <button class="action-button" id="createInvoiceBtn">
+                <i class="material-icons">add</i>
+                <span data-i18n="create_invoice">Create Invoice</span>
+            </button>
+        </div>
+
+        <div class="invoices-grid">
+            <div class="grid-header">
+                <h2 class="grid-title" data-i18n="invoices_list">Invoices List</h2>
+                <div class="grid-actions">
+                    <button class="grid-action-button" id="exportInvoicesBtn" title="Export Invoices">
+                        <i class="material-icons">file_download</i>
+                    </button>
+                    <button class="grid-action-button" id="refreshInvoicesBtn" title="Refresh">
+                        <i class="material-icons">refresh</i>
+                    </button>
+                </div>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="invoices-table">
+                    <thead>
+                        <tr>
+                            <th data-i18n="invoice_id">Invoice ID</th>
+                            <th data-i18n="customer">Customer</th>
+                            <th data-i18n="amount">Amount</th>
+                            <th data-i18n="status">Status</th>
+                            <th data-i18n="issue_date">Issue Date</th>
+                            <th data-i18n="due_date">Due Date</th>
+                            <th data-i18n="actions">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="invoicesTableBody">
+                        <!-- Invoice rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="data-service.js"></script>
+    <script src="translations.js"></script>
+    <script src="navigation-controller.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize language
+            initLanguage();
+
+            // Load invoices
+            loadInvoices();
+
+            // Set up event listeners
+            setupEventListeners();
+        });
+
+        // Function to initialize language
+        function initLanguage() {
+            // Get preferred language from data service or use browser language
+            let preferredLanguage = 'en';
+
+            if (typeof DataService !== 'undefined') {
+                preferredLanguage = DataService.getLanguagePreference();
+            } else {
+                preferredLanguage = localStorage.getItem('preferredLanguage') ||
+                                   navigator.language.split('-')[0] ||
+                                   'en';
+            }
+
+            // Translate the UI
+            translateUI(preferredLanguage);
+        }
+
+        // Function to load invoices
+        function loadInvoices() {
+            const invoicesTableBody = document.getElementById('invoicesTableBody');
+            if (!invoicesTableBody) return;
+
+            // Clear existing content
+            invoicesTableBody.innerHTML = '';
+
+            // Get invoices from data service
+            let invoices = [];
+            if (typeof DataService !== 'undefined') {
+                invoices = DataService.getInvoices();
+            }
+
+            // Add invoice rows
+            if (invoices.length > 0) {
+                invoices.forEach(invoice => {
+                    const row = document.createElement('tr');
+
+                    // Set status class
+                    let statusClass = '';
+                    switch (invoice.status.toLowerCase()) {
+                        case 'paid':
+                            statusClass = 'status-paid';
+                            break;
+                        case 'pending':
+                            statusClass = 'status-pending';
+                            break;
+                        case 'overdue':
+                            statusClass = 'status-overdue';
+                            break;
+                    }
+
+                    // Format amount
+                    const formattedAmount = '$' + invoice.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+                    // Format dates
+                    const issueDate = new Date(invoice.issueDate).toLocaleDateString();
+                    const dueDate = new Date(invoice.dueDate).toLocaleDateString();
+
+                    // Create row content
+                    row.innerHTML = `
+                        <td>${invoice.id}</td>
+                        <td>${invoice.customer}</td>
+                        <td>${formattedAmount}</td>
+                        <td><span class="status-badge ${statusClass}">${invoice.status}</span></td>
+                        <td>${issueDate}</td>
+                        <td>${dueDate}</td>
+                        <td>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="action-icon view-invoice" data-invoice-id="${invoice.id}" title="View">
+                                    <i class="material-icons">visibility</i>
+                                </button>
+                                <button class="action-icon download-invoice" data-invoice-id="${invoice.id}" title="Download">
+                                    <i class="material-icons">file_download</i>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+
+                    invoicesTableBody.appendChild(row);
+                });
+            } else {
+                // No invoices message
+                const row = document.createElement('tr');
+                const cell = document.createElement('td');
+                cell.colSpan = 7;
+                cell.style.textAlign = 'center';
+                cell.style.padding = '24px';
+                cell.setAttribute('data-i18n', 'no_invoices_found');
+                cell.textContent = 'No invoices found.';
+                row.appendChild(cell);
+                invoicesTableBody.appendChild(row);
+            }
+        }
+
+        // Function to set up event listeners
+        function setupEventListeners() {
+            // Back to dashboard button
+            const backToDashboardBtn = document.getElementById('backToDashboard');
+            if (backToDashboardBtn) {
+                backToDashboardBtn.addEventListener('click', function() {
+                    if (typeof NavigationController !== 'undefined') {
+                        NavigationController.navigateTo('DASHBOARD');
+                    } else {
+                        window.location.href = 'party-portal.html';
+                    }
+                });
+            }
+
+            // Create invoice button
+            const createInvoiceBtn = document.getElementById('createInvoiceBtn');
+            if (createInvoiceBtn) {
+                createInvoiceBtn.addEventListener('click', function() {
+                    if (typeof NavigationController !== 'undefined') {
+                        NavigationController.showNotification('Invoice creation form would open here', 'info');
+                    } else {
+                        alert('Invoice creation form would open here');
+                    }
+                });
+            }
+
+            // Export invoices button
+            const exportInvoicesBtn = document.getElementById('exportInvoicesBtn');
+            if (exportInvoicesBtn) {
+                exportInvoicesBtn.addEventListener('click', function() {
+                    if (typeof NavigationController !== 'undefined') {
+                        NavigationController.showNotification('Invoices would be exported here', 'info');
+                    } else {
+                        alert('Invoices would be exported here');
+                    }
+                });
+            }
+
+            // Refresh invoices button
+            const refreshInvoicesBtn = document.getElementById('refreshInvoicesBtn');
+            if (refreshInvoicesBtn) {
+                refreshInvoicesBtn.addEventListener('click', function() {
+                    const icon = this.querySelector('i');
+                    icon.style.animation = 'spin 1s linear infinite';
+
+                    // Simulate refresh delay
+                    setTimeout(() => {
+                        icon.style.animation = '';
+                        loadInvoices();
+
+                        if (typeof NavigationController !== 'undefined') {
+                            NavigationController.showNotification('Invoices refreshed', 'success');
+                        } else {
+                            alert('Invoices refreshed');
+                        }
+                    }, 1000);
+                });
+            }
+
+            // View invoice buttons
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.view-invoice')) {
+                    const button = e.target.closest('.view-invoice');
+                    const invoiceId = button.dataset.invoiceId;
+
+                    if (typeof NavigationController !== 'undefined') {
+                        NavigationController.showNotification(`Viewing invoice ${invoiceId}`, 'info');
+                    } else {
+                        alert(`Viewing invoice ${invoiceId}`);
+                    }
+                }
+            });
+
+            // Download invoice buttons
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.download-invoice')) {
+                    const button = e.target.closest('.download-invoice');
+                    const invoiceId = button.dataset.invoiceId;
+
+                    if (typeof NavigationController !== 'undefined') {
+                        NavigationController.showNotification(`Downloading invoice ${invoiceId}`, 'info');
+                    } else {
+                        alert(`Downloading invoice ${invoiceId}`);
+                    }
+                }
+            });
+        }
+    </script>
+
+    <!-- Navigation Utility -->
+    <script src="navigation-utils.js"></script>
+</body>
+</html>

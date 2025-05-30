@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Center - Aftermarket Software</title>
+
+    <!-- Google Material Design Lite -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.grey-blue.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <style>
+        /* Base styles */
+        :root {
+            --primary-color: #212529;
+            --secondary-color: #f5f5f5;
+            --accent-color: #757575;
+            --border-color: #e0e0e0;
+            --hover-color: #e9e9e9;
+            --shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --border-radius: 4px;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --info-color: #2196f3;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--secondary-color);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .help-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .help-header {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .help-title {
+            font-size: 28px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .help-subtitle {
+            color: var(--accent-color);
+            margin-bottom: 20px;
+        }
+
+        .help-search {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .help-search-input {
+            width: 100%;
+            padding: 12px 20px;
+            padding-right: 50px;
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .help-search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(33, 37, 41, 0.1);
+        }
+
+        .help-search-button {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .help-search-button:hover {
+            background-color: var(--hover-color);
+            color: var(--primary-color);
+        }
+
+        .help-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .help-category {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            animation: slideInUp 0.5s ease;
+        }
+
+        .help-category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .help-category-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: var(--primary-color);
+            font-size: 24px;
+        }
+
+        .help-category-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .help-category-description {
+            color: var(--accent-color);
+            font-size: 14px;
+        }
+
+        .help-section {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 20px;
+            animation: slideInUp 0.5s ease;
+        }
+
+        .help-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .help-section-title {
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .help-section-action {
+            color: var(--accent-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: var(--transition);
+        }
+
+        .help-section-action:hover {
+            color: var(--primary-color);
+        }
+
+        .faq-list {
+            list-style: none;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 0;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-question i {
+            transition: var(--transition);
+        }
+
+        .faq-answer {
+            margin-top: 10px;
+            display: none;
+            padding: 10px;
+            background-color: var(--secondary-color);
+            border-radius: var(--border-radius);
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        .video-tutorials {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .video-tutorial {
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .video-tutorial:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .video-thumbnail {
+            position: relative;
+            height: 150px;
+            background-color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .video-play {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .video-tutorial:hover .video-play {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .video-info {
+            padding: 15px;
+            background-color: white;
+        }
+
+        .video-title {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .video-duration {
+            color: var(--accent-color);
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .contact-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .contact-method {
+            background-color: var(--secondary-color);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: var(--transition);
+        }
+
+        .contact-method:hover {
+            background-color: var(--hover-color);
+        }
+
+        .contact-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-title {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .contact-description {
+            color: var(--accent-color);
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .help-header {
+                padding: 20px;
+            }
+
+            .help-title {
+                font-size: 24px;
+            }
+
+            .help-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="help-container">
+        <!-- Help Header -->
+        <div class="help-header">
+            <h1 class="help-title" data-i18n="help_center">Help Center</h1>
+            <p class="help-subtitle" data-i18n="help_subtitle">Find answers to your questions and learn how to use our platform</p>
+            <div class="help-search">
+                <input type="text" class="help-search-input" placeholder="Search for help..." data-i18n="search_help_placeholder">
+                <button class="help-search-button">
+                    <i class="material-icons">search</i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Help Categories -->
+        <div class="help-categories">
+            <div class="help-category">
+                <div class="help-category-icon">
+                    <i class="material-icons">help_outline</i>
+                </div>
+                <h2 class="help-category-title" data-i18n="faqs">FAQs</h2>
+                <p class="help-category-description" data-i18n="faqs_description">Find answers to frequently asked questions</p>
+            </div>
+            <div class="help-category">
+                <div class="help-category-icon">
+                    <i class="material-icons">book</i>
+                </div>
+                <h2 class="help-category-title" data-i18n="user_guides">User Guides</h2>
+                <p class="help-category-description" data-i18n="user_guides_description">Detailed guides on how to use our platform</p>
+            </div>
+            <div class="help-category">
+                <div class="help-category-icon">
+                    <i class="material-icons">video_library</i>
+                </div>
+                <h2 class="help-category-title" data-i18n="video_tutorials">Video Tutorials</h2>
+                <p class="help-category-description" data-i18n="video_tutorials_description">Watch step-by-step video tutorials</p>
+            </div>
+            <div class="help-category">
+                <div class="help-category-icon">
+                    <i class="material-icons">headset_mic</i>
+                </div>
+                <h2 class="help-category-title" data-i18n="contact_support">Contact Support</h2>
+                <p class="help-category-description" data-i18n="contact_support_description">Get in touch with our support team</p>
+            </div>
+        </div>
+
+        <!-- FAQs Section -->
+        <div class="help-section">
+            <div class="help-section-header">
+                <h2 class="help-section-title" data-i18n="frequently_asked_questions">Frequently Asked Questions</h2>
+                <a href="#" class="help-section-action">
+                    <span data-i18n="view_all">View All</span>
+                    <i class="material-icons">arrow_forward</i>
+                </a>
+            </div>
+            <ul class="faq-list">
+                <li class="faq-item">
+                    <div class="faq-question">
+                        <span data-i18n="faq_question_1">How do I reset my password?</span>
+                        <i class="material-icons">expand_more</i>
+                    </div>
+                    <div class="faq-answer" data-i18n="faq_answer_1">
+                        To reset your password, click on the "Forgot Password" link on the login page. Enter your email address and follow the instructions sent to your email.
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">
+                        <span data-i18n="faq_question_2">How do I add a new party?</span>
+                        <i class="material-icons">expand_more</i>
+                    </div>
+                    <div class="faq-answer" data-i18n="faq_answer_2">
+                        To add a new party, go to the Party List page and click on the "Add Party" button. Fill in the required information and click "Save".
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">
+                        <span data-i18n="faq_question_3">How do I export data from the grid?</span>
+                        <i class="material-icons">expand_more</i>
+                    </div>
+                    <div class="faq-answer" data-i18n="faq_answer_3">
+                        To export data, click on the export button in the grid header. You can choose to export as CSV or Excel format.
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">
+                        <span data-i18n="faq_question_4">How do I use the advanced search?</span>
+                        <i class="material-icons">expand_more</i>
+                    </div>
+                    <div class="faq-answer" data-i18n="faq_answer_4">
+                        Click on the advanced search button in the grid header. You can add multiple search criteria and use AND/OR operators to create complex queries.
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Video Tutorials Section -->
+        <div class="help-section">
+            <div class="help-section-header">
+                <h2 class="help-section-title" data-i18n="video_tutorials">Video Tutorials</h2>
+                <a href="#" class="help-section-action">
+                    <span data-i18n="view_all">View All</span>
+                    <i class="material-icons">arrow_forward</i>
+                </a>
+            </div>
+            <div class="video-tutorials">
+                <div class="video-tutorial">
+                    <div class="video-thumbnail">
+                        <div class="video-play">
+                            <i class="material-icons">play_arrow</i>
+                        </div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title" data-i18n="video_title_1">Getting Started with the Portal</h3>
+                        <div class="video-duration">
+                            <i class="material-icons" style="font-size: 14px;">access_time</i>
+                            <span>5:32</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-tutorial">
+                    <div class="video-thumbnail">
+                        <div class="video-play">
+                            <i class="material-icons">play_arrow</i>
+                        </div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title" data-i18n="video_title_2">Managing Parties</h3>
+                        <div class="video-duration">
+                            <i class="material-icons" style="font-size: 14px;">access_time</i>
+                            <span>7:15</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-tutorial">
+                    <div class="video-thumbnail">
+                        <div class="video-play">
+                            <i class="material-icons">play_arrow</i>
+                        </div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title" data-i18n="video_title_3">Advanced Search Features</h3>
+                        <div class="video-duration">
+                            <i class="material-icons" style="font-size: 14px;">access_time</i>
+                            <span>4:48</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-tutorial">
+                    <div class="video-thumbnail">
+                        <div class="video-play">
+                            <i class="material-icons">play_arrow</i>
+                        </div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title" data-i18n="video_title_4">Customizing Your Dashboard</h3>
+                        <div class="video-duration">
+                            <i class="material-icons" style="font-size: 14px;">access_time</i>
+                            <span>6:22</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Support Section -->
+        <div class="help-section">
+            <div class="help-section-header">
+                <h2 class="help-section-title" data-i18n="contact_support">Contact Support</h2>
+            </div>
+            <div class="contact-methods">
+                <div class="contact-method">
+                    <div class="contact-icon">
+                        <i class="material-icons">email</i>
+                    </div>
+                    <div class="contact-info">
+                        <h3 class="contact-title" data-i18n="email_support">Email Support</h3>
+                        <p class="contact-description" data-i18n="email_support_description">Send us an email and we'll respond within 24 hours</p>
+                        <a href="mailto:support@example.com" style="color: var(--primary-color);">support@example.com</a>
+                    </div>
+                </div>
+                <div class="contact-method">
+                    <div class="contact-icon">
+                        <i class="material-icons">chat</i>
+                    </div>
+                    <div class="contact-info">
+                        <h3 class="contact-title" data-i18n="live_chat">Live Chat</h3>
+                        <p class="contact-description" data-i18n="live_chat_description">Chat with our support team in real-time</p>
+                        <button style="background-color: var(--primary-color); color: white; border: none; padding: 5px 10px; border-radius: var(--border-radius); margin-top: 5px; cursor: pointer;" data-i18n="start_chat">Start Chat</button>
+                    </div>
+                </div>
+                <div class="contact-method">
+                    <div class="contact-icon">
+                        <i class="material-icons">phone</i>
+                    </div>
+                    <div class="contact-info">
+                        <h3 class="contact-title" data-i18n="phone_support">Phone Support</h3>
+                        <p class="contact-description" data-i18n="phone_support_description">Call us during business hours (9 AM - 5 PM EST)</p>
+                        <a href="tel:+18001234567" style="color: var(--primary-color);">+1 (800) 123-4567</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="data-service.js"></script>
+    <script src="translations.js"></script>
+    <script src="navigation-controller.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize language
+            initLanguage();
+
+            // Set up FAQ toggles
+            const faqItems = document.querySelectorAll('.faq-item');
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                question.addEventListener('click', function() {
+                    item.classList.toggle('active');
+                });
+            });
+
+            // Activate the first FAQ item by default
+            if (faqItems.length > 0) {
+                faqItems[0].classList.add('active');
+            }
+
+            // Set up event listeners
+            setupEventListeners();
+        });
+
+        // Function to initialize language
+        function initLanguage() {
+            // Get preferred language from data service or use browser language
+            let preferredLanguage = 'en';
+
+            if (typeof DataService !== 'undefined') {
+                preferredLanguage = DataService.getLanguagePreference();
+            } else {
+                preferredLanguage = localStorage.getItem('preferredLanguage') ||
+                                   navigator.language.split('-')[0] ||
+                                   'en';
+            }
+
+            // Translate the UI
+            translateUI(preferredLanguage);
+        }
+
+        // Function to set up event listeners
+        function setupEventListeners() {
+            // Help search
+            const searchInput = document.querySelector('.help-search-input');
+            const searchButton = document.querySelector('.help-search-button');
+
+            if (searchInput && searchButton) {
+                // Search button click
+                searchButton.addEventListener('click', function() {
+                    performSearch(searchInput.value);
+                });
+
+                // Enter key press in search input
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        performSearch(this.value);
+                    }
+                });
+            }
+
+            // Help categories
+            const helpCategories = document.querySelectorAll('.help-category');
+            helpCategories.forEach(category => {
+                category.addEventListener('click', function() {
+                    const categoryTitle = this.querySelector('.help-category-title').getAttribute('data-i18n');
+                    navigateToCategory(categoryTitle);
+                });
+            });
+
+            // View all links
+            const viewAllLinks = document.querySelectorAll('.help-section-action');
+            viewAllLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const section = this.closest('.help-section').querySelector('.help-section-title').getAttribute('data-i18n');
+                    viewAllItems(section);
+                });
+            });
+
+            // Video tutorials
+            const videoTutorials = document.querySelectorAll('.video-tutorial');
+            videoTutorials.forEach(tutorial => {
+                tutorial.addEventListener('click', function() {
+                    const videoTitle = this.querySelector('.video-title').textContent;
+                    playVideo(videoTitle);
+                });
+            });
+
+            // Contact methods
+            const startChatButton = document.querySelector('button[data-i18n="start_chat"]');
+            if (startChatButton) {
+                startChatButton.addEventListener('click', function() {
+                    startChat();
+                });
+            }
+        }
+
+        // Function to perform search
+        function performSearch(searchTerm) {
+            if (!searchTerm.trim()) {
+                alert('Please enter a search term');
+                return;
+            }
+
+            // In a real application, you would search through help content
+            alert(`Searching for: ${searchTerm}`);
+
+            // For demonstration, let's show a simple result
+            const faqItems = document.querySelectorAll('.faq-item');
+            let found = false;
+
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question span').textContent.toLowerCase();
+                const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+
+                if (question.includes(searchTerm.toLowerCase()) || answer.includes(searchTerm.toLowerCase())) {
+                    // Highlight this item
+                    item.classList.add('active');
+                    item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    found = true;
+
+                    // Add a highlight effect
+                    item.style.backgroundColor = 'rgba(33, 150, 243, 0.1)';
+                    setTimeout(() => {
+                        item.style.backgroundColor = '';
+                    }, 2000);
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+
+            if (!found) {
+                alert('No results found for: ' + searchTerm);
+            }
+        }
+
+        // Function to navigate to a category
+        function navigateToCategory(category) {
+            // In a real application, you would navigate to the category page
+            switch (category) {
+                case 'faqs':
+                    // Scroll to FAQs section
+                    document.querySelector('.help-section:nth-child(1)').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    break;
+                case 'user_guides':
+                    alert('User Guides section would open here');
+                    break;
+                case 'video_tutorials':
+                    // Scroll to Video Tutorials section
+                    document.querySelector('.help-section:nth-child(2)').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    break;
+                case 'contact_support':
+                    // Scroll to Contact Support section
+                    document.querySelector('.help-section:nth-child(3)').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    break;
+                default:
+                    alert(`Navigating to ${category} category`);
+            }
+        }
+
+        // Function to view all items in a section
+        function viewAllItems(section) {
+            // In a real application, you would navigate to a page with all items in the section
+            alert(`Viewing all items in ${section} section`);
+        }
+
+        // Function to play a video
+        function playVideo(videoTitle) {
+            // In a real application, you would open a video player
+            alert(`Playing video: ${videoTitle}`);
+        }
+
+        // Function to start a chat
+        function startChat() {
+            // In a real application, you would open a chat window
+            alert('Live chat would open here');
+        }
+    </script>
+</body>
+</html>

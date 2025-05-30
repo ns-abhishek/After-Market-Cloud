@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Party Details - Aftermarket Software</title>
+
+    <!-- Google Material Design Lite -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.grey-blue.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #212529;
+            --secondary-color: #f5f5f5;
+            --accent-color: #757575;
+            --border-color: #e0e0e0;
+            --shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+            --success-color: #4caf50;
+            --error-color: #f44336;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--secondary-color);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .app-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            height: 64px;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 16px;
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        .back-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .app-title {
+            font-size: 20px;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .main-content {
+            margin-top: 64px;
+            padding: 24px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .party-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .party-header {
+            background: linear-gradient(135deg, var(--primary-color), #343a40);
+            color: white;
+            padding: 32px;
+            text-align: center;
+        }
+
+        .party-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+            margin: 0 auto 16px;
+        }
+
+        .party-name {
+            font-size: 28px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .party-type {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .party-status {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background-color: var(--success-color);
+        }
+
+        .status-inactive {
+            background-color: var(--error-color);
+        }
+
+        .party-body {
+            padding: 32px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .detail-section {
+            background-color: var(--secondary-color);
+            border-radius: var(--border-radius);
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            color: var(--accent-color);
+        }
+
+        .detail-value {
+            font-weight: 500;
+            text-align: right;
+        }
+
+        .actions-section {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 12px 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background-color: #343a40;
+            transform: translateY(-2px);
+        }
+
+        .action-btn.secondary {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .action-btn.secondary:hover {
+            background-color: #e9e9e9;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--error-color);
+        }
+
+        .error-state i {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .actions-section {
+                flex-direction: column;
+            }
+
+            .party-header {
+                padding: 24px;
+            }
+
+            .party-body {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <button class="back-button" onclick="history.back()">
+                <i class="material-icons">arrow_back</i>
+            </button>
+            <h1 class="app-title">Party Details</h1>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Loading State -->
+        <div id="loadingState" class="loading">
+            <div class="spinner"></div>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="error-state" style="display: none;">
+            <i class="material-icons">error</i>
+            <h3>Party Not Found</h3>
+            <p>The requested party could not be found.</p>
+        </div>
+
+        <!-- Party Details -->
+        <div id="partyDetails" style="display: none;">
+            <div class="party-card">
+                <div class="party-header">
+                    <div class="party-status" id="partyStatus"></div>
+                    <div class="party-avatar" id="partyAvatar"></div>
+                    <h1 class="party-name" id="partyName">Loading...</h1>
+                    <p class="party-type" id="partyType">Loading...</p>
+                </div>
+                <div class="party-body">
+                    <div class="details-grid">
+                        <div class="detail-section">
+                            <h3 class="section-title">
+                                <i class="material-icons">contact_mail</i>
+                                Contact Information
+                            </h3>
+                            <div class="detail-item">
+                                <span class="detail-label">Email</span>
+                                <span class="detail-value" id="partyEmail">-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Phone</span>
+                                <span class="detail-value" id="partyPhone">-</span>
+                            </div>
+                        </div>
+
+                        <div class="detail-section">
+                            <h3 class="section-title">
+                                <i class="material-icons">location_on</i>
+                                Location
+                            </h3>
+                            <div class="detail-item">
+                                <span class="detail-label">City</span>
+                                <span class="detail-value" id="partyCity">-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Country</span>
+                                <span class="detail-value" id="partyCountry">-</span>
+                            </div>
+                        </div>
+
+                        <div class="detail-section">
+                            <h3 class="section-title">
+                                <i class="material-icons">business</i>
+                                Organization
+                            </h3>
+                            <div class="detail-item">
+                                <span class="detail-label">Company</span>
+                                <span class="detail-value" id="partyCompany">-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Branch</span>
+                                <span class="detail-value" id="partyBranch">-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Region</span>
+                                <span class="detail-value" id="partyRegion">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="actions-section">
+                        <button class="action-btn" id="customer360Btn">
+                            <i class="material-icons">dashboard</i>
+                            Customer 360 View
+                        </button>
+                        <button class="action-btn secondary" id="editBtn">
+                            <i class="material-icons">edit</i>
+                            Edit Party
+                        </button>
+                        <button class="action-btn secondary" id="contactBtn">
+                            <i class="material-icons">phone</i>
+                            Contact
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="data-service.js"></script>
+    <script>
+        let currentPartyId = null;
+        let partyData = null;
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPartyDetails();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('customer360Btn').addEventListener('click', function() {
+                if (currentPartyId) {
+                    window.open(`customer-360-view.html?customerId=${currentPartyId}`, '_blank');
+                }
+            });
+
+            document.getElementById('editBtn').addEventListener('click', function() {
+                if (currentPartyId) {
+                    window.open(`party-details-advanced.html`, '_blank');
+                }
+            });
+
+            document.getElementById('contactBtn').addEventListener('click', function() {
+                showNotification('Contact functionality would open here', 'info');
+            });
+        }
+
+        function loadPartyDetails() {
+            // Get party ID from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            currentPartyId = urlParams.get('partyId');
+
+            if (!currentPartyId) {
+                showError();
+                return;
+            }
+
+            // Simulate loading delay
+            setTimeout(() => {
+                try {
+                    partyData = DataService.getPartyById(currentPartyId);
+
+                    if (partyData) {
+                        populatePartyDetails();
+                        showPartyDetails();
+                    } else {
+                        showError();
+                    }
+                } catch (error) {
+                    console.error('Error loading party details:', error);
+                    showError();
+                }
+            }, 800);
+        }
+
+        function populatePartyDetails() {
+            // Update header
+            document.getElementById('partyName').textContent = partyData.name;
+            document.getElementById('partyType').textContent = partyData.partyType || 'Unknown Type';
+            document.getElementById('partyAvatar').textContent = partyData.name.charAt(0).toUpperCase();
+
+            // Update status
+            const statusElement = document.getElementById('partyStatus');
+            const statusClass = partyData.isActive ? 'status-active' : 'status-inactive';
+            const statusText = partyData.isActive ? 'Active' : 'Inactive';
+            statusElement.className = `party-status ${statusClass}`;
+            statusElement.textContent = statusText;
+
+            // Update contact information
+            document.getElementById('partyEmail').textContent = partyData.email || 'Not provided';
+            document.getElementById('partyPhone').textContent = partyData.phone || 'Not provided';
+
+            // Update location
+            document.getElementById('partyCity').textContent = partyData.city || 'Unknown';
+            document.getElementById('partyCountry').textContent = partyData.country || 'Unknown';
+
+            // Update organization
+            document.getElementById('partyCompany').textContent = partyData.company || 'Not specified';
+            document.getElementById('partyBranch').textContent = partyData.branch || 'Main';
+            document.getElementById('partyRegion').textContent = partyData.region || 'Not specified';
+        }
+
+        function showPartyDetails() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('errorState').style.display = 'none';
+            document.getElementById('partyDetails').style.display = 'block';
+        }
+
+        function showError() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('partyDetails').style.display = 'none';
+            document.getElementById('errorState').style.display = 'block';
+        }
+
+        function goBack() {
+            // Always go to party details advanced page
+            console.log('Navigating back to party-details-advanced.html');
+            window.location.href = 'party-details-advanced.html';
+        }
+
+        function showNotification(message, type = 'info') {
+            let notification = document.getElementById('notification');
+            if (!notification) {
+                notification = document.createElement('div');
+                notification.id = 'notification';
+                notification.style.cssText = `
+                    position: fixed;
+                    bottom: 24px;
+                    right: 24px;
+                    padding: 16px 24px;
+                    border-radius: 4px;
+                    color: white;
+                    font-weight: 500;
+                    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+                    transform: translateY(100px);
+                    opacity: 0;
+                    transition: transform 0.3s, opacity 0.3s;
+                    z-index: 1000;
+                    max-width: 400px;
+                `;
+                document.body.appendChild(notification);
+            }
+
+            notification.textContent = message;
+
+            const colors = {
+                success: '#4caf50',
+                error: '#f44336',
+                warning: '#ff9800',
+                info: '#2196f3'
+            };
+            notification.style.backgroundColor = colors[type] || colors.info;
+
+            setTimeout(() => {
+                notification.style.transform = 'translateY(0)';
+                notification.style.opacity = '1';
+            }, 10);
+
+            setTimeout(() => {
+                notification.style.transform = 'translateY(100px)';
+                notification.style.opacity = '0';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

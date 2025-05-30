@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Digital Catalog - Aftermarket Software</title>
+
+    <!-- Google Material Design Components Web -->
+    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+
+    <!-- Google Material Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Round">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Modern Catalog Styles -->
+    <link rel="stylesheet" href="modern-catalog-styles.css">
+</head>
+<body class="mdc-typography">
+    <div class="catalog-app">
+        <!-- Header -->
+        <header class="catalog-header">
+            <div class="header-container">
+                <div class="header-left">
+                    <button class="menu-button" id="menuButton">
+                        <i class="material-icons">menu</i>
+                    </button>
+                    <h1 class="header-title">Digital Catalog</h1>
+                </div>
+                <div class="header-search">
+                    <div class="search-container">
+                        <i class="material-icons search-icon">search</i>
+                        <input type="text" class="search-input" id="catalogSearch" placeholder="Search products...">
+                        <button class="voice-search-button" id="voiceSearchBtn" title="Voice Search">
+                            <i class="material-icons">mic</i>
+                        </button>
+                        <button class="advanced-search-button" id="advancedSearchBtn" title="Advanced Search">
+                            <i class="material-icons">filter_alt</i>
+                        </button>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="header-action-button" id="compareButton">
+                        <i class="material-icons-outlined">compare_arrows</i>
+                    </button>
+                    <button class="header-action-button" id="wishlistButton">
+                        <i class="material-icons-outlined">favorite_border</i>
+                    </button>
+                    <button class="header-action-button cart-button" id="cartButton">
+                        <i class="material-icons-outlined">shopping_cart</i>
+                        <span class="cart-badge" id="cartBadge">0</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Side Navigation -->
+        <div class="side-nav" id="sideNav">
+            <div class="side-nav-header">
+                <h2 class="side-nav-title">Aftermarket</h2>
+                <button class="close-nav-button" id="closeNavButton">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <nav class="side-nav-menu">
+                <a href="index.html" class="nav-item">
+                    <i class="material-icons">dashboard</i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="index.html#employees" class="nav-item">
+                    <i class="material-icons">people</i>
+                    <span>Employees</span>
+                </a>
+                <a href="index.html#customers" class="nav-item">
+                    <i class="material-icons">business</i>
+                    <span>Customers</span>
+                </a>
+                <a href="index.html#parts" class="nav-item">
+                    <i class="material-icons">build</i>
+                    <span>Parts</span>
+                </a>
+                <a href="party-grid-material.html" class="nav-item">
+                    <i class="material-icons">group_work</i>
+                    <span>Party</span>
+                </a>
+                <a href="modern-catalog.html" class="nav-item active">
+                    <i class="material-icons">shopping_cart</i>
+                    <span>Catalog</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <main class="catalog-main">
+            <!-- Breadcrumbs -->
+            <div class="breadcrumbs">
+                <a href="index.html">Home</a>
+                <span class="separator">/</span>
+                <span class="current">Catalog</span>
+            </div>
+
+            <!-- Hero Section -->
+            <section class="catalog-hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">Discover Quality Parts</h1>
+                    <p class="hero-subtitle">Browse our extensive collection of aftermarket parts</p>
+                    <button class="mdc-button mdc-button--raised hero-button" id="exploreButton">
+                        <span class="mdc-button__ripple"></span>
+                        <span class="mdc-button__label">Explore Now</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Filter Bar -->
+            <section class="filter-bar">
+                <div class="filter-container">
+                    <div class="filter-group">
+                        <button class="filter-button" id="categoryFilterButton">
+                            <span>Category</span>
+                            <i class="material-icons">arrow_drop_down</i>
+                        </button>
+                        <div class="filter-dropdown" id="categoryDropdown">
+                            <!-- Categories will be added dynamically -->
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <button class="filter-button" id="manufacturerFilterButton">
+                            <span>Manufacturer</span>
+                            <i class="material-icons">arrow_drop_down</i>
+                        </button>
+                        <div class="filter-dropdown" id="manufacturerDropdown">
+                            <!-- Manufacturers will be added dynamically -->
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <button class="filter-button" id="priceFilterButton">
+                            <span>Price Range</span>
+                            <i class="material-icons">arrow_drop_down</i>
+                        </button>
+                        <div class="filter-dropdown" id="priceDropdown">
+                            <div class="price-slider-container">
+                                <div class="price-slider" id="priceSlider"></div>
+                                <div class="price-range">
+                                    <span id="minPrice">$0</span>
+                                    <span id="maxPrice">$200</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <button class="filter-button" id="sortFilterButton">
+                            <span>Sort By</span>
+                            <i class="material-icons">arrow_drop_down</i>
+                        </button>
+                        <div class="filter-dropdown" id="sortDropdown">
+                            <div class="dropdown-item" data-sort="name">Name</div>
+                            <div class="dropdown-item" data-sort="price-low">Price: Low to High</div>
+                            <div class="dropdown-item" data-sort="price-high">Price: High to Low</div>
+                            <div class="dropdown-item" data-sort="newest">Newest First</div>
+                            <div class="dropdown-item" data-sort="rating">Highest Rated</div>
+                        </div>
+                    </div>
+                    <button id="advancedFilterBtn" title="Advanced Filter">
+                        <i class="material-icons">filter_list</i>
+                        <span>Advanced Filter</span>
+                    </button>
+                    <div class="filter-group view-toggle">
+                        <button class="view-button active" data-view="grid" id="gridViewButton">
+                            <i class="material-icons">grid_view</i>
+                        </button>
+                        <button class="view-button" data-view="list" id="listViewButton">
+                            <i class="material-icons">view_list</i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Applied Filters -->
+            <section class="applied-filters" id="appliedFilters">
+                <!-- Applied filters will be added dynamically -->
+            </section>
+
+            <!-- Quick Filters -->
+            <section class="quick-filters">
+                <div class="quick-filter active" data-filter="all">All Products</div>
+                <div class="quick-filter" data-filter="featured">Featured</div>
+                <div class="quick-filter" data-filter="bestseller">Best Sellers</div>
+                <div class="quick-filter" data-filter="new">New Arrivals</div>
+                <div class="quick-filter" data-filter="sale">On Sale</div>
+            </section>
+
+            <!-- Product Grid -->
+            <section class="product-grid" id="productGrid">
+                <!-- Products will be added dynamically -->
+            </section>
+
+            <!-- Loading Indicator -->
+            <div class="loading-indicator" id="loadingIndicator">
+                <div class="spinner"></div>
+                <p>Loading products...</p>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="catalog-footer">
+            <div class="footer-container">
+                <div class="footer-section">
+                    <h3 class="footer-title">Aftermarket Software</h3>
+                    <p class="footer-description">Your one-stop solution for quality aftermarket parts.</p>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#parts">Parts</a></li>
+                        <li><a href="modern-catalog.html">Catalog</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Contact Us</h3>
+                    <p><i class="material-icons">email</i> info@aftermarket.com</p>
+                    <p><i class="material-icons">phone</i> +1 (555) 123-4567</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Aftermarket Software. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Product Detail Modal -->
+    <div class="product-modal" id="productModal">
+        <div class="modal-content">
+            <!-- Product details will be added dynamically -->
+        </div>
+    </div>
+
+    <!-- We don't need the advanced search modal anymore as we're using the advanced filter panel -->
+    <!-- The advanced filter panel will be created dynamically by the advanced-filter.js script -->
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Scripts -->
+    <script src="load-three.js"></script>
+    <script src="catalog-data.js"></script>
+    <script src="modern-catalog.js"></script>
+    <script src="catalog-3d-viewer.js"></script>
+    <script src="catalog-voice-control.js"></script>
+    <script src="advanced-filter.js"></script>
+</body>
+</html>

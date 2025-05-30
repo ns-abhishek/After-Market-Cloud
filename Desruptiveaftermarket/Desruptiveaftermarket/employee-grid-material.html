@@ -1,0 +1,4591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Grid - Material Design</title>
+
+    <!-- Google Material Design Lite -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.grey-blue.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #ffffff;
+            color: #212121;
+            overflow-x: hidden;
+        }
+
+        /* Menu icon */
+        .menu-icon {
+            position: fixed;
+            top: 85px;
+            left: 15px;
+            width: 35px;
+            height: 35px;
+            background-color: #3b5998;
+            color: white;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .menu-icon i {
+            font-size: 22px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-icon:hover {
+            transform: scale(1.05);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+
+        /* Hide menu icon when drawer is visible */
+        .mdl-layout__drawer:hover + .menu-icon {
+            opacity: 0;
+            transform: translateX(-50px);
+            pointer-events: none;
+        }
+
+        /* Hide default drawer button */
+        .mdl-layout__drawer-button {
+            display: none !important;
+        }
+
+        /* Fix for drawer title and drawer styling */
+        .mdl-layout__drawer {
+            background-color: #f5f5f5;
+            border-right: none;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            width: 240px;
+            transform: translateX(-240px);
+            transition: transform 0.3s ease;
+            z-index: 9;
+            position: fixed;
+            height: calc(100% - 70px);
+            top: 70px;
+            border-top: none;
+        }
+
+        /* Show drawer on hover */
+        .menu-trigger:hover ~ .mdl-layout__drawer,
+        .mdl-layout__drawer:hover {
+            transform: translateX(0) !important;
+        }
+
+        .drawer-title {
+            display: none; /* Hide the title */
+        }
+
+        .mdl-layout__drawer .mdl-navigation {
+            padding-top: 0;
+        }
+
+        .mdl-layout__drawer .mdl-navigation__link {
+            color: #333333;
+            font-size: 14px;
+            font-weight: 400;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s ease;
+            margin: 0;
+            border-bottom: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .mdl-layout__drawer .mdl-navigation__link:hover {
+            background-color: #e0e0e0;
+            color: #000000;
+        }
+
+        .mdl-layout__drawer .mdl-navigation__link.active {
+            background-color: #e0e0e0;
+            color: #000000;
+            font-weight: 500;
+        }
+
+        .mdl-layout__drawer .mdl-navigation__link i {
+            margin-right: 16px;
+            color: #555555;
+            font-size: 18px;
+            opacity: 0.8;
+        }
+
+        .mdl-layout__drawer .mdl-navigation__link:hover i,
+        .mdl-layout__drawer .mdl-navigation__link.active i {
+            color: #212121;
+            opacity: 1;
+        }
+
+        .page-content {
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 70px);
+            background-color: #f5f7fa;
+            margin-left: 0 !important;
+            width: 100% !important;
+            transition: margin-left 0.3s ease, width 0.3s ease;
+        }
+
+
+
+        .mdl-layout__content {
+            transition: margin-left 0.3s ease, width 0.3s ease;
+        }
+
+        /* Header styles */
+        .mdl-layout__header {
+            background-color: #212121;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Fix for header layout */
+        .mdl-layout--fixed-header>.mdl-layout__header {
+            z-index: 10;
+        }
+
+        .mdl-layout__header-row {
+            padding: 0 20px 0 20px; /* Reduced left padding since we don't need space for menu button */
+            height: 70px; /* Taller header for better visibility */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .menu-trigger {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+
+        .menu-trigger:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .menu-trigger i {
+            color: white;
+            font-size: 24px;
+        }
+
+        .mdl-layout-title {
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            padding: 0;
+            position: relative;
+            display: inline-block;
+            margin-left: 0; /* Reset margin */
+            white-space: nowrap; /* Prevent text from wrapping */
+            overflow: visible; /* Ensure text is visible */
+        }
+
+        .mdl-layout-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #e6f0ff;
+        }
+
+        /* Header navigation */
+        .mdl-layout__header .mdl-navigation__link {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 400;
+            padding: 0 16px;
+            height: 70px;
+            line-height: 70px;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .mdl-layout__header .mdl-navigation__link:hover {
+            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .mdl-layout__header .mdl-navigation__link.active {
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .mdl-layout__header .mdl-navigation__link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 16px;
+            right: 16px;
+            height: 3px;
+            background-color: #e6f0ff;
+        }
+
+        /* Search bar styles */
+        .search-box {
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+            padding: 8px 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            margin-right: 20px;
+        }
+
+        .mdl-textfield {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0;
+            margin: 0;
+        }
+
+        .mdl-textfield__input {
+            color: white !important;
+            font-size: 16px !important;
+            width: calc(100% - 50px) !important;
+            margin-left: 10px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.5) !important;
+            padding: 5px 0;
+        }
+
+        .mdl-textfield__input::placeholder {
+            color: rgba(255, 255, 255, 0.7) !important;
+            opacity: 1;
+        }
+
+        .mdl-textfield__label {
+            color: rgba(255, 255, 255, 0.7) !important;
+            margin-left: 10px;
+            top: 24px;
+        }
+
+        .mdl-button--icon {
+            color: white !important;
+            background: none;
+            border: none;
+            width: 30px;
+            height: 30px;
+            min-width: 30px;
+            padding: 0;
+        }
+
+        .mdl-button--icon i {
+            color: white;
+            font-size: 20px;
+        }
+
+        .voice-search {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: white;
+            transition: color 0.3s ease;
+            background: none;
+            border: none;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .voice-search:hover, .voice-search.listening {
+            color: #2196F3;
+        }
+
+        .voice-search.listening {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* Grid container styles */
+        .grid-container {
+            padding: 16px;
+            overflow: auto;
+            flex: 1;
+        }
+
+        /* Table styles */
+        .mdl-data-table {
+            width: 100%;
+            white-space: nowrap;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .mdl-data-table thead {
+            background-color: #f5f5f5;
+        }
+
+        .mdl-data-table th {
+            color: #333333;
+            font-weight: 600;
+            padding: 14px 16px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: none;
+            text-align: center;
+            position: relative;
+        }
+
+        .mdl-data-table th:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: #e0e0e0;
+        }
+
+        .mdl-data-table td {
+            padding: 16px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+            color: #333333;
+            font-weight: 400;
+            text-align: center;
+        }
+
+        .mdl-data-table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .mdl-data-table tbody tr:hover {
+            background-color: #f5f5f5;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Zebra striping for better readability */
+        .mdl-data-table tbody tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        /* Action buttons in table */
+        .mdl-data-table .view-employee {
+            color: #333333;
+            transition: all 0.2s ease;
+            background: none;
+            border: none;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0;
+            margin: 0 auto; /* Center horizontally */
+        }
+
+        .mdl-data-table .view-employee:hover {
+            color: #000000;
+            transform: scale(1.1);
+        }
+
+        .mdl-data-table .view-employee i {
+            font-size: 20px;
+        }
+
+        /* Column-specific alignment */
+        .mdl-data-table th.mdl-data-table__cell--non-numeric,
+        .mdl-data-table td.mdl-data-table__cell--non-numeric {
+            text-align: left;
+        }
+
+        .mdl-data-table th:first-child,
+        .mdl-data-table td:first-child {
+            text-align: center;
+            width: 70px;
+            background-color: #f0f7ff;
+        }
+
+        .mdl-data-table td.view-cell {
+            background-color: #f5f5f5;
+            border-right: 1px solid #e0e0e0;
+            padding: 8px;
+            text-align: center; /* Center content */
+            vertical-align: middle; /* Center vertically */
+        }
+
+        .mdl-data-table th.view-column {
+            font-weight: 600;
+            letter-spacing: 1px;
+            background-color: #f0f0f0;
+            position: relative;
+            overflow: visible;
+            text-align: center; /* Center text */
+        }
+
+        .mdl-data-table th.view-column::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: #e0e0e0;
+        }
+
+        .mdl-data-table th:nth-child(2),
+        .mdl-data-table td:nth-child(2) {
+            text-align: center;
+            width: 60px;
+        }
+
+        .mdl-data-table th:nth-child(3),
+        .mdl-data-table td:nth-child(3) {
+            text-align: center;
+        }
+
+        .mdl-data-table th:nth-child(5),
+        .mdl-data-table td:nth-child(5) {
+            text-align: center;
+        }
+
+        .mdl-data-table th:last-child,
+        .mdl-data-table td:last-child {
+            text-align: center;
+        }
+
+        /* Grid header with action buttons */
+        .grid-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 0 0 15px 0;
+            border-bottom: 1px solid #e6f0ff;
+        }
+
+        .grid-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .grid-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .grid-action-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            background-color: #ffffff;
+            border: 1px solid #e6f0ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .grid-action-button i {
+            font-size: 20px;
+            color: #4a6fa5;
+        }
+
+        .grid-action-button:hover {
+            background-color: #f0f7ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Delete button */
+        .grid-action-button#deleteSelected i {
+            color: #e74c3c;
+        }
+
+        .grid-action-button#deleteSelected:hover {
+            background-color: #fff5f5;
+            border-color: #ffeeee;
+        }
+
+        /* Search button */
+        .grid-action-button#advancedSearch i {
+            color: #3b5998;
+        }
+
+        .grid-action-button#advancedSearch:hover {
+            background-color: #f0f7ff;
+        }
+
+        /* Export button */
+        .grid-action-button#exportData i {
+            color: #27ae60;
+        }
+
+        .grid-action-button#exportData:hover {
+            background-color: #f0fff5;
+        }
+
+        /* Refresh button */
+        .grid-action-button#refreshGrid i {
+            color: #3498db;
+        }
+
+        .grid-action-button#refreshGrid:hover {
+            background-color: #f0f7ff;
+        }
+
+        /* Status indicator */
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+            position: relative;
+        }
+
+        .status-indicator::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(0.8);
+                opacity: 0.3;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.1;
+            }
+            100% {
+                transform: scale(0.8);
+                opacity: 0.3;
+            }
+        }
+
+        .status-active {
+            background-color: #2ecc71;
+        }
+
+        .status-active::after {
+            background-color: #2ecc71;
+        }
+
+        .status-inactive {
+            background-color: #e74c3c;
+        }
+
+        .status-inactive::after {
+            background-color: #e74c3c;
+        }
+
+        /* Responsive adjustments */
+        /* Advanced Search Panel styles */
+        .advanced-search-panel {
+            position: fixed;
+            top: 70px;
+            left: -380px;
+            width: 380px;
+            height: calc(100vh - 70px);
+            background-color: white;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .advanced-search-panel.active {
+            left: 0;
+        }
+
+        .panel-header {
+            padding: 20px;
+            background: #212121;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            opacity: 0.5;
+        }
+
+        .panel-header h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .panel-header h2 i {
+            font-size: 22px;
+        }
+
+        .panel-close-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            border-radius: 50%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .panel-close-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+
+        .panel-body {
+            padding: 24px;
+            overflow-y: auto;
+            flex: 1;
+            background-color: white;
+            position: relative;
+        }
+
+        .panel-body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.05), transparent);
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #34495e;
+            position: relative;
+            padding-left: 5px;
+        }
+
+        .form-group label::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 14px;
+            background-color: #3498db;
+            border-radius: 2px;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #333333;
+            background-color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            border-color: #3498db;
+            box-shadow: 0 3px 8px rgba(52, 152, 219, 0.2);
+            outline: none;
+            transform: translateY(-1px);
+        }
+
+        .form-group select {
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%233498db" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            padding-right: 40px;
+        }
+
+        /* Dropdown menu styling */
+        select option {
+            padding: 10px;
+            background-color: white;
+            color: #333333;
+        }
+
+        /* Selected option in dropdown */
+        select option:checked {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .panel-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .panel-actions button {
+            flex: 1;
+            height: 44px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 14px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            line-height: 1;
+        }
+
+        .panel-actions button span {
+            display: inline-block;
+            text-align: center;
+        }
+
+        .panel-actions button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(255,255,255,0));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .panel-actions button:hover::after {
+            opacity: 1;
+        }
+
+        .panel-reset-btn {
+            background-color: #ecf0f1;
+            color: #34495e;
+            border: none;
+        }
+
+        .panel-reset-btn:hover {
+            background-color: #bdc3c7;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        }
+
+        .panel-search-btn {
+            background-color: #212121;
+            color: white;
+            border: none;
+        }
+
+        .panel-search-btn:hover {
+            background-color: #000000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .add-filter-btn {
+            width: 100%;
+            height: 44px;
+            background-color: #212121;
+            color: white;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            border-radius: 6px;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 14px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .add-filter-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: all 0.6s ease;
+        }
+
+        .add-filter-btn:hover {
+            background-color: #000000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .add-filter-btn:hover::before {
+            left: 100%;
+        }
+
+        .add-filter-btn i {
+            font-size: 20px;
+        }
+
+        .applied-filters {
+            background-color: white;
+            padding: 16px;
+            min-height: 120px;
+            max-height: 250px;
+            overflow-y: auto;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .filter-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8fafc;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border-left: 3px solid #3498db;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .filter-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(to bottom, #3498db, #2980b9);
+            opacity: 0.8;
+        }
+
+        .filter-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .filter-text {
+            flex: 1;
+            font-size: 14px;
+            color: #34495e;
+            font-weight: 500;
+            padding-right: 10px;
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .filter-actions button {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            background-color: transparent;
+        }
+
+        .filter-actions button.edit-filter {
+            color: #3498db;
+        }
+
+        .filter-actions button.edit-filter:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+            transform: scale(1.1);
+        }
+
+        .filter-actions button.remove-filter {
+            color: #e74c3c;
+        }
+
+        .filter-actions button.remove-filter:hover {
+            background-color: rgba(231, 76, 60, 0.1);
+            transform: scale(1.1);
+        }
+
+        .no-filters {
+            color: #95a5a6;
+            font-style: italic;
+            text-align: center;
+            padding: 24px;
+            font-size: 14px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="%23ecf0f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>') no-repeat center 30px;
+            padding-top: 120px;
+            opacity: 0.7;
+        }
+
+        .condition-badge {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-right: 8px;
+            font-weight: 600;
+            box-shadow: 0 1px 3px rgba(52, 152, 219, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .condition-badge::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.2), rgba(255,255,255,0));
+            opacity: 0.5;
+        }
+
+        /* Quick Filters styles */
+        .quick-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border: 1px solid #e6e9ed;
+            position: relative;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            font-size: 13px;
+            color: #555;
+            margin: 0;
+        }
+
+        .filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 10px;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-chip:hover {
+            background-color: #f8fafc;
+            border-color: #bdc3c7;
+        }
+
+        .filter-chip.active {
+            background-color: #3b5998;
+            color: white;
+            border-color: #3b5998;
+        }
+
+        .filter-chip.active::after {
+            content: "×";
+            font-size: 14px;
+            margin-left: 6px;
+            font-weight: bold;
+        }
+
+        .filter-chip.active:hover {
+            background-color: #2d4373;
+        }
+
+        /* Active Filters styles */
+        .active-filters-container {
+            margin-bottom: 20px;
+            display: none; /* Hidden by default, shown when filters are active */
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            position: relative;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .active-filters-container.has-filters {
+            display: block;
+        }
+
+        .active-filters-container::before {
+            content: 'Active Filters';
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background-color: #2ecc71;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(46, 204, 113, 0.3);
+        }
+
+        .active-filters-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .active-filters-header span {
+            font-weight: 600;
+            font-size: 16px;
+            color: #34495e;
+        }
+
+        .active-filters-header button {
+            color: #e74c3c;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .active-filters-header button:hover {
+            background-color: rgba(231, 76, 60, 0.1);
+            transform: scale(1.1);
+        }
+
+        .active-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .active-filter {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 10px 6px 14px;
+            background-color: #f8fafc;
+            border-radius: 20px;
+            font-size: 13px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .active-filter:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+
+        .active-filter .filter-label {
+            margin-right: 10px;
+            font-weight: 500;
+            color: #34495e;
+        }
+
+        .active-filter .remove-filter {
+            cursor: pointer;
+            color: #e74c3c;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .active-filter .remove-filter:hover {
+            color: #c0392b;
+            transform: scale(1.2);
+        }
+
+        /* Grid container transition for when panel is active */
+        .grid-container {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 100%;
+            padding: 0 20px;
+        }
+
+        .grid-container.panel-active {
+            margin-left: 380px;
+            width: calc(100% - 380px);
+        }
+
+        /* Pagination styles */
+        .pagination-wrapper {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: white;
+            padding: 16px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .pagination-info {
+            font-size: 14px;
+            color: #34495e;
+        }
+
+        .pagination-info strong {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .pagination-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .pagination-btn {
+            color: #3498db;
+            transition: all 0.3s ease;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
+
+        .pagination-btn:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .pagination-btn:disabled {
+            color: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        .pagination-btn:disabled:hover {
+            background-color: transparent;
+            transform: none;
+        }
+
+        .pagination-pages {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin: 0 8px;
+        }
+
+        .pagination-page {
+            min-width: 36px;
+            height: 36px;
+            border-radius: 4px;
+            padding: 0;
+            font-size: 14px;
+            color: #34495e;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pagination-page:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .pagination-page.active {
+            background-color: #3498db;
+            color: white;
+            box-shadow: 0 3px 6px rgba(52, 152, 219, 0.3);
+        }
+
+        .pagination-ellipsis {
+            color: #95a5a6;
+            font-size: 14px;
+            margin: 0 3px;
+        }
+
+        .pagination-size {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #34495e;
+        }
+
+        .pagination-size select {
+            width: 70px;
+            height: 36px;
+            padding: 0 10px;
+            border-radius: 4px;
+            border: 1px solid #3b5998;
+            background-color: white;
+            color: #333333;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            appearance: auto;
+            -webkit-appearance: menulist;
+            -moz-appearance: menulist;
+        }
+
+        .pagination-size select:focus {
+            border-color: #3498db;
+            box-shadow: 0 3px 6px rgba(52, 152, 219, 0.2);
+            outline: none;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .mdl-data-table {
+                min-width: 800px;
+            }
+
+            .grid-container {
+                overflow-x: auto;
+                padding: 0 15px;
+            }
+
+            .advanced-search-panel {
+                width: 100%;
+                left: -100%;
+                border-radius: 0;
+            }
+
+            .grid-container.panel-active {
+                margin-left: 0;
+                width: 100%;
+                opacity: 0.3;
+                pointer-events: none;
+            }
+
+            .pagination-container {
+                flex-direction: column;
+                gap: 20px;
+                align-items: center;
+            }
+
+            .pagination-controls {
+                order: 1;
+            }
+
+            .pagination-info {
+                order: 2;
+            }
+
+            .pagination-size {
+                order: 3;
+            }
+
+            .mdl-layout-title {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .action-buttons {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .action-button {
+                flex: 0 0 calc(50% - 10px);
+            }
+
+            .quick-filters::before {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .active-filters-container::before {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .action-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .quick-filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .pagination-pages .pagination-page:not(.active):not(:first-child):not(:last-child) {
+                display: none;
+            }
+
+            .mdl-layout-title {
+                font-size: 18px;
+            }
+
+            .mdl-layout-title::after {
+                width: 30px;
+            }
+
+            .grid-container {
+                padding: 0 10px;
+            }
+        }
+
+        /* Employee Detail Modal Styles */
+        .employee-detail-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 1000;
+            overflow-y: auto;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.85);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes blurIn {
+            from {
+                backdrop-filter: blur(0px);
+                -webkit-backdrop-filter: blur(0px);
+            }
+            to {
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+            }
+        }
+
+        .employee-detail-modal.active {
+            display: block;
+            opacity: 1;
+            animation: blurIn 0.4s ease forwards;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15px auto;
+            width: 98%;
+            max-width: 1400px;
+            border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+            animation: modalFadeIn 0.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+            transform-origin: center;
+        }
+
+        .modal-header {
+            background-color: #212121;
+            color: white;
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .modal-action-btn {
+            background-color: #fff;
+            color: #212121;
+            border: 1px solid #e0e0e0;
+            padding: 8px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            letter-spacing: 0.5px;
+        }
+
+        .modal-action-btn:hover {
+            background-color: #f5f5f5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-close-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            margin-left: 15px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+
+        .modal-close-btn i {
+            font-size: 22px;
+        }
+
+        .modal-body {
+            padding: 30px;
+            max-height: calc(100vh - 150px);
+            overflow-y: auto;
+            background-color: #fafafa;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+            gap: 20px;
+        }
+
+        .form-field {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .form-field.full-width {
+            flex-basis: 100%;
+        }
+
+        .form-field label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .form-field.required label::after {
+            content: " *";
+            color: red;
+        }
+
+        .form-field input,
+        .form-field select,
+        .form-field textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #333;
+            background-color: #ffffff;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-field input:focus,
+        .form-field select:focus,
+        .form-field textarea:focus {
+            outline: none;
+            border-color: #212121;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .form-field input[readonly],
+        .form-field select[disabled],
+        .form-field textarea[readonly] {
+            background-color: #f5f5f5;
+            cursor: not-allowed;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .checkbox-field {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .checkbox-field input[type="checkbox"] {
+            width: auto;
+        }
+
+        .accordion-container {
+            margin-top: 40px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .accordion-item {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .accordion-item:last-child {
+            border-bottom: none;
+        }
+
+        .accordion-header {
+            background-color: #212121;
+            color: white;
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .accordion-header:hover {
+            background-color: #000000;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .accordion-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: all 0.6s ease;
+        }
+
+        .accordion-header:hover::after {
+            left: 100%;
+        }
+
+        .accordion-icon {
+            margin-right: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-item.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            padding: 20px;
+            display: none;
+            background-color: #f5f5f5;
+            border-top: 1px solid #e0e0e0;
+            transform: translateY(-10px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .accordion-item.active .accordion-content {
+            display: block;
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-footer {
+            padding: 20px 25px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: flex-end;
+            background-color: #f9f9f9;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* HR Self-Service Styles */
+        .accordion-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #212121;
+            margin: 0 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            letter-spacing: 0.5px;
+        }
+
+        /* Tab Styles */
+        .hr-tabs, .training-tabs {
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+        }
+
+        .hr-tabs::-webkit-scrollbar, .training-tabs::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+
+        .hr-tab, .training-tab {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: #666;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .hr-tab:hover, .training-tab:hover {
+            color: #212121;
+        }
+
+        .hr-tab.active, .training-tab.active {
+            color: #212121;
+            border-bottom-color: #212121;
+        }
+
+        .hr-tab-content, .training-tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .hr-tab-content.active, .training-tab-content.active {
+            display: block;
+        }
+
+        .hr-tab-content h4, .training-tab-content h4 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: #212121;
+        }
+
+        /* Action Buttons */
+        .form-actions {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .action-btn {
+            background-color: #212121;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background-color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Pay Stubs Styles */
+        .pay-stubs-list {
+            margin-bottom: 15px;
+        }
+
+        .pay-stub-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .pay-stub-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .pay-stub-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pay-period {
+            font-weight: 500;
+            color: #212121;
+        }
+
+        .pay-amount {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .download-btn {
+            background-color: transparent;
+            color: #212121;
+            border: 1px solid #e0e0e0;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            background-color: #f5f5f5;
+            border-color: #ccc;
+        }
+
+        .view-more {
+            text-align: center;
+        }
+
+        .view-more-btn {
+            background: none;
+            border: none;
+            color: #212121;
+            cursor: pointer;
+            font-weight: 500;
+            padding: 5px 10px;
+            transition: all 0.3s ease;
+        }
+
+        .view-more-btn:hover {
+            text-decoration: underline;
+        }
+
+        /* Benefits Styles */
+        .benefits-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .benefit-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .benefit-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #f5f5f5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+
+        .benefit-icon i {
+            color: #212121;
+            font-size: 20px;
+        }
+
+        .benefit-details {
+            flex: 1;
+        }
+
+        .benefit-details h5 {
+            margin: 0 0 5px 0;
+            font-size: 15px;
+            color: #212121;
+        }
+
+        .benefit-details p {
+            margin: 0;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .benefit-action {
+            background-color: transparent;
+            color: #212121;
+            border: 1px solid #e0e0e0;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .benefit-action:hover {
+            background-color: #f5f5f5;
+            border-color: #ccc;
+        }
+
+        /* Leave Management Styles */
+        .leave-summary {
+            margin-bottom: 25px;
+        }
+
+        .leave-balance {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .leave-type h5 {
+            margin: 0 0 8px 0;
+            font-size: 15px;
+            color: #212121;
+        }
+
+        .leave-progress {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: #212121;
+            border-radius: 4px;
+        }
+
+        .leave-progress span {
+            font-size: 13px;
+            color: #666;
+            white-space: nowrap;
+        }
+
+        .leave-requests {
+            margin-bottom: 25px;
+        }
+
+        .leave-request-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .leave-request-item {
+            padding: 12px 15px;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .leave-request-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .leave-request-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .leave-dates {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .date-range {
+            font-weight: 500;
+            color: #212121;
+        }
+
+        .leave-days {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .leave-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .leave-type-label {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .leave-status {
+            font-size: 12px;
+            font-weight: 500;
+            padding: 3px 8px;
+            border-radius: 12px;
+            margin-top: 5px;
+        }
+
+        .leave-status.approved {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .leave-status.pending {
+            background-color: #fff8e1;
+            color: #f57f17;
+        }
+
+        .leave-status.rejected {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        /* Expense Reporting Styles */
+        .expense-summary {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .summary-card {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .summary-card h5 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .summary-card .amount {
+            font-size: 20px;
+            font-weight: 600;
+            color: #212121;
+        }
+
+        .summary-card .date {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .recent-expenses {
+            margin-bottom: 25px;
+        }
+
+        .expense-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .expense-item {
+            padding: 12px 15px;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .expense-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .expense-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .expense-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .expense-date {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .expense-type {
+            font-weight: 500;
+            color: #212121;
+        }
+
+        .expense-amount {
+            font-weight: 600;
+            color: #212121;
+        }
+
+        .expense-status {
+            font-size: 12px;
+            font-weight: 500;
+            padding: 3px 8px;
+            border-radius: 12px;
+            text-align: right;
+        }
+
+        .expense-status.approved {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .expense-status.pending {
+            background-color: #fff8e1;
+            color: #f57f17;
+        }
+
+        .expense-status.rejected {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        .file-upload {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .upload-btn {
+            background-color: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        .file-name {
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* Onboarding and Training Styles */
+        .onboarding-progress {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checklist-item i {
+            font-size: 20px;
+        }
+
+        .checklist-item.completed i {
+            color: #2e7d32;
+        }
+
+        .checklist-item:not(.completed) i {
+            color: #bdbdbd;
+        }
+
+        .course-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .course-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .course-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .course-item.completed {
+            background-color: #f9f9f9;
+        }
+
+        .course-info {
+            flex: 1;
+        }
+
+        .course-info h5 {
+            margin: 0 0 5px 0;
+            font-size: 15px;
+            color: #212121;
+        }
+
+        .course-info p {
+            margin: 0 0 8px 0;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .course-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .course-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .course-meta i {
+            font-size: 14px;
+        }
+
+        .course-action {
+            background-color: #212121;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .course-action:hover {
+            background-color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .course-item.completed .course-action {
+            background-color: transparent;
+            color: #212121;
+            border: 1px solid #e0e0e0;
+        }
+
+        .course-item.completed .course-action:hover {
+            background-color: #f5f5f5;
+            border-color: #ccc;
+        }
+
+        .document-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .document-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .document-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .document-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+
+        .document-icon i {
+            color: #212121;
+            font-size: 20px;
+        }
+
+        .document-info {
+            flex: 1;
+        }
+
+        .document-info h5 {
+            margin: 0 0 5px 0;
+            font-size: 15px;
+            color: #212121;
+        }
+
+        .document-info p {
+            margin: 0;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .document-action {
+            background-color: transparent;
+            color: #212121;
+            border: 1px solid #e0e0e0;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .document-action:hover {
+            background-color: #f5f5f5;
+            border-color: #ccc;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 95%;
+                margin: 10px auto;
+            }
+
+            .form-field {
+                flex: 100%;
+            }
+
+            .modal-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .modal-actions {
+                align-self: flex-end;
+            }
+
+            .benefit-item, .course-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .benefit-action, .course-action {
+                align-self: flex-end;
+            }
+
+            .leave-request-details, .expense-details {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .leave-info, .expense-amount {
+                align-self: flex-start;
+                margin-top: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- MDL Layout -->
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+        <header class="mdl-layout__header">
+            <div class="mdl-layout__header-row">
+                <div class="menu-trigger">
+                    <i class="material-icons">menu</i>
+                </div>
+                <span class="mdl-layout-title">Employee Management</span>
+                <div class="mdl-layout-spacer"></div>
+
+                <!-- Search Box -->
+                <div class="search-box">
+                    <div class="mdl-textfield mdl-js-textfield">
+                        <i class="material-icons">search</i>
+                        <input class="mdl-textfield__input" type="text" id="search" placeholder="Search employees...">
+                        <i class="material-icons voice-search" id="voiceSearch">mic</i>
+                    </div>
+                </div>
+
+                <div class="mdl-layout-spacer"></div>
+
+                <!-- Navigation -->
+                <nav class="mdl-navigation mdl-layout--large-screen-only">
+                    <a class="mdl-navigation__link" href="#">Dashboard</a>
+                    <a class="mdl-navigation__link active" href="#">Employees</a>
+                    <a class="mdl-navigation__link" href="#">Customers</a>
+                    <a class="mdl-navigation__link" href="#">Parts</a>
+                </nav>
+            </div>
+        </header>
+
+        <div class="mdl-layout__drawer">
+            <nav class="mdl-navigation">
+                <a class="mdl-navigation__link" href="#"><i class="material-icons">dashboard</i> Dashboard</a>
+                <a class="mdl-navigation__link active" href="#"><i class="material-icons">people</i> Employees</a>
+                <a class="mdl-navigation__link" href="#"><i class="material-icons">business</i> Customers</a>
+                <a class="mdl-navigation__link" href="#"><i class="material-icons">build</i> Parts</a>
+                <a class="mdl-navigation__link" href="#"><i class="material-icons">shopping_cart</i> Orders</a>
+                <a class="mdl-navigation__link" href="#"><i class="material-icons">assessment</i> Reports</a>
+            </nav>
+        </div>
+
+
+
+        <main class="mdl-layout__content">
+            <div class="page-content">
+                <!-- Advanced Search Panel -->
+                <div class="advanced-search-panel" id="advancedSearchPanel">
+                    <div class="panel-header">
+                        <h2><i class="material-icons">menu</i> Advanced Search</h2>
+                        <button class="panel-close-btn" id="closeAdvancedSearch">
+                            <i class="material-icons">close</i>
+                        </button>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="selectColumn">Column</label>
+                            <select class="mdl-textfield__input" id="selectColumn">
+                                <option value="">Select Column</option>
+                                <option value="id">Employee Code</option>
+                                <option value="name">Name</option>
+                                <option value="mobile">Mobile</option>
+                                <option value="email">Email</option>
+                                <option value="department">Department</option>
+                                <option value="designation">Designation</option>
+                                <option value="isActive">Is Active?</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="selectOperator">Operator</label>
+                            <select class="mdl-textfield__input" id="selectOperator">
+                                <option value="">Select Operator</option>
+                                <option value="equals">Equals</option>
+                                <option value="notEquals">Not Equals</option>
+                                <option value="contains">Contains</option>
+                                <option value="startsWith">Starts With</option>
+                                <option value="endsWith">Ends With</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="searchValue">Value</label>
+                            <input type="text" class="mdl-textfield__input" id="searchValue" placeholder="Enter search value">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="selectCondition">Condition</label>
+                            <select class="mdl-textfield__input" id="selectCondition">
+                                <option value="and">AND</option>
+                                <option value="or">OR</option>
+                            </select>
+                        </div>
+
+                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect add-filter-btn" id="addFilterBtn">
+                            <i class="material-icons">add</i> ADD FILTER
+                        </button>
+
+                        <div class="form-group">
+                            <label>Applied Filters</label>
+                            <div class="applied-filters" id="appliedFilters">
+                                <!-- Applied filters will be displayed here -->
+                                <div class="no-filters">No filters applied</div>
+                            </div>
+                        </div>
+
+                        <div class="panel-actions">
+                            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect panel-reset-btn" id="resetFiltersBtn">
+                                <i class="material-icons">clear</i> <span>RESET</span>
+                            </button>
+                            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect panel-search-btn" id="applyFiltersBtn">
+                                <i class="material-icons">search</i> <span>APPLY FILTERS</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-container" id="gridContainer">
+                    <!-- Grid Header with Action Buttons -->
+                    <div class="grid-header">
+                        <h2>Employee List</h2>
+                        <div class="grid-actions">
+                            <button class="grid-action-button" id="deleteSelected" title="Delete">
+                                <i class="material-icons">delete</i>
+                            </button>
+                            <button class="grid-action-button" id="advancedSearch" title="Search">
+                                <i class="material-icons">search</i>
+                            </button>
+                            <button class="grid-action-button" id="exportData" title="Export">
+                                <i class="material-icons">file_download</i>
+                            </button>
+                            <button class="grid-action-button" id="refreshGrid" title="Refresh">
+                                <i class="material-icons">refresh</i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quick Filters -->
+                    <div class="quick-filters">
+                        <div class="filter-group">
+                            <label>Quick Filters:</label>
+                            <div class="filter-chips">
+                                <span class="filter-chip" data-filter="Administration" data-type="Department">Administration</span>
+                                <span class="filter-chip" data-filter="Service" data-type="Department">Service</span>
+                                <span class="filter-chip" data-filter="Parts" data-type="Department">Parts</span>
+                                <span class="filter-chip" data-filter="Service Technician" data-type="Designation">Service Technician</span>
+                                <span class="filter-chip" data-filter="Service Coordinator" data-type="Designation">Service Coordinator</span>
+                                <span class="filter-chip" data-filter="Parts Manager" data-type="Designation">Parts Manager</span>
+                                <span class="filter-chip" data-filter="active" data-type="Status">Active</span>
+                                <span class="filter-chip" data-filter="inactive" data-type="Status">Inactive</span>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <!-- Employee Grid Table -->
+                    <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+                        <thead>
+                            <tr>
+                                <th class="view-column">VIEW</th>
+                                <th>
+                                    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select" for="checkbox-all">
+                                        <input type="checkbox" id="checkbox-all" class="mdl-checkbox__input">
+                                    </label>
+                                </th>
+                                <th>Employee Code</th>
+                                <th class="mdl-data-table__cell--non-numeric">Name</th>
+                                <th>Mobile</th>
+                                <th class="mdl-data-table__cell--non-numeric">Email</th>
+                                <th class="mdl-data-table__cell--non-numeric">Department</th>
+                                <th class="mdl-data-table__cell--non-numeric">Designation</th>
+                                <th>Is Active?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Employee data rows will be populated here -->
+                        </tbody>
+                    </table>
+
+                    <!-- Pagination -->
+                    <div class="pagination-wrapper">
+                        <div class="pagination-container">
+                            <div class="pagination-info">
+                                <span>Page <strong>1</strong> of <strong>117</strong></span>
+                            </div>
+                            <div class="pagination-controls">
+                                <button class="mdl-button mdl-js-button mdl-button--icon pagination-btn" title="First Page">
+                                    <i class="material-icons">first_page</i>
+                                </button>
+                                <button class="mdl-button mdl-js-button mdl-button--icon pagination-btn" title="Previous Page">
+                                    <i class="material-icons">chevron_left</i>
+                                </button>
+
+                                <div class="pagination-pages">
+                                    <button class="mdl-button mdl-js-button pagination-page active">1</button>
+                                    <button class="mdl-button mdl-js-button pagination-page">2</button>
+                                    <button class="mdl-button mdl-js-button pagination-page">3</button>
+                                    <span class="pagination-ellipsis">...</span>
+                                    <button class="mdl-button mdl-js-button pagination-page">117</button>
+                                </div>
+
+                                <button class="mdl-button mdl-js-button mdl-button--icon pagination-btn" title="Next Page">
+                                    <i class="material-icons">chevron_right</i>
+                                </button>
+                                <button class="mdl-button mdl-js-button mdl-button--icon pagination-btn" title="Last Page">
+                                    <i class="material-icons">last_page</i>
+                                </button>
+                            </div>
+                            <div class="pagination-size">
+                                <span>Show</span>
+                                <select id="paginationSize">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                                <span>entries</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Employee Detail Modal -->
+    <div class="employee-detail-modal" id="employeeDetailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="employeeModalTitle">Employee Details</h2>
+                <div class="modal-actions">
+                    <button class="modal-action-btn" id="editEmployeeBtn">Edit</button>
+                    <button class="modal-action-btn" id="exitEmployeeBtn">Exit</button>
+                    <button class="modal-close-btn" id="closeEmployeeModal">
+                        <i class="material-icons">close</i>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <form id="employeeDetailForm">
+                    <div class="form-row">
+                        <div class="form-field required">
+                            <label for="employeeCode">Employee Code</label>
+                            <input type="text" id="employeeCode" name="employeeCode" readonly>
+                        </div>
+                        <div class="form-field required">
+                            <label for="employeeName">Name</label>
+                            <input type="text" id="employeeName" name="employeeName" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-field required">
+                            <label for="department">Department</label>
+                            <select id="department" name="department" disabled>
+                                <option value="Administration">Administration</option>
+                                <option value="Service">Service</option>
+                                <option value="Parts">Parts</option>
+                            </select>
+                        </div>
+                        <div class="form-field required">
+                            <label for="designation">Designation</label>
+                            <select id="designation" name="designation" disabled>
+                                <option value="Credit Agent">Credit Agent</option>
+                                <option value="DMS Administrator">DMS Administrator</option>
+                                <option value="Service Technician">Service Technician</option>
+                                <option value="Service Coordinator">Service Coordinator</option>
+                                <option value="Parts Manager">Parts Manager</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-field required">
+                            <label for="manager">Manager</label>
+                            <select id="manager" name="manager" disabled>
+                                <option value="">Select</option>
+                                <option value="Manager 1">Manager 1</option>
+                                <option value="Manager 2">Manager 2</option>
+                            </select>
+                        </div>
+                        <div class="form-field required">
+                            <label for="state">State</label>
+                            <select id="state" name="state" disabled>
+                                <option value="Quebec">Quebec</option>
+                                <option value="Ontario">Ontario</option>
+                                <option value="Alberta">Alberta</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-field required">
+                            <label for="country">Country</label>
+                            <select id="country" name="country" disabled>
+                                <option value="Canada">Canada</option>
+                                <option value="USA">USA</option>
+                            </select>
+                        </div>
+                        <div class="form-field required">
+                            <label for="region">Region</label>
+                            <select id="region" name="region" disabled>
+                                <option value="Canada">Canada</option>
+                                <option value="North America">North America</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-field required full-width">
+                            <label for="address">Address</label>
+                            <textarea id="address" name="address" rows="2" readonly></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="location">Location</label>
+                            <input type="text" id="location" name="location" readonly>
+                        </div>
+                        <div class="form-field">
+                            <label for="zipCode">Zip Code</label>
+                            <input type="text" id="zipCode" name="zipCode" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="landline">Landline</label>
+                            <input type="text" id="landline" name="landline" readonly>
+                        </div>
+                        <div class="form-field">
+                            <label for="mobile">Mobile</label>
+                            <input type="text" id="mobile" name="mobile" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" readonly>
+                        </div>
+                        <div class="form-field">
+                            <label for="dateOfJoining">Date of Joining</label>
+                            <input type="text" id="dateOfJoining" name="dateOfJoining" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="hourlyRate">Hourly Rate</label>
+                            <input type="number" id="hourlyRate" name="hourlyRate" readonly>
+                        </div>
+                        <div class="form-field">
+                            <label for="dateOfRelieving">Date of Relieving</label>
+                            <input type="text" id="dateOfRelieving" name="dateOfRelieving" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="exemptionHours">Exemption Hours</label>
+                            <input type="text" id="exemptionHours" name="exemptionHours" readonly>
+                        </div>
+                        <div class="form-field checkbox-group">
+                            <div class="checkbox-field">
+                                <input type="checkbox" id="isActive" name="isActive" disabled>
+                                <label for="isActive">Is Active?</label>
+                            </div>
+                            <div class="checkbox-field">
+                                <input type="checkbox" id="isConsideredForPayroll" name="isConsideredForPayroll" disabled>
+                                <label for="isConsideredForPayroll">Is Considered For Payroll</label>
+                            </div>
+                            <div class="checkbox-field">
+                                <input type="checkbox" id="isEligibleForOT" name="isEligibleForOT" disabled>
+                                <label for="isEligibleForOT">Is Eligible for OT</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="incentive">Incentive</label>
+                            <input type="text" id="incentive" name="incentive" readonly>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="accordion-container">
+                    <!-- HR Self-Service Section -->
+                    <div class="accordion-section">
+                        <h3 class="section-title">HR Self-Service</h3>
+
+                        <!-- Personal Information -->
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <i class="material-icons accordion-icon">expand_more</i>
+                                <span>Personal Information</span>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="hr-section">
+                                    <div class="hr-tabs">
+                                        <button class="hr-tab active" data-tab="contact-details">Contact Details</button>
+                                        <button class="hr-tab" data-tab="pay-stubs">Pay Stubs</button>
+                                        <button class="hr-tab" data-tab="benefits">Benefits</button>
+                                    </div>
+
+                                    <div class="hr-tab-content active" id="contact-details">
+                                        <h4>Contact Details</h4>
+                                        <div class="form-row">
+                                            <div class="form-field">
+                                                <label for="emergencyContact">Emergency Contact</label>
+                                                <input type="text" id="emergencyContact" value="John Doe" readonly>
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="emergencyPhone">Emergency Phone</label>
+                                                <input type="text" id="emergencyPhone" value="555-123-4567" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-field">
+                                                <label for="personalEmail">Personal Email</label>
+                                                <input type="email" id="personalEmail" value="john.employee@personal.com" readonly>
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="homePhone">Home Phone</label>
+                                                <input type="text" id="homePhone" value="555-987-6543" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="form-actions">
+                                            <button class="action-btn" id="editContactBtn">Edit Contact Details</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="hr-tab-content" id="pay-stubs">
+                                        <h4>Pay Stubs</h4>
+                                        <div class="pay-stubs-list">
+                                            <div class="pay-stub-item">
+                                                <div class="pay-stub-info">
+                                                    <span class="pay-period">Jan 1 - Jan 15, 2023</span>
+                                                    <span class="pay-amount">$1,250.00</span>
+                                                </div>
+                                                <button class="download-btn"><i class="material-icons">download</i> Download</button>
+                                            </div>
+                                            <div class="pay-stub-item">
+                                                <div class="pay-stub-info">
+                                                    <span class="pay-period">Dec 16 - Dec 31, 2022</span>
+                                                    <span class="pay-amount">$1,250.00</span>
+                                                </div>
+                                                <button class="download-btn"><i class="material-icons">download</i> Download</button>
+                                            </div>
+                                            <div class="pay-stub-item">
+                                                <div class="pay-stub-info">
+                                                    <span class="pay-period">Dec 1 - Dec 15, 2022</span>
+                                                    <span class="pay-amount">$1,250.00</span>
+                                                </div>
+                                                <button class="download-btn"><i class="material-icons">download</i> Download</button>
+                                            </div>
+                                        </div>
+                                        <div class="view-more">
+                                            <button class="view-more-btn">View More Pay Stubs</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="hr-tab-content" id="benefits">
+                                        <h4>Benefits</h4>
+                                        <div class="benefits-summary">
+                                            <div class="benefit-item">
+                                                <div class="benefit-icon"><i class="material-icons">health_and_safety</i></div>
+                                                <div class="benefit-details">
+                                                    <h5>Health Insurance</h5>
+                                                    <p>Premium Plan - Family Coverage</p>
+                                                    <p>Policy #: HI-12345678</p>
+                                                </div>
+                                                <button class="benefit-action">View Details</button>
+                                            </div>
+                                            <div class="benefit-item">
+                                                <div class="benefit-icon"><i class="material-icons">savings</i></div>
+                                                <div class="benefit-details">
+                                                    <h5>401(k) Retirement</h5>
+                                                    <p>Current Contribution: 6%</p>
+                                                    <p>Employer Match: 4%</p>
+                                                </div>
+                                                <button class="benefit-action">Manage</button>
+                                            </div>
+                                            <div class="benefit-item">
+                                                <div class="benefit-icon"><i class="material-icons">schedule</i></div>
+                                                <div class="benefit-details">
+                                                    <h5>Paid Time Off</h5>
+                                                    <p>Vacation: 15 days remaining</p>
+                                                    <p>Sick Leave: 5 days remaining</p>
+                                                </div>
+                                                <button class="benefit-action">View Details</button>
+                                            </div>
+                                        </div>
+                                        <div class="form-actions">
+                                            <button class="action-btn">Open Benefits Portal</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Leave Request and Management -->
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <i class="material-icons accordion-icon">expand_more</i>
+                                <span>Leave Management</span>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="leave-management">
+                                    <div class="leave-summary">
+                                        <div class="leave-balance">
+                                            <div class="leave-type">
+                                                <h5>Vacation</h5>
+                                                <div class="leave-progress">
+                                                    <div class="progress-bar">
+                                                        <div class="progress" style="width: 75%"></div>
+                                                    </div>
+                                                    <span>15 days remaining</span>
+                                                </div>
+                                            </div>
+                                            <div class="leave-type">
+                                                <h5>Sick Leave</h5>
+                                                <div class="leave-progress">
+                                                    <div class="progress-bar">
+                                                        <div class="progress" style="width: 50%"></div>
+                                                    </div>
+                                                    <span>5 days remaining</span>
+                                                </div>
+                                            </div>
+                                            <div class="leave-type">
+                                                <h5>Personal Days</h5>
+                                                <div class="leave-progress">
+                                                    <div class="progress-bar">
+                                                        <div class="progress" style="width: 33%"></div>
+                                                    </div>
+                                                    <span>1 day remaining</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="leave-requests">
+                                        <h4>Recent Leave Requests</h4>
+                                        <div class="leave-request-list">
+                                            <div class="leave-request-item">
+                                                <div class="leave-request-details">
+                                                    <div class="leave-dates">
+                                                        <span class="date-range">Mar 15 - Mar 17, 2023</span>
+                                                        <span class="leave-days">(3 days)</span>
+                                                    </div>
+                                                    <div class="leave-info">
+                                                        <span class="leave-type-label">Vacation</span>
+                                                        <span class="leave-status approved">Approved</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="leave-request-item">
+                                                <div class="leave-request-details">
+                                                    <div class="leave-dates">
+                                                        <span class="date-range">Feb 10, 2023</span>
+                                                        <span class="leave-days">(1 day)</span>
+                                                    </div>
+                                                    <div class="leave-info">
+                                                        <span class="leave-type-label">Sick Leave</span>
+                                                        <span class="leave-status approved">Approved</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="new-leave-request">
+                                        <h4>Request Leave</h4>
+                                        <form id="leaveRequestForm">
+                                            <div class="form-row">
+                                                <div class="form-field">
+                                                    <label for="leaveType">Leave Type</label>
+                                                    <select id="leaveType">
+                                                        <option value="vacation">Vacation</option>
+                                                        <option value="sick">Sick Leave</option>
+                                                        <option value="personal">Personal Day</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-field">
+                                                    <label for="leaveStartDate">Start Date</label>
+                                                    <input type="date" id="leaveStartDate">
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-field">
+                                                    <label for="leaveEndDate">End Date</label>
+                                                    <input type="date" id="leaveEndDate">
+                                                </div>
+                                                <div class="form-field">
+                                                    <label for="leaveReason">Reason (Optional)</label>
+                                                    <input type="text" id="leaveReason">
+                                                </div>
+                                            </div>
+                                            <div class="form-actions">
+                                                <button type="button" class="action-btn" id="submitLeaveRequest">Submit Request</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Expense Reporting -->
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <i class="material-icons accordion-icon">expand_more</i>
+                                <span>Expense Reporting</span>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="expense-reporting">
+                                    <div class="expense-summary">
+                                        <div class="summary-card">
+                                            <h5>Pending Reimbursement</h5>
+                                            <div class="amount">$245.75</div>
+                                        </div>
+                                        <div class="summary-card">
+                                            <h5>Year-to-Date Expenses</h5>
+                                            <div class="amount">$1,875.50</div>
+                                        </div>
+                                        <div class="summary-card">
+                                            <h5>Last Reimbursement</h5>
+                                            <div class="amount">$320.00</div>
+                                            <div class="date">Feb 28, 2023</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="recent-expenses">
+                                        <h4>Recent Expenses</h4>
+                                        <div class="expense-list">
+                                            <div class="expense-item">
+                                                <div class="expense-details">
+                                                    <div class="expense-info">
+                                                        <span class="expense-date">Mar 10, 2023</span>
+                                                        <span class="expense-type">Travel - Airfare</span>
+                                                    </div>
+                                                    <div class="expense-amount">$195.75</div>
+                                                </div>
+                                                <div class="expense-status pending">Pending Approval</div>
+                                            </div>
+                                            <div class="expense-item">
+                                                <div class="expense-details">
+                                                    <div class="expense-info">
+                                                        <span class="expense-date">Mar 5, 2023</span>
+                                                        <span class="expense-type">Office Supplies</span>
+                                                    </div>
+                                                    <div class="expense-amount">$50.00</div>
+                                                </div>
+                                                <div class="expense-status pending">Pending Approval</div>
+                                            </div>
+                                            <div class="expense-item">
+                                                <div class="expense-details">
+                                                    <div class="expense-info">
+                                                        <span class="expense-date">Feb 25, 2023</span>
+                                                        <span class="expense-type">Client Lunch</span>
+                                                    </div>
+                                                    <div class="expense-amount">$85.25</div>
+                                                </div>
+                                                <div class="expense-status approved">Approved</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="new-expense">
+                                        <h4>Submit New Expense</h4>
+                                        <form id="expenseForm">
+                                            <div class="form-row">
+                                                <div class="form-field">
+                                                    <label for="expenseDate">Date</label>
+                                                    <input type="date" id="expenseDate">
+                                                </div>
+                                                <div class="form-field">
+                                                    <label for="expenseType">Expense Type</label>
+                                                    <select id="expenseType">
+                                                        <option value="travel">Travel</option>
+                                                        <option value="meals">Meals & Entertainment</option>
+                                                        <option value="supplies">Office Supplies</option>
+                                                        <option value="other">Other</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-field">
+                                                    <label for="expenseAmount">Amount</label>
+                                                    <input type="number" id="expenseAmount" step="0.01" placeholder="0.00">
+                                                </div>
+                                                <div class="form-field">
+                                                    <label for="expenseDescription">Description</label>
+                                                    <input type="text" id="expenseDescription">
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-field full-width">
+                                                    <label for="receiptUpload">Upload Receipt</label>
+                                                    <div class="file-upload">
+                                                        <input type="file" id="receiptUpload">
+                                                        <button type="button" class="upload-btn">Choose File</button>
+                                                        <span class="file-name">No file chosen</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-actions">
+                                                <button type="button" class="action-btn" id="submitExpense">Submit Expense</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Onboarding and Training Materials -->
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <i class="material-icons accordion-icon">expand_more</i>
+                                <span>Onboarding & Training</span>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="training-materials">
+                                    <div class="training-tabs">
+                                        <button class="training-tab active" data-tab="onboarding">Onboarding</button>
+                                        <button class="training-tab" data-tab="courses">Training Courses</button>
+                                        <button class="training-tab" data-tab="documents">Documents</button>
+                                    </div>
+
+                                    <div class="training-tab-content active" id="onboarding">
+                                        <h4>Onboarding Checklist</h4>
+                                        <div class="onboarding-progress">
+                                            <div class="progress-bar">
+                                                <div class="progress" style="width: 80%"></div>
+                                            </div>
+                                            <span>80% Complete</span>
+                                        </div>
+                                        <div class="checklist">
+                                            <div class="checklist-item completed">
+                                                <i class="material-icons">check_circle</i>
+                                                <span>Complete new hire paperwork</span>
+                                            </div>
+                                            <div class="checklist-item completed">
+                                                <i class="material-icons">check_circle</i>
+                                                <span>Set up company email and accounts</span>
+                                            </div>
+                                            <div class="checklist-item completed">
+                                                <i class="material-icons">check_circle</i>
+                                                <span>Review company policies</span>
+                                            </div>
+                                            <div class="checklist-item completed">
+                                                <i class="material-icons">check_circle</i>
+                                                <span>Complete orientation training</span>
+                                            </div>
+                                            <div class="checklist-item">
+                                                <i class="material-icons">radio_button_unchecked</i>
+                                                <span>Meet with department team</span>
+                                            </div>
+                                            <div class="checklist-item">
+                                                <i class="material-icons">radio_button_unchecked</i>
+                                                <span>Complete security training</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="training-tab-content" id="courses">
+                                        <h4>Available Training Courses</h4>
+                                        <div class="course-list">
+                                            <div class="course-item">
+                                                <div class="course-info">
+                                                    <h5>Customer Service Excellence</h5>
+                                                    <p>Learn best practices for exceptional customer service</p>
+                                                    <div class="course-meta">
+                                                        <span><i class="material-icons">schedule</i> 2 hours</span>
+                                                        <span><i class="material-icons">calendar_today</i> Due: Apr 15, 2023</span>
+                                                    </div>
+                                                </div>
+                                                <button class="course-action">Start Course</button>
+                                            </div>
+                                            <div class="course-item">
+                                                <div class="course-info">
+                                                    <h5>Workplace Safety</h5>
+                                                    <p>Essential safety protocols and procedures</p>
+                                                    <div class="course-meta">
+                                                        <span><i class="material-icons">schedule</i> 1 hour</span>
+                                                        <span><i class="material-icons">calendar_today</i> Due: Mar 30, 2023</span>
+                                                    </div>
+                                                </div>
+                                                <button class="course-action">Start Course</button>
+                                            </div>
+                                            <div class="course-item completed">
+                                                <div class="course-info">
+                                                    <h5>Company Orientation</h5>
+                                                    <p>Introduction to company policies and culture</p>
+                                                    <div class="course-meta">
+                                                        <span><i class="material-icons">schedule</i> 3 hours</span>
+                                                        <span><i class="material-icons">check_circle</i> Completed</span>
+                                                    </div>
+                                                </div>
+                                                <button class="course-action">Review</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="training-tab-content" id="documents">
+                                        <h4>Important Documents</h4>
+                                        <div class="document-list">
+                                            <div class="document-item">
+                                                <div class="document-icon"><i class="material-icons">description</i></div>
+                                                <div class="document-info">
+                                                    <h5>Employee Handbook</h5>
+                                                    <p>Complete guide to company policies and procedures</p>
+                                                </div>
+                                                <button class="document-action"><i class="material-icons">download</i> Download</button>
+                                            </div>
+                                            <div class="document-item">
+                                                <div class="document-icon"><i class="material-icons">description</i></div>
+                                                <div class="document-info">
+                                                    <h5>Benefits Guide</h5>
+                                                    <p>Detailed information about employee benefits</p>
+                                                </div>
+                                                <button class="document-action"><i class="material-icons">download</i> Download</button>
+                                            </div>
+                                            <div class="document-item">
+                                                <div class="document-icon"><i class="material-icons">description</i></div>
+                                                <div class="document-info">
+                                                    <h5>IT Security Policy</h5>
+                                                    <p>Guidelines for maintaining data security</p>
+                                                </div>
+                                                <button class="document-action"><i class="material-icons">download</i> Download</button>
+                                            </div>
+                                            <div class="document-item">
+                                                <div class="document-icon"><i class="material-icons">description</i></div>
+                                                <div class="document-info">
+                                                    <h5>Travel & Expense Policy</h5>
+                                                    <p>Rules and procedures for business expenses</p>
+                                                </div>
+                                                <button class="document-action"><i class="material-icons">download</i> Download</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Original Employee Information Section -->
+                    <div class="accordion-section">
+                        <h3 class="section-title">Employee Information</h3>
+
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <i class="material-icons accordion-icon">expand_more</i>
+                                <span>Employee - Branch</span>
+                            </div>
+                            <div class="accordion-content">
+                                <!-- Content for Employee-Branch -->
+                                <p>Branch information will be displayed here.</p>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <i class="material-icons accordion-icon">expand_more</i>
+                                <span>Skills</span>
+                            </div>
+                            <div class="accordion-content">
+                                <!-- Content for Skills -->
+                                <p>Employee skills will be displayed here.</p>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <i class="material-icons accordion-icon">expand_more</i>
+                                <span>Training Details</span>
+                            </div>
+                            <div class="accordion-content">
+                                <!-- Content for Training Details -->
+                                <p>Training details will be displayed here.</p>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <i class="material-icons accordion-icon">expand_more</i>
+                                <span>Working Time</span>
+                            </div>
+                            <div class="accordion-content">
+                                <!-- Content for Working Time -->
+                                <p>Working time information will be displayed here.</p>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <i class="material-icons accordion-icon">expand_more</i>
+                                <span>ETO Details</span>
+                            </div>
+                            <div class="accordion-content">
+                                <!-- Content for ETO Details -->
+                                <p>ETO details will be displayed here.</p>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <i class="material-icons accordion-icon">expand_more</i>
+                                <span>Downlines Association</span>
+                            </div>
+                            <div class="accordion-content">
+                                <!-- Content for Downlines Association -->
+                                <p>Downlines association information will be displayed here.</p>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <i class="material-icons accordion-icon">expand_more</i>
+                                <span>Qualification</span>
+                            </div>
+                            <div class="accordion-content">
+                                <!-- Content for Qualification -->
+                                <p>Qualification information will be displayed here.</p>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <i class="material-icons accordion-icon">expand_more</i>
+                                <span>Experience</span>
+                            </div>
+                            <div class="accordion-content">
+                                <!-- Content for Experience -->
+                                <p>Experience information will be displayed here.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="modal-actions">
+                        <button class="modal-action-btn" id="editEmployeeBtnBottom">Edit</button>
+                        <button class="modal-action-btn" id="exitEmployeeBtnBottom">Exit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const employeeData = [
+                { id: 'E001', name: 'Admin', mobile: '', email: '', department: 'Administration', designation: 'Credit Agent', isActive: true },
+                { id: 'A029346', name: 'Employee 11', mobile: '', email: '', department: 'Administration', designation: 'DMS Administrator', isActive: true },
+                { id: '9631', name: 'Employee 362', mobile: '', email: '', department: 'Service', designation: 'Service Technician', isActive: true },
+                { id: '397745', name: 'Employee 363', mobile: '', email: '', department: 'Service', designation: 'Service Technician', isActive: true },
+                { id: '361381', name: 'Employee 364', mobile: '', email: '', department: 'Service', designation: 'Service Technician', isActive: false },
+                { id: '9590', name: 'Employee 365', mobile: '', email: '', department: 'Service', designation: 'Service Coordinator', isActive: true },
+                { id: '412118', name: 'Employee 366', mobile: '', email: '', department: 'Service', designation: 'Customer Service Repres', isActive: true },
+                { id: '1476', name: 'Employee 367', mobile: '', email: '', department: 'Service', designation: 'Service Technician', isActive: true },
+                { id: '196729', name: 'Employee 368', mobile: '', email: '', department: 'Parts', designation: 'Parts Manager', isActive: true },
+                { id: '410658', name: 'Employee 369', mobile: '', email: '', department: 'Service', designation: 'Service Technician', isActive: false }
+            ];
+
+            // Populate the table with employee data
+            populateEmployeeTable(employeeData);
+
+            // Initialize Material Design Lite components
+            componentHandler.upgradeAllRegistered();
+
+            // Set up event listeners
+            setupEventListeners();
+
+            // Initialize voice search
+            initVoiceSearch();
+
+            // Initialize quick filters
+            initQuickFilters();
+
+            // Function to populate the employee table
+            function populateEmployeeTable(data) {
+                const tableBody = document.querySelector('.mdl-data-table tbody');
+                tableBody.innerHTML = '';
+
+                data.forEach(employee => {
+                    const row = document.createElement('tr');
+
+                    // View button
+                    row.innerHTML = `
+                        <td class="view-cell">
+                            <button class="view-employee" data-employee-id="${employee.id}">
+                                <i class="material-icons">visibility</i>
+                            </button>
+                        </td>
+                        <td>
+                            <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select" for="checkbox-${employee.id}">
+                                <input type="checkbox" id="checkbox-${employee.id}" class="mdl-checkbox__input">
+                            </label>
+                        </td>
+                        <td>${employee.id}</td>
+                        <td class="mdl-data-table__cell--non-numeric">${employee.name}</td>
+                        <td>${employee.mobile || '-'}</td>
+                        <td class="mdl-data-table__cell--non-numeric">${employee.email || '-'}</td>
+                        <td class="mdl-data-table__cell--non-numeric">${employee.department}</td>
+                        <td class="mdl-data-table__cell--non-numeric">${employee.designation}</td>
+                        <td>
+                            <span class="status-indicator ${employee.isActive ? 'status-active' : 'status-inactive'}"></span>
+                            ${employee.isActive ? 'Yes' : 'No'}
+                        </td>
+                    `;
+
+                    tableBody.appendChild(row);
+                });
+
+                // Upgrade the newly added MDL components
+                componentHandler.upgradeElements(tableBody);
+            }
+
+            // Set up event listeners for buttons and interactions
+            function setupEventListeners() {
+                // Select all checkbox
+                const selectAllCheckbox = document.getElementById('checkbox-all');
+                selectAllCheckbox.addEventListener('change', function() {
+                    const isChecked = this.checked;
+                    const checkboxes = document.querySelectorAll('.mdl-data-table tbody .mdl-checkbox__input');
+
+                    checkboxes.forEach(checkbox => {
+                        checkbox.checked = isChecked;
+                        checkbox.parentElement.classList.toggle('is-checked', isChecked);
+                    });
+                });
+
+                // Delete selected button
+                document.getElementById('deleteSelected').addEventListener('click', function() {
+                    const selectedCheckboxes = document.querySelectorAll('.mdl-data-table tbody .mdl-checkbox__input:checked');
+
+                    if (selectedCheckboxes.length === 0) {
+                        alert('Please select at least one employee to delete.');
+                        return;
+                    }
+
+                    const confirmDelete = confirm(`Are you sure you want to delete ${selectedCheckboxes.length} selected employee(s)?`);
+
+                    if (confirmDelete) {
+                        // In a real application, you would send a request to delete the selected employees
+                        alert(`${selectedCheckboxes.length} employee(s) deleted successfully.`);
+
+                        // Refresh the grid (in a real app, you would fetch updated data)
+                        selectedCheckboxes.forEach(checkbox => {
+                            const row = checkbox.closest('tr');
+                            row.remove();
+                        });
+                    }
+                });
+
+                // Advanced Search functionality
+                const advancedSearchPanel = document.getElementById('advancedSearchPanel');
+                const gridContainer = document.getElementById('gridContainer');
+                const advancedSearchBtn = document.getElementById('advancedSearch');
+                const closeAdvancedSearchBtn = document.getElementById('closeAdvancedSearch');
+                const addFilterBtn = document.getElementById('addFilterBtn');
+                const resetFiltersBtn = document.getElementById('resetFiltersBtn');
+                const applyFiltersBtn = document.getElementById('applyFiltersBtn');
+                const appliedFilters = document.getElementById('appliedFilters');
+                const selectColumn = document.getElementById('selectColumn');
+                const selectOperator = document.getElementById('selectOperator');
+                const searchValue = document.getElementById('searchValue');
+                const selectCondition = document.getElementById('selectCondition');
+
+                // Store applied filters
+                let filters = [];
+
+                // Toggle advanced search panel
+                advancedSearchBtn.addEventListener('click', function() {
+                    advancedSearchPanel.classList.add('active');
+                    gridContainer.classList.add('panel-active');
+                });
+
+                // Close advanced search panel
+                closeAdvancedSearchBtn.addEventListener('click', function() {
+                    advancedSearchPanel.classList.remove('active');
+                    gridContainer.classList.remove('panel-active');
+                });
+
+                // Click outside to close panel (for mobile)
+                document.addEventListener('click', function(e) {
+                    if (advancedSearchPanel.classList.contains('active') &&
+                        !advancedSearchPanel.contains(e.target) &&
+                        e.target !== advancedSearchBtn &&
+                        !advancedSearchBtn.contains(e.target)) {
+                        advancedSearchPanel.classList.remove('active');
+                        gridContainer.classList.remove('panel-active');
+                    }
+                });
+
+                // Add filter
+                addFilterBtn.addEventListener('click', function() {
+                    const column = selectColumn.value;
+                    const operator = selectOperator.value;
+                    const value = searchValue.value.trim();
+                    const condition = selectCondition.value;
+
+                    // Validate inputs
+                    if (!column || !operator || !value) {
+                        alert('Please select column, operator, and enter a value.');
+                        return;
+                    }
+
+                    // Get readable names for display
+                    const columnText = selectColumn.options[selectColumn.selectedIndex].text;
+                    const operatorText = selectOperator.options[selectOperator.selectedIndex].text;
+
+                    // Check for duplicate filters
+                    const isDuplicate = filters.some(filter =>
+                        filter.column === column &&
+                        filter.operator === operator &&
+                        filter.value.toLowerCase() === value.toLowerCase()
+                    );
+
+                    if (isDuplicate) {
+                        alert('This filter already exists.');
+                        return;
+                    }
+
+                    // Create filter object
+                    const filter = {
+                        id: Date.now(), // Unique ID for the filter
+                        column,
+                        operator,
+                        value,
+                        condition,
+                        displayText: `${columnText} ${operatorText} "${value}"`
+                    };
+
+                    // Add to filters array
+                    filters.push(filter);
+
+                    // Update filters display
+                    updateFiltersDisplay();
+
+                    // Clear inputs
+                    searchValue.value = '';
+                });
+
+                // Update filters display
+                function updateFiltersDisplay() {
+                    if (filters.length === 0) {
+                        appliedFilters.innerHTML = '<div class="no-filters">No filters applied</div>';
+                        return;
+                    }
+
+                    let html = '';
+                    filters.forEach((filter, index) => {
+                        const conditionText = index > 0 ? `<span class="condition-badge">${filter.condition}</span> ` : '';
+
+                        html += `
+                            <div class="filter-item" data-filter-id="${filter.id}">
+                                <div class="filter-text">
+                                    ${conditionText}${filter.displayText}
+                                </div>
+                                <div class="filter-actions">
+                                    <button class="mdl-button mdl-js-button mdl-button--icon edit-filter" title="Edit Filter">
+                                        <i class="material-icons">edit</i>
+                                    </button>
+                                    <button class="mdl-button mdl-js-button mdl-button--icon remove-filter" title="Remove Filter">
+                                        <i class="material-icons">close</i>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    appliedFilters.innerHTML = html;
+
+                    // Add event listeners to edit and remove buttons
+                    document.querySelectorAll('.edit-filter').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const filterId = parseInt(this.closest('.filter-item').getAttribute('data-filter-id'));
+                            editFilter(filterId);
+                        });
+                    });
+
+                    document.querySelectorAll('.remove-filter').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const filterId = parseInt(this.closest('.filter-item').getAttribute('data-filter-id'));
+                            removeFilter(filterId);
+                        });
+                    });
+                }
+
+                // Edit filter
+                function editFilter(filterId) {
+                    const filter = filters.find(f => f.id === filterId);
+                    if (!filter) return;
+
+                    // Populate form with filter values
+                    selectColumn.value = filter.column;
+                    selectOperator.value = filter.operator;
+                    searchValue.value = filter.value;
+                    selectCondition.value = filter.condition;
+
+                    // Remove the filter (will be re-added when user clicks Add Filter)
+                    removeFilter(filterId);
+                }
+
+                // Remove filter
+                function removeFilter(filterId) {
+                    filters = filters.filter(f => f.id !== filterId);
+                    updateFiltersDisplay();
+                }
+
+                // Reset filters
+                resetFiltersBtn.addEventListener('click', function() {
+                    filters = [];
+                    updateFiltersDisplay();
+
+                    // Reset form
+                    selectColumn.value = '';
+                    selectOperator.value = '';
+                    searchValue.value = '';
+                    selectCondition.value = 'and';
+
+                    // Reset grid to show all data
+                    populateEmployeeTable(employeeData);
+                });
+
+                // Apply filters
+                applyFiltersBtn.addEventListener('click', function() {
+                    if (filters.length === 0) {
+                        alert('Please add at least one filter.');
+                        return;
+                    }
+
+                    // Filter the data
+                    const filteredData = filterEmployeeData(employeeData, filters);
+
+                    // Update the table
+                    populateEmployeeTable(filteredData);
+
+                    // Close the panel
+                    advancedSearchPanel.classList.remove('active');
+                    gridContainer.classList.remove('panel-active');
+                });
+
+                // Filter employee data based on applied filters
+                function filterEmployeeData(data, filters) {
+                    return data.filter(employee => {
+                        let result = true;
+
+                        filters.forEach((filter, index) => {
+                            let matches = false;
+                            const value = employee[filter.column];
+                            const filterValue = filter.value;
+
+                            // Skip the condition for the first filter
+                            if (index === 0) {
+                                matches = evaluateCondition(value, filter.operator, filterValue);
+                                result = matches;
+                                return;
+                            }
+
+                            // Apply AND/OR logic for subsequent filters
+                            matches = evaluateCondition(value, filter.operator, filterValue);
+
+                            if (filter.condition === 'and') {
+                                result = result && matches;
+                            } else {
+                                result = result || matches;
+                            }
+                        });
+
+                        return result;
+                    });
+                }
+
+                // Evaluate a single condition
+                function evaluateCondition(value, operator, filterValue) {
+                    // Handle different data types
+                    if (value === undefined || value === null) {
+                        return false;
+                    }
+
+                    // Convert to string for comparison
+                    const strValue = String(value).toLowerCase();
+                    const strFilterValue = String(filterValue).toLowerCase();
+
+                    switch (operator) {
+                        case 'equals':
+                            return strValue === strFilterValue;
+                        case 'notEquals':
+                            return strValue !== strFilterValue;
+                        case 'contains':
+                            return strValue.includes(strFilterValue);
+                        case 'startsWith':
+                            return strValue.startsWith(strFilterValue);
+                        case 'endsWith':
+                            return strValue.endsWith(strFilterValue);
+                        default:
+                            return false;
+                    }
+                }
+
+                // Export Data button
+                document.getElementById('exportData').addEventListener('click', function() {
+                    // In a real application, you would export the data to CSV/Excel
+                    alert('Data export functionality would trigger here.');
+                });
+
+                // Refresh Grid button
+                document.getElementById('refreshGrid').addEventListener('click', function() {
+                    // In a real application, you would fetch fresh data
+                    alert('Grid refreshed with latest data.');
+                    populateEmployeeTable(employeeData);
+                });
+
+                // View employee buttons are handled in initEmployeeDetailModal()
+
+                // Search input
+                const searchInput = document.getElementById('search');
+                searchInput.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase();
+
+                    if (searchTerm.trim() === '') {
+                        // If search is empty, show all employees
+                        populateEmployeeTable(employeeData);
+                        return;
+                    }
+
+                    // Filter employees based on search term
+                    const filteredEmployees = employeeData.filter(employee => {
+                        return (
+                            employee.id.toLowerCase().includes(searchTerm) ||
+                            employee.name.toLowerCase().includes(searchTerm) ||
+                            employee.mobile.toLowerCase().includes(searchTerm) ||
+                            employee.email.toLowerCase().includes(searchTerm) ||
+                            employee.department.toLowerCase().includes(searchTerm) ||
+                            employee.designation.toLowerCase().includes(searchTerm)
+                        );
+                    });
+
+                    populateEmployeeTable(filteredEmployees);
+                });
+            }
+
+            // Initialize voice search functionality
+            function initVoiceSearch() {
+                const voiceSearchBtn = document.getElementById('voiceSearch');
+                const searchInput = document.getElementById('search');
+
+                // Check if browser supports speech recognition
+                if ('webkitSpeechRecognition' in window) {
+                    const recognition = new webkitSpeechRecognition();
+                    recognition.continuous = false;
+                    recognition.interimResults = false;
+                    recognition.lang = 'en-US';
+
+                    voiceSearchBtn.addEventListener('click', function() {
+                        recognition.start();
+                        voiceSearchBtn.classList.add('listening');
+                    });
+
+                    recognition.onresult = function(event) {
+                        const transcript = event.results[0][0].transcript;
+                        searchInput.value = transcript;
+
+                        // Trigger the input event to perform the search
+                        const inputEvent = new Event('input', { bubbles: true });
+                        searchInput.dispatchEvent(inputEvent);
+                    };
+
+                    recognition.onend = function() {
+                        voiceSearchBtn.classList.remove('listening');
+                    };
+
+                    recognition.onerror = function(event) {
+                        console.error('Speech recognition error', event.error);
+                        voiceSearchBtn.classList.remove('listening');
+                    };
+                } else {
+                    voiceSearchBtn.style.display = 'none';
+                    console.warn('Browser does not support speech recognition');
+                }
+            }
+
+            // Initialize employee detail modal
+            initEmployeeDetailModal();
+
+            // Initialize quick filters functionality
+            function initQuickFilters() {
+                // Get all filter chips
+                const filterChips = document.querySelectorAll('.filter-chip');
+
+                // Store active quick filters
+                const activeQuickFilters = [];
+
+                // Add click event to filter chips
+                filterChips.forEach(chip => {
+                    chip.addEventListener('click', function() {
+                        const filterValue = this.getAttribute('data-filter');
+                        const filterType = this.getAttribute('data-type');
+
+                        // Toggle active state
+                        this.classList.toggle('active');
+
+                        if (this.classList.contains('active')) {
+                            // Add to active filters
+                            addActiveFilter(filterType, filterValue, this);
+                        } else {
+                            // Remove from active filters
+                            removeActiveFilter(filterType, filterValue);
+                        }
+
+                        // Apply filters to the grid
+                        applyQuickFilters();
+                    });
+                });
+
+                // Add active filter
+                function addActiveFilter(type, value, chipElement) {
+                    // Check if filter already exists
+                    const existingFilterIndex = activeQuickFilters.findIndex(filter =>
+                        filter.type === type && filter.value === value
+                    );
+
+                    if (existingFilterIndex === -1) {
+                        // Add new filter
+                        activeQuickFilters.push({
+                            type,
+                            value,
+                            chipElement
+                        });
+                    }
+                }
+
+                // Remove active filter
+                function removeActiveFilter(type, value) {
+                    // Find and remove the filter
+                    const filterIndex = activeQuickFilters.findIndex(filter =>
+                        filter.type === type && filter.value === value
+                    );
+
+                    if (filterIndex !== -1) {
+                        activeQuickFilters.splice(filterIndex, 1);
+                    }
+                }
+
+                // Apply quick filters to the grid
+                function applyQuickFilters() {
+                    if (activeQuickFilters.length === 0) {
+                        // If no filters, show all data
+                        populateEmployeeTable(employeeData);
+                        return;
+                    }
+
+                    // Filter the data based on active filters
+                    const filteredData = employeeData.filter(employee => {
+                        // Group filters by type
+                        const filtersByType = {};
+                        activeQuickFilters.forEach(filter => {
+                            if (!filtersByType[filter.type]) {
+                                filtersByType[filter.type] = [];
+                            }
+                            filtersByType[filter.type].push(filter.value);
+                        });
+
+                        // Check each filter type (AND between different types)
+                        for (const type in filtersByType) {
+                            const values = filtersByType[type];
+                            let typeMatch = false;
+
+                            // For each filter type, check if any value matches (OR within same type)
+                            switch (type) {
+                                case 'Department':
+                                    typeMatch = values.some(value => employee.department === value);
+                                    break;
+                                case 'Designation':
+                                    typeMatch = values.some(value => employee.designation === value);
+                                    break;
+                                case 'Status':
+                                    if (values.includes('active') && employee.isActive) {
+                                        typeMatch = true;
+                                    } else if (values.includes('inactive') && !employee.isActive) {
+                                        typeMatch = true;
+                                    }
+                                    break;
+                            }
+
+                            // If any filter type doesn't match, exclude the employee
+                            if (!typeMatch) {
+                                return false;
+                            }
+                        }
+
+                        // If all filter types match, include the employee
+                        return true;
+                    });
+
+                    // Update the table with filtered data
+                    populateEmployeeTable(filteredData);
+                }
+            }
+
+            // Initialize employee detail modal
+            function initEmployeeDetailModal() {
+                const modal = document.getElementById('employeeDetailModal');
+                const closeBtn = document.getElementById('closeEmployeeModal');
+                const exitBtn = document.getElementById('exitEmployeeBtn');
+                const exitBtnBottom = document.getElementById('exitEmployeeBtnBottom');
+                const editBtn = document.getElementById('editEmployeeBtn');
+                const editBtnBottom = document.getElementById('editEmployeeBtnBottom');
+                const accordionHeaders = document.querySelectorAll('.accordion-header');
+
+                // Handle view employee button clicks
+                document.addEventListener('click', function(e) {
+                    const viewBtn = e.target.closest('.view-employee');
+                    if (viewBtn) {
+                        const employeeId = viewBtn.getAttribute('data-employee-id');
+                        openEmployeeDetail(employeeId);
+                    }
+                });
+
+                // Close modal when clicking close button
+                closeBtn.addEventListener('click', function() {
+                    closeEmployeeDetail();
+                });
+
+                // Close modal when clicking exit button
+                exitBtn.addEventListener('click', function() {
+                    closeEmployeeDetail();
+                });
+
+                // Close modal when clicking bottom exit button
+                exitBtnBottom.addEventListener('click', function() {
+                    closeEmployeeDetail();
+                });
+
+                // Handle edit button click
+                editBtn.addEventListener('click', function() {
+                    toggleEditMode();
+                });
+
+                // Handle bottom edit button click
+                editBtnBottom.addEventListener('click', function() {
+                    toggleEditMode();
+                });
+
+                // Close modal when clicking outside
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        closeEmployeeDetail();
+                    }
+                });
+
+                // Toggle accordion sections
+                accordionHeaders.forEach(header => {
+                    header.addEventListener('click', function() {
+                        const accordionItem = this.parentElement;
+                        accordionItem.classList.toggle('active');
+                    });
+                });
+
+                // Initialize HR Self-Service tabs
+                initHrTabs();
+
+                // Initialize file upload functionality
+                initFileUpload();
+
+                // Initialize form submission handlers
+                initFormSubmissions();
+            }
+
+            // Initialize HR Self-Service tabs
+            function initHrTabs() {
+                // Personal Information tabs
+                const hrTabs = document.querySelectorAll('.hr-tab');
+                hrTabs.forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        const tabId = this.getAttribute('data-tab');
+
+                        // Remove active class from all tabs
+                        hrTabs.forEach(t => t.classList.remove('active'));
+
+                        // Add active class to clicked tab
+                        this.classList.add('active');
+
+                        // Hide all tab content
+                        document.querySelectorAll('.hr-tab-content').forEach(content => {
+                            content.classList.remove('active');
+                        });
+
+                        // Show selected tab content
+                        document.getElementById(tabId).classList.add('active');
+                    });
+                });
+
+                // Training tabs
+                const trainingTabs = document.querySelectorAll('.training-tab');
+                trainingTabs.forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        const tabId = this.getAttribute('data-tab');
+
+                        // Remove active class from all tabs
+                        trainingTabs.forEach(t => t.classList.remove('active'));
+
+                        // Add active class to clicked tab
+                        this.classList.add('active');
+
+                        // Hide all tab content
+                        document.querySelectorAll('.training-tab-content').forEach(content => {
+                            content.classList.remove('active');
+                        });
+
+                        // Show selected tab content
+                        document.getElementById(tabId).classList.add('active');
+                    });
+                });
+
+                // Edit contact details button
+                const editContactBtn = document.getElementById('editContactBtn');
+                if (editContactBtn) {
+                    editContactBtn.addEventListener('click', function() {
+                        const contactFields = document.querySelectorAll('#contact-details input');
+
+                        if (this.textContent === 'Edit Contact Details') {
+                            // Switch to edit mode
+                            contactFields.forEach(field => {
+                                field.readOnly = false;
+                                field.classList.add('editing');
+                            });
+                            this.textContent = 'Save Changes';
+                        } else {
+                            // Switch to view mode
+                            contactFields.forEach(field => {
+                                field.readOnly = true;
+                                field.classList.remove('editing');
+                            });
+                            this.textContent = 'Edit Contact Details';
+
+                            // Show success message
+                            showNotification('Contact details updated successfully!', 'success');
+                        }
+                    });
+                }
+
+                // View more pay stubs button
+                const viewMoreBtn = document.querySelector('.view-more-btn');
+                if (viewMoreBtn) {
+                    viewMoreBtn.addEventListener('click', function() {
+                        // In a real application, this would load more pay stubs
+                        showNotification('Loading more pay stubs...', 'info');
+
+                        // Simulate loading more pay stubs
+                        setTimeout(() => {
+                            const payStubsList = document.querySelector('.pay-stubs-list');
+
+                            // Add more pay stubs
+                            const newPayStubs = [
+                                { period: 'Nov 16 - Nov 30, 2022', amount: '$1,250.00' },
+                                { period: 'Nov 1 - Nov 15, 2022', amount: '$1,250.00' }
+                            ];
+
+                            newPayStubs.forEach(stub => {
+                                const payStubItem = document.createElement('div');
+                                payStubItem.className = 'pay-stub-item';
+                                payStubItem.innerHTML = `
+                                    <div class="pay-stub-info">
+                                        <span class="pay-period">${stub.period}</span>
+                                        <span class="pay-amount">${stub.amount}</span>
+                                    </div>
+                                    <button class="download-btn"><i class="material-icons">download</i> Download</button>
+                                `;
+                                payStubsList.appendChild(payStubItem);
+                            });
+
+                            showNotification('More pay stubs loaded', 'success');
+                        }, 1000);
+                    });
+                }
+
+                // Benefit action buttons
+                document.querySelectorAll('.benefit-action').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const benefitName = this.closest('.benefit-item').querySelector('h5').textContent;
+                        showNotification(`Opening ${benefitName} details...`, 'info');
+                    });
+                });
+
+                // Document download buttons
+                document.querySelectorAll('.document-action').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const documentName = this.closest('.document-item').querySelector('h5').textContent;
+                        showNotification(`Downloading ${documentName}...`, 'info');
+                    });
+                });
+
+                // Course action buttons
+                document.querySelectorAll('.course-action').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const courseItem = this.closest('.course-item');
+                        const courseName = courseItem.querySelector('h5').textContent;
+                        const isCompleted = courseItem.classList.contains('completed');
+
+                        if (isCompleted) {
+                            showNotification(`Reviewing ${courseName}...`, 'info');
+                        } else {
+                            showNotification(`Starting ${courseName}...`, 'info');
+                        }
+                    });
+                });
+            }
+
+            // Initialize file upload functionality
+            function initFileUpload() {
+                const fileInput = document.getElementById('receiptUpload');
+                const fileNameDisplay = document.querySelector('.file-name');
+                const uploadBtn = document.querySelector('.upload-btn');
+
+                if (fileInput && uploadBtn) {
+                    uploadBtn.addEventListener('click', function() {
+                        fileInput.click();
+                    });
+
+                    fileInput.addEventListener('change', function() {
+                        if (this.files.length > 0) {
+                            fileNameDisplay.textContent = this.files[0].name;
+                        } else {
+                            fileNameDisplay.textContent = 'No file chosen';
+                        }
+                    });
+                }
+            }
+
+            // Initialize form submission handlers
+            function initFormSubmissions() {
+                // Leave request form submission
+                const submitLeaveRequestBtn = document.getElementById('submitLeaveRequest');
+                if (submitLeaveRequestBtn) {
+                    submitLeaveRequestBtn.addEventListener('click', function() {
+                        const leaveType = document.getElementById('leaveType').value;
+                        const startDate = document.getElementById('leaveStartDate').value;
+                        const endDate = document.getElementById('leaveEndDate').value;
+
+                        if (!startDate || !endDate) {
+                            showNotification('Please select start and end dates', 'error');
+                            return;
+                        }
+
+                        // In a real application, this would submit the form to the server
+                        showNotification('Processing leave request...', 'info');
+
+                        // Simulate form submission
+                        setTimeout(() => {
+                            // Add the new leave request to the list
+                            const leaveRequestList = document.querySelector('.leave-request-list');
+
+                            const startDateObj = new Date(startDate);
+                            const endDateObj = new Date(endDate);
+
+                            // Format dates
+                            const options = { month: 'short', day: 'numeric', year: 'numeric' };
+                            const formattedStartDate = startDateObj.toLocaleDateString('en-US', options);
+                            const formattedEndDate = endDateObj.toLocaleDateString('en-US', options);
+
+                            // Calculate days
+                            const diffTime = Math.abs(endDateObj - startDateObj);
+                            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+                            const dateRangeText = startDate === endDate ?
+                                formattedStartDate :
+                                `${formattedStartDate} - ${formattedEndDate}`;
+
+                            const leaveRequestItem = document.createElement('div');
+                            leaveRequestItem.className = 'leave-request-item';
+                            leaveRequestItem.innerHTML = `
+                                <div class="leave-request-details">
+                                    <div class="leave-dates">
+                                        <span class="date-range">${dateRangeText}</span>
+                                        <span class="leave-days">(${diffDays} day${diffDays > 1 ? 's' : ''})</span>
+                                    </div>
+                                    <div class="leave-info">
+                                        <span class="leave-type-label">${document.getElementById('leaveType').options[document.getElementById('leaveType').selectedIndex].text}</span>
+                                        <span class="leave-status pending">Pending Approval</span>
+                                    </div>
+                                </div>
+                            `;
+
+                            // Add to the beginning of the list
+                            leaveRequestList.insertBefore(leaveRequestItem, leaveRequestList.firstChild);
+
+                            // Reset form
+                            document.getElementById('leaveStartDate').value = '';
+                            document.getElementById('leaveEndDate').value = '';
+                            document.getElementById('leaveReason').value = '';
+
+                            showNotification('Leave request submitted successfully!', 'success');
+                        }, 1000);
+                    });
+                }
+
+                // Expense form submission
+                const submitExpenseBtn = document.getElementById('submitExpense');
+                if (submitExpenseBtn) {
+                    submitExpenseBtn.addEventListener('click', function() {
+                        const expenseDate = document.getElementById('expenseDate').value;
+                        const expenseType = document.getElementById('expenseType').value;
+                        const expenseAmount = document.getElementById('expenseAmount').value;
+                        const expenseDescription = document.getElementById('expenseDescription').value;
+
+                        if (!expenseDate || !expenseAmount) {
+                            showNotification('Please fill in all required fields', 'error');
+                            return;
+                        }
+
+                        // In a real application, this would submit the form to the server
+                        showNotification('Processing expense submission...', 'info');
+
+                        // Simulate form submission
+                        setTimeout(() => {
+                            // Add the new expense to the list
+                            const expenseList = document.querySelector('.expense-list');
+
+                            const dateObj = new Date(expenseDate);
+
+                            // Format date
+                            const options = { month: 'short', day: 'numeric', year: 'numeric' };
+                            const formattedDate = dateObj.toLocaleDateString('en-US', options);
+
+                            // Format amount
+                            const formattedAmount = parseFloat(expenseAmount).toLocaleString('en-US', {
+                                style: 'currency',
+                                currency: 'USD'
+                            });
+
+                            const expenseTypeText = document.getElementById('expenseType').options[document.getElementById('expenseType').selectedIndex].text;
+
+                            const expenseItem = document.createElement('div');
+                            expenseItem.className = 'expense-item';
+                            expenseItem.innerHTML = `
+                                <div class="expense-details">
+                                    <div class="expense-info">
+                                        <span class="expense-date">${formattedDate}</span>
+                                        <span class="expense-type">${expenseTypeText}${expenseDescription ? ' - ' + expenseDescription : ''}</span>
+                                    </div>
+                                    <div class="expense-amount">${formattedAmount}</div>
+                                </div>
+                                <div class="expense-status pending">Pending Approval</div>
+                            `;
+
+                            // Add to the beginning of the list
+                            expenseList.insertBefore(expenseItem, expenseList.firstChild);
+
+                            // Update pending reimbursement amount
+                            const pendingAmountElement = document.querySelector('.summary-card:first-child .amount');
+                            const currentAmount = parseFloat(pendingAmountElement.textContent.replace('$', '').replace(',', ''));
+                            const newAmount = currentAmount + parseFloat(expenseAmount);
+                            pendingAmountElement.textContent = newAmount.toLocaleString('en-US', {
+                                style: 'currency',
+                                currency: 'USD'
+                            });
+
+                            // Reset form
+                            document.getElementById('expenseDate').value = '';
+                            document.getElementById('expenseAmount').value = '';
+                            document.getElementById('expenseDescription').value = '';
+                            document.querySelector('.file-name').textContent = 'No file chosen';
+
+                            showNotification('Expense submitted successfully!', 'success');
+                        }, 1000);
+                    });
+                }
+            }
+
+            // Show notification
+            function showNotification(message, type = 'info') {
+                // Create notification element if it doesn't exist
+                let notification = document.querySelector('.notification');
+                if (!notification) {
+                    notification = document.createElement('div');
+                    notification.className = 'notification';
+                    document.body.appendChild(notification);
+
+                    // Add styles if not already in the document
+                    if (!document.getElementById('notification-styles')) {
+                        const style = document.createElement('style');
+                        style.id = 'notification-styles';
+                        style.textContent = `
+                            .notification {
+                                position: fixed;
+                                top: 20px;
+                                right: 20px;
+                                padding: 12px 20px;
+                                border-radius: 4px;
+                                color: white;
+                                font-weight: 500;
+                                z-index: 2000;
+                                opacity: 0;
+                                transform: translateY(-20px);
+                                transition: all 0.3s ease;
+                                box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+                            }
+                            .notification.show {
+                                opacity: 1;
+                                transform: translateY(0);
+                            }
+                            .notification.info {
+                                background-color: #2196F3;
+                            }
+                            .notification.success {
+                                background-color: #4CAF50;
+                            }
+                            .notification.error {
+                                background-color: #F44336;
+                            }
+                        `;
+                        document.head.appendChild(style);
+                    }
+                }
+
+                // Set notification content and type
+                notification.textContent = message;
+                notification.className = `notification ${type}`;
+
+                // Show notification
+                setTimeout(() => {
+                    notification.classList.add('show');
+                }, 10);
+
+                // Hide notification after 3 seconds
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+
+            // Function to open employee detail modal
+            function openEmployeeDetail(employeeId) {
+                // Find employee data
+                const employee = employeeData.find(emp => emp.id === employeeId);
+
+                if (employee) {
+                    // Set modal title
+                    document.getElementById('employeeModalTitle').textContent = employee.name;
+
+                    // Populate form fields
+                    document.getElementById('employeeCode').value = employee.id;
+                    document.getElementById('employeeName').value = employee.name;
+
+                    // Set department and designation
+                    const departmentSelect = document.getElementById('department');
+                    const designationSelect = document.getElementById('designation');
+
+                    // Set department
+                    for (let i = 0; i < departmentSelect.options.length; i++) {
+                        if (departmentSelect.options[i].value === employee.department) {
+                            departmentSelect.selectedIndex = i;
+                            break;
+                        }
+                    }
+
+                    // Set designation
+                    for (let i = 0; i < designationSelect.options.length; i++) {
+                        if (designationSelect.options[i].value === employee.designation) {
+                            designationSelect.selectedIndex = i;
+                            break;
+                        }
+                    }
+
+                    // Set other fields with sample data
+                    document.getElementById('address').value = '35 Gagnon boulevard, Sainte-Claire, Quebec G0R 2V0';
+                    document.getElementById('mobile').value = employee.mobile || '';
+                    document.getElementById('email').value = employee.email || '';
+                    document.getElementById('dateOfJoining').value = '05-Oct-2016';
+                    document.getElementById('hourlyRate').value = '0';
+
+                    // Set checkbox states
+                    document.getElementById('isActive').checked = employee.isActive;
+
+                    // Reset modal content animation
+                    const modalContent = document.querySelector('.modal-content');
+                    modalContent.style.animation = 'none';
+                    modalContent.offsetHeight; // Trigger reflow
+                    modalContent.style.animation = 'modalFadeIn 0.5s cubic-bezier(0.19, 1, 0.22, 1) forwards';
+
+                    // Show the modal with animation
+                    modal.style.display = 'block';
+                    setTimeout(() => {
+                        modal.classList.add('active');
+                        document.body.style.overflow = 'hidden'; // Prevent scrolling
+                    }, 10); // Small delay to ensure display:block is applied first
+
+                    // Open first accordion by default
+                    document.querySelector('.accordion-item').classList.add('active');
+                }
+            }
+
+            // Function to close employee detail modal
+            function closeEmployeeDetail() {
+                // Animate modal closing
+                modal.classList.remove('active');
+
+                // Add a fade-out animation to the modal content
+                const modalContent = document.querySelector('.modal-content');
+                modalContent.style.animation = 'modalFadeIn 0.3s cubic-bezier(0.19, 1, 0.22, 1) reverse forwards';
+
+                // Wait for animation to complete before hiding modal
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = ''; // Restore scrolling
+                }, 300);
+
+                // Reset form to read-only mode
+                const form = document.getElementById('employeeDetailForm');
+                const inputs = form.querySelectorAll('input, select, textarea');
+
+                inputs.forEach(input => {
+                    if (input.type === 'checkbox') {
+                        input.disabled = true;
+                    } else {
+                        input.readOnly = true;
+                        if (input.tagName === 'SELECT') {
+                            input.disabled = true;
+                        }
+                    }
+                });
+
+                // Update button text
+                editBtn.textContent = 'Edit';
+                editBtnBottom.textContent = 'Edit';
+
+                // Reset accordion states
+                document.querySelectorAll('.accordion-item').forEach(item => {
+                    if (item !== document.querySelector('.accordion-item')) {
+                        item.classList.remove('active');
+                    }
+                });
+            }
+
+                // Function to toggle edit mode
+                function toggleEditMode() {
+                    const form = document.getElementById('employeeDetailForm');
+                    const inputs = form.querySelectorAll('input, select, textarea');
+
+                    // Check if currently in edit mode
+                    const isEditMode = editBtn.textContent === 'Save';
+
+                    if (isEditMode) {
+                        // Switch to view mode
+                        inputs.forEach(input => {
+                            if (input.type === 'checkbox') {
+                                input.disabled = true;
+                            } else {
+                                input.readOnly = true;
+                                if (input.tagName === 'SELECT') {
+                                    input.disabled = true;
+                                }
+                            }
+                        });
+
+                        // Update button text
+                        editBtn.textContent = 'Edit';
+                        editBtnBottom.textContent = 'Edit';
+
+                        // Show success message
+                        alert('Employee details updated successfully!');
+                    } else {
+                        // Switch to edit mode
+                        inputs.forEach(input => {
+                            if (input.id === 'employeeCode') {
+                                // Keep employee code read-only
+                                return;
+                            }
+
+                            if (input.type === 'checkbox') {
+                                input.disabled = false;
+                            } else {
+                                input.readOnly = false;
+                                if (input.tagName === 'SELECT') {
+                                    input.disabled = false;
+                                }
+                            }
+                        });
+
+                        // Update button text
+                        editBtn.textContent = 'Save';
+                        editBtnBottom.textContent = 'Save';
+                    }
+                }
+            }
+
+            // Setup drawer behavior
+            const drawer = document.querySelector('.mdl-layout__drawer');
+            const content = document.querySelector('.mdl-layout__content');
+            const menuTrigger = document.querySelector('.menu-trigger');
+            const pageContent = document.querySelector('.page-content');
+
+            // Handle menu trigger hover
+            menuTrigger.addEventListener('mouseenter', function() {
+                drawer.style.transform = 'translateX(0)';
+            });
+
+            // Handle drawer hover
+            drawer.addEventListener('mouseenter', function() {
+                drawer.style.transform = 'translateX(0)';
+            });
+
+            // Handle drawer mouseleave
+            drawer.addEventListener('mouseleave', function() {
+                if (!menuTrigger.matches(':hover')) {
+                    drawer.style.transform = '';
+                }
+            });
+
+            // Handle menu trigger mouseleave
+            menuTrigger.addEventListener('mouseleave', function() {
+                if (!drawer.matches(':hover')) {
+                    drawer.style.transform = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Dashboard - Disruptive Aftermarket</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="light-theme.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script>
+
+    <style>
+        /* Executive Dashboard Specific Styles */
+        :root {
+            --primary-color: #000000;
+            --primary-light: #1f2937;
+            --secondary-color: #ffffff;
+            --accent-color: #f8fafc;
+            --border-color: #e2e8f0;
+            --hover-color: #f1f5f9;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --border-radius: 12px;
+            --success-color: #059669;
+            --warning-color: #d97706;
+            --error-color: #dc2626;
+            --info-color: #2563eb;
+            --purple-color: #7c3aed;
+            --teal-color: #0891b2;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .app-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-md);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            height: 64px;
+        }
+
+        .app-title {
+            font-size: 20px;
+            font-weight: 600;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 16px;
+            padding: 8px;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .back-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .header-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+
+        .header-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 64px;
+            padding: 24px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            margin-bottom: 32px;
+        }
+
+        .dashboard-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .dashboard-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .dashboard-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .time-range-selector {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .time-range-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            background: white;
+            color: var(--text-secondary);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+
+        .time-range-btn.active,
+        .time-range-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .dashboard-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .action-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 10px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-1px);
+        }
+
+        .action-btn.secondary {
+            background: white;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .action-btn.secondary:hover {
+            background: var(--hover-color);
+        }
+
+        /* KPI Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .kpi-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-color);
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--info-color));
+        }
+
+        .kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .kpi-title {
+            font-size: 14px;
+            color: #64748b !important;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        .kpi-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .kpi-value {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #1e293b !important;
+        }
+
+        .kpi-change {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .kpi-change.positive {
+            color: #059669 !important;
+        }
+
+        .kpi-change.negative {
+            color: #dc2626 !important;
+        }
+
+        .kpi-change.neutral {
+            color: #64748b !important;
+        }
+
+        .kpi-trend {
+            margin-top: 12px;
+            height: 40px;
+        }
+
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .chart-container {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            transition: var(--transition);
+        }
+
+        .chart-container:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary-color);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b !important;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chart-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chart-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: #64748b !important;
+            padding: 6px 12px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 12px;
+            transition: var(--transition);
+        }
+
+        .chart-btn:hover,
+        .chart-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .chart-canvas {
+            position: relative;
+            height: 300px;
+        }
+
+        /* Full width charts */
+        .chart-full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* Tables */
+        .data-table-container {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .table-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b !important;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 16px 24px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            background-color: var(--secondary-color);
+            font-weight: 600;
+            color: #1e293b !important;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .data-table td {
+            color: #374151 !important;
+        }
+
+        .data-table tbody tr:hover {
+            background-color: var(--hover-color);
+        }
+
+        /* Status badges */
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background-color: #dcfce7;
+            color: var(--success-color);
+        }
+
+        .status-warning {
+            background-color: #fef3c7;
+            color: var(--warning-color);
+        }
+
+        .status-critical {
+            background-color: #fecaca;
+            color: var(--error-color);
+        }
+
+        /* Responsive design */
+        @media (max-width: 1200px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .dashboard-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .main-content {
+                padding: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <button class="back-button" onclick="goBack()">
+                <i class="material-icons">arrow_back</i>
+            </button>
+            <h1 class="app-title">
+                <i class="material-icons">dashboard</i>
+                Executive Dashboard
+            </h1>
+            <div class="header-actions">
+                <button class="header-btn" id="refreshBtn">
+                    <i class="material-icons">refresh</i>
+                    Refresh
+                </button>
+                <button class="header-btn" id="exportBtn">
+                    <i class="material-icons">download</i>
+                    Export
+                </button>
+                <button class="header-btn" id="settingsBtn">
+                    <i class="material-icons">settings</i>
+                    Settings
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <h2 class="dashboard-title">Executive Overview</h2>
+            <p class="dashboard-subtitle">Real-time insights and key performance indicators for strategic decision making</p>
+
+            <div class="dashboard-controls">
+                <div class="time-range-selector">
+                    <button class="time-range-btn" data-range="7d">7 Days</button>
+                    <button class="time-range-btn active" data-range="30d">30 Days</button>
+                    <button class="time-range-btn" data-range="90d">90 Days</button>
+                    <button class="time-range-btn" data-range="1y">1 Year</button>
+                    <button class="time-range-btn" data-range="custom">Custom</button>
+                </div>
+
+                <div class="dashboard-actions">
+                    <button class="action-btn secondary" id="filtersBtn">
+                        <i class="material-icons">filter_list</i>
+                        Filters
+                    </button>
+                    <button class="action-btn" id="generateReportBtn">
+                        <i class="material-icons">assessment</i>
+                        Generate Report
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <div class="kpi-title">Total Revenue</div>
+                    <div class="kpi-icon" style="background-color: var(--success-color);">
+                        <i class="material-icons">attach_money</i>
+                    </div>
+                </div>
+                <div class="kpi-value" id="totalRevenue">$0</div>
+                <div class="kpi-change positive" id="revenueChange">
+                    <i class="material-icons">trending_up</i>
+                    <span>+0%</span>
+                </div>
+                <div class="kpi-trend">
+                    <canvas id="revenueTrendChart" width="100" height="40"></canvas>
+                </div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <div class="kpi-title">Active Customers</div>
+                    <div class="kpi-icon" style="background-color: var(--info-color);">
+                        <i class="material-icons">people</i>
+                    </div>
+                </div>
+                <div class="kpi-value" id="activeCustomers">0</div>
+                <div class="kpi-change positive" id="customersChange">
+                    <i class="material-icons">trending_up</i>
+                    <span>+0%</span>
+                </div>
+                <div class="kpi-trend">
+                    <canvas id="customersTrendChart" width="100" height="40"></canvas>
+                </div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <div class="kpi-title">Service Orders</div>
+                    <div class="kpi-icon" style="background-color: var(--warning-color);">
+                        <i class="material-icons">build</i>
+                    </div>
+                </div>
+                <div class="kpi-value" id="serviceOrders">0</div>
+                <div class="kpi-change neutral" id="serviceChange">
+                    <i class="material-icons">trending_flat</i>
+                    <span>0%</span>
+                </div>
+                <div class="kpi-trend">
+                    <canvas id="serviceTrendChart" width="100" height="40"></canvas>
+                </div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <div class="kpi-title">Equipment Units</div>
+                    <div class="kpi-icon" style="background-color: var(--purple-color);">
+                        <i class="material-icons">precision_manufacturing</i>
+                    </div>
+                </div>
+                <div class="kpi-value" id="equipmentUnits">0</div>
+                <div class="kpi-change positive" id="equipmentChange">
+                    <i class="material-icons">trending_up</i>
+                    <span>+0%</span>
+                </div>
+                <div class="kpi-trend">
+                    <canvas id="equipmentTrendChart" width="100" height="40"></canvas>
+                </div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <div class="kpi-title">Profit Margin</div>
+                    <div class="kpi-icon" style="background-color: var(--teal-color);">
+                        <i class="material-icons">trending_up</i>
+                    </div>
+                </div>
+                <div class="kpi-value" id="profitMargin">0%</div>
+                <div class="kpi-change positive" id="profitChange">
+                    <i class="material-icons">trending_up</i>
+                    <span>+0%</span>
+                </div>
+                <div class="kpi-trend">
+                    <canvas id="profitTrendChart" width="100" height="40"></canvas>
+                </div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <div class="kpi-title">Customer Satisfaction</div>
+                    <div class="kpi-icon" style="background-color: var(--error-color);">
+                        <i class="material-icons">sentiment_satisfied</i>
+                    </div>
+                </div>
+                <div class="kpi-value" id="customerSatisfaction">0%</div>
+                <div class="kpi-change positive" id="satisfactionChange">
+                    <i class="material-icons">trending_up</i>
+                    <span>+0%</span>
+                </div>
+                <div class="kpi-trend">
+                    <canvas id="satisfactionTrendChart" width="100" height="40"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-grid">
+            <!-- Revenue Trend Chart -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">
+                        <i class="material-icons">trending_up</i>
+                        Revenue Trend Analysis
+                    </h3>
+                    <div class="chart-actions">
+                        <button class="chart-btn active" data-period="7d">7D</button>
+                        <button class="chart-btn" data-period="30d">30D</button>
+                        <button class="chart-btn" data-period="90d">90D</button>
+                        <button class="chart-btn" data-period="1y">1Y</button>
+                    </div>
+                </div>
+                <div class="chart-canvas">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Business Performance Distribution -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">
+                        <i class="material-icons">donut_large</i>
+                        Business Performance
+                    </h3>
+                    <div class="chart-actions">
+                        <button class="chart-btn active" data-chart="pie">Pie</button>
+                        <button class="chart-btn" data-chart="doughnut">Donut</button>
+                    </div>
+                </div>
+                <div class="chart-canvas">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Charts Row -->
+        <div class="charts-grid">
+            <!-- Customer Growth Chart -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">
+                        <i class="material-icons">people_outline</i>
+                        Customer Growth & Retention
+                    </h3>
+                    <div class="chart-actions">
+                        <button class="chart-btn active" data-type="line">Line</button>
+                        <button class="chart-btn" data-type="bar">Bar</button>
+                    </div>
+                </div>
+                <div class="chart-canvas">
+                    <canvas id="customerGrowthChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Operational Efficiency -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">
+                        <i class="material-icons">speed</i>
+                        Operational Efficiency
+                    </h3>
+                    <div class="chart-actions">
+                        <button class="chart-btn active" data-metric="efficiency">Efficiency</button>
+                        <button class="chart-btn" data-metric="productivity">Productivity</button>
+                    </div>
+                </div>
+                <div class="chart-canvas">
+                    <canvas id="operationalChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Market Analysis Chart -->
+        <div class="chart-container chart-full-width">
+            <div class="chart-header">
+                <h3 class="chart-title">
+                    <i class="material-icons">analytics</i>
+                    Market Analysis & Competitive Position
+                </h3>
+                <div class="chart-actions">
+                    <button class="chart-btn active" data-view="market">Market Share</button>
+                    <button class="chart-btn" data-view="competitive">Competitive</button>
+                    <button class="chart-btn" data-view="trends">Trends</button>
+                </div>
+            </div>
+            <div class="chart-canvas">
+                <canvas id="marketAnalysisChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Executive Tables Section -->
+        <div class="charts-grid">
+            <!-- Top Performing Products -->
+            <div class="data-table-container">
+                <div class="table-header">
+                    <h3 class="table-title">
+                        <i class="material-icons">star</i>
+                        Top Performing Products
+                    </h3>
+                    <button class="action-btn secondary" id="viewAllProductsBtn">
+                        <i class="material-icons">open_in_new</i>
+                        View All
+                    </button>
+                </div>
+                <table class="data-table" id="topProductsTable">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Revenue</th>
+                            <th>Units Sold</th>
+                            <th>Growth</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Key Customers -->
+            <div class="data-table-container">
+                <div class="table-header">
+                    <h3 class="table-title">
+                        <i class="material-icons">business</i>
+                        Key Customers
+                    </h3>
+                    <button class="action-btn secondary" id="viewAllCustomersBtn">
+                        <i class="material-icons">people</i>
+                        View All
+                    </button>
+                </div>
+                <table class="data-table" id="keyCustomersTable">
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Revenue</th>
+                            <th>Orders</th>
+                            <th>Last Order</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Recent Activities & Alerts -->
+        <div class="charts-grid">
+            <!-- Recent Activities -->
+            <div class="data-table-container">
+                <div class="table-header">
+                    <h3 class="table-title">
+                        <i class="material-icons">history</i>
+                        Recent Activities
+                    </h3>
+                    <button class="action-btn secondary" id="viewAllActivitiesBtn">
+                        <i class="material-icons">list</i>
+                        View All
+                    </button>
+                </div>
+                <table class="data-table" id="recentActivitiesTable">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Activity</th>
+                            <th>User</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- System Alerts -->
+            <div class="data-table-container">
+                <div class="table-header">
+                    <h3 class="table-title">
+                        <i class="material-icons">warning</i>
+                        System Alerts
+                    </h3>
+                    <button class="action-btn secondary" id="viewAllAlertsBtn">
+                        <i class="material-icons">notifications</i>
+                        View All
+                    </button>
+                </div>
+                <table class="data-table" id="systemAlertsTable">
+                    <thead>
+                        <tr>
+                            <th>Priority</th>
+                            <th>Alert</th>
+                            <th>Time</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="navigation-utils.js"></script>
+    <script src="data-service.js"></script>
+    <script src="executive-dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,2547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Party Details - Advanced View - Aftermarket Software</title>
+
+    <!-- Google Material Design Lite -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.grey-blue.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- Responsive Framework and Theme System -->
+    <link rel="stylesheet" href="responsive-framework.css">
+    <link rel="stylesheet" href="light-theme.css">
+    <script src="global-config.js"></script>
+
+    <style>
+        /* Black Theme with Light Backgrounds */
+        :root {
+            --primary-color: #000000;
+            --primary-light: #1f2937;
+            --secondary-color: #ffffff;
+            --accent-color: #f8fafc;
+            --border-color: #e2e8f0;
+            --hover-color: #f1f5f9;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --border-radius: 12px;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --info-color: #3b82f6;
+            --light-blue: #eff6ff;
+            --light-green: #ecfdf5;
+            --light-orange: #fffbeb;
+            --light-purple: #faf5ff;
+            --sidebar-width: 320px;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .app-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-md);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            height: 64px;
+        }
+
+        .app-title {
+            font-size: 20px;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 16px;
+            padding: 8px;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .menu-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Top Menu Styles */
+        .top-menu {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .menu-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .menu-label {
+            font-size: 12px;
+            color: #bdc3c7;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-items {
+            display: flex;
+            gap: 8px;
+        }
+
+        .menu-item {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .menu-item:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-1px);
+        }
+
+        .menu-item i {
+            font-size: 16px;
+        }
+
+        /* Navigation Sidebar Styles */
+        .nav-sidebar {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 320px;
+            height: 100vh;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            color: var(--text-primary);
+            z-index: 1100;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+            border-right: 1px solid var(--border-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-sidebar.open {
+            left: 0;
+        }
+
+        .nav-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .nav-title {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .nav-close {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .nav-close:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .nav-content {
+            padding: 16px 0;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            padding: 8px 24px;
+            margin: 0 0 8px 0;
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item {
+            margin: 0;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            color: #374151 !important;
+            text-decoration: none;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            border-radius: 0 8px 8px 0;
+            margin-right: 8px;
+        }
+
+        .nav-link:hover {
+            background: #f1f5f9 !important;
+            color: #1f2937 !important;
+        }
+
+        .nav-item.active .nav-link {
+            background: #e0f2fe !important;
+            border-left-color: #000000 !important;
+            color: #000000 !important;
+            font-weight: 500;
+        }
+
+        .nav-link i {
+            font-size: 20px;
+            width: 20px;
+            color: inherit !important;
+        }
+
+        /* Overlay for sidebar */
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1050;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .nav-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Breadcrumb Navigation */
+        .breadcrumb-nav {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 24px;
+            position: fixed;
+            top: 64px;
+            left: 0;
+            right: 0;
+            z-index: 90;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .breadcrumb-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .breadcrumb-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .breadcrumb-link {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #374151 !important;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .breadcrumb-link:hover {
+            background: #f1f5f9 !important;
+            color: #1f2937 !important;
+        }
+
+        .breadcrumb-link.active {
+            background: #000000 !important;
+            color: white !important;
+            cursor: default;
+        }
+
+        .breadcrumb-separator {
+            color: var(--text-muted) !important;
+            font-size: 16px;
+        }
+
+        .breadcrumb-icon {
+            font-size: 16px;
+            color: inherit !important;
+        }
+
+        /* Quick Action Bar */
+        .quick-action-bar {
+            position: fixed;
+            top: 64px;
+            right: 24px;
+            z-index: 95;
+            display: flex;
+            gap: 8px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            padding: 8px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .quick-action-btn {
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quick-action-btn:hover {
+            background: var(--hover-color);
+            color: var(--primary-color);
+        }
+
+        .quick-action-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Layout */
+        .app-layout {
+            display: flex;
+            margin-top: 112px; /* 64px header + 48px breadcrumb */
+            min-height: calc(100vh - 112px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            border-right: 1px solid var(--border-color);
+            transform: translateX(-100%);
+            transition: var(--transition);
+            position: fixed;
+            top: 112px; /* 64px header + 48px breadcrumb */
+            left: 0;
+            bottom: 0;
+            z-index: 50;
+            overflow-y: auto;
+            box-shadow: var(--shadow);
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(135deg, var(--light-blue), var(--light-green));
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .sidebar-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .sidebar-content {
+            padding: 24px;
+        }
+
+        /* Quick Filters in Sidebar */
+        .quick-filters-section {
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 24px 0;
+        }
+
+        .active-filters-display {
+            margin-bottom: 16px;
+            padding: 12px;
+            background: var(--light-blue);
+            border-radius: var(--border-radius);
+            border-left: 3px solid var(--info-color);
+        }
+
+        .filter-categories-grid {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .filter-category {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .category-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .filter-chip {
+            padding: 4px 10px;
+            background-color: var(--secondary-color);
+            border-radius: 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            border: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        .filter-chip:hover {
+            background-color: var(--hover-color);
+            transform: translateY(-1px);
+        }
+
+        .filter-chip.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .filter-chip-close {
+            font-size: 14px;
+            line-height: 1;
+            margin-left: 2px;
+        }
+
+        .active-filter-count {
+            background: var(--primary-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Account number styling */
+        .account-number-badge {
+            font-size: 12px;
+            color: #666;
+            background: #f8f9fa;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin: 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .account-number-small {
+            font-size: 11px;
+            color: #666;
+            margin: 2px 0;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Enhanced action buttons */
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            border: none;
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #c82333, #bd2130);
+        }
+
+        /* Form styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--primary-color);
+            font-size: 14px;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            transition: var(--transition);
+            background-color: white;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--info-color);
+            box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 32px;
+        }
+
+        .btn {
+            padding: 12px 16px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--info-color), #1976d2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(23, 162, 184, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--hover-color);
+        }
+
+        /* Main content */
+        .main-content {
+            flex: 1;
+            padding: 24px;
+            transition: var(--transition);
+            margin-left: 0;
+        }
+
+        .main-content.sidebar-open {
+            margin-left: var(--sidebar-width);
+        }
+
+        /* Ultra Compact Search and controls bar */
+        .controls-bar {
+            background: linear-gradient(135deg, white, var(--secondary-color));
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 8px 12px;
+            margin-bottom: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .search-section {
+            flex: 1;
+            min-width: 200px;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .search-container {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 6px 32px 6px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 13px;
+            transition: var(--transition);
+            height: 32px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(33, 37, 41, 0.1);
+        }
+
+        .search-actions {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 4px;
+        }
+
+        .search-btn {
+            background: none;
+            border: none;
+            color: #64748b !important;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .search-btn:hover {
+            color: var(--primary-color);
+            background-color: var(--hover-color);
+        }
+
+        .smart-search-toggle {
+            background-color: var(--info-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 6px 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: var(--transition);
+            font-weight: 500;
+            font-size: 12px;
+            height: 32px;
+        }
+
+        .smart-search-toggle:hover {
+            background-color: #1976d2;
+        }
+
+        .smart-search-toggle.active {
+            background-color: var(--success-color);
+        }
+
+        .controls-section {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .control-btn {
+            background: linear-gradient(135deg, var(--primary-color), #2c2c2c);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 6px 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: var(--transition);
+            font-weight: 500;
+            font-size: 12px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            height: 32px;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .control-btn.secondary {
+            background: linear-gradient(135deg, white, var(--secondary-color));
+            color: var(--primary-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .control-btn.secondary:hover {
+            background: linear-gradient(135deg, var(--hover-color), #e0e0e0);
+        }
+
+        /* Ultra Compact View controls */
+        .view-controls {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 6px 12px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .view-options {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .view-toggle {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 4px 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: var(--transition);
+            font-size: 12px;
+            font-weight: 500;
+            color: #6c757d;
+            height: 28px;
+        }
+
+        .view-toggle.active {
+            background-color: #1a1a1a;
+            color: white;
+            border-color: #1a1a1a;
+        }
+
+        .view-toggle:hover:not(.active) {
+            background-color: var(--hover-color);
+            border-color: #adb5bd;
+        }
+
+        /* Colored icons for view toggles */
+        .view-toggle[data-view="card"] i {
+            color: #007bff;
+        }
+
+        .view-toggle[data-view="list"] i {
+            color: #28a745;
+        }
+
+        .view-toggle[data-view="compact"] i {
+            color: #ffc107;
+        }
+
+        .view-toggle[data-view="grid"] i {
+            color: #dc3545;
+        }
+
+        .view-toggle.active i {
+            color: white;
+        }
+
+        .sort-controls {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .sort-select {
+            padding: 4px 8px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            background-color: white;
+            cursor: pointer;
+            font-size: 12px;
+            height: 28px;
+        }
+
+        /* Column search toggle button */
+        .column-search-toggle {
+            background: var(--info-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 4px 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: var(--transition);
+            font-size: 12px;
+            height: 28px;
+        }
+
+        .column-search-toggle:hover {
+            background: #1976d2;
+        }
+
+        .column-search-toggle.active {
+            background: var(--success-color);
+        }
+
+        /* Enhanced Column visibility controls */
+        .column-visibility-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .column-visibility-btn {
+            background: linear-gradient(135deg, var(--primary-color), #0056b3);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 6px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            height: 32px;
+            transition: var(--transition);
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+        }
+
+        .column-visibility-btn:hover {
+            background: linear-gradient(135deg, #0056b3, #004085);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+        }
+
+        .column-visibility-btn i {
+            font-size: 16px;
+        }
+
+        .column-visibility-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            padding: 12px;
+            min-width: 220px;
+            z-index: 1000;
+            display: none;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .column-visibility-menu.show {
+            display: block;
+            animation: slideDown 0.2s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .column-visibility-header {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .column-visibility-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 8px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 13px;
+            transition: var(--transition);
+            margin-bottom: 2px;
+        }
+
+        .column-visibility-item:hover {
+            background: var(--hover-color);
+        }
+
+        .column-visibility-item input[type="checkbox"] {
+            margin: 0;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: var(--primary-color);
+        }
+
+        .column-visibility-item label {
+            cursor: pointer;
+            flex: 1;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .column-visibility-item.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .column-visibility-actions {
+            margin-top: 12px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 8px;
+        }
+
+        .column-action-btn {
+            flex: 1;
+            padding: 6px 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: white;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 11px;
+            transition: var(--transition);
+        }
+
+        .column-action-btn:hover {
+            background: var(--hover-color);
+        }
+
+        .column-action-btn.primary {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .column-action-btn.primary:hover {
+            background: #0056b3;
+        }
+
+        /* Grid-only controls */
+        .grid-only-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-right: 12px;
+            padding-right: 12px;
+            border-right: 1px solid var(--border-color);
+        }
+
+        /* Drag to scroll indicator */
+        .drag-scroll-indicator {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 123, 255, 0.1);
+            color: var(--primary-color);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            opacity: 0;
+            transition: var(--transition);
+            pointer-events: none;
+        }
+
+        .drag-scroll-indicator.show {
+            opacity: 1;
+        }
+
+        .results-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 14px;
+            color: var(--accent-color);
+        }
+
+
+
+        /* Party cards layout */
+        .party-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .party-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .party-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .party-header {
+            background: linear-gradient(135deg, var(--primary-color), #343a40);
+            color: white;
+            padding: 20px;
+            position: relative;
+        }
+
+        .party-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .party-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .party-status {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background-color: var(--success-color);
+        }
+
+        .status-inactive {
+            background-color: var(--error-color);
+        }
+
+        .party-body {
+            padding: 20px;
+        }
+
+        .party-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #64748b !important;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+        .party-actions {
+            display: flex;
+            gap: 8px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 10px 12px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-info {
+            background-color: var(--info-color);
+            color: white;
+        }
+
+        .action-btn:hover {
+            opacity: 0.8;
+            transform: translateY(-1px);
+        }
+
+        /* Card view colored action buttons - Ultra Light */
+        .btn-primary {
+            background-color: var(--btn-view-bg) !important;
+            color: var(--btn-view-text) !important;
+            border: 1px solid var(--border-color) !important;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--btn-view-hover) !important;
+        }
+
+        .btn-info {
+            background-color: var(--btn-360-bg) !important;
+            color: var(--btn-360-text) !important;
+            border: 1px solid var(--border-color) !important;
+        }
+
+        .btn-info:hover {
+            background-color: var(--btn-360-hover) !important;
+        }
+
+        .btn-secondary {
+            background-color: var(--btn-edit-bg) !important;
+            color: var(--btn-edit-text) !important;
+            border: 1px solid var(--border-color) !important;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--btn-edit-hover) !important;
+        }
+
+        .btn-danger {
+            background-color: var(--btn-delete-bg) !important;
+            color: var(--btn-delete-text) !important;
+            border: 1px solid var(--border-color) !important;
+        }
+
+        .btn-danger:hover {
+            background-color: var(--btn-delete-hover) !important;
+        }
+
+        .btn-primary:hover {
+            background-color: #495057 !important;
+        }
+
+        .btn-info:hover {
+            background-color: #0056b3 !important;
+        }
+
+        .btn-secondary:hover {
+            background-color: #1e7e34 !important;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333 !important;
+        }
+
+        /* List view */
+        .party-list {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .list-item {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 20px;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .list-item:hover {
+            background-color: var(--hover-color);
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .list-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), #343a40);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .list-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+
+        .list-main {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .list-title {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .list-subtitle {
+            font-size: 14px;
+            color: var(--accent-color);
+        }
+
+        .list-details {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 14px;
+        }
+
+        .list-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .list-action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--accent-color);
+            padding: 8px;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .list-action-btn:hover {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        /* List view colored action icons */
+        .list-action-btn[title*="View"] i,
+        .list-action-btn[onclick*="viewPartyDetails"] i {
+            color: #6c757d !important;
+            font-size: 20px;
+        }
+
+        .list-action-btn[title*="View"]:hover i,
+        .list-action-btn[onclick*="viewPartyDetails"]:hover i {
+            color: #495057 !important;
+        }
+
+        .list-action-btn[title*="360"] i,
+        .list-action-btn[onclick*="viewCustomer360"] i {
+            color: #007bff !important;
+            font-size: 20px;
+        }
+
+        .list-action-btn[title*="360"]:hover i,
+        .list-action-btn[onclick*="viewCustomer360"]:hover i {
+            color: #0056b3 !important;
+        }
+
+        .list-action-btn[title*="Edit"] i,
+        .list-action-btn[onclick*="editParty"] i {
+            color: #28a745 !important;
+            font-size: 20px;
+        }
+
+        .list-action-btn[title*="Edit"]:hover i,
+        .list-action-btn[onclick*="editParty"]:hover i {
+            color: #1e7e34 !important;
+        }
+
+        .list-action-btn[title*="Delete"] i,
+        .list-action-btn[onclick*="deleteParty"] i {
+            color: #dc3545 !important;
+            font-size: 20px;
+        }
+
+        .list-action-btn[title*="Delete"]:hover i,
+        .list-action-btn[onclick*="deleteParty"]:hover i {
+            color: #c82333 !important;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--accent-color);
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        /* Loading state */
+        .loading-state {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        /* Sync status styles */
+        .sync-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: rgba(23, 162, 184, 0.1);
+        }
+
+        /* Enhanced Grid layout with scroll features */
+        .party-grid {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: none;
+            position: relative;
+        }
+
+        .grid-scroll-container {
+            overflow-x: auto;
+            overflow-y: visible;
+            position: relative;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-color) #f1f1f1;
+        }
+
+        /* Custom scrollbar for webkit browsers */
+        .grid-scroll-container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .grid-scroll-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .grid-scroll-container::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        .grid-scroll-container::-webkit-scrollbar-thumb:hover {
+            background: #0056b3;
+        }
+
+        /* Scroll indicators */
+        .scroll-indicator {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 123, 255, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: var(--transition);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .scroll-indicator:hover {
+            background: rgba(0, 86, 179, 0.9);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .scroll-indicator.left {
+            left: 10px;
+        }
+
+        .scroll-indicator.right {
+            right: 10px;
+        }
+
+        .scroll-indicator.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Horizontal scroll hint */
+        .scroll-hint {
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            background: rgba(0, 123, 255, 0.1);
+            color: var(--primary-color);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            opacity: 0.7;
+            transition: var(--transition);
+        }
+
+        .scroll-hint:hover {
+            opacity: 1;
+            background: rgba(0, 123, 255, 0.2);
+        }
+
+        .grid-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1200px; /* Ensure minimum width for all columns */
+        }
+
+        .grid-table th,
+        .grid-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .grid-table th {
+            background-color: var(--secondary-color);
+            font-weight: 600;
+            color: #64748b !important;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .grid-table tbody tr:hover {
+            background-color: var(--hover-color);
+        }
+
+        .grid-table td {
+            color: #374151 !important;
+        }
+
+        .grid-table .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .grid-table .status-active {
+            background-color: var(--light-green);
+            color: var(--success-color);
+        }
+
+        .grid-table .status-inactive {
+            background-color: var(--light-red);
+            color: var(--error-color);
+        }
+
+        .grid-table .party-type-badge {
+            background-color: var(--light-blue);
+            color: var(--info-color);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .grid-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .grid-action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: var(--transition);
+            color: #64748b !important;
+        }
+
+        .grid-action-btn:hover {
+            background-color: var(--hover-color);
+        }
+
+        /* Colored action icons - Enhanced */
+        .grid-action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 4px;
+            transition: var(--transition);
+            color: #64748b !important;
+        }
+
+        .grid-action-btn:hover {
+            background-color: var(--hover-color);
+        }
+
+        /* View/Eye icon - Ultra Light Gray */
+        .grid-action-btn[title*="View"] i,
+        .grid-action-btn[onclick*="viewPartyDetails"] i {
+            color: var(--btn-view-text) !important;
+            font-size: 20px;
+        }
+
+        .grid-action-btn[title*="View"]:hover i,
+        .grid-action-btn[onclick*="viewPartyDetails"]:hover i {
+            color: #1f2937 !important;
+        }
+
+        /* Dashboard/360 icon - Ultra Light Blue */
+        .grid-action-btn[title*="360"] i,
+        .grid-action-btn[onclick*="viewCustomer360"] i {
+            color: var(--btn-360-text) !important;
+            font-size: 20px;
+        }
+
+        .grid-action-btn[title*="360"]:hover i,
+        .grid-action-btn[onclick*="viewCustomer360"]:hover i {
+            color: #1e40af !important;
+        }
+
+        /* Edit icon - Ultra Light Green */
+        .grid-action-btn[title*="Edit"] i,
+        .grid-action-btn[onclick*="editParty"] i {
+            color: var(--btn-edit-text) !important;
+            font-size: 20px;
+        }
+
+        .grid-action-btn[title*="Edit"]:hover i,
+        .grid-action-btn[onclick*="editParty"]:hover i {
+            color: #166534 !important;
+        }
+
+        /* Delete icon - Ultra Light Red */
+        .grid-action-btn[title*="Delete"] i,
+        .grid-action-btn[onclick*="deleteParty"] i {
+            color: var(--btn-delete-text) !important;
+            font-size: 20px;
+        }
+
+        .grid-action-btn[title*="Delete"]:hover i,
+        .grid-action-btn[onclick*="deleteParty"]:hover i {
+            color: #dc2626 !important;
+        }
+
+        /* Compact Bulk Actions */
+        .compact-bulk-actions {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            padding: 12px 20px;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        .bulk-actions-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .selected-info {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .compact-delete-btn,
+        .compact-cancel-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 6px 12px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: var(--transition);
+            margin-left: 8px;
+        }
+
+        .compact-delete-btn:hover {
+            background: rgba(220, 53, 69, 0.8);
+            border-color: rgba(220, 53, 69, 0.8);
+        }
+
+        .compact-cancel-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Grid positioning for bulk actions */
+        .party-grid {
+            position: relative;
+        }
+
+        .party-grid .grid-table {
+            margin-top: 0;
+        }
+
+        .party-grid.has-selection .grid-table {
+            margin-top: 48px;
+        }
+
+        .grid-table th input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+
+
+        /* Compact Column search row */
+        .column-search-row {
+            background-color: #f8f9fa;
+        }
+
+        .column-search-row th {
+            padding: 4px 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .column-search-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .column-search-input,
+        .column-search-select {
+            width: 100%;
+            padding: 4px 20px 4px 6px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-size: 11px;
+            background-color: white;
+            transition: var(--transition);
+            height: 24px;
+        }
+
+        .column-search-input:focus,
+        .column-search-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+        }
+
+        .column-search-input.has-value,
+        .column-search-select.has-value {
+            background-color: #e3f2fd;
+            border-color: var(--primary-color);
+        }
+
+        .search-clear-icon {
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            color: #999;
+            cursor: pointer;
+            transition: var(--transition);
+            background: white;
+            border-radius: 50%;
+            padding: 1px;
+        }
+
+        .search-clear-icon:hover {
+            color: var(--error-color);
+            background-color: #ffebee;
+        }
+
+        .clear-all-searches-btn {
+            background: var(--error-color);
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 4px 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 24px;
+            width: 24px;
+        }
+
+        .clear-all-searches-btn:hover {
+            background: #c82333;
+            transform: scale(1.05);
+        }
+
+        .clear-all-searches-btn i {
+            font-size: 14px;
+        }
+
+        .grid-table td input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .grid-table tr.selected {
+            background-color: rgba(0, 123, 255, 0.1);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .controls-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-section {
+                min-width: auto;
+                flex-direction: column;
+            }
+
+            .view-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .party-container {
+                grid-template-columns: 1fr;
+            }
+
+            .party-details {
+                grid-template-columns: 1fr;
+            }
+
+            .list-content {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .filter-categories {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="material-icons">menu</i>
+            </button>
+            <h1 class="app-title">Aftermarket Software - Party Management</h1>
+
+            <!-- Top Menu - Most Used & Recently Used -->
+            <div class="top-menu">
+                <div class="menu-section">
+                    <span class="menu-label">Most Used</span>
+                    <div class="menu-items">
+                        <button class="menu-item" onclick="openCustomer360()">
+                            <i class="material-icons">dashboard</i>
+                            Customer 360
+                        </button>
+                        <button class="menu-item" onclick="openEquipmentManagement()">
+                            <i class="material-icons">precision_manufacturing</i>
+                            Equipment
+                        </button>
+                        <button class="menu-item" onclick="openWarrantyTracker()">
+                            <i class="material-icons">verified_user</i>
+                            Warranty
+                        </button>
+                    </div>
+                </div>
+                <div class="menu-section">
+                    <span class="menu-label">Recently Used</span>
+                    <div class="menu-items">
+                        <button class="menu-item" onclick="openServiceHistory()">
+                            <i class="material-icons">build</i>
+                            Service History
+                        </button>
+                        <button class="menu-item" onclick="openReports()">
+                            <i class="material-icons">analytics</i>
+                            Reports
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Breadcrumb Navigation -->
+    <nav class="breadcrumb-nav">
+        <div class="breadcrumb-container" id="breadcrumbContainer">
+            <div class="breadcrumb-item">
+                <a href="#" class="breadcrumb-link" onclick="navigateToHome()">
+                    <i class="material-icons breadcrumb-icon">home</i>
+                    <span>Aftermarket Software</span>
+                </a>
+            </div>
+            <i class="material-icons breadcrumb-separator">chevron_right</i>
+            <div class="breadcrumb-item">
+                <a href="#" class="breadcrumb-link" onclick="navigateToPartyManagement()">
+                    <i class="material-icons breadcrumb-icon">people</i>
+                    <span>Party Management</span>
+                </a>
+            </div>
+            <i class="material-icons breadcrumb-separator">chevron_right</i>
+            <div class="breadcrumb-item">
+                <a href="#" class="breadcrumb-link active">
+                    <i class="material-icons breadcrumb-icon">view_list</i>
+                    <span>Party Details</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Quick Action Bar -->
+    <div class="quick-action-bar">
+        <button class="quick-action-btn" onclick="goBack()" title="Go Back">
+            <i class="material-icons">arrow_back</i>
+        </button>
+        <button class="quick-action-btn" onclick="refreshPage()" title="Refresh">
+            <i class="material-icons">refresh</i>
+        </button>
+        <button class="quick-action-btn" onclick="toggleBookmark()" title="Bookmark" id="bookmarkBtn">
+            <i class="material-icons">bookmark_border</i>
+        </button>
+        <button class="quick-action-btn" onclick="shareCurrentPage()" title="Share">
+            <i class="material-icons">share</i>
+        </button>
+        <button class="quick-action-btn" onclick="openHelp()" title="Help">
+            <i class="material-icons">help_outline</i>
+        </button>
+    </div>
+
+    <!-- Navigation Sidebar -->
+    <nav class="nav-sidebar" id="navSidebar">
+        <div class="nav-header">
+            <h2 class="nav-title">Navigation</h2>
+            <button class="nav-close" id="navClose">
+                <i class="material-icons">close</i>
+            </button>
+        </div>
+        <div class="nav-content">
+            <div class="nav-section">
+                <h3 class="nav-section-title">Party Management</h3>
+                <ul class="nav-list">
+                    <li class="nav-item active">
+                        <a href="#" class="nav-link">
+                            <i class="material-icons">people</i>
+                            <span>Party Details</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" onclick="openCustomer360()" class="nav-link">
+                            <i class="material-icons">dashboard</i>
+                            <span>Customer 360 View</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <h3 class="nav-section-title">Equipment & Assets</h3>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="#" onclick="openEquipmentManagement()" class="nav-link">
+                            <i class="material-icons">precision_manufacturing</i>
+                            <span>Equipment Management</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" onclick="openWarrantyTracker()" class="nav-link">
+                            <i class="material-icons">verified_user</i>
+                            <span>Warranty Tracker</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" onclick="openServiceHistory()" class="nav-link">
+                            <i class="material-icons">build</i>
+                            <span>Service History</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <h3 class="nav-section-title">Analytics & Reports</h3>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="#" onclick="openReports()" class="nav-link">
+                            <i class="material-icons">analytics</i>
+                            <span>Reports & Analytics</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" onclick="openDashboard()" class="nav-link">
+                            <i class="material-icons">dashboard</i>
+                            <span>Executive Dashboard</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <h3 class="nav-section-title">Administration</h3>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="#" onclick="openUserManagement()" class="nav-link">
+                            <i class="material-icons">admin_panel_settings</i>
+                            <span>User Management</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" onclick="openSettings()" class="nav-link">
+                            <i class="material-icons">settings</i>
+                            <span>System Settings</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" onclick="openThemeConfigurator()" class="nav-link">
+                            <i class="material-icons">palette</i>
+                            <span>Theme Configuration</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Navigation Overlay -->
+    <div class="nav-overlay" id="navOverlay"></div>
+
+    <!-- Sidebar for Advanced Search -->
+    <aside class="sidebar" id="advancedSidebar">
+        <div class="sidebar-header">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <h2 class="sidebar-title">Filters & Advanced Search</h2>
+                <div id="syncStatus" class="sync-status" style="display: none;">
+                    <i class="material-icons" style="font-size: 16px; color: var(--info-color);">sync</i>
+                </div>
+            </div>
+            <p class="sidebar-subtitle">Quick filters and detailed search criteria • Syncs with main search</p>
+        </div>
+        <div class="sidebar-content">
+            <!-- Quick Filters Section -->
+            <div class="quick-filters-section">
+                <h3 class="section-title">
+                    <i class="material-icons">filter_list</i>
+                    Quick Filters
+                    <span class="active-filter-count" id="activeFilterCount" style="display: none;">0</span>
+                </h3>
+
+                <!-- Active Filters Display -->
+                <div class="active-filters-display" id="activeFiltersDisplay" style="display: none;">
+                    <!-- Active filters will be shown here -->
+                </div>
+
+                <!-- Filter Categories -->
+                <div class="filter-categories-grid">
+                    <div class="filter-category">
+                        <div class="category-title">Party Type</div>
+                        <div class="filter-chips" id="partyTypeFilters">
+                            <!-- Party type filters will be populated here -->
+                        </div>
+                    </div>
+                    <div class="filter-category">
+                        <div class="category-title">Status</div>
+                        <div class="filter-chips" id="statusFilters">
+                            <!-- Status filters will be populated here -->
+                        </div>
+                    </div>
+                    <div class="filter-category">
+                        <div class="category-title">Location</div>
+                        <div class="filter-chips" id="locationFilters">
+                            <!-- Location filters will be populated here -->
+                        </div>
+                    </div>
+                    <div class="filter-category">
+                        <div class="category-title">Company</div>
+                        <div class="filter-chips" id="companyFilters">
+                            <!-- Company filters will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-secondary" id="clearAllFilters" style="width: 100%; margin-top: 16px;">
+                    <i class="material-icons">clear_all</i>
+                    Clear All Filters
+                </button>
+            </div>
+
+            <!-- Divider -->
+            <div class="section-divider"></div>
+
+            <!-- Advanced Search Form -->
+            <form id="advancedSearchForm">
+                <h3 class="section-title">
+                    <i class="material-icons">search</i>
+                    Advanced Search
+                </h3>
+
+                <!-- Party Type Filter -->
+                <div class="form-group">
+                    <label class="form-label">Party Type</label>
+                    <select id="advPartyType" class="form-select">
+                        <option value="">All Party Types</option>
+                        <option value="Customer">Customer</option>
+                        <option value="Prospect">Prospect</option>
+                        <option value="Outside Agency">Outside Agency</option>
+                        <option value="Manufacturer">Manufacturer</option>
+                        <option value="Clearing Agent">Clearing Agent</option>
+                        <option value="Transporter">Transporter</option>
+                        <option value="Insurance">Insurance</option>
+                        <option value="Financier">Financier</option>
+                        <option value="User">User</option>
+                        <option value="Vendor">Vendor</option>
+                        <option value="Contractor">Contractor</option>
+                    </select>
+                </div>
+
+                <!-- Name Search -->
+                <div class="form-group">
+                    <label class="form-label">Name</label>
+                    <input type="text" id="advName" class="form-input" placeholder="Enter party name">
+                </div>
+
+                <!-- Email Search -->
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" id="advEmail" class="form-input" placeholder="Enter email address">
+                </div>
+
+                <!-- Phone Search -->
+                <div class="form-group">
+                    <label class="form-label">Phone</label>
+                    <input type="tel" id="advPhone" class="form-input" placeholder="Enter phone number">
+                </div>
+
+                <!-- Location Filters -->
+                <div class="form-group">
+                    <label class="form-label">City</label>
+                    <input type="text" id="advCity" class="form-input" placeholder="Enter city">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Country</label>
+                    <input type="text" id="advCountry" class="form-input" placeholder="Enter country">
+                </div>
+
+                <!-- Company and Branch -->
+                <div class="form-group">
+                    <label class="form-label">Company</label>
+                    <input type="text" id="advCompany" class="form-input" placeholder="Enter company name">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Branch</label>
+                    <input type="text" id="advBranch" class="form-input" placeholder="Enter branch">
+                </div>
+
+                <!-- Status Filter -->
+                <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <select id="advStatus" class="form-select">
+                        <option value="">All Statuses</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="material-icons">search</i>
+                        Search
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="clearAdvancedSearch()">
+                        <i class="material-icons">clear</i>
+                        Clear
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closeSidebar()">
+                        <i class="material-icons">close</i>
+                        Close
+                    </button>
+                </div>
+            </form>
+        </div>
+    </aside>
+
+    <!-- App Layout -->
+    <div class="app-layout">
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <!-- Search and Controls Bar -->
+        <div class="controls-bar">
+            <div class="search-section">
+                <div class="search-container">
+                    <input type="text" class="search-input" id="mainSearch" placeholder="Search parties by name, email, phone, city, or any field...">
+                    <div class="search-actions">
+                        <button class="search-btn" id="voiceSearchBtn" title="Voice Search">
+                            <i class="material-icons">mic</i>
+                        </button>
+                        <button class="search-btn" id="clearSearchBtn" title="Clear Search">
+                            <i class="material-icons">clear</i>
+                        </button>
+                    </div>
+                </div>
+                <button class="smart-search-toggle" id="smartSearchToggle">
+                    <i class="material-icons">psychology</i>
+                    Smart Search
+                </button>
+            </div>
+            <div class="controls-section">
+                <button class="control-btn" id="advancedSearchBtn">
+                    <i class="material-icons">tune</i>
+                    Advanced Search
+                </button>
+                <button class="control-btn secondary" id="importBtn">
+                    <i class="material-icons">file_upload</i>
+                    Import
+                </button>
+                <button class="control-btn secondary" id="exportBtn">
+                    <i class="material-icons">file_download</i>
+                    Export
+                </button>
+                <button class="control-btn" id="addPartyBtn">
+                    <i class="material-icons">add</i>
+                    Add Party
+                </button>
+            </div>
+        </div>
+
+
+
+        <!-- View Controls -->
+        <div class="view-controls">
+            <div class="view-options">
+                <button class="view-toggle active" id="cardViewBtn" data-view="card">
+                    <i class="material-icons">view_module</i>
+                    Cards
+                </button>
+                <button class="view-toggle" id="listViewBtn" data-view="list">
+                    <i class="material-icons">view_list</i>
+                    List
+                </button>
+                <button class="view-toggle" id="compactViewBtn" data-view="compact">
+                    <i class="material-icons">view_comfy</i>
+                    Compact
+                </button>
+                <button class="view-toggle" id="gridViewBtn" data-view="grid">
+                    <i class="material-icons">grid_view</i>
+                    Normal Grid
+                </button>
+            </div>
+            <div class="sort-controls">
+                <div class="grid-only-controls" id="gridOnlyControls" style="display: none;">
+                    <button id="columnSearchToggle" class="column-search-toggle active" onclick="toggleColumnSearch()" title="Toggle Column Search">
+                        <i class="material-icons">search</i>
+                        <span>Column Search</span>
+                    </button>
+                    <div class="column-visibility-dropdown">
+                        <button class="column-visibility-btn" onclick="toggleColumnVisibility()" title="Show/Hide Columns">
+                            <i class="material-icons">view_column</i>
+                            <span>Show/Hide Columns</span>
+                        </button>
+                    <div class="column-visibility-menu" id="columnVisibilityMenu">
+                        <div class="column-visibility-header">
+                            <i class="material-icons">visibility</i>
+                            <span>Column Visibility</span>
+                        </div>
+                        <div class="column-visibility-item">
+                            <input type="checkbox" id="col-name" checked onchange="toggleColumn('name')" disabled>
+                            <label for="col-name">Name (Required)</label>
+                        </div>
+                        <div class="column-visibility-item">
+                            <input type="checkbox" id="col-account" checked onchange="toggleColumn('accountNumber')">
+                            <label for="col-account">Account Number</label>
+                        </div>
+                        <div class="column-visibility-item">
+                            <input type="checkbox" id="col-type" checked onchange="toggleColumn('partyType')">
+                            <label for="col-type">Party Type</label>
+                        </div>
+                        <div class="column-visibility-item">
+                            <input type="checkbox" id="col-email" checked onchange="toggleColumn('email')">
+                            <label for="col-email">Email</label>
+                        </div>
+                        <div class="column-visibility-item">
+                            <input type="checkbox" id="col-phone" checked onchange="toggleColumn('phone')">
+                            <label for="col-phone">Phone</label>
+                        </div>
+                        <div class="column-visibility-item">
+                            <input type="checkbox" id="col-mobile" checked onchange="toggleColumn('mobile')">
+                            <label for="col-mobile">Mobile</label>
+                        </div>
+                        <div class="column-visibility-item">
+                            <input type="checkbox" id="col-location" checked onchange="toggleColumn('location')">
+                            <label for="col-location">Location</label>
+                        </div>
+                        <div class="column-visibility-item">
+                            <input type="checkbox" id="col-address" checked onchange="toggleColumn('address')">
+                            <label for="col-address">Address</label>
+                        </div>
+                        <div class="column-visibility-item">
+                            <input type="checkbox" id="col-company" checked onchange="toggleColumn('company')">
+                            <label for="col-company">Company</label>
+                        </div>
+                        <div class="column-visibility-item">
+                            <input type="checkbox" id="col-status" checked onchange="toggleColumn('status')">
+                            <label for="col-status">Status</label>
+                        </div>
+                        <div class="column-visibility-actions">
+                            <button class="column-action-btn" onclick="showAllColumns()">Show All</button>
+                            <button class="column-action-btn" onclick="hideAllColumns()">Hide All</button>
+                            <button class="column-action-btn primary" onclick="resetColumnVisibility()">Reset</button>
+                        </div>
+                    </div>
+                </div>
+                </div> <!-- End grid-only-controls -->
+                <label for="sortBy">Sort:</label>
+                <select class="sort-select" id="sortBy">
+                    <option value="name">Name</option>
+                    <option value="partyType">Party Type</option>
+                    <option value="city">City</option>
+                    <option value="country">Country</option>
+                    <option value="isActive">Status</option>
+                </select>
+                <button class="search-btn" id="sortOrderBtn" title="Sort Order">
+                    <i class="material-icons">arrow_upward</i>
+                </button>
+            </div>
+            <div class="results-info">
+                <span id="resultsCount">0 parties</span>
+                <span>•</span>
+                <span id="filterStatus">No filters applied</span>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="loading-state" style="display: none;">
+            <div class="spinner"></div>
+        </div>
+
+        <!-- Party Container (Cards View) -->
+        <div id="partyContainer" class="party-container">
+            <!-- Party cards will be populated here -->
+        </div>
+
+        <!-- Party List (List View) -->
+        <div id="partyList" class="party-list" style="display: none;">
+            <!-- Party list items will be populated here -->
+        </div>
+
+        <!-- Party Grid (Normal Grid View) -->
+        <div id="partyGrid" class="party-grid" style="display: none;">
+            <!-- Compact Bulk Actions (only shows when items selected) -->
+            <div class="compact-bulk-actions" id="compactBulkActions" style="display: none;">
+                <div class="bulk-actions-content">
+                    <span class="selected-info">
+                        <span id="selectedCount">0</span> items selected
+                    </span>
+                    <button class="compact-delete-btn" onclick="bulkDeleteParties()">
+                        <i class="material-icons">delete</i>
+                        Delete Selected
+                    </button>
+                    <button class="compact-cancel-btn" onclick="clearSelection()">
+                        <i class="material-icons">close</i>
+                        Cancel
+                    </button>
+                </div>
+            </div>
+
+            <!-- Scroll Indicators -->
+            <button class="scroll-indicator left" id="scrollLeft" onclick="scrollGridLeft()" title="Scroll Left">
+                <i class="material-icons">chevron_left</i>
+            </button>
+            <button class="scroll-indicator right" id="scrollRight" onclick="scrollGridRight()" title="Scroll Right">
+                <i class="material-icons">chevron_right</i>
+            </button>
+
+            <!-- Drag to scroll indicator -->
+            <div class="drag-scroll-indicator" id="dragScrollIndicator">
+                <i class="material-icons">drag_indicator</i>
+                <span>Drag to scroll horizontally</span>
+            </div>
+
+            <!-- Scroll hint -->
+            <div class="scroll-hint">
+                <i class="material-icons">swipe</i>
+                <span>Scroll horizontally</span>
+            </div>
+
+            <!-- Grid scroll container -->
+            <div class="grid-scroll-container" id="gridScrollContainer">
+                <table class="grid-table">
+                <thead>
+                    <tr>
+                        <th width="40">
+                            <input type="checkbox" id="headerSelectAll" onchange="toggleSelectAll()" title="Select All">
+                        </th>
+                        <th data-column="name">Name</th>
+                        <th data-column="accountNumber">Account Number</th>
+                        <th data-column="partyType">Party Type</th>
+                        <th data-column="email">Email</th>
+                        <th data-column="phone">Phone</th>
+                        <th data-column="mobile">Mobile</th>
+                        <th data-column="location">Location</th>
+                        <th data-column="address">Address</th>
+                        <th data-column="company">Company</th>
+                        <th data-column="status">Status</th>
+                        <th width="120">Actions</th>
+                    </tr>
+                    <tr class="column-search-row">
+                        <th></th>
+                        <th>
+                            <div class="column-search-container">
+                                <input type="text" class="column-search-input" placeholder="Search name..." data-column="name" onkeyup="searchColumn(this)">
+                                <i class="material-icons search-clear-icon" onclick="clearColumnSearch(this)" style="display: none;">close</i>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="column-search-container">
+                                <input type="text" class="column-search-input" placeholder="Search account..." data-column="accountNumber" onkeyup="searchColumn(this)">
+                                <i class="material-icons search-clear-icon" onclick="clearColumnSearch(this)" style="display: none;">close</i>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="column-search-container">
+                                <input type="text" class="column-search-input" placeholder="Search type..." data-column="partyType" onkeyup="searchColumn(this)">
+                                <i class="material-icons search-clear-icon" onclick="clearColumnSearch(this)" style="display: none;">close</i>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="column-search-container">
+                                <input type="text" class="column-search-input" placeholder="Search email..." data-column="email" onkeyup="searchColumn(this)">
+                                <i class="material-icons search-clear-icon" onclick="clearColumnSearch(this)" style="display: none;">close</i>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="column-search-container">
+                                <input type="text" class="column-search-input" placeholder="Search phone..." data-column="phone" onkeyup="searchColumn(this)">
+                                <i class="material-icons search-clear-icon" onclick="clearColumnSearch(this)" style="display: none;">close</i>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="column-search-container">
+                                <input type="text" class="column-search-input" placeholder="Search mobile..." data-column="mobile" onkeyup="searchColumn(this)">
+                                <i class="material-icons search-clear-icon" onclick="clearColumnSearch(this)" style="display: none;">close</i>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="column-search-container">
+                                <input type="text" class="column-search-input" placeholder="Search location..." data-column="location" onkeyup="searchColumn(this)">
+                                <i class="material-icons search-clear-icon" onclick="clearColumnSearch(this)" style="display: none;">close</i>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="column-search-container">
+                                <input type="text" class="column-search-input" placeholder="Search address..." data-column="address" onkeyup="searchColumn(this)">
+                                <i class="material-icons search-clear-icon" onclick="clearColumnSearch(this)" style="display: none;">close</i>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="column-search-container">
+                                <input type="text" class="column-search-input" placeholder="Search company..." data-column="company" onkeyup="searchColumn(this)">
+                                <i class="material-icons search-clear-icon" onclick="clearColumnSearch(this)" style="display: none;">close</i>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="column-search-container">
+                                <select class="column-search-select" data-column="status" onchange="searchColumn(this)">
+                                    <option value="">All Status</option>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                                <i class="material-icons search-clear-icon" onclick="clearColumnSearch(this)" style="display: none;">close</i>
+                            </div>
+                        </th>
+                        <th>
+                            <button class="clear-all-searches-btn" onclick="clearAllColumnSearches()" title="Clear All Searches">
+                                <i class="material-icons">clear_all</i>
+                            </button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="gridTableBody">
+                    <!-- Grid rows will be populated here -->
+                </tbody>
+            </table>
+            </div> <!-- End grid-scroll-container -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <i class="material-icons">people_outline</i>
+            <h3>No Parties Found</h3>
+            <p>No parties match your current search criteria or filters.</p>
+        </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="navigation-utils.js"></script>
+    <script src="data-service.js"></script>
+    <script src="party-details-advanced.js"></script>
+</body>
+</html>

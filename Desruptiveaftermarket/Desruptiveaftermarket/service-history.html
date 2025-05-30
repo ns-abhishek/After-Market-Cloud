@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service History - Aftermarket Software</title>
+
+    <!-- Google Material Design Lite -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.grey-blue.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- Light Theme -->
+    <link rel="stylesheet" href="light-theme.css">
+
+    <style>
+        /* Black Theme with Light Backgrounds */
+        :root {
+            --primary-color: #000000;
+            --primary-light: #1f2937;
+            --secondary-color: #ffffff;
+            --accent-color: #f8fafc;
+            --border-color: #e2e8f0;
+            --hover-color: #f1f5f9;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --transition: all 0.3s ease;
+            --border-radius: 12px;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --info-color: #3b82f6;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .app-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-md);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            height: 64px;
+        }
+
+        .app-title {
+            font-size: 20px;
+            font-weight: 500;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 16px;
+            padding: 8px;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .back-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Main content */
+        .main-content {
+            margin-top: 64px;
+            padding: 16px;
+            max-width: 1600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Stats cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #1e293b !important;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #64748b !important;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-icon {
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+
+        /* Filters */
+        .filters-container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .filters-row {
+            display: grid;
+            grid-template-columns: 1fr auto auto auto auto;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .search-input {
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(33, 37, 41, 0.1);
+        }
+
+        .filter-select {
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            background-color: white;
+            cursor: pointer;
+            min-width: 150px;
+        }
+
+        .action-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 12px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .action-btn:hover {
+            background-color: #343a40;
+        }
+
+        .action-btn.secondary {
+            background-color: var(--info-color);
+        }
+
+        .action-btn.secondary:hover {
+            background-color: #1976d2;
+        }
+
+        /* Service table */
+        .service-table-container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 18px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #1e293b !important;
+        }
+
+        .service-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .service-table th,
+        .service-table td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .service-table th {
+            background-color: var(--secondary-color);
+            font-weight: 500;
+            color: #1e293b !important;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .service-table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        .service-table tbody tr:hover {
+            background-color: var(--hover-color);
+        }
+
+        .service-table td {
+            color: #374151 !important;
+        }
+
+        /* Status badges */
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .status-completed {
+            background-color: #e8f5e8;
+            color: var(--success-color);
+        }
+
+        .status-in-progress {
+            background-color: #fff3e0;
+            color: var(--warning-color);
+        }
+
+        .status-scheduled {
+            background-color: #e3f2fd;
+            color: var(--info-color);
+        }
+
+        .status-cancelled {
+            background-color: #ffebee;
+            color: var(--error-color);
+        }
+
+        /* Service type badges */
+        .service-type-badge {
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            background-color: var(--secondary-color);
+            color: #1e293b !important;
+        }
+
+        /* Action buttons */
+        .table-action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #64748b !important;
+            padding: 8px;
+            border-radius: 50%;
+            transition: var(--transition);
+            margin: 0 2px;
+        }
+
+        .table-action-btn:hover {
+            background-color: var(--secondary-color);
+            color: #1e293b !important;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b !important;
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .filters-row {
+                grid-template-columns: 1fr;
+            }
+
+            .service-table {
+                font-size: 14px;
+            }
+
+            .service-table th,
+            .service-table td {
+                padding: 12px 8px;
+            }
+
+            /* Hide some columns on mobile */
+            .service-table th:nth-child(n+6),
+            .service-table td:nth-child(n+6) {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <button class="back-button" onclick="goBack()">
+                <i class="material-icons">arrow_back</i>
+            </button>
+            <h1 class="app-title">
+                <i class="material-icons">build</i>
+                Service History
+            </h1>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="material-icons" style="color: var(--success-color);">check_circle</i>
+                </div>
+                <div class="stat-value" id="completedServices">0</div>
+                <div class="stat-label">Completed Services</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="material-icons" style="color: var(--warning-color);">schedule</i>
+                </div>
+                <div class="stat-value" id="scheduledServices">0</div>
+                <div class="stat-label">Scheduled Services</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="material-icons" style="color: var(--info-color);">attach_money</i>
+                </div>
+                <div class="stat-value" id="totalCost">$0</div>
+                <div class="stat-label">Total Service Cost</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="material-icons" style="color: #0891b2 !important;">access_time</i>
+                </div>
+                <div class="stat-value" id="totalHours">0</div>
+                <div class="stat-label">Total Labor Hours</div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-container">
+            <div class="filters-row">
+                <input type="text" class="search-input" id="serviceSearch" placeholder="Search by equipment, customer, technician, or description...">
+                <select class="filter-select" id="statusFilter">
+                    <option value="">All Status</option>
+                    <option value="Completed">Completed</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Scheduled">Scheduled</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
+                <select class="filter-select" id="typeFilter">
+                    <option value="">All Types</option>
+                    <option value="Preventive Maintenance">Preventive Maintenance</option>
+                    <option value="Repair">Repair</option>
+                    <option value="Emergency">Emergency</option>
+                    <option value="Inspection">Inspection</option>
+                </select>
+                <button class="action-btn" id="addServiceBtn">
+                    <i class="material-icons">add</i>
+                    Add Service
+                </button>
+                <button class="action-btn secondary" id="exportBtn">
+                    <i class="material-icons">download</i>
+                    Export
+                </button>
+            </div>
+        </div>
+
+        <!-- Service Table -->
+        <div class="service-table-container">
+            <div class="table-header">
+                <h3 class="table-title">
+                    <i class="material-icons">build</i>
+                    Service Records
+                </h3>
+                <div style="display: flex; gap: 8px;">
+                    <button class="action-btn" id="refreshBtn" style="padding: 8px 12px;">
+                        <i class="material-icons">refresh</i>
+                    </button>
+                </div>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="service-table">
+                    <thead>
+                        <tr>
+                            <th>Service ID</th>
+                            <th>Date</th>
+                            <th>Equipment</th>
+                            <th>Customer</th>
+                            <th>Service Type</th>
+                            <th>Technician</th>
+                            <th>Status</th>
+                            <th>Cost</th>
+                            <th>Hours</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="serviceTableBody">
+                        <!-- Service rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <i class="material-icons">build</i>
+            <h3>No Service Records Found</h3>
+            <p>No service records match your current filters.</p>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="navigation-utils.js"></script>
+    <script src="data-service.js"></script>
+    <script src="service-history.js"></script>
+</body>
+</html>

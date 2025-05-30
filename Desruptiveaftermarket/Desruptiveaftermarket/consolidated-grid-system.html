@@ -1,0 +1,3045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aftermarket System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+    <style id="app-styles">
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #212529;
+            background-color: #ffffff;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            width: 100%;
+            padding: 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #212529;
+            color: white;
+            border-bottom: 1px solid #343a40;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            color: white;
+            font-weight: 500;
+        }
+
+        /* Navigation styles */
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 5px;
+        }
+
+        .nav-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+            gap: 8px;
+        }
+
+        .nav-menu li a:hover {
+            background-color: #343a40;
+        }
+
+        .nav-menu li.active a {
+            background-color: #495057;
+        }
+
+        /* Tenant selector styles */
+        .tenant-selector {
+            padding: 10px 20px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .tenant-select, .entity-select {
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            background-color: #fff;
+            font-size: 14px;
+            min-width: 200px;
+            cursor: pointer;
+        }
+
+        .tenant-select:focus, .entity-select:focus {
+            outline: none;
+            border-color: #adb5bd;
+            box-shadow: 0 0 0 2px rgba(173, 181, 189, 0.25);
+        }
+
+        /* Search bar styles */
+        .search-container {
+            padding: 15px 20px;
+            background-color: #f8f9fa;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid #e9ecef;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            flex-grow: 1;
+            max-width: 800px;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+            border: 1px solid #e9ecef;
+            overflow: hidden;
+        }
+
+        .search-input-wrapper:focus-within {
+            box-shadow: 0 0 0 2px rgba(33, 37, 41, 0.15);
+            border-color: #adb5bd;
+        }
+
+        .search-input {
+            flex-grow: 1;
+            height: 100%;
+            padding: 0 60px 0 15px;
+            border: none;
+            font-size: 16px;
+            background-color: transparent;
+            transition: all 0.2s ease;
+            color: #212529;
+        }
+
+        .search-input:focus {
+            outline: none;
+        }
+
+        .search-button {
+            position: absolute;
+            right: 0;
+            height: 46px;
+            width: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            background-color: #212529;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .search-button:hover {
+            background-color: #343a40;
+        }
+
+        .search-button:active {
+            background-color: #000000;
+        }
+
+        #voiceSearchButton {
+            border-radius: 0 8px 8px 0;
+        }
+
+        #voiceSearchButton .fa-microphone {
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        #voiceSearchButton:hover .fa-microphone {
+            transform: scale(1.1);
+        }
+
+        #voiceSearchButton.listening {
+            animation: pulse 1.5s infinite;
+        }
+
+        #voiceSearchButton.listening .fa-microphone {
+            animation: wave 1.5s infinite;
+            color: #ffffff;
+        }
+
+        #voiceSearchButton.listening:after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 0 8px 8px 0;
+            animation: wave 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); background-color: #000000; }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes wave {
+            0% { box-shadow: 0 0 0 0 rgba(33, 37, 41, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(33, 37, 41, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(33, 37, 41, 0); }
+        }
+
+        .search-filter-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            display: none;
+            padding: 0;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .search-filter-dropdown.show {
+            display: block;
+            animation: fadeIn 0.2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .search-filter-header {
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            border-bottom: 1px solid #e9ecef;
+            font-weight: 500;
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .search-filter-body {
+            padding: 10px 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .search-filter-footer {
+            padding: 10px 15px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .search-filter-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 8px 10px;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+
+        .search-filter-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .search-filter-item label {
+            margin-left: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            flex-grow: 1;
+        }
+
+        .search-filter-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .search-filter-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #0d6efd;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 11px;
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            border: 1.5px solid white;
+            transition: all 0.2s ease;
+        }
+
+        #filterToggleButton:hover .search-filter-badge {
+            transform: scale(1.1);
+        }
+
+        .search-filter-button {
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .search-filter-button:hover {
+            background-color: #0b5ed7;
+        }
+
+        .search-filter-reset {
+            background-color: transparent;
+            color: #6c757d;
+            border: none;
+            padding: 6px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .search-filter-reset:hover {
+            color: #495057;
+        }
+
+        /* Toast notification */
+        .search-toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 2000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s;
+            max-width: 300px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .search-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Pulse animation for search button when searching */
+        @keyframes searchPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); background-color: #0d6efd; }
+            100% { transform: scale(1); }
+        }
+
+        .search-button.searching {
+            animation: searchPulse 0.5s;
+        }
+
+        /* Advanced Search Button */
+        .advanced-search-btn {
+            background-color: #212529;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0 20px;
+            height: 46px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            white-space: nowrap;
+        }
+
+        .advanced-search-btn:hover {
+            background-color: #343a40;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .advanced-search-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .advanced-search-btn i {
+            font-size: 16px;
+        }
+
+        /* Main content layout */
+        .main-content {
+            display: flex;
+            position: relative;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Grid styles */
+        .grid-container {
+            flex: 1;
+            background-color: white;
+            transition: width 0.3s ease;
+            overflow: auto;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .grid-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #212529;
+            border-bottom: 1px solid #343a40;
+            color: white;
+        }
+
+        .grid-title {
+            font-weight: 500;
+            font-size: 18px;
+            color: white;
+        }
+
+        .grid-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .refresh-btn, .clear-filters-btn {
+            background-color: #343a40;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.2s ease;
+        }
+
+        .refresh-btn:hover, .clear-filters-btn:hover {
+            background-color: #495057;
+        }
+
+        .clear-filters-btn {
+            background-color: #e9ecef;
+            color: #212529;
+            border: 1px solid #dee2e6;
+        }
+
+        .clear-filters-btn:hover {
+            background-color: #dee2e6;
+        }
+
+        /* Table styles */
+        .grid-table-container {
+            flex: 1;
+            overflow: auto;
+        }
+
+        .grid-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .grid-table th, .grid-table td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .grid-table th {
+            background-color: #f8f9fa;
+            font-weight: 500;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            color: #212529;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 40px;
+        }
+
+        /* Column search fields */
+        .column-search {
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            right: 0;
+            padding: 0 5px;
+        }
+
+        .column-search .search-input-wrapper {
+            position: relative;
+            width: 100%;
+            height: 30px;
+            box-shadow: none;
+            border-radius: 4px;
+        }
+
+        .column-search input {
+            width: 100%;
+            height: 30px;
+            padding: 4px 24px 4px 8px;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            font-size: 12px;
+            background-color: white;
+            transition: all 0.2s ease;
+            color: #212529;
+        }
+
+        .column-search input:focus {
+            border-color: #adb5bd;
+            box-shadow: 0 0 0 1px rgba(33, 37, 41, 0.15);
+            outline: none;
+        }
+
+        .column-search input::placeholder {
+            color: #adb5bd;
+            font-style: italic;
+        }
+
+        .clear-input-btn {
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #adb5bd;
+            font-size: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+            opacity: 0.7;
+            padding: 0;
+        }
+
+        .clear-input-btn:hover {
+            color: #212529;
+            background-color: #f8f9fa;
+            opacity: 1;
+        }
+
+        .clear-input-btn:focus {
+            outline: none;
+        }
+
+        .grid-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .grid-table tr:nth-child(even) {
+            background-color: #ffffff;
+        }
+
+        .grid-table tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+
+        /* Menu suggestions dropdown */
+        .menu-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: white;
+            border: 1px solid #ced4da;
+            border-radius: 0 0 4px 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+        }
+
+        .menu-suggestions.show {
+            display: block;
+        }
+
+        .suggestion-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.2s;
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .suggestion-item.active {
+            background-color: #e9ecef;
+        }
+
+        .suggestion-item i {
+            margin-right: 8px;
+            color: #6c757d;
+        }
+
+        /* Column search in advanced search */
+        .search-column-container {
+            position: relative;
+        }
+
+        .column-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: white;
+            border: 1px solid #ced4da;
+            border-radius: 0 0 4px 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+        }
+
+        .column-suggestions.show {
+            display: block;
+        }
+
+        .column-suggestion-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.2s;
+            color: #212529;
+            font-size: 14px;
+        }
+
+        .column-suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .column-suggestion-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .column-suggestion-item.active {
+            background-color: #e9ecef;
+        }
+
+        /* Advanced Search Panel styles */
+        .advanced-search-panel {
+            position: fixed;
+            top: 0;
+            left: -380px; /* Start off-screen to the left */
+            width: 380px;
+            height: 100%;
+            background-color: #ffffff; /* White */
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border-right: 1px solid #e9ecef; /* Lightest gray */
+        }
+
+        .advanced-search-panel.active {
+            left: 0; /* Slide in from left */
+        }
+
+        /* Grid container transition for when panel is active */
+        .grid-container {
+            transition: margin-left 0.3s ease, width 0.3s ease;
+            width: 100%;
+        }
+
+        .grid-container.panel-active {
+            margin-left: 380px;
+            width: calc(100% - 380px);
+        }
+
+        .panel-header {
+            padding: 15px 20px;
+            background-color: #212529; /* Black */
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #343a40;
+        }
+
+        .panel-header h2 {
+            margin: 0;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+
+        .panel-close-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 18px;
+            transition: color 0.2s ease;
+        }
+
+        .panel-close-btn:hover {
+            color: #adb5bd; /* Light gray */
+        }
+
+        .panel-body {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+            background-color: #ffffff; /* White */
+            max-height: calc(100% - 56px); /* Subtract header height */
+        }
+
+        /* Advanced Search Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            color: #212529; /* Black */
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e9ecef; /* Lightest gray */
+            border-radius: 4px;
+            font-size: 14px;
+            background-color: white;
+            height: 40px;
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #adb5bd; /* Light gray */
+            box-shadow: 0 0 0 2px rgba(173, 181, 189, 0.25);
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23adb5bd" viewBox="0 0 16 16"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: calc(100% - 12px) center;
+            background-size: 12px;
+            padding-right: 30px;
+        }
+
+        /* Action Buttons */
+        .action-btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            height: 40px;
+            font-weight: 500;
+        }
+
+        .add-btn {
+            background-color: #212529; /* Black */
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .add-btn:hover {
+            background-color: #343a40; /* Slightly lighter black */
+        }
+
+        .save-btn {
+            background-color: #28a745; /* Green */
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .save-btn:hover {
+            background-color: #218838; /* Darker green */
+        }
+
+        .search-btn {
+            background-color: #212529; /* Black */
+            color: white;
+            flex: 1;
+        }
+
+        .search-btn:hover {
+            background-color: #343a40; /* Slightly lighter black */
+        }
+
+        .reset-btn {
+            background-color: #e9ecef; /* Lightest gray */
+            color: #212529; /* Black */
+            border: 1px solid #dee2e6;
+        }
+
+        .reset-btn:hover {
+            background-color: #dee2e6; /* Slightly darker light gray */
+        }
+
+        .remove-btn {
+            background-color: #dc3545; /* Red */
+            color: white;
+        }
+
+        .remove-btn:hover {
+            background-color: #c82333; /* Darker red */
+        }
+
+        .remove-btn:disabled {
+            background-color: #e9ecef; /* Lightest gray */
+            color: #adb5bd; /* Light gray */
+            cursor: not-allowed;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        /* Quick Filters Section */
+        .quick-filters-section {
+            margin-bottom: 25px;
+            border-bottom: 1px solid #e9ecef; /* Lightest gray */
+            padding-bottom: 20px;
+        }
+
+        .quick-filters-section h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #212529; /* Black */
+            font-weight: 500;
+        }
+
+        .quick-filters-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .quick-filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .quick-filter-btn {
+            background-color: #ffffff; /* White */
+            border: 1px solid #e9ecef; /* Lightest gray */
+            border-radius: 20px;
+            padding: 8px 14px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+            transition: all 0.2s ease;
+            min-height: 32px;
+        }
+
+        .quick-filter-btn .filter-content {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .quick-filter-btn:hover {
+            background-color: #f8f9fa; /* Lightest gray */
+            border-color: #dee2e6;
+        }
+
+        .quick-filter-btn.active {
+            background-color: #212529; /* Black */
+            color: white;
+            border-color: #212529;
+        }
+
+        .quick-filter-btn .close-icon {
+            display: none;
+            font-size: 14px;
+            font-weight: bold;
+            margin-left: 5px;
+            transition: opacity 0.2s ease;
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+            pointer-events: none; /* Make it non-interactive */
+        }
+
+        .quick-filter-btn.active .close-icon {
+            display: inline-block;
+            opacity: 1;
+            width: auto;
+            overflow: visible;
+        }
+
+        .no-quick-filters {
+            color: #6c757d; /* Medium gray */
+            font-size: 14px;
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        /* Applied Filters */
+        .applied-filters {
+            margin-bottom: 25px;
+            border-bottom: 1px solid #e9ecef; /* Lightest gray */
+            padding-bottom: 20px;
+        }
+
+        .applied-filters h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #212529; /* Black */
+            font-weight: 500;
+        }
+
+        .applied-filters-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+        }
+
+        .filters-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background-color: #f8f9fa; /* Lightest gray */
+            border-radius: 4px;
+            border: 1px solid #e9ecef;
+            transition: all 0.2s ease;
+        }
+
+        .filter-item.editing {
+            background-color: #e9ecef; /* Slightly darker light gray */
+            border-color: #dee2e6;
+            box-shadow: 0 0 0 2px rgba(173, 181, 189, 0.25);
+        }
+
+        .filter-text {
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .edit-filter, .remove-filter {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            color: #6c757d; /* Medium gray */
+            transition: color 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+        }
+
+        .edit-filter:hover {
+            color: #212529; /* Black */
+            background-color: #e9ecef; /* Lightest gray */
+        }
+
+        .remove-filter:hover {
+            color: #dc3545; /* Red */
+            background-color: #e9ecef; /* Lightest gray */
+        }
+
+        .no-filters {
+            color: #6c757d; /* Medium gray */
+            font-size: 14px;
+            font-style: italic;
+            padding: 10px;
+            background-color: #f8f9fa; /* Lightest gray */
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        /* Active Filters Display */
+        .active-filters-display {
+            margin-bottom: 25px;
+        }
+
+        .active-filters-display h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #212529; /* Black */
+            font-weight: 500;
+        }
+
+        .active-filters-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .active-filter-tag {
+            background-color: #212529; /* Black */
+            color: white;
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .remove-tag {
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: color 0.2s ease;
+        }
+
+        .remove-tag:hover {
+            color: #dc3545; /* Red */
+        }
+
+        /* Menu search highlight */
+        .search-highlight > a {
+            position: relative;
+        }
+
+        .search-highlight > a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background-color: #0d6efd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="header">
+            <h1>Aftermarket System</h1>
+            <ul class="nav-menu">
+                <li><a href="#" data-section="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#" data-section="employees"><i class="fas fa-id-badge"></i> Employees</a></li>
+                <li><a href="#" data-section="customers"><i class="fas fa-users"></i> Customers</a></li>
+                <li><a href="#" data-section="parts"><i class="fas fa-cogs"></i> Parts</a></li>
+                <li><a href="#" data-section="orders"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+                <li><a href="#" data-section="reports"><i class="fas fa-chart-bar"></i> Reports</a></li>
+            </ul>
+        </nav>
+
+        <div class="tenant-selector">
+            <select id="tenantSelector" class="tenant-select">
+                <option value="all">All Tenants</option>
+                <option value="tenant1" selected>TechCorp Enterprise</option>
+                <option value="tenant2">GlobalTech Solutions</option>
+                <option value="tenant3">EuroTech Systems</option>
+            </select>
+            <select id="entitySelector" class="entity-select">
+                <option value="all">All Entities</option>
+                <option value="entity1" selected>TechCorp</option>
+                <option value="entity2">East Branch</option>
+                <option value="entity3">Midwest Branch</option>
+                <option value="entity4">Northeast</option>
+                <option value="entity5">Central</option>
+            </select>
+        </div>
+
+        <div class="search-container">
+            <div class="search-input-wrapper">
+                <input type="text" class="search-input" id="menuSearchInput" placeholder="Search across all data..." autocomplete="off">
+                <div id="menuSuggestions" class="menu-suggestions"></div>
+                <button class="search-button" id="voiceSearchButton" title="Voice Search">
+                    <i class="fas fa-microphone"></i>
+                </button>
+            </div>
+            <button class="advanced-search-btn" id="toggleAdvancedSearch">
+                <i class="fas fa-filter"></i> Advanced Search
+            </button>
+        </div>
+
+        <div class="main-content" id="mainContent">
+            <!-- Content will be loaded dynamically -->
+        </div>
+    </div>
+
+    <!-- All CSS and JS are now included directly in this file -->
+    <script>
+        // Function to initialize grid containers
+        function initializeGrids() {
+            const mainContent = document.getElementById('mainContent');
+
+            // Create Employee Grid
+            const employeesGrid = createGrid('employeesGrid', 'Employees', [
+                'Employee Code', 'Name', 'Mobile', 'Email', 'Department', 'Designation', 'Status', 'Join Date', 'Salary', 'Location', 'Company', 'Branch', 'Region', 'Tenant ID', 'Entity ID'
+            ], getEmployeeData());
+
+            // Create Customer Grid
+            const customersGrid = createGrid('customersGrid', 'Customers', [
+                'Customer ID', 'Company Name', 'Contact Person', 'Email', 'Phone', 'Address', 'City', 'Country', 'Status', 'Company', 'Branch', 'Region', 'Tenant ID', 'Entity ID'
+            ], getCustomerData());
+
+            // Create Parts Grid
+            const partsGrid = createGrid('partsGrid', 'Parts', [
+                'Part Number', 'Description', 'Category', 'Manufacturer', 'Unit Price', 'In Stock', 'Reorder Level', 'Location', 'Status', 'Company', 'Branch', 'Region', 'Tenant ID', 'Entity ID'
+            ], getPartsData());
+
+            // Append grids to main content
+            mainContent.appendChild(employeesGrid);
+            mainContent.appendChild(customersGrid);
+            mainContent.appendChild(partsGrid);
+
+            // Hide customer and parts grids initially
+            customersGrid.style.display = 'none';
+            partsGrid.style.display = 'none';
+        }
+
+        // Function to create a grid container
+        function createGrid(id, title, columns, data) {
+            const gridContainer = document.createElement('div');
+            gridContainer.className = 'grid-container';
+            gridContainer.id = id;
+
+            const gridHeader = document.createElement('div');
+            gridHeader.className = 'grid-header';
+            gridHeader.innerHTML = `
+                <div class="grid-title">${title}</div>
+                <div class="grid-actions">
+                    <button class="refresh-btn" id="refresh${id}">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            `;
+
+            const gridTableContainer = document.createElement('div');
+            gridTableContainer.className = 'grid-table-container';
+
+            const table = document.createElement('table');
+            table.className = 'grid-table';
+
+            // Create table header
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+
+            columns.forEach((column, index) => {
+                const th = document.createElement('th');
+                th.textContent = column;
+                th.style.position = 'relative';
+
+                // Add column search input
+                const columnSearch = document.createElement('div');
+                columnSearch.className = 'column-search';
+                columnSearch.innerHTML = `
+                    <div class="search-input-wrapper">
+                        <input type="text" class="column-search-input" data-column="${index}" placeholder="Search ${column}...">
+                        <button class="clear-input-btn" title="Clear">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+
+                th.appendChild(columnSearch);
+                headerRow.appendChild(th);
+            });
+
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            // Create table body with data
+            const tbody = document.createElement('tbody');
+
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+
+                row.forEach(cell => {
+                    const td = document.createElement('td');
+                    td.textContent = cell;
+                    tr.appendChild(td);
+                });
+
+                tbody.appendChild(tr);
+            });
+
+            table.appendChild(tbody);
+            gridTableContainer.appendChild(table);
+
+            gridContainer.appendChild(gridHeader);
+            gridContainer.appendChild(gridTableContainer);
+
+            return gridContainer;
+        }
+
+        // Function to create the advanced search panel
+        function createAdvancedSearchPanel() {
+            const mainContent = document.getElementById('mainContent');
+
+            const panel = document.createElement('div');
+            panel.className = 'advanced-search-panel';
+            panel.id = 'advancedSearchPanel';
+
+            panel.innerHTML = `
+                <div class="panel-header">
+                    <h2><i class="fas fa-filter"></i> Advanced Search</h2>
+                    <button class="panel-close-btn" id="closeAdvancedSearch">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="panel-body">
+                    <!-- Quick Filters Section -->
+                    <div class="quick-filters-section">
+                        <h3>Quick Filters:</h3>
+                        <div class="quick-filters-container" id="quickFiltersContainer">
+                            <!-- Employee Department Quick Filters -->
+                            <div class="quick-filter-group" data-column="department">
+                                <div class="quick-filter-btn" data-column="department" data-operator="equal" data-value="Engineering">
+                                    <span class="filter-content"><i class="fas fa-code"></i> Engineering</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                                <div class="quick-filter-btn" data-column="department" data-operator="equal" data-value="Marketing">
+                                    <span class="filter-content"><i class="fas fa-bullhorn"></i> Marketing</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                                <div class="quick-filter-btn" data-column="department" data-operator="equal" data-value="Sales">
+                                    <span class="filter-content"><i class="fas fa-chart-line"></i> Sales</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                                <div class="quick-filter-btn" data-column="department" data-operator="equal" data-value="HR">
+                                    <span class="filter-content"><i class="fas fa-users"></i> HR</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                            </div>
+
+                            <!-- Employee Designation Quick Filters -->
+                            <div class="quick-filter-group" data-column="designation">
+                                <div class="quick-filter-btn" data-column="designation" data-operator="equal" data-value="Developer">
+                                    <span class="filter-content"><i class="fas fa-laptop-code"></i> Developer</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                                <div class="quick-filter-btn" data-column="designation" data-operator="equal" data-value="Manager">
+                                    <span class="filter-content"><i class="fas fa-user-tie"></i> Manager</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                                <div class="quick-filter-btn" data-column="designation" data-operator="equal" data-value="Executive">
+                                    <span class="filter-content"><i class="fas fa-briefcase"></i> Executive</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                            </div>
+
+                            <!-- Employee Email Quick Filters -->
+                            <div class="quick-filter-group" data-column="email">
+                                <div class="quick-filter-btn" data-column="email" data-operator="contains" data-value="@example.com">
+                                    <span class="filter-content"><i class="fas fa-envelope"></i> @example.com</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                            </div>
+
+                            <!-- Customer Status Quick Filters -->
+                            <div class="quick-filter-group" data-column="status">
+                                <div class="quick-filter-btn" data-column="status" data-operator="equal" data-value="Active">
+                                    <span class="filter-content"><i class="fas fa-check-circle"></i> Active</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                                <div class="quick-filter-btn" data-column="status" data-operator="equal" data-value="Inactive">
+                                    <span class="filter-content"><i class="fas fa-times-circle"></i> Inactive</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                                <div class="quick-filter-btn" data-column="status" data-operator="equal" data-value="Pending">
+                                    <span class="filter-content"><i class="fas fa-clock"></i> Pending</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                            </div>
+
+                            <!-- Customer Country Quick Filters -->
+                            <div class="quick-filter-group" data-column="country">
+                                <div class="quick-filter-btn" data-column="country" data-operator="equal" data-value="USA">
+                                    <span class="filter-content"><i class="fas fa-flag"></i> USA</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                                <div class="quick-filter-btn" data-column="country" data-operator="equal" data-value="Canada">
+                                    <span class="filter-content"><i class="fas fa-flag"></i> Canada</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                                <div class="quick-filter-btn" data-column="country" data-operator="equal" data-value="UK">
+                                    <span class="filter-content"><i class="fas fa-flag"></i> UK</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                                <div class="quick-filter-btn" data-column="country" data-operator="equal" data-value="Germany">
+                                    <span class="filter-content"><i class="fas fa-flag"></i> Germany</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                            </div>
+
+                            <!-- Parts Category Quick Filters -->
+                            <div class="quick-filter-group" data-column="category">
+                                <div class="quick-filter-btn" data-column="category" data-operator="equal" data-value="Filters">
+                                    <span class="filter-content"><i class="fas fa-filter"></i> Filters</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                                <div class="quick-filter-btn" data-column="category" data-operator="equal" data-value="Brakes">
+                                    <span class="filter-content"><i class="fas fa-car"></i> Brakes</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                                <div class="quick-filter-btn" data-column="category" data-operator="equal" data-value="Electrical">
+                                    <span class="filter-content"><i class="fas fa-bolt"></i> Electrical</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                                <div class="quick-filter-btn" data-column="category" data-operator="equal" data-value="Ignition">
+                                    <span class="filter-content"><i class="fas fa-fire"></i> Ignition</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                            </div>
+
+                            <!-- Parts Manufacturer Quick Filters -->
+                            <div class="quick-filter-group" data-column="manufacturer">
+                                <div class="quick-filter-btn" data-column="manufacturer" data-operator="equal" data-value="FilterCorp">
+                                    <span class="filter-content"><i class="fas fa-industry"></i> FilterCorp</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                                <div class="quick-filter-btn" data-column="manufacturer" data-operator="equal" data-value="BrakeMasters">
+                                    <span class="filter-content"><i class="fas fa-industry"></i> BrakeMasters</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                                <div class="quick-filter-btn" data-column="manufacturer" data-operator="equal" data-value="SparkTech">
+                                    <span class="filter-content"><i class="fas fa-industry"></i> SparkTech</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                                <div class="quick-filter-btn" data-column="manufacturer" data-operator="equal" data-value="ElectroParts">
+                                    <span class="filter-content"><i class="fas fa-industry"></i> ElectroParts</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                            </div>
+
+                            <!-- Company Quick Filters -->
+                            <div class="quick-filter-group" data-column="company">
+                                <div class="quick-filter-btn" data-column="company" data-operator="equal" data-value="TechCorp">
+                                    <span class="filter-content"><i class="fas fa-building"></i> TechCorp</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                                <div class="quick-filter-btn" data-column="company" data-operator="equal" data-value="GlobalTech">
+                                    <span class="filter-content"><i class="fas fa-building"></i> GlobalTech</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                                <div class="quick-filter-btn" data-column="company" data-operator="equal" data-value="EuroTech">
+                                    <span class="filter-content"><i class="fas fa-building"></i> EuroTech</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                            </div>
+
+                            <!-- Branch Quick Filters -->
+                            <div class="quick-filter-group" data-column="branch">
+                                <div class="quick-filter-btn" data-column="branch" data-operator="equal" data-value="East Branch">
+                                    <span class="filter-content"><i class="fas fa-code-branch"></i> East Branch</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                                <div class="quick-filter-btn" data-column="branch" data-operator="equal" data-value="West Branch">
+                                    <span class="filter-content"><i class="fas fa-code-branch"></i> West Branch</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                                <div class="quick-filter-btn" data-column="branch" data-operator="equal" data-value="Midwest Branch">
+                                    <span class="filter-content"><i class="fas fa-code-branch"></i> Midwest Branch</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                                <div class="quick-filter-btn" data-column="branch" data-operator="equal" data-value="Canada Branch">
+                                    <span class="filter-content"><i class="fas fa-code-branch"></i> Canada Branch</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                                <div class="quick-filter-btn" data-column="branch" data-operator="equal" data-value="UK Branch">
+                                    <span class="filter-content"><i class="fas fa-code-branch"></i> UK Branch</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                                <div class="quick-filter-btn" data-column="branch" data-operator="equal" data-value="Germany Branch">
+                                    <span class="filter-content"><i class="fas fa-code-branch"></i> Germany Branch</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                            </div>
+
+                            <!-- Region Quick Filters -->
+                            <div class="quick-filter-group" data-column="region">
+                                <div class="quick-filter-btn" data-column="region" data-operator="equal" data-value="Northeast">
+                                    <span class="filter-content"><i class="fas fa-map-marker-alt"></i> Northeast</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                                <div class="quick-filter-btn" data-column="region" data-operator="equal" data-value="West">
+                                    <span class="filter-content"><i class="fas fa-map-marker-alt"></i> West</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                                <div class="quick-filter-btn" data-column="region" data-operator="equal" data-value="Central">
+                                    <span class="filter-content"><i class="fas fa-map-marker-alt"></i> Central</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                                <div class="quick-filter-btn" data-column="region" data-operator="equal" data-value="North">
+                                    <span class="filter-content"><i class="fas fa-map-marker-alt"></i> North</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                                <div class="quick-filter-btn" data-column="region" data-operator="equal" data-value="Europe">
+                                    <span class="filter-content"><i class="fas fa-map-marker-alt"></i> Europe</span>
+                                    <span class="close-icon" title="Remove filter">×</span>
+                                </div>
+                            </div>
+
+                            <!-- No quick filters message -->
+                            <div class="no-quick-filters" style="display: none;">
+                                No quick filters available for this column. Please use the form below.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="advanced-filter-form">
+                        <h3>Advanced Filter:</h3>
+
+                        <!-- Select Column -->
+                        <div class="form-group">
+                            <label for="columnField">Select Column:</label>
+                            <div class="search-column-container">
+                                <input type="text" id="columnSearchInput" class="form-control" placeholder="Search columns..." autocomplete="off">
+                                <div id="columnSuggestions" class="column-suggestions"></div>
+                            </div>
+                        </div>
+
+                        <!-- Select Operator -->
+                        <div class="form-group">
+                            <label for="selectOperator">Select Operator:</label>
+                            <select id="selectOperator" class="form-control">
+                                <option value="">--Select--</option>
+                                <option value="equal">Equal</option>
+                                <option value="notEqual">Not Equal</option>
+                                <option value="like">Like</option>
+                                <option value="contains">Contains</option>
+                                <option value="greaterThan">Greater Than</option>
+                                <option value="lessThan">Less Than</option>
+                                <option value="between">Between</option>
+                                <option value="in">In List</option>
+                            </select>
+                        </div>
+
+                        <!-- Value Input -->
+                        <div class="form-group">
+                            <label for="valueInput">Value:</label>
+                            <input type="text" id="valueInput" class="form-control" placeholder="Enter value">
+                        </div>
+
+                        <!-- Condition -->
+                        <div class="form-group">
+                            <label for="selectCondition">Select Condition:</label>
+                            <select id="selectCondition" class="form-control">
+                                <option value="">--Select--</option>
+                                <option value="and">AND</option>
+                                <option value="or">OR</option>
+                            </select>
+                        </div>
+
+                        <!-- Add Filter Button -->
+                        <button id="addFilterBtn" class="action-btn add-btn">
+                            <i class="fas fa-plus-circle"></i> Add Filter
+                        </button>
+
+                        <!-- Save Changes Button (initially hidden) -->
+                        <button id="saveChangesBtn" class="action-btn save-btn" style="display: none;">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+
+                    <!-- Applied Filters -->
+                    <div class="applied-filters">
+                        <h3>Applied Filters:</h3>
+                        <div class="applied-filters-actions">
+                            <button id="removeSelectedFiltersBtn" class="action-btn remove-btn" disabled>
+                                <i class="fas fa-trash-alt"></i> Remove Selected
+                            </button>
+                        </div>
+                        <div id="appliedFiltersContainer" class="filters-list">
+                            <div class="no-filters">No filters applied</div>
+                        </div>
+                    </div>
+
+                    <!-- Active Filters Display (synchronized with grid) -->
+                    <div class="active-filters-display">
+                        <h3>Active Filters:</h3>
+                        <div id="activeFiltersContainer" class="active-filters-list">
+                            <div class="no-filters">No active filters</div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <button id="searchBtn" class="action-btn search-btn">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                        <button id="resetBtn" class="action-btn reset-btn">
+                            <i class="fas fa-undo"></i> Reset
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            mainContent.appendChild(panel);
+
+            // Global function to close the advanced search panel
+            window.closeAdvancedSearchPanel = function() {
+                const panel = document.getElementById('advancedSearchPanel');
+
+                if (panel) {
+                    panel.classList.remove('active');
+
+                    // Find all grid containers and remove panel-active class
+                    const gridContainers = document.querySelectorAll('.grid-container');
+                    gridContainers.forEach(container => {
+                        container.classList.remove('panel-active');
+                    });
+                }
+            };
+
+            // Direct click handler for the close button
+            const closeButton = document.getElementById('closeAdvancedSearch');
+            if (closeButton) {
+                // Use addEventListener instead of onclick
+                closeButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.closeAdvancedSearchPanel();
+                });
+            }
+
+            // Handle clicks outside the panel
+            document.addEventListener('mousedown', function(e) {
+                const panel = document.getElementById('advancedSearchPanel');
+                if (!panel || !panel.classList.contains('active')) return;
+
+                const toggleButton = document.getElementById('toggleAdvancedSearch');
+
+                // Check if click is outside panel and not on toggle button
+                if (!panel.contains(e.target) &&
+                    (!toggleButton || !toggleButton.contains(e.target))) {
+                    window.closeAdvancedSearchPanel();
+                }
+            });
+        }
+
+        // Initialize column search functionality
+        function initColumnSearch() {
+            const columnSearchInputs = document.querySelectorAll('.column-search-input');
+            const clearButtons = document.querySelectorAll('.clear-input-btn');
+
+            // Add event listeners to each column search input
+            columnSearchInputs.forEach(input => {
+                const columnIndex = parseInt(input.dataset.column);
+
+                input.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase(); // Convert to lowercase for case-insensitive search
+                    const tableId = this.closest('.grid-container').id;
+                    const tableRows = document.querySelectorAll(`#${tableId} tbody tr`);
+
+                    // Show/hide the clear button based on input value
+                    const clearButton = this.parentElement.querySelector('.clear-input-btn');
+                    if (clearButton) {
+                        clearButton.style.display = this.value ? 'flex' : 'none';
+                    }
+
+                    tableRows.forEach(row => {
+                        const cell = row.cells[columnIndex];
+                        if (!cell) return;
+
+                        const cellText = cell.textContent.toLowerCase(); // Convert to lowercase for case-insensitive comparison
+                        if (searchTerm === '' || cellText.includes(searchTerm)) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                });
+
+                // Clear button functionality with Escape key
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') {
+                        this.value = '';
+                        // Trigger input event to update the table
+                        const event = new Event('input');
+                        this.dispatchEvent(event);
+                    }
+                });
+
+                // Initialize clear button visibility
+                const clearButton = input.parentElement.querySelector('.clear-input-btn');
+                if (clearButton) {
+                    clearButton.style.display = input.value ? 'flex' : 'none';
+                }
+            });
+
+            // Add event listeners to each clear button
+            clearButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const input = this.parentElement.querySelector('.column-search-input');
+                    if (input) {
+                        input.value = '';
+                        input.focus();
+                        // Trigger input event to update the table
+                        const event = new Event('input');
+                        input.dispatchEvent(event);
+                    }
+                });
+            });
+        }
+
+        // Initialize Advanced Search with column suggestions
+        function initAdvancedSearch() {
+            const columnSearchInput = document.getElementById('columnSearchInput');
+            const columnSuggestions = document.getElementById('columnSuggestions');
+            const selectOperator = document.getElementById('selectOperator');
+            const valueInput = document.getElementById('valueInput');
+            const selectCondition = document.getElementById('selectCondition');
+            const addFilterBtn = document.getElementById('addFilterBtn');
+            const saveChangesBtn = document.getElementById('saveChangesBtn');
+            const searchBtn = document.getElementById('searchBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const removeSelectedFiltersBtn = document.getElementById('removeSelectedFiltersBtn');
+            const appliedFiltersContainer = document.getElementById('appliedFiltersContainer');
+            const activeFiltersContainer = document.getElementById('activeFiltersContainer');
+            const quickFilterButtons = document.querySelectorAll('.quick-filter-btn');
+
+            // Store active filters
+            let activeFilters = [];
+            let editingFilterIndex = -1;
+
+            // Define column options for each grid
+            const gridColumns = {
+                'employees': [
+                    { value: 'employeeCode', text: 'Employee Code' },
+                    { value: 'name', text: 'Name' },
+                    { value: 'mobile', text: 'Mobile' },
+                    { value: 'email', text: 'Email' },
+                    { value: 'department', text: 'Department' },
+                    { value: 'designation', text: 'Designation' },
+                    { value: 'status', text: 'Status' },
+                    { value: 'joinDate', text: 'Join Date' },
+                    { value: 'salary', text: 'Salary' },
+                    { value: 'location', text: 'Location' },
+                    { value: 'company', text: 'Company' },
+                    { value: 'branch', text: 'Branch' },
+                    { value: 'region', text: 'Region' },
+                    { value: 'tenantId', text: 'Tenant ID' },
+                    { value: 'entityId', text: 'Entity ID' }
+                ],
+                'customers': [
+                    { value: 'customerId', text: 'Customer ID' },
+                    { value: 'companyName', text: 'Company Name' },
+                    { value: 'contactPerson', text: 'Contact Person' },
+                    { value: 'email', text: 'Email' },
+                    { value: 'phone', text: 'Phone' },
+                    { value: 'address', text: 'Address' },
+                    { value: 'city', text: 'City' },
+                    { value: 'country', text: 'Country' },
+                    { value: 'status', text: 'Status' },
+                    { value: 'company', text: 'Company' },
+                    { value: 'branch', text: 'Branch' },
+                    { value: 'region', text: 'Region' },
+                    { value: 'tenantId', text: 'Tenant ID' },
+                    { value: 'entityId', text: 'Entity ID' }
+                ],
+                'parts': [
+                    { value: 'partNumber', text: 'Part Number' },
+                    { value: 'description', text: 'Description' },
+                    { value: 'category', text: 'Category' },
+                    { value: 'manufacturer', text: 'Manufacturer' },
+                    { value: 'unitPrice', text: 'Unit Price' },
+                    { value: 'inStock', text: 'In Stock' },
+                    { value: 'reorderLevel', text: 'Reorder Level' },
+                    { value: 'location', text: 'Location' },
+                    { value: 'status', text: 'Status' },
+                    { value: 'company', text: 'Company' },
+                    { value: 'branch', text: 'Branch' },
+                    { value: 'region', text: 'Region' },
+                    { value: 'tenantId', text: 'Tenant ID' },
+                    { value: 'entityId', text: 'Entity ID' }
+                ]
+            };
+
+            // Function to show column suggestions based on active grid
+            function showColumnSuggestions(searchText) {
+                // Clear previous suggestions
+                columnSuggestions.innerHTML = '';
+
+                // Determine the current active section by checking which grid is visible
+                let activeSection = 'employees'; // Default
+                const employeesGrid = document.getElementById('employeesGrid');
+                const customersGrid = document.getElementById('customersGrid');
+                const partsGrid = document.getElementById('partsGrid');
+
+                if (employeesGrid && employeesGrid.style.display !== 'none') {
+                    activeSection = 'employees';
+                } else if (customersGrid && customersGrid.style.display !== 'none') {
+                    activeSection = 'customers';
+                } else if (partsGrid && partsGrid.style.display !== 'none') {
+                    activeSection = 'parts';
+                }
+
+                // Get columns for the active grid
+                const activeColumns = gridColumns[activeSection] || [];
+
+                // If no search text, show all columns
+                if (!searchText) {
+                    if (activeColumns.length > 0) {
+                        activeColumns.forEach(column => {
+                            addColumnSuggestionItem(column);
+                        });
+                        columnSuggestions.classList.add('show');
+                    }
+                    return;
+                }
+
+                searchText = searchText.toLowerCase();
+                let matchFound = false;
+
+                // Filter columns that match the search text
+                const filteredColumns = activeColumns.filter(column =>
+                    column.text.toLowerCase().includes(searchText)
+                );
+
+                if (filteredColumns.length > 0) {
+                    filteredColumns.forEach(column => {
+                        addColumnSuggestionItem(column);
+                        matchFound = true;
+                    });
+                }
+
+                if (matchFound) {
+                    columnSuggestions.classList.add('show');
+                } else {
+                    columnSuggestions.classList.remove('show');
+                }
+            }
+
+            // Helper function to add a column suggestion item
+            function addColumnSuggestionItem(column) {
+                const suggestionItem = document.createElement('div');
+                suggestionItem.className = 'column-suggestion-item';
+                suggestionItem.textContent = column.text;
+                suggestionItem.dataset.value = column.value;
+
+                // Add click event to select this column
+                suggestionItem.addEventListener('click', function() {
+                    columnSearchInput.value = column.text;
+                    columnSearchInput.dataset.value = column.value;
+                    columnSuggestions.classList.remove('show');
+
+                    // Auto-select operator if it's empty
+                    if (!selectOperator.value) {
+                        selectOperator.value = 'equal';
+                    }
+
+                    // Focus on the value input
+                    valueInput.focus();
+                });
+
+                columnSuggestions.appendChild(suggestionItem);
+            }
+
+            // Show suggestions as user types
+            columnSearchInput.addEventListener('input', function() {
+                showColumnSuggestions(this.value);
+            });
+
+            // Show all columns when focusing on the input
+            columnSearchInput.addEventListener('focus', function() {
+                // Show all columns for the active grid on focus
+                showColumnSuggestions('');
+            });
+
+            // Close suggestions when clicking outside
+            document.addEventListener('mousedown', function(e) {
+                // Only process if suggestions are visible
+                if (columnSuggestions && columnSuggestions.classList.contains('show')) {
+                    // Check if click is outside both the input and suggestions
+                    if ((!columnSearchInput || !columnSearchInput.contains(e.target)) &&
+                        (!columnSuggestions || !columnSuggestions.contains(e.target))) {
+                        columnSuggestions.classList.remove('show');
+                    }
+                }
+            });
+
+            // Function to get operator display text
+            function getOperatorDisplayText(operator) {
+                const operatorMap = {
+                    'equal': 'Equal to',
+                    'notEqual': 'Not Equal to',
+                    'like': 'Like',
+                    'contains': 'Contains',
+                    'greaterThan': 'Greater Than',
+                    'lessThan': 'Less Than',
+                    'between': 'Between',
+                    'in': 'In List'
+                };
+                return operatorMap[operator] || operator;
+            }
+
+            // Function to get condition display text
+            function getConditionDisplayText(condition) {
+                return condition.toUpperCase();
+            }
+
+            // Function to add a filter to the applied filters list
+            function addFilter(column, columnText, operator, value, condition) {
+                // Check for duplicates (case-insensitive)
+                const valueLower = value.toLowerCase();
+                const isDuplicate = activeFilters.some(filter =>
+                    filter.column === column &&
+                    filter.operator === operator &&
+                    filter.value.toLowerCase() === valueLower
+                );
+
+                if (isDuplicate) {
+                    alert('This filter already exists. Duplicate filters are not allowed.');
+                    return false;
+                }
+
+                const newFilter = {
+                    column,
+                    columnText,
+                    operator,
+                    value,
+                    condition: condition || 'and' // Default to AND if not specified
+                };
+
+                if (editingFilterIndex >= 0) {
+                    // Update existing filter
+                    activeFilters[editingFilterIndex] = newFilter;
+                    editingFilterIndex = -1;
+                    saveChangesBtn.style.display = 'none';
+                } else {
+                    // Add new filter
+                    activeFilters.push(newFilter);
+                }
+
+                updateAppliedFilters();
+                updateActiveFilters();
+                clearFilterForm();
+                return true;
+            }
+
+            // Function to update the applied filters display
+            function updateAppliedFilters() {
+                appliedFiltersContainer.innerHTML = '';
+
+                if (activeFilters.length === 0) {
+                    appliedFiltersContainer.innerHTML = '<div class="no-filters">No filters applied</div>';
+                    removeSelectedFiltersBtn.disabled = true;
+
+                    // Reset all quick filter buttons
+                    quickFilterButtons.forEach(button => {
+                        button.classList.remove('active');
+                    });
+
+                    return;
+                }
+
+                removeSelectedFiltersBtn.disabled = false;
+
+                // First, reset all quick filter buttons
+                quickFilterButtons.forEach(button => {
+                    button.classList.remove('active');
+                });
+
+                // Then, mark the active ones based on current filters
+                activeFilters.forEach((filter, index) => {
+                    // Find matching quick filter buttons and mark them as active
+                    const matchingButtons = document.querySelectorAll(`.quick-filter-btn[data-column="${filter.column}"][data-operator="${filter.operator}"][data-value="${filter.value}"]`);
+                    matchingButtons.forEach(button => {
+                        button.classList.add('active');
+                    });
+
+                    // Create filter item for the applied filters list
+                    const filterItem = document.createElement('div');
+                    filterItem.className = 'filter-item';
+                    filterItem.dataset.index = index;
+
+                    if (index === editingFilterIndex) {
+                        filterItem.classList.add('editing');
+                    }
+
+                    const conditionText = index > 0 ? `<span class="filter-condition">${getConditionDisplayText(filter.condition)}</span> ` : '';
+
+                    filterItem.innerHTML = `
+                        <div class="filter-checkbox">
+                            <input type="checkbox" id="filter-${index}" class="filter-select">
+                        </div>
+                        <div class="filter-text">
+                            ${conditionText}${filter.columnText} ${getOperatorDisplayText(filter.operator)} "${filter.value}"
+                        </div>
+                        <div class="filter-actions">
+                            <button class="edit-filter" title="Edit Filter">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="remove-filter" title="Remove Filter">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    `;
+
+                    // Add event listeners for edit and remove buttons
+                    const editBtn = filterItem.querySelector('.edit-filter');
+                    const removeBtn = filterItem.querySelector('.remove-filter');
+                    const checkbox = filterItem.querySelector('.filter-select');
+
+                    editBtn.addEventListener('click', function() {
+                        editFilter(index);
+                    });
+
+                    removeBtn.addEventListener('click', function() {
+                        removeFilter(index);
+                    });
+
+                    checkbox.addEventListener('change', function() {
+                        updateRemoveSelectedButton();
+                    });
+
+                    appliedFiltersContainer.appendChild(filterItem);
+                });
+            }
+
+            // Function to update the active filters display
+            function updateActiveFilters() {
+                activeFiltersContainer.innerHTML = '';
+
+                if (activeFilters.length === 0) {
+                    activeFiltersContainer.innerHTML = '<div class="no-filters">No active filters</div>';
+                    return;
+                }
+
+                activeFilters.forEach((filter, index) => {
+                    const filterTag = document.createElement('div');
+                    filterTag.className = 'active-filter-tag';
+                    filterTag.innerHTML = `
+                        ${filter.columnText} ${getOperatorDisplayText(filter.operator)} "${filter.value}"
+                        <span class="remove-tag" data-index="${index}">×</span>
+                    `;
+
+                    // Add event listener for remove tag
+                    const removeTag = filterTag.querySelector('.remove-tag');
+                    removeTag.addEventListener('click', function() {
+                        removeFilter(parseInt(this.dataset.index));
+                    });
+
+                    activeFiltersContainer.appendChild(filterTag);
+                });
+            }
+
+            // Function to edit a filter
+            function editFilter(index) {
+                const filter = activeFilters[index];
+
+                // Reset any previous editing state
+                const previousEditingItem = appliedFiltersContainer.querySelector('.filter-item.editing');
+                if (previousEditingItem) {
+                    previousEditingItem.classList.remove('editing');
+                }
+
+                // Set form values
+                columnSearchInput.value = filter.columnText;
+                columnSearchInput.dataset.value = filter.column;
+                selectOperator.value = filter.operator;
+                valueInput.value = filter.value;
+                selectCondition.value = filter.condition;
+
+                // Set editing state
+                editingFilterIndex = index;
+                saveChangesBtn.style.display = 'flex';
+
+                // Highlight the item being edited
+                const currentEditingItem = appliedFiltersContainer.querySelector(`.filter-item[data-index="${index}"]`);
+                if (currentEditingItem) {
+                    currentEditingItem.classList.add('editing');
+                }
+
+                // Focus on the column input
+                columnSearchInput.focus();
+            }
+
+            // Function to remove a filter
+            function removeFilter(index) {
+                activeFilters.splice(index, 1);
+
+                // If we were editing this filter, reset the editing state
+                if (editingFilterIndex === index) {
+                    editingFilterIndex = -1;
+                    saveChangesBtn.style.display = 'none';
+                    clearFilterForm();
+                } else if (editingFilterIndex > index) {
+                    // Adjust the editing index if we removed a filter before it
+                    editingFilterIndex--;
+                }
+
+                updateAppliedFilters();
+                updateActiveFilters();
+                applyFiltersToGrid();
+            }
+
+            // Function to clear the filter form
+            function clearFilterForm() {
+                columnSearchInput.value = '';
+                columnSearchInput.dataset.value = '';
+                selectOperator.value = '';
+                valueInput.value = '';
+                selectCondition.value = '';
+            }
+
+            // Function to update the remove selected button state
+            function updateRemoveSelectedButton() {
+                const selectedCheckboxes = appliedFiltersContainer.querySelectorAll('.filter-select:checked');
+                removeSelectedFiltersBtn.disabled = selectedCheckboxes.length === 0;
+            }
+
+            // Function to apply filters to the grid
+            function applyFiltersToGrid() {
+                // Get the current active grid
+                // Find the visible grid to determine the active section
+                let activeSection = 'employees'; // Default
+                const employeesGrid = document.getElementById('employeesGrid');
+                const customersGrid = document.getElementById('customersGrid');
+                const partsGrid = document.getElementById('partsGrid');
+
+                if (employeesGrid && employeesGrid.style.display !== 'none') {
+                    activeSection = 'employees';
+                } else if (customersGrid && customersGrid.style.display !== 'none') {
+                    activeSection = 'customers';
+                } else if (partsGrid && partsGrid.style.display !== 'none') {
+                    activeSection = 'parts';
+                }
+
+                const gridId = `${activeSection}Grid`;
+                const tableRows = document.querySelectorAll(`#${gridId} tbody tr`);
+
+                // If no filters, show all rows
+                if (activeFilters.length === 0) {
+                    tableRows.forEach(row => {
+                        row.style.display = '';
+                    });
+                    return;
+                }
+
+                // Apply filters to each row
+                tableRows.forEach(row => {
+                    let shouldShow = true;
+                    let lastCondition = 'and';
+
+                    activeFilters.forEach(filter => {
+                        // Find the column index for this filter
+                        const columnIndex = Array.from(row.parentElement.parentElement.querySelectorAll('th'))
+                            .findIndex(th => th.textContent.trim() === filter.columnText);
+
+                        if (columnIndex === -1) return;
+
+                        const cell = row.cells[columnIndex];
+                        if (!cell) return;
+
+                        const cellText = cell.textContent.trim();
+                        let matches = false;
+
+                        // Convert to lowercase for case-insensitive comparison
+                        const cellTextLower = cellText.toLowerCase();
+                        const filterValueLower = filter.value.toLowerCase();
+
+                        // Check if the cell matches the filter
+                        switch (filter.operator) {
+                            case 'equal':
+                                matches = cellTextLower === filterValueLower;
+                                break;
+                            case 'notEqual':
+                                matches = cellTextLower !== filterValueLower;
+                                break;
+                            case 'like':
+                                matches = cellTextLower.startsWith(filterValueLower);
+                                break;
+                            case 'contains':
+                                matches = cellTextLower.includes(filterValueLower);
+                                break;
+                            case 'greaterThan':
+                                matches = parseFloat(cellText) > parseFloat(filter.value);
+                                break;
+                            case 'lessThan':
+                                matches = parseFloat(cellText) < parseFloat(filter.value);
+                                break;
+                            case 'between':
+                                const [min, max] = filter.value.split(',').map(v => parseFloat(v.trim()));
+                                const cellValue = parseFloat(cellText);
+                                matches = cellValue >= min && cellValue <= max;
+                                break;
+                            case 'in':
+                                const values = filter.value.split(',').map(v => v.trim().toLowerCase());
+                                matches = values.includes(cellTextLower);
+                                break;
+                            default:
+                                matches = false;
+                        }
+
+                        // Apply the condition (AND/OR)
+                        if (lastCondition === 'and') {
+                            shouldShow = shouldShow && matches;
+                        } else {
+                            shouldShow = shouldShow || matches;
+                        }
+
+                        lastCondition = filter.condition;
+                    });
+
+                    row.style.display = shouldShow ? '' : 'none';
+                });
+            }
+
+            // Function to handle quick filter clicks
+            function handleQuickFilterClick(e) {
+                // Simply toggle the active class on the button
+                if (this.classList.contains('active')) {
+                    this.classList.remove('active');
+                } else {
+                    this.classList.add('active');
+                }
+            }
+
+            // Add event listeners for quick filter buttons
+            quickFilterButtons.forEach(button => {
+                button.addEventListener('click', handleQuickFilterClick);
+            });
+
+            // Add event listener for the add filter button
+            addFilterBtn.addEventListener('click', function() {
+                const column = columnSearchInput.dataset.value;
+                const columnText = columnSearchInput.value;
+                const operator = selectOperator.value;
+                const value = valueInput.value;
+                const condition = selectCondition.value;
+
+                if (!column || !columnText) {
+                    alert('Please select a column.');
+                    return;
+                }
+
+                if (!operator) {
+                    alert('Please select an operator.');
+                    return;
+                }
+
+                if (!value) {
+                    alert('Please enter a value.');
+                    return;
+                }
+
+                const added = addFilter(column, columnText, operator, value, condition);
+
+                if (added) {
+                    applyFiltersToGrid();
+                }
+            });
+
+            // Add event listener for the save changes button
+            saveChangesBtn.addEventListener('click', function() {
+                const column = columnSearchInput.dataset.value;
+                const columnText = columnSearchInput.value;
+                const operator = selectOperator.value;
+                const value = valueInput.value;
+                const condition = selectCondition.value;
+
+                if (!column || !columnText) {
+                    alert('Please select a column.');
+                    return;
+                }
+
+                if (!operator) {
+                    alert('Please select an operator.');
+                    return;
+                }
+
+                if (!value) {
+                    alert('Please enter a value.');
+                    return;
+                }
+
+                const added = addFilter(column, columnText, operator, value, condition);
+
+                if (added) {
+                    applyFiltersToGrid();
+                }
+            });
+
+            // Add event listener for the search button
+            searchBtn.addEventListener('click', function() {
+                applyFiltersToGrid();
+            });
+
+            // Add event listener for the reset button
+            resetBtn.addEventListener('click', function() {
+                activeFilters = [];
+                editingFilterIndex = -1;
+                saveChangesBtn.style.display = 'none';
+                clearFilterForm();
+                updateAppliedFilters();
+                updateActiveFilters();
+                applyFiltersToGrid();
+            });
+
+            // Add event listener for the remove selected filters button
+            removeSelectedFiltersBtn.addEventListener('click', function() {
+                const selectedCheckboxes = appliedFiltersContainer.querySelectorAll('.filter-select:checked');
+                const selectedIndices = Array.from(selectedCheckboxes).map(checkbox =>
+                    parseInt(checkbox.closest('.filter-item').dataset.index)
+                ).sort((a, b) => b - a); // Sort in descending order to remove from end first
+
+                selectedIndices.forEach(index => {
+                    removeFilter(index);
+                });
+            });
+
+            // Handle keyboard navigation
+            columnSearchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowDown' && columnSuggestions.classList.contains('show')) {
+                    // Navigate to first suggestion item
+                    const firstItem = columnSuggestions.querySelector('.column-suggestion-item');
+                    if (firstItem) {
+                        firstItem.classList.add('active');
+                        firstItem.focus();
+                    }
+                    e.preventDefault();
+                } else if (e.key === 'Escape') {
+                    columnSuggestions.classList.remove('show');
+                }
+            });
+
+            // Update column suggestions when active grid changes
+            document.addEventListener('grid-change', function() {
+                // Clear column search input
+                columnSearchInput.value = '';
+                columnSearchInput.dataset.value = '';
+                columnSuggestions.classList.remove('show');
+
+                // Reset other form fields
+                selectOperator.value = '';
+                valueInput.value = '';
+                selectCondition.value = '';
+
+                // Reset filters
+                activeFilters = [];
+                editingFilterIndex = -1;
+                saveChangesBtn.style.display = 'none';
+                updateAppliedFilters();
+                updateActiveFilters();
+            });
+        }
+
+        // Multi-tenant data structure
+        const tenants = [
+            { id: 'tenant1', name: 'TechCorp Enterprise', description: 'Technology Corporation', active: true },
+            { id: 'tenant2', name: 'GlobalTech Solutions', description: 'Global Technology Solutions', active: true },
+            { id: 'tenant3', name: 'EuroTech Systems', description: 'European Technology Systems', active: true }
+        ];
+
+        // Entity structure within tenants
+        const entities = [
+            { id: 'entity1', tenantId: 'tenant1', name: 'TechCorp', type: 'Company', parentId: null },
+            { id: 'entity2', tenantId: 'tenant1', name: 'East Branch', type: 'Branch', parentId: 'entity1' },
+            { id: 'entity3', tenantId: 'tenant1', name: 'Midwest Branch', type: 'Branch', parentId: 'entity1' },
+            { id: 'entity4', tenantId: 'tenant1', name: 'Northeast', type: 'Region', parentId: 'entity2' },
+            { id: 'entity5', tenantId: 'tenant1', name: 'Central', type: 'Region', parentId: 'entity3' },
+
+            { id: 'entity6', tenantId: 'tenant2', name: 'GlobalTech', type: 'Company', parentId: null },
+            { id: 'entity7', tenantId: 'tenant2', name: 'West Branch', type: 'Branch', parentId: 'entity6' },
+            { id: 'entity8', tenantId: 'tenant2', name: 'Canada Branch', type: 'Branch', parentId: 'entity6' },
+            { id: 'entity9', tenantId: 'tenant2', name: 'West', type: 'Region', parentId: 'entity7' },
+            { id: 'entity10', tenantId: 'tenant2', name: 'North', type: 'Region', parentId: 'entity8' },
+
+            { id: 'entity11', tenantId: 'tenant3', name: 'EuroTech', type: 'Company', parentId: null },
+            { id: 'entity12', tenantId: 'tenant3', name: 'UK Branch', type: 'Branch', parentId: 'entity11' },
+            { id: 'entity13', tenantId: 'tenant3', name: 'Germany Branch', type: 'Branch', parentId: 'entity11' },
+            { id: 'entity14', tenantId: 'tenant3', name: 'Europe', type: 'Region', parentId: 'entity12' }
+        ];
+
+        // Current active tenant and entity
+        let currentTenant = tenants[0];
+        let currentEntity = entities[0];
+
+        // Sample data functions with tenant and entity IDs
+        function getEmployeeData() {
+            return [
+                ['EMP001', 'John Smith', '555-1234', 'john@example.com', 'Engineering', 'Developer', 'Active', '2020-01-15', '$85,000', 'New York', 'TechCorp', 'East Branch', 'Northeast', 'tenant1', 'entity1'],
+                ['EMP002', 'Jane Doe', '555-5678', 'jane@example.com', 'Marketing', 'Manager', 'Active', '2019-05-20', '$95,000', 'Chicago', 'TechCorp', 'Midwest Branch', 'Central', 'tenant1', 'entity1'],
+                ['EMP003', 'Bob Johnson', '555-9012', 'bob@example.com', 'Sales', 'Executive', 'Active', '2018-11-10', '$110,000', 'Los Angeles', 'GlobalTech', 'West Branch', 'West', 'tenant2', 'entity6'],
+                ['EMP004', 'Alice Brown', '555-3456', 'alice@example.com', 'HR', 'Coordinator', 'Active', '2021-03-05', '$65,000', 'Boston', 'TechCorp', 'East Branch', 'Northeast', 'tenant1', 'entity1'],
+                ['EMP005', 'Charlie Wilson', '555-7890', 'charlie@example.com', 'Engineering', 'Senior Developer', 'Active', '2017-08-15', '$105,000', 'Seattle', 'GlobalTech', 'West Branch', 'West', 'tenant2', 'entity6'],
+                ['EMP006', 'Eva Schmidt', '555-6543', 'eva@eurotech.com', 'Engineering', 'Developer', 'Active', '2019-06-10', '€75,000', 'Berlin', 'EuroTech', 'Germany Branch', 'Europe', 'tenant3', 'entity11'],
+                ['EMP007', 'James Wilson', '555-8765', 'james@eurotech.com', 'Sales', 'Manager', 'Active', '2018-03-22', '£65,000', 'London', 'EuroTech', 'UK Branch', 'Europe', 'tenant3', 'entity11']
+            ];
+        }
+
+        function getCustomerData() {
+            return [
+                ['CUST001', 'Acme Corp', 'John Manager', 'john@acme.com', '555-1111', '123 Main St', 'New York', 'USA', 'Active', 'TechCorp', 'East Branch', 'Northeast', 'tenant1', 'entity1'],
+                ['CUST002', 'Beta Industries', 'Sarah Director', 'sarah@beta.com', '555-2222', '456 Oak Ave', 'Chicago', 'USA', 'Active', 'TechCorp', 'Midwest Branch', 'Central', 'tenant1', 'entity1'],
+                ['CUST003', 'Gamma Solutions', 'Mike President', 'mike@gamma.com', '555-3333', '789 Pine Rd', 'Toronto', 'Canada', 'Inactive', 'GlobalTech', 'Canada Branch', 'North', 'tenant2', 'entity6'],
+                ['CUST004', 'Delta Services', 'Lisa Owner', 'lisa@delta.com', '555-4444', '321 Elm Blvd', 'London', 'UK', 'Active', 'EuroTech', 'UK Branch', 'Europe', 'tenant3', 'entity11'],
+                ['CUST005', 'Epsilon Tech', 'David CEO', 'david@epsilon.com', '555-5555', '654 Birch Ln', 'Berlin', 'Germany', 'Pending', 'EuroTech', 'Germany Branch', 'Europe', 'tenant3', 'entity11'],
+                ['CUST006', 'Omega Systems', 'Laura CTO', 'laura@omega.com', '555-6666', '987 Pine St', 'Seattle', 'USA', 'Active', 'GlobalTech', 'West Branch', 'West', 'tenant2', 'entity6'],
+                ['CUST007', 'Alpha Solutions', 'Mark Director', 'mark@alpha.com', '555-7777', '654 Maple Ave', 'Boston', 'USA', 'Active', 'TechCorp', 'East Branch', 'Northeast', 'tenant1', 'entity1']
+            ];
+        }
+
+        function getPartsData() {
+            return [
+                ['P-10001', 'Air Filter', 'Filters', 'FilterCorp', '$24.99', '156', '50', 'Aisle A-12', 'In Stock', 'TechCorp', 'East Branch', 'Northeast', 'tenant1', 'entity1'],
+                ['P-10002', 'Brake Pad Set', 'Brakes', 'BrakeMasters', '$89.95', '78', '30', 'Aisle B-05', 'In Stock', 'TechCorp', 'Midwest Branch', 'Central', 'tenant1', 'entity1'],
+                ['P-10003', 'Oil Filter', 'Filters', 'FilterCorp', '$12.50', '210', '75', 'Aisle A-14', 'In Stock', 'GlobalTech', 'West Branch', 'West', 'tenant2', 'entity6'],
+                ['P-10004', 'Spark Plug Set', 'Ignition', 'SparkTech', '$45.75', '92', '40', 'Aisle C-03', 'In Stock', 'GlobalTech', 'West Branch', 'West', 'tenant2', 'entity6'],
+                ['P-10005', 'Alternator', 'Electrical', 'ElectroParts', '$175.00', '25', '15', 'Aisle D-08', 'In Stock', 'TechCorp', 'East Branch', 'Northeast', 'tenant1', 'entity1'],
+                ['P-10006', 'Fuel Pump', 'Fuel System', 'GermanParts', '€120.50', '35', '20', 'Aisle E-02', 'In Stock', 'EuroTech', 'Germany Branch', 'Europe', 'tenant3', 'entity11'],
+                ['P-10007', 'Timing Belt', 'Engine', 'BritishParts', '£45.00', '42', '25', 'Aisle F-07', 'In Stock', 'EuroTech', 'UK Branch', 'Europe', 'tenant3', 'entity11']
+            ];
+        }
+
+        // Set up event listeners after DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize the main content with grid containers
+            initializeGrids();
+
+            // Menu navigation functionality
+            const navLinks = document.querySelectorAll('.nav-menu li a');
+            const gridContainers = {
+                'dashboard': null, // No specific grid for dashboard
+                'employees': document.getElementById('employeesGrid'),
+                'customers': document.getElementById('customersGrid'),
+                'parts': document.getElementById('partsGrid'),
+                'orders': null, // Not implemented yet
+                'reports': null  // Not implemented yet
+            };
+
+            // Track current active section
+            let currentActiveSection = 'employees'; // Default to employees
+
+            // Function to show the selected grid and hide others
+            function showGrid(section) {
+                // Hide all grids first
+                Object.values(gridContainers).forEach(grid => {
+                    if (grid) grid.style.display = 'none';
+                });
+
+                // Show the selected grid if it exists
+                if (gridContainers[section]) {
+                    gridContainers[section].style.display = 'block';
+                    currentActiveSection = section;
+
+                    // Update the advanced search button text based on the current section
+                    const advancedSearchBtn = document.getElementById('toggleAdvancedSearch');
+                    if (advancedSearchBtn) {
+                        advancedSearchBtn.innerHTML = `<i class="fas fa-filter"></i> ${section.charAt(0).toUpperCase() + section.slice(1)} Advanced Search`;
+                    }
+
+                    // Dispatch grid change event
+                    const event = new CustomEvent('grid-change', {
+                        detail: { section: section }
+                    });
+                    document.dispatchEvent(event);
+                }
+
+                // Update active menu item
+                navLinks.forEach(link => {
+                    link.parentElement.classList.remove('active');
+                    if (link.getAttribute('data-section') === section) {
+                        link.parentElement.classList.add('active');
+                    }
+                });
+            }
+
+            // Add click event listeners to navigation links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const section = this.getAttribute('data-section');
+                    showGrid(section);
+
+                    // Close menu suggestions if open
+                    const menuSuggestions = document.getElementById('menuSuggestions');
+                    menuSuggestions.classList.remove('show');
+                });
+            });
+
+            // Menu suggestions functionality
+            const menuSearchInput = document.getElementById('menuSearchInput');
+            const menuSearchButton = document.getElementById('menuSearchButton');
+            const menuSuggestions = document.getElementById('menuSuggestions');
+
+            // Create menu items data with icons
+            const menuItems = [
+                { text: 'Dashboard', section: 'dashboard', icon: 'fas fa-home' },
+                { text: 'Employees', section: 'employees', icon: 'fas fa-id-badge' },
+                { text: 'Customers', section: 'customers', icon: 'fas fa-users' },
+                { text: 'Parts', section: 'parts', icon: 'fas fa-cogs' },
+                { text: 'Orders', section: 'orders', icon: 'fas fa-shopping-cart' },
+                { text: 'Reports', section: 'reports', icon: 'fas fa-chart-bar' }
+            ];
+
+            // Function to show menu suggestions based on input
+            function showMenuSuggestions(searchText) {
+                // Clear previous suggestions
+                menuSuggestions.innerHTML = '';
+
+                if (!searchText) {
+                    menuSuggestions.classList.remove('show');
+                    return;
+                }
+
+                searchText = searchText.toLowerCase();
+                let matchFound = false;
+
+                // Filter menu items that match the search text
+                const filteredItems = menuItems.filter(item =>
+                    item.text.toLowerCase().includes(searchText)
+                );
+
+                if (filteredItems.length > 0) {
+                    filteredItems.forEach(item => {
+                        const suggestionItem = document.createElement('div');
+                        suggestionItem.className = 'suggestion-item';
+                        suggestionItem.innerHTML = `<i class="${item.icon}"></i> ${item.text}`;
+                        suggestionItem.dataset.section = item.section;
+
+                        // Add click event to navigate to the section
+                        suggestionItem.addEventListener('click', function() {
+                            showGrid(this.dataset.section);
+                            menuSearchInput.value = item.text;
+                            menuSuggestions.classList.remove('show');
+                        });
+
+                        menuSuggestions.appendChild(suggestionItem);
+                        matchFound = true;
+                    });
+                }
+
+                if (matchFound) {
+                    menuSuggestions.classList.add('show');
+                } else {
+                    menuSuggestions.classList.remove('show');
+                }
+            }
+
+            // Function to search across all tenants, entities, and grids
+            function searchMenus(searchText) {
+                if (!searchText) return;
+
+                searchText = searchText.toLowerCase();
+                let foundItems = [];
+                let foundInGrids = {
+                    employees: false,
+                    customers: false,
+                    parts: false
+                };
+                let totalFoundCount = 0;
+                let selectedTenant = document.getElementById('tenantSelector').value;
+                let selectedEntity = document.getElementById('entitySelector').value;
+
+                // Reset all menu items to normal state
+                navLinks.forEach(item => {
+                    item.style.backgroundColor = '';
+                    item.parentElement.classList.remove('search-highlight');
+                });
+
+                // Search through menu items first
+                navLinks.forEach(item => {
+                    const menuText = item.textContent.toLowerCase();
+                    if (menuText.includes(searchText)) {
+                        foundItems.push(item);
+                        item.style.backgroundColor = '#495057';
+                        item.parentElement.classList.add('search-highlight');
+                    }
+                });
+
+                // Search across all grids
+                const sections = ['employees', 'customers', 'parts'];
+
+                sections.forEach(section => {
+                    const gridId = `${section}Grid`;
+                    const tableRows = document.querySelectorAll(`#${gridId} tbody tr`);
+                    let sectionFoundCount = 0;
+
+                    // Search in all columns of the grid
+                    tableRows.forEach(row => {
+                        let rowMatches = false;
+                        let tenantMatch = true;
+                        let entityMatch = true;
+
+                        // Check tenant and entity filters if not set to "all"
+                        if (selectedTenant !== 'all') {
+                            const tenantCell = row.cells[row.cells.length - 2]; // Second to last column is tenant ID
+                            tenantMatch = tenantCell && tenantCell.textContent.trim() === selectedTenant;
+                        }
+
+                        if (selectedEntity !== 'all') {
+                            const entityCell = row.cells[row.cells.length - 1]; // Last column is entity ID
+                            entityMatch = entityCell && entityCell.textContent.trim() === selectedEntity;
+                        }
+
+                        // Only search if tenant and entity match the filters
+                        if (tenantMatch && entityMatch) {
+                            // Get search filter settings
+                            const searchInTenants = document.getElementById('searchTenants').checked;
+                            const searchInCompanies = document.getElementById('searchCompanies').checked;
+                            const searchInBranches = document.getElementById('searchBranches').checked;
+                            const searchInRegions = document.getElementById('searchRegions').checked;
+                            const searchInAllFields = document.getElementById('searchAllFields').checked;
+
+                            // Check each cell in the row
+                            Array.from(row.cells).forEach((cell, cellIndex) => {
+                                const cellText = cell.textContent.toLowerCase();
+
+                                // Determine if we should search in this cell based on filter settings
+                                let shouldSearchThisCell = false;
+
+                                if (searchInAllFields) {
+                                    // Search all cells
+                                    shouldSearchThisCell = true;
+                                } else {
+                                    // Check specific column types
+                                    const columnCount = row.cells.length;
+
+                                    // Company is at index columnCount-5
+                                    if (searchInCompanies && cellIndex === columnCount-5) {
+                                        shouldSearchThisCell = true;
+                                    }
+                                    // Branch is at index columnCount-4
+                                    else if (searchInBranches && cellIndex === columnCount-4) {
+                                        shouldSearchThisCell = true;
+                                    }
+                                    // Region is at index columnCount-3
+                                    else if (searchInRegions && cellIndex === columnCount-3) {
+                                        shouldSearchThisCell = true;
+                                    }
+                                    // Tenant is at index columnCount-2
+                                    else if (searchInTenants && cellIndex === columnCount-2) {
+                                        shouldSearchThisCell = true;
+                                    }
+                                    // For other columns, search if any filter is checked
+                                    else if (searchInTenants || searchInCompanies || searchInBranches || searchInRegions) {
+                                        // Don't search in other columns if specific filters are set
+                                        shouldSearchThisCell = false;
+                                    } else {
+                                        // If no specific filters are checked, search all columns
+                                        shouldSearchThisCell = true;
+                                    }
+                                }
+
+                                // Only check for matches if we should search this cell
+                                if (shouldSearchThisCell && cellText.includes(searchText)) {
+                                    rowMatches = true;
+                                }
+                            });
+                        }
+
+                        // Show/hide the row based on match
+                        if (rowMatches) {
+                            row.style.display = '';
+                            foundInGrids[section] = true;
+                            sectionFoundCount++;
+                            totalFoundCount++;
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+
+                    // Update the section header to show match count
+                    const sectionHeader = document.querySelector(`#${gridId} .grid-title`);
+                    if (sectionHeader && sectionFoundCount > 0) {
+                        sectionHeader.innerHTML = `${section.charAt(0).toUpperCase() + section.slice(1)} <span class="search-match-count">(${sectionFoundCount} matches)</span>`;
+                    }
+                });
+
+                // If we found matches in any grid, show that grid
+                if (totalFoundCount > 0) {
+                    // Find the first grid with matches and show it
+                    for (const section in foundInGrids) {
+                        if (foundInGrids[section]) {
+                            showGrid(section);
+
+                            // Open advanced search panel to show filters
+                            const panel = document.getElementById('advancedSearchPanel');
+                            const activeGridContainer = document.getElementById(`${section}Grid`);
+
+                            if (panel && !panel.classList.contains('active')) {
+                                panel.classList.add('active');
+
+                                if (activeGridContainer) {
+                                    activeGridContainer.classList.add('panel-active');
+                                }
+
+                                // Update panel title
+                                const panelTitle = panel.querySelector('.panel-header h2');
+                                if (panelTitle) {
+                                    panelTitle.innerHTML = `<i class="fas fa-filter"></i> ${section.charAt(0).toUpperCase() + section.slice(1)} Advanced Search`;
+                                }
+                            }
+
+                            break;
+                        }
+                    }
+
+                    // Show a summary of results
+                    alert(`Found ${totalFoundCount} matches across all data. Showing results.`);
+                } else if (foundItems.length > 0) {
+                    // If only menu items found, navigate to the first one
+                    const section = foundItems[0].getAttribute('data-section');
+                    showGrid(section);
+
+                    // Scroll to the first found item
+                    foundItems[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    menuSuggestions.classList.remove('show');
+                } else {
+                    // If not found anywhere, show message
+                    alert('No matches found for: ' + searchText);
+                }
+            }
+
+            // Initialize voice recognition
+            let recognition = null;
+            const voiceSearchButton = document.getElementById('voiceSearchButton');
+
+            // Check if browser supports speech recognition
+            if ('webkitSpeechRecognition' in window) {
+                recognition = new webkitSpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = 'en-US';
+
+                recognition.onstart = function() {
+                    voiceSearchButton.classList.add('listening');
+                    menuSearchInput.placeholder = 'Listening...';
+                };
+
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    menuSearchInput.value = transcript;
+
+                    // Process voice commands and check if a command was executed
+                    const commandExecuted = processVoiceCommand(transcript);
+
+                    if (commandExecuted) {
+                        // If a command was executed, show a toast with the action
+                        setTimeout(() => {
+                            menuSearchInput.value = '';
+                            showToast(`Command executed: "${transcript}"`);
+                        }, 300);
+                    } else {
+                        // If no command was recognized, perform a search
+                        setTimeout(() => {
+                            if (menuSearchInput.value.trim()) {
+                                searchMenus(menuSearchInput.value);
+
+                                // Clear the search input after searching
+                                setTimeout(() => {
+                                    menuSearchInput.value = '';
+                                    showToast(`Searched for: "${transcript}"`);
+                                }, 500);
+                            }
+                        }, 300);
+                    }
+                };
+
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error', event.error);
+                    voiceSearchButton.classList.remove('listening');
+                    menuSearchInput.placeholder = 'Search across all data...';
+                };
+
+                recognition.onend = function() {
+                    voiceSearchButton.classList.remove('listening');
+                    menuSearchInput.placeholder = 'Search across all data...';
+                };
+
+                // Add click event for voice search button
+                voiceSearchButton.addEventListener('click', function() {
+                    if (recognition) {
+                        try {
+                            if (voiceSearchButton.classList.contains('listening')) {
+                                recognition.stop();
+                            } else {
+                                recognition.start();
+                            }
+                        } catch (e) {
+                            console.error('Speech recognition error:', e);
+                        }
+                    } else {
+                        alert('Your browser does not support voice recognition.');
+                    }
+                });
+            } else {
+                voiceSearchButton.style.display = 'none';
+                console.warn('Browser does not support speech recognition');
+            }
+
+            // Process voice commands
+            function processVoiceCommand(command) {
+                command = command.toLowerCase().trim();
+
+                // First check for navigation commands
+                if (command.includes('show employees') || command.includes('go to employees') || command === 'employees' || command === 'employee') {
+                    showGrid('employees');
+                    return true;
+                }
+
+                // Check for customer-related commands - handle various forms
+                else if (command.includes('show customers') || command.includes('go to customers') ||
+                         command === 'customers' || command === 'customer' ||
+                         command.includes('customer') || command.includes('customers')) {
+                    showGrid('customers');
+                    return true;
+                }
+
+                // Check for parts-related commands
+                else if (command.includes('show parts') || command.includes('go to parts') ||
+                         command === 'parts' || command === 'part') {
+                    showGrid('parts');
+                    return true;
+                }
+
+                // Check for advanced search commands
+                else if (command.includes('advanced search') || command.includes('open advanced search')) {
+                    document.getElementById('toggleAdvancedSearch').click();
+                    return true;
+                }
+
+                // Check for search commands
+                else if (command.includes('search for') || command.includes('find')) {
+                    // Extract search term
+                    let searchTerm = '';
+                    if (command.includes('search for')) {
+                        searchTerm = command.split('search for')[1].trim();
+                    } else if (command.includes('find')) {
+                        searchTerm = command.split('find')[1].trim();
+                    }
+
+                    if (searchTerm) {
+                        menuSearchInput.value = searchTerm;
+                        searchMenus(searchTerm);
+                        return true;
+                    }
+                }
+
+                // Check if the command itself is a navigation keyword
+                const navigationKeywords = {
+                    'employee': 'employees',
+                    'employees': 'employees',
+                    'customer': 'customers',
+                    'customers': 'customers',
+                    'part': 'parts',
+                    'parts': 'parts'
+                };
+
+                // Check if the command is a direct navigation keyword
+                if (navigationKeywords[command]) {
+                    showGrid(navigationKeywords[command]);
+                    return true;
+                }
+
+                // If no specific command matched, return false to indicate we should search
+                return false;
+            }
+
+            // Event listeners for search input
+            menuSearchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    const searchValue = this.value;
+                    if (searchValue.trim()) {
+                        // Add animation to voice button
+                        voiceSearchButton.classList.add('searching');
+
+                        // Perform search
+                        searchMenus(searchValue);
+
+                        // Clear the search input after searching
+                        setTimeout(() => {
+                            this.value = '';
+                            // Show a toast notification
+                            showToast(`Searched for: "${searchValue}"`);
+                            // Remove animation class
+                            voiceSearchButton.classList.remove('searching');
+                        }, 300);
+                    }
+                }
+            });
+
+            // Handle arrow key navigation for suggestions
+            menuSearchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowDown' && menuSuggestions.classList.contains('show')) {
+                    // Navigate to first suggestion item
+                    const firstItem = menuSuggestions.querySelector('.suggestion-item');
+                    if (firstItem) {
+                        firstItem.classList.add('active');
+                        firstItem.focus();
+                    }
+                    e.preventDefault();
+                }
+            });
+
+            // Function to show toast notification
+            function showToast(message) {
+                // Create toast element if it doesn't exist
+                let toast = document.getElementById('searchToast');
+                if (!toast) {
+                    toast = document.createElement('div');
+                    toast.id = 'searchToast';
+                    toast.className = 'search-toast';
+                    document.body.appendChild(toast);
+                }
+
+                // Set message and show toast
+                toast.textContent = message;
+                toast.classList.add('show');
+
+                // Hide toast after 3 seconds
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+
+            // Show suggestions as user types
+            menuSearchInput.addEventListener('input', function() {
+                showMenuSuggestions(this.value);
+
+                if (this.value === '') {
+                    // Reset all menu items
+                    navLinks.forEach(item => {
+                        item.style.backgroundColor = '';
+                        item.parentElement.classList.remove('search-highlight');
+                    });
+                }
+            });
+
+            // Close suggestions when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!menuSearchInput.contains(e.target) && !menuSuggestions.contains(e.target)) {
+                    menuSuggestions.classList.remove('show');
+                }
+            });
+
+            // Initialize with employees grid
+            showGrid('employees');
+
+            // Create and append the advanced search panel
+            createAdvancedSearchPanel();
+
+            // Toggle Advanced Search Panel
+            document.getElementById('toggleAdvancedSearch').addEventListener('click', function(event) {
+                event.stopPropagation(); // Prevent event from bubbling up
+                event.preventDefault(); // Prevent default action
+                const panel = document.getElementById('advancedSearchPanel');
+                const activeGridContainer = document.getElementById(`${currentActiveSection}Grid`);
+
+                // Update panel title based on current section
+                const panelTitle = panel.querySelector('.panel-header h2');
+                if (panelTitle) {
+                    panelTitle.innerHTML = `<i class="fas fa-filter"></i> ${currentActiveSection.charAt(0).toUpperCase() + currentActiveSection.slice(1)} Advanced Search`;
+                }
+
+                // Show/hide quick filters based on current section
+                const quickFiltersSection = panel.querySelector('.quick-filters-section');
+
+                if (quickFiltersSection) {
+                    // Show all filter groups first
+                    const allFilterGroups = quickFiltersSection.querySelectorAll('.quick-filter-group');
+                    allFilterGroups.forEach(group => group.style.display = 'none');
+
+                    // Show only relevant filter groups for current section
+                    if (currentActiveSection === 'employees') {
+                        const employeeFilters = quickFiltersSection.querySelectorAll('.quick-filter-group[data-column="department"], .quick-filter-group[data-column="designation"], .quick-filter-group[data-column="email"], .quick-filter-group[data-column="company"], .quick-filter-group[data-column="branch"], .quick-filter-group[data-column="region"]');
+                        employeeFilters.forEach(group => group.style.display = 'flex');
+                    } else if (currentActiveSection === 'customers') {
+                        const customerFilters = quickFiltersSection.querySelectorAll('.quick-filter-group[data-column="status"], .quick-filter-group[data-column="country"], .quick-filter-group[data-column="company"], .quick-filter-group[data-column="branch"], .quick-filter-group[data-column="region"]');
+                        customerFilters.forEach(group => group.style.display = 'flex');
+                    } else if (currentActiveSection === 'parts') {
+                        const partsFilters = quickFiltersSection.querySelectorAll('.quick-filter-group[data-column="category"], .quick-filter-group[data-column="manufacturer"], .quick-filter-group[data-column="company"], .quick-filter-group[data-column="branch"], .quick-filter-group[data-column="region"]');
+                        partsFilters.forEach(group => group.style.display = 'flex');
+                    }
+                }
+
+                panel.classList.toggle('active');
+
+                // Toggle the panel-active class on the active grid container
+                if (panel.classList.contains('active') && activeGridContainer) {
+                    activeGridContainer.classList.add('panel-active');
+                } else if (activeGridContainer) {
+                    activeGridContainer.classList.remove('panel-active');
+                }
+            });
+
+            // Initialize column search functionality
+            initColumnSearch();
+
+            // Initialize Advanced Search with column suggestions
+            initAdvancedSearch();
+
+            // Function to update entity selector based on selected tenant
+            function updateEntitySelector() {
+                const tenantSelector = document.getElementById('tenantSelector');
+                const entitySelector = document.getElementById('entitySelector');
+                const selectedTenant = tenantSelector.value;
+
+                // Clear current options
+                entitySelector.innerHTML = '<option value="all">All Entities</option>';
+
+                // If "all" is selected, don't add any specific entities
+                if (selectedTenant === 'all') {
+                    return;
+                }
+
+                // Filter entities by tenant
+                const tenantEntities = entities.filter(entity => entity.tenantId === selectedTenant);
+
+                // Add filtered entities to selector
+                tenantEntities.forEach(entity => {
+                    const option = document.createElement('option');
+                    option.value = entity.id;
+                    option.textContent = entity.name;
+                    entitySelector.appendChild(option);
+                });
+
+                // Select the first entity by default
+                if (tenantEntities.length > 0) {
+                    entitySelector.value = tenantEntities[0].id;
+                }
+            }
+
+            // Function to filter grid data based on tenant and entity
+            function filterGridsByTenantAndEntity() {
+                const selectedTenant = document.getElementById('tenantSelector').value;
+                const selectedEntity = document.getElementById('entitySelector').value;
+                const sections = ['employees', 'customers', 'parts'];
+
+                sections.forEach(section => {
+                    const gridId = `${section}Grid`;
+                    const tableRows = document.querySelectorAll(`#${gridId} tbody tr`);
+
+                    tableRows.forEach(row => {
+                        let tenantMatch = true;
+                        let entityMatch = true;
+
+                        // Check tenant filter if not set to "all"
+                        if (selectedTenant !== 'all') {
+                            const tenantCell = row.cells[row.cells.length - 2]; // Second to last column is tenant ID
+                            tenantMatch = tenantCell && tenantCell.textContent.trim() === selectedTenant;
+                        }
+
+                        // Check entity filter if not set to "all"
+                        if (selectedEntity !== 'all') {
+                            const entityCell = row.cells[row.cells.length - 1]; // Last column is entity ID
+                            entityMatch = entityCell && entityCell.textContent.trim() === selectedEntity;
+                        }
+
+                        // Show/hide the row based on filters
+                        row.style.display = (tenantMatch && entityMatch) ? '' : 'none';
+                    });
+                });
+            }
+
+            // Initialize tenant and entity selectors
+            const tenantSelector = document.getElementById('tenantSelector');
+            const entitySelector = document.getElementById('entitySelector');
+
+            // Add event listeners for tenant and entity selectors
+            tenantSelector.addEventListener('change', function() {
+                updateEntitySelector();
+                filterGridsByTenantAndEntity();
+            });
+
+            entitySelector.addEventListener('change', function() {
+                filterGridsByTenantAndEntity();
+            });
+
+            // Initialize entity selector
+            updateEntitySelector();
+
+            // Apply initial filtering
+            filterGridsByTenantAndEntity();
+        });
+    </script>
+</body>
+</html>

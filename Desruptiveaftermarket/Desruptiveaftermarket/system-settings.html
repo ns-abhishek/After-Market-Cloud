@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Settings - Disruptive Aftermarket</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="light-theme.css">
+    <script src="security-service.js"></script>
+
+    <style>
+        /* System Settings Specific Styles */
+        :root {
+            --primary-color: #000000;
+            --primary-light: #1f2937;
+            --secondary-color: #ffffff;
+            --accent-color: #f8fafc;
+            --border-color: #e2e8f0;
+            --hover-color: #f1f5f9;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --border-radius: 12px;
+            --success-color: #059669;
+            --warning-color: #d97706;
+            --error-color: #dc2626;
+            --info-color: #2563eb;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .app-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            height: 64px;
+        }
+
+        .app-title {
+            font-size: 20px;
+            font-weight: 600;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 16px;
+            padding: 8px;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .back-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .header-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+
+        .header-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 64px;
+            padding: 24px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        /* Settings Navigation */
+        .settings-nav {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 32px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-tab {
+            padding: 12px 0;
+            border-bottom: 2px solid transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .nav-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .nav-tab:hover {
+            color: var(--primary-color);
+        }
+
+        /* Settings Content */
+        .settings-content {
+            display: grid;
+            gap: 24px;
+        }
+
+        .settings-section {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--accent-color);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .section-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .section-content {
+            padding: 24px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            background: white;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            background: white;
+            resize: vertical;
+            min-height: 100px;
+            transition: var(--transition);
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: var(--transition);
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--success-color);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Setting Item */
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-info h4 {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .setting-info p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Action Buttons */
+        .action-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 12px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-1px);
+        }
+
+        .action-btn.secondary {
+            background: white;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .action-btn.secondary:hover {
+            background: var(--hover-color);
+        }
+
+        .action-btn.danger {
+            background: var(--error-color);
+        }
+
+        .action-btn.danger:hover {
+            background: #b91c1c;
+        }
+
+        /* Grid Layout */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 16px;
+            }
+
+            .settings-nav {
+                overflow-x: auto;
+                padding-bottom: 8px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+
+        /* Hidden sections */
+        .settings-tab-content {
+            display: none;
+        }
+
+        .settings-tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <button class="back-button" title="Go Back" onclick="goBack()">
+                <i class="material-icons">arrow_back</i>
+            </button>
+            <h1 class="app-title">
+                <i class="material-icons">settings</i>
+                System Settings
+            </h1>
+            <div class="header-actions">
+                <button class="header-btn" onclick="resetToDefaults()">
+                    <i class="material-icons">restore</i>
+                    Reset
+                </button>
+                <button class="header-btn" onclick="exportSettings()">
+                    <i class="material-icons">download</i>
+                    Export
+                </button>
+                <button class="header-btn" onclick="saveAllSettings()">
+                    <i class="material-icons">save</i>
+                    Save All
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">System Settings</h1>
+            <p class="page-subtitle">Configure system-wide settings and preferences</p>
+        </div>
+
+        <!-- Settings Navigation -->
+        <nav class="settings-nav">
+            <div class="nav-tab active" onclick="switchTab('general')">General</div>
+            <div class="nav-tab" onclick="switchTab('security')">Security</div>
+            <div class="nav-tab" onclick="switchTab('compliance')">Compliance</div>
+            <div class="nav-tab" onclick="switchTab('integrations')">Integrations</div>
+            <div class="nav-tab" onclick="switchTab('backup')">Backup & Maintenance</div>
+            <div class="nav-tab" onclick="switchTab('audit')">Audit & Logging</div>
+        </nav>
+
+        <!-- Settings Content -->
+        <div class="settings-content">
+            <!-- General Settings -->
+            <div id="general-tab" class="settings-tab-content active">
+                <div class="settings-section">
+                    <div class="section-header">
+                        <h2 class="section-title">General Configuration</h2>
+                        <p class="section-description">Basic system settings and preferences</p>
+                    </div>
+                    <div class="section-content">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Company Name</label>
+                                <input type="text" class="form-input" id="companyName" value="Disruptive Aftermarket">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">System Timezone</label>
+                                <select class="form-select" id="timezone">
+                                    <option value="UTC">UTC</option>
+                                    <option value="America/New_York">Eastern Time</option>
+                                    <option value="America/Chicago">Central Time</option>
+                                    <option value="America/Denver">Mountain Time</option>
+                                    <option value="America/Los_Angeles" selected>Pacific Time</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Default Language</label>
+                                <select class="form-select" id="defaultLanguage">
+                                    <option value="en" selected>English</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Date Format</label>
+                                <select class="form-select" id="dateFormat">
+                                    <option value="MM/DD/YYYY" selected>MM/DD/YYYY</option>
+                                    <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                                    <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h4>Maintenance Mode</h4>
+                                <p>Enable maintenance mode to restrict system access</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="maintenanceMode">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h4>Auto-Save Changes</h4>
+                                <p>Automatically save user changes without confirmation</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="autoSave" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="form-actions">
+                            <button class="action-btn secondary" onclick="resetGeneralSettings()">Reset</button>
+                            <button class="action-btn" onclick="saveGeneralSettings()">Save Changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Settings -->
+            <div id="security-tab" class="settings-tab-content">
+                <!-- Security content will be loaded here -->
+            </div>
+
+            <!-- Compliance Settings -->
+            <div id="compliance-tab" class="settings-tab-content">
+                <!-- Compliance content will be loaded here -->
+            </div>
+
+            <!-- Integrations Settings -->
+            <div id="integrations-tab" class="settings-tab-content">
+                <!-- Integrations content will be loaded here -->
+            </div>
+
+            <!-- Backup & Maintenance Settings -->
+            <div id="backup-tab" class="settings-tab-content">
+                <!-- Backup content will be loaded here -->
+            </div>
+
+            <!-- Audit & Logging Settings -->
+            <div id="audit-tab" class="settings-tab-content">
+                <!-- Audit content will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <script src="system-settings.js"></script>
+</body>
+</html>

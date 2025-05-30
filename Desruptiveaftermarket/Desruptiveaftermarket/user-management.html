@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - Disruptive Aftermarket</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="light-theme.css">
+    <script src="security-service.js"></script>
+
+    <style>
+        /* User Management Specific Styles */
+        :root {
+            --primary-color: #000000;
+            --primary-light: #1f2937;
+            --secondary-color: #ffffff;
+            --accent-color: #f8fafc;
+            --border-color: #e2e8f0;
+            --hover-color: #f1f5f9;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --border-radius: 12px;
+            --success-color: #059669;
+            --warning-color: #d97706;
+            --error-color: #dc2626;
+            --info-color: #2563eb;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .app-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            height: 64px;
+        }
+
+        .app-title {
+            font-size: 20px;
+            font-weight: 600;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 16px;
+            padding: 8px;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .back-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .header-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+
+        .header-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 64px;
+            padding: 24px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .page-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            background: white;
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-btn {
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            background: white;
+            color: var(--text-secondary);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .filter-btn:hover {
+            background: var(--hover-color);
+        }
+
+        .action-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 12px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-1px);
+        }
+
+        .action-btn.secondary {
+            background: white;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .action-btn.secondary:hover {
+            background: var(--hover-color);
+        }
+
+        /* Users Grid */
+        .users-container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .users-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .users-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .users-count {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .users-table th,
+        .users-table td {
+            padding: 16px 24px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .users-table th {
+            background-color: var(--accent-color);
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .users-table td {
+            color: var(--text-secondary);
+        }
+
+        .users-table tbody tr:hover {
+            background-color: var(--hover-color);
+        }
+
+        /* User Avatar */
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-details h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .user-details p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Status badges */
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background-color: #dcfce7;
+            color: var(--success-color);
+        }
+
+        .status-inactive {
+            background-color: #fef3c7;
+            color: var(--warning-color);
+        }
+
+        .status-locked {
+            background-color: #fecaca;
+            color: var(--error-color);
+        }
+
+        /* Role badges */
+        .role-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .role-admin {
+            background-color: #ddd6fe;
+            color: #7c3aed;
+        }
+
+        .role-manager {
+            background-color: #dbeafe;
+            color: var(--info-color);
+        }
+
+        .role-user {
+            background-color: #dcfce7;
+            color: var(--success-color);
+        }
+
+        .role-guest {
+            background-color: #f1f5f9;
+            color: var(--text-muted);
+        }
+
+        /* Action buttons */
+        .table-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .table-action-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: var(--transition);
+            font-size: 18px;
+        }
+
+        .table-action-btn:hover {
+            background: var(--hover-color);
+            color: var(--text-primary);
+        }
+
+        .table-action-btn.edit:hover {
+            color: var(--info-color);
+        }
+
+        .table-action-btn.delete:hover {
+            color: var(--error-color);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .page-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-container {
+                max-width: none;
+            }
+
+            .main-content {
+                padding: 16px;
+            }
+
+            .users-table {
+                font-size: 14px;
+            }
+
+            .users-table th,
+            .users-table td {
+                padding: 12px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <button class="back-button" title="Go Back" onclick="goBack()">
+                <i class="material-icons">arrow_back</i>
+            </button>
+            <h1 class="app-title">
+                <i class="material-icons">admin_panel_settings</i>
+                User Management
+            </h1>
+            <div class="header-actions">
+                <button class="header-btn" onclick="refreshUsers()">
+                    <i class="material-icons">refresh</i>
+                    Refresh
+                </button>
+                <button class="header-btn" onclick="exportUsers()">
+                    <i class="material-icons">download</i>
+                    Export
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">User Management</h1>
+            <p class="page-subtitle">Manage user accounts, roles, and permissions</p>
+
+            <div class="page-actions">
+                <div class="search-container">
+                    <input type="text" class="search-input" id="userSearch" placeholder="Search users by name, email, or role...">
+                    <button class="filter-btn" onclick="toggleFilters()">
+                        <i class="material-icons">filter_list</i>
+                        Filters
+                    </button>
+                </div>
+                <button class="action-btn" onclick="addNewUser()">
+                    <i class="material-icons">person_add</i>
+                    Add User
+                </button>
+            </div>
+        </div>
+
+        <!-- Users Container -->
+        <div class="users-container">
+            <div class="users-header">
+                <h2 class="users-title">All Users</h2>
+                <span class="users-count" id="usersCount">Loading...</span>
+            </div>
+
+            <table class="users-table" id="usersTable">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Last Login</th>
+                        <th>MFA</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                    <!-- Users will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script src="user-management.js"></script>
+</body>
+</html>

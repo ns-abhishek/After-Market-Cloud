@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aftermarket Software Demo - Customer 360 View</title>
+
+    <!-- Google Material Design Lite -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.grey-blue.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <style>
+        /* Base styles */
+        :root {
+            --primary-color: #212529;
+            --secondary-color: #f5f5f5;
+            --accent-color: #757575;
+            --border-color: #e0e0e0;
+            --hover-color: #e9e9e9;
+            --shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --border-radius: 4px;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --info-color: #2196f3;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--secondary-color);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .app-header {
+            background: linear-gradient(135deg, var(--primary-color), #343a40);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .header-content h1 {
+            font-size: 48px;
+            font-weight: 300;
+            margin-bottom: 16px;
+        }
+
+        .header-subtitle {
+            font-size: 20px;
+            opacity: 0.9;
+            margin-bottom: 32px;
+        }
+
+        .header-features {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .feature-badge {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Main content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Demo cards */
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .demo-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .demo-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), #343a40);
+            color: white;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .card-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .card-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-bottom: 24px;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .feature-list i {
+            color: var(--success-color);
+            font-size: 16px;
+        }
+
+        .demo-button {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 16px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .demo-button:hover {
+            background-color: #343a40;
+        }
+
+        /* Stats section */
+        .stats-section {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 40px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .stats-title {
+            font-size: 32px;
+            font-weight: 300;
+            margin-bottom: 32px;
+            color: var(--primary-color);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 32px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Technology section */
+        .tech-section {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .tech-title {
+            font-size: 32px;
+            font-weight: 300;
+            margin-bottom: 32px;
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+        }
+
+        .tech-item {
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .tech-item:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .tech-icon {
+            font-size: 32px;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+        }
+
+        .tech-name {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .tech-description {
+            font-size: 14px;
+            color: var(--accent-color);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-title {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        .footer-text {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 24px;
+        }
+
+        .footer-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .footer-button {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 12px 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .footer-button:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .header-content h1 {
+                font-size: 36px;
+            }
+
+            .header-subtitle {
+                font-size: 18px;
+            }
+
+            .header-features {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .tech-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <h1>Aftermarket Software</h1>
+            <p class="header-subtitle">Advanced Customer 360 View & Equipment Management</p>
+            <div class="header-features">
+                <div class="feature-badge">
+                    <i class="material-icons">dashboard</i>
+                    Customer 360 View
+                </div>
+                <div class="feature-badge">
+                    <i class="material-icons">precision_manufacturing</i>
+                    Equipment Tracking
+                </div>
+                <div class="feature-badge">
+                    <i class="material-icons">verified_user</i>
+                    Warranty Management
+                </div>
+                <div class="feature-badge">
+                    <i class="material-icons">language</i>
+                    Multi-language
+                </div>
+                <div class="feature-badge">
+                    <i class="material-icons">security</i>
+                    GDPR Compliant
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Demo Cards -->
+        <div class="demo-grid">
+            <!-- Party Grid Demo -->
+            <div class="demo-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="material-icons">people</i>
+                    </div>
+                    <h3 class="card-title">Party Management Grid</h3>
+                    <p class="card-subtitle">Traditional grid with advanced features</p>
+                </div>
+                <div class="card-body">
+                    <ul class="feature-list">
+                        <li><i class="material-icons">check_circle</i> Advanced search with operators</li>
+                        <li><i class="material-icons">check_circle</i> Quick filters & voice search</li>
+                        <li><i class="material-icons">check_circle</i> Multi-tenant support</li>
+                        <li><i class="material-icons">check_circle</i> Export & bulk operations</li>
+                    </ul>
+                    <button class="demo-button" onclick="openDemo('party-grid-modern.html')">
+                        <i class="material-icons">launch</i>
+                        View Party Grid
+                    </button>
+                </div>
+            </div>
+
+            <!-- Party Details Advanced Demo -->
+            <div class="demo-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="material-icons">view_module</i>
+                    </div>
+                    <h3 class="card-title">Party Details Advanced</h3>
+                    <p class="card-subtitle">Modern card-based view with AI search</p>
+                </div>
+                <div class="card-body">
+                    <ul class="feature-list">
+                        <li><i class="material-icons">check_circle</i> Smart AI-powered search</li>
+                        <li><i class="material-icons">check_circle</i> Multiple view modes (Cards/List)</li>
+                        <li><i class="material-icons">check_circle</i> Voice search & quick filters</li>
+                        <li><i class="material-icons">check_circle</i> Import/Export CSV & JSON</li>
+                    </ul>
+                    <button class="demo-button" onclick="openDemo('party-details-advanced.html')">
+                        <i class="material-icons">launch</i>
+                        View Advanced Details
+                    </button>
+                </div>
+            </div>
+
+            <!-- Customer 360 Demo -->
+            <div class="demo-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="material-icons">dashboard</i>
+                    </div>
+                    <h3 class="card-title">Customer 360 View</h3>
+                    <p class="card-subtitle">Comprehensive customer insights</p>
+                </div>
+                <div class="card-body">
+                    <ul class="feature-list">
+                        <li><i class="material-icons">check_circle</i> Unified customer profile</li>
+                        <li><i class="material-icons">check_circle</i> Equipment ownership tracking</li>
+                        <li><i class="material-icons">check_circle</i> Service history & communications</li>
+                        <li><i class="material-icons">check_circle</i> Real-time data integration</li>
+                    </ul>
+                    <button class="demo-button" onclick="openDemo('customer-360-view.html?customerId=P001')">
+                        <i class="material-icons">launch</i>
+                        View Customer 360
+                    </button>
+                </div>
+            </div>
+
+            <!-- Equipment Management Demo -->
+            <div class="demo-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="material-icons">precision_manufacturing</i>
+                    </div>
+                    <h3 class="card-title">Equipment Management</h3>
+                    <p class="card-subtitle">Asset tracking & maintenance</p>
+                </div>
+                <div class="card-body">
+                    <ul class="feature-list">
+                        <li><i class="material-icons">check_circle</i> Equipment registry & tracking</li>
+                        <li><i class="material-icons">check_circle</i> Operating hours monitoring</li>
+                        <li><i class="material-icons">check_circle</i> Location & status tracking</li>
+                        <li><i class="material-icons">check_circle</i> Service scheduling</li>
+                    </ul>
+                    <button class="demo-button" onclick="openDemo('equipment-management.html?customerId=P001')">
+                        <i class="material-icons">launch</i>
+                        View Equipment
+                    </button>
+                </div>
+            </div>
+
+            <!-- Warranty Tracker Demo -->
+            <div class="demo-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="material-icons">verified_user</i>
+                    </div>
+                    <h3 class="card-title">Warranty Tracker</h3>
+                    <p class="card-subtitle">Warranty validation & management</p>
+                </div>
+                <div class="card-body">
+                    <ul class="feature-list">
+                        <li><i class="material-icons">check_circle</i> Automatic warranty validation</li>
+                        <li><i class="material-icons">check_circle</i> Expiry alerts & notifications</li>
+                        <li><i class="material-icons">check_circle</i> Claims tracking & history</li>
+                        <li><i class="material-icons">check_circle</i> Coverage analysis</li>
+                    </ul>
+                    <button class="demo-button" onclick="openDemo('warranty-tracker.html')">
+                        <i class="material-icons">launch</i>
+                        View Warranties
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Section -->
+        <div class="stats-section">
+            <h2 class="stats-title">Platform Capabilities</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">360°</div>
+                    <div class="stat-label">Customer View</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">11</div>
+                    <div class="stat-label">Party Types</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">AI</div>
+                    <div class="stat-label">Smart Search</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">View Modes</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">Voice</div>
+                    <div class="stat-label">Search Enabled</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">GDPR Compliant</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technology Section -->
+        <div class="tech-section">
+            <h2 class="tech-title">Built with Modern Technologies</h2>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <div class="tech-icon">
+                        <i class="fab fa-google"></i>
+                    </div>
+                    <div class="tech-name">Material Design</div>
+                    <div class="tech-description">Google's design system for modern UX</div>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="tech-name">Responsive Design</div>
+                    <div class="tech-description">Works perfectly on all devices</div>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="tech-name">Security First</div>
+                    <div class="tech-description">GDPR/CCPA compliant architecture</div>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <div class="tech-name">Cloud Ready</div>
+                    <div class="tech-description">Multi-tenant SAAS architecture</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <h3 class="footer-title">Ready to Transform Your Aftermarket Operations?</h3>
+            <p class="footer-text">
+                Experience the power of comprehensive customer management with our advanced 360-degree view platform.
+                Built for global deployment with enterprise-grade security and compliance.
+            </p>
+            <div class="footer-buttons">
+                <button class="footer-button" onclick="openDemo('party-details-advanced.html')">
+                    <i class="material-icons">play_arrow</i>
+                    Start Advanced Demo
+                </button>
+                <button class="footer-button" onclick="window.open('README.md', '_blank')">
+                    <i class="material-icons">description</i>
+                    Documentation
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function openDemo(url) {
+            window.open(url, '_blank');
+        }
+
+        // Add some interactive animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate stats on scroll
+            const observerOptions = {
+                threshold: 0.5,
+                rootMargin: '0px 0px -100px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animation = 'fadeInUp 0.6s ease forwards';
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.demo-card, .stat-item, .tech-item').forEach(el => {
+                observer.observe(el);
+            });
+        });
+
+        // Add CSS animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

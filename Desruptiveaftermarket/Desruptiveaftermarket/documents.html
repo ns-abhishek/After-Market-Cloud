@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documents - Aftermarket Software</title>
+
+    <!-- Google Material Design Lite -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.grey-blue.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <style>
+        /* Base styles */
+        :root {
+            --primary-color: #212529;
+            --secondary-color: #f5f5f5;
+            --accent-color: #757575;
+            --border-color: #e0e0e0;
+            --hover-color: #e9e9e9;
+            --shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --border-radius: 4px;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --info-color: #2196f3;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--secondary-color);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .documents-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 500;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .back-button:hover {
+            color: var(--primary-color);
+        }
+
+        .action-button {
+            padding: 8px 16px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .action-button:hover {
+            background-color: #343a40;
+        }
+
+        .documents-grid {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            animation: slideInUp 0.5s ease;
+        }
+
+        .grid-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .grid-title {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .grid-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .grid-action-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--accent-color);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .grid-action-button:hover {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        .documents-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .documents-table th,
+        .documents-table td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .documents-table th {
+            background-color: var(--secondary-color);
+            font-weight: 500;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            color: var(--primary-color);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .documents-table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        .documents-table tbody tr:hover {
+            background-color: var(--hover-color);
+        }
+
+        .documents-table tbody tr:nth-child(even) {
+            background-color: rgba(245, 245, 245, 0.5);
+        }
+
+        .documents-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .document-type {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .document-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 500;
+        }
+
+        .document-pdf {
+            background-color: #f44336;
+        }
+
+        .document-excel {
+            background-color: #4caf50;
+        }
+
+        .document-word {
+            background-color: #2196f3;
+        }
+
+        .document-image {
+            background-color: #ff9800;
+        }
+
+        .document-other {
+            background-color: #9e9e9e;
+        }
+
+        .action-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--accent-color);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .action-icon:hover {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .documents-table th:nth-child(n+5),
+            .documents-table td:nth-child(n+5) {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="documents-container">
+        <div class="page-header">
+            <button class="back-button" id="backToDashboard">
+                <i class="material-icons">arrow_back</i>
+                <span data-i18n="back_to_dashboard">Back to Dashboard</span>
+            </button>
+            <h1 class="page-title" data-i18n="documents">Documents</h1>
+            <button class="action-button" id="uploadDocumentBtn">
+                <i class="material-icons">cloud_upload</i>
+                <span data-i18n="upload_document">Upload Document</span>
+            </button>
+        </div>
+
+        <div class="documents-grid">
+            <div class="grid-header">
+                <h2 class="grid-title" data-i18n="documents_list">Documents List</h2>
+                <div class="grid-actions">
+                    <button class="grid-action-button" id="createFolderBtn" title="Create Folder">
+                        <i class="material-icons">create_new_folder</i>
+                    </button>
+                    <button class="grid-action-button" id="refreshDocumentsBtn" title="Refresh">
+                        <i class="material-icons">refresh</i>
+                    </button>
+                </div>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="documents-table">
+                    <thead>
+                        <tr>
+                            <th data-i18n="name">Name</th>
+                            <th data-i18n="type">Type</th>
+                            <th data-i18n="size">Size</th>
+                            <th data-i18n="upload_date">Upload Date</th>
+                            <th data-i18n="category">Category</th>
+                            <th data-i18n="actions">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="documentsTableBody">
+                        <!-- Document rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="data-service.js"></script>
+    <script src="translations.js"></script>
+    <script src="navigation-controller.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize language
+            initLanguage();
+
+            // Load documents
+            loadDocuments();
+
+            // Set up event listeners
+            setupEventListeners();
+        });
+
+        // Function to initialize language
+        function initLanguage() {
+            // Get preferred language from data service or use browser language
+            let preferredLanguage = 'en';
+
+            if (typeof DataService !== 'undefined') {
+                preferredLanguage = DataService.getLanguagePreference();
+            } else {
+                preferredLanguage = localStorage.getItem('preferredLanguage') ||
+                                   navigator.language.split('-')[0] ||
+                                   'en';
+            }
+
+            // Translate the UI
+            translateUI(preferredLanguage);
+        }
+
+        // Function to load documents
+        function loadDocuments() {
+            const documentsTableBody = document.getElementById('documentsTableBody');
+            if (!documentsTableBody) return;
+
+            // Clear existing content
+            documentsTableBody.innerHTML = '';
+
+            // Get documents from data service
+            let documents = [];
+            if (typeof DataService !== 'undefined') {
+                documents = DataService.getDocuments();
+            }
+
+            // Add document rows
+            if (documents.length > 0) {
+                documents.forEach(document => {
+                    const row = document.createElement('tr');
+
+                    // Set document icon class and text
+                    let iconClass = 'document-other';
+                    let iconText = 'DOC';
+
+                    switch (document.type.toLowerCase()) {
+                        case 'pdf':
+                            iconClass = 'document-pdf';
+                            iconText = 'PDF';
+                            break;
+                        case 'excel':
+                            iconClass = 'document-excel';
+                            iconText = 'XLS';
+                            break;
+                        case 'word':
+                            iconClass = 'document-word';
+                            iconText = 'DOC';
+                            break;
+                        case 'image':
+                            iconClass = 'document-image';
+                            iconText = 'IMG';
+                            break;
+                    }
+
+                    // Format upload date
+                    const uploadDate = new Date(document.uploadDate).toLocaleDateString();
+
+                    // Create row content
+                    row.innerHTML = `
+                        <td>${document.name}</td>
+                        <td>
+                            <div class="document-type">
+                                <div class="document-icon ${iconClass}">${iconText}</div>
+                                <span>${document.type}</span>
+                            </div>
+                        </td>
+                        <td>${document.size}</td>
+                        <td>${uploadDate}</td>
+                        <td>${document.category}</td>
+                        <td>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="action-icon view-document" data-document-id="${document.id}" title="View">
+                                    <i class="material-icons">visibility</i>
+                                </button>
+                                <button class="action-icon download-document" data-document-id="${document.id}" title="Download">
+                                    <i class="material-icons">file_download</i>
+                                </button>
+                                <button class="action-icon share-document" data-document-id="${document.id}" title="Share">
+                                    <i class="material-icons">share</i>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+
+                    documentsTableBody.appendChild(row);
+                });
+            } else {
+                // No documents message
+                const row = document.createElement('tr');
+                const cell = document.createElement('td');
+                cell.colSpan = 6;
+                cell.style.textAlign = 'center';
+                cell.style.padding = '24px';
+                cell.setAttribute('data-i18n', 'no_documents_found');
+                cell.textContent = 'No documents found.';
+                row.appendChild(cell);
+                documentsTableBody.appendChild(row);
+            }
+        }
+
+        // Function to set up event listeners
+        function setupEventListeners() {
+            // Back to dashboard button
+            const backToDashboardBtn = document.getElementById('backToDashboard');
+            if (backToDashboardBtn) {
+                backToDashboardBtn.addEventListener('click', function() {
+                    if (typeof NavigationController !== 'undefined') {
+                        NavigationController.navigateTo('DASHBOARD');
+                    } else {
+                        window.location.href = 'party-portal.html';
+                    }
+                });
+            }
+
+            // Upload document button
+            const uploadDocumentBtn = document.getElementById('uploadDocumentBtn');
+            if (uploadDocumentBtn) {
+                uploadDocumentBtn.addEventListener('click', function() {
+                    if (typeof NavigationController !== 'undefined') {
+                        NavigationController.showNotification('Document upload dialog would open here', 'info');
+                    } else {
+                        alert('Document upload dialog would open here');
+                    }
+                });
+            }
+
+            // Create folder button
+            const createFolderBtn = document.getElementById('createFolderBtn');
+            if (createFolderBtn) {
+                createFolderBtn.addEventListener('click', function() {
+                    if (typeof NavigationController !== 'undefined') {
+                        NavigationController.showNotification('Create folder dialog would open here', 'info');
+                    } else {
+                        alert('Create folder dialog would open here');
+                    }
+                });
+            }
+
+            // Refresh documents button
+            const refreshDocumentsBtn = document.getElementById('refreshDocumentsBtn');
+            if (refreshDocumentsBtn) {
+                refreshDocumentsBtn.addEventListener('click', function() {
+                    const icon = this.querySelector('i');
+                    icon.style.animation = 'spin 1s linear infinite';
+
+                    // Simulate refresh delay
+                    setTimeout(() => {
+                        icon.style.animation = '';
+                        loadDocuments();
+
+                        if (typeof NavigationController !== 'undefined') {
+                            NavigationController.showNotification('Documents refreshed', 'success');
+                        } else {
+                            alert('Documents refreshed');
+                        }
+                    }, 1000);
+                });
+            }
+
+            // Document action buttons
+            document.addEventListener('click', function(e) {
+                // View document
+                if (e.target.closest('.view-document')) {
+                    const button = e.target.closest('.view-document');
+                    const documentId = button.dataset.documentId;
+
+                    if (typeof NavigationController !== 'undefined') {
+                        NavigationController.showNotification(`Viewing document ${documentId}`, 'info');
+                    } else {
+                        alert(`Viewing document ${documentId}`);
+                    }
+                }
+
+                // Download document
+                if (e.target.closest('.download-document')) {
+                    const button = e.target.closest('.download-document');
+                    const documentId = button.dataset.documentId;
+
+                    if (typeof NavigationController !== 'undefined') {
+                        NavigationController.showNotification(`Downloading document ${documentId}`, 'info');
+                    } else {
+                        alert(`Downloading document ${documentId}`);
+                    }
+                }
+
+                // Share document
+                if (e.target.closest('.share-document')) {
+                    const button = e.target.closest('.share-document');
+                    const documentId = button.dataset.documentId;
+
+                    if (typeof NavigationController !== 'undefined') {
+                        NavigationController.showNotification(`Sharing document ${documentId}`, 'info');
+                    } else {
+                        alert(`Sharing document ${documentId}`);
+                    }
+                }
+            });
+        }
+    </script>
+
+    <!-- Navigation Utility -->
+    <script src="navigation-utils.js"></script>
+</body>
+</html>

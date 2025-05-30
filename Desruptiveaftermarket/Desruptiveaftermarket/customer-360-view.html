@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer 360 View - Aftermarket Software</title>
+
+    <!-- Google Material Design Lite -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.grey-blue.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- Navigation Utilities -->
+    <script src="navigation-utils.js"></script>
+
+    <style>
+        /* Base styles */
+        :root {
+            --primary-color: #212529;
+            --secondary-color: #f5f5f5;
+            --accent-color: #757575;
+            --border-color: #e0e0e0;
+            --hover-color: #e9e9e9;
+            --shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --border-radius: 4px;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --info-color: #2196f3;
+            --light-blue: #e3f2fd;
+            --light-green: #e8f5e9;
+            --light-orange: #fff3e0;
+            --light-purple: #f3e5f5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--secondary-color);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .app-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            height: 64px;
+        }
+
+        .app-title {
+            font-size: 20px;
+            font-weight: 500;
+            flex: 1;
+            text-align: center;
+        }
+
+        .header-navigation {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+        }
+
+        .nav-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .nav-button:disabled:hover {
+            background-color: transparent;
+        }
+
+        .customer-counter {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            margin: 0 8px;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .header-search {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Main content */
+        .main-content {
+            margin-top: 64px;
+            padding: 16px;
+            max-width: 1600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Customer header */
+        .customer-header {
+            background: linear-gradient(135deg, var(--primary-color), #343a40);
+            color: white;
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .customer-info {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .customer-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .customer-details h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .customer-meta {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .customer-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .action-button {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 12px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .action-button:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Dashboard grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        /* Cards */
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-body {
+            padding: 16px;
+        }
+
+        /* Stats cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-icon {
+            font-size: 24px;
+            margin-bottom: 12px;
+            opacity: 0.7;
+        }
+
+        /* Equipment grid */
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .equipment-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 16px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+        }
+
+        .equipment-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .equipment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .equipment-title {
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        .equipment-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background-color: #e8f5e8;
+            color: var(--success-color);
+        }
+
+        .status-maintenance {
+            background-color: #fff3e0;
+            color: var(--warning-color);
+        }
+
+        .equipment-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .detail-label {
+            color: var(--accent-color);
+            font-weight: 500;
+        }
+
+        /* Service History Styles */
+        #serviceHistory {
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        /* Scrollbar Styles */
+        .equipment-grid::-webkit-scrollbar,
+        #serviceHistory::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .equipment-grid::-webkit-scrollbar-track,
+        #serviceHistory::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .equipment-grid::-webkit-scrollbar-thumb,
+        #serviceHistory::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .equipment-grid::-webkit-scrollbar-thumb:hover,
+        #serviceHistory::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .customer-info {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .customer-actions {
+                justify-content: center;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Loading animation */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <button class="nav-button back-button" title="Go Back">
+                <i class="material-icons">arrow_back</i>
+            </button>
+            <div class="header-navigation">
+                <button class="nav-button" id="prevCustomerBtn" onclick="navigateToPreviousCustomer()" title="Previous Customer">
+                    <i class="material-icons">chevron_left</i>
+                </button>
+                <div class="customer-counter" id="customerCounter">
+                    1 of 8
+                </div>
+                <button class="nav-button" id="nextCustomerBtn" onclick="navigateToNextCustomer()" title="Next Customer">
+                    <i class="material-icons">chevron_right</i>
+                </button>
+            </div>
+            <h1 class="app-title">Customer 360 View</h1>
+            <div class="header-search">
+                <button class="nav-button" id="searchCustomerBtn" onclick="showCustomerSelector()" title="Search Customers">
+                    <i class="material-icons">search</i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Loading State -->
+        <div id="loadingState" class="loading">
+            <div class="spinner"></div>
+        </div>
+
+        <!-- Customer Content -->
+        <div id="customerContent" style="display: none;">
+            <!-- Customer Header -->
+            <div class="customer-header">
+                <div class="customer-info">
+                    <div class="customer-avatar" id="customerAvatar">
+                        <i class="material-icons">business</i>
+                    </div>
+                    <div class="customer-details">
+                        <h1 id="customerName">Loading...</h1>
+                        <div class="customer-meta">
+                            <div class="meta-item">
+                                <i class="material-icons">location_on</i>
+                                <span id="customerLocation">-</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="material-icons">email</i>
+                                <span id="customerEmail">-</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="material-icons">phone</i>
+                                <span id="customerPhone">-</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="material-icons">business_center</i>
+                                <span id="customerType">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="customer-actions">
+                        <button class="action-button" id="editCustomerBtn">
+                            <i class="material-icons">edit</i> Edit
+                        </button>
+                        <button class="action-button" id="contactCustomerBtn">
+                            <i class="material-icons">phone</i> Contact
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="material-icons" style="color: var(--info-color);">precision_manufacturing</i>
+                    </div>
+                    <div class="stat-value" id="equipmentCount">0</div>
+                    <div class="stat-label">Equipment</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="material-icons" style="color: var(--success-color);">verified_user</i>
+                    </div>
+                    <div class="stat-value" id="warrantyCount">0</div>
+                    <div class="stat-label">Active Warranties</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="material-icons" style="color: var(--warning-color);">build</i>
+                    </div>
+                    <div class="stat-value" id="serviceCount">0</div>
+                    <div class="stat-label">Service Records</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="material-icons" style="color: var(--accent-color);">chat</i>
+                    </div>
+                    <div class="stat-value" id="communicationCount">0</div>
+                    <div class="stat-label">Communications</div>
+                </div>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+                <!-- Equipment Overview -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="material-icons">precision_manufacturing</i>
+                            Equipment Overview
+                        </h3>
+                        <button class="action-button" style="background: none; color: var(--primary-color);" id="viewAllEquipmentBtn">
+                            <i class="material-icons">open_in_new</i>
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="equipmentOverview" class="equipment-grid">
+                            <!-- Equipment cards will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Service History -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="material-icons">build</i>
+                            Recent Service History
+                        </h3>
+                        <button class="action-button" style="background: none; color: var(--primary-color);" id="viewAllServiceBtn">
+                            <i class="material-icons">open_in_new</i>
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="serviceHistory">
+                            <!-- Service history will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="navigation-utils.js"></script>
+    <script src="data-service.js"></script>
+    <script src="customer-360-view.js"></script>
+</body>
+</html>
