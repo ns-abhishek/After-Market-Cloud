@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Invoice Return - Invoice Management</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/themes.css">
+    <link rel="stylesheet" href="../assets/css/tables.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="../index.html">
+                <i class="fas fa-file-invoice-dollar me-2"></i>
+                Invoice Management
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">
+                            <i class="fas fa-home me-1"></i>Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">
+                            <i class="fas fa-chart-pie me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-plus me-1"></i>Add New
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="openAddModal('customer')">Customer Invoice</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="openAddModal('service-return')">Service Return</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="openAddModal('internal')">Internal Invoice</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="openAddModal('internal-return')">Internal Return</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-download me-1"></i>Export
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="exportAllData('pdf')">Export All as PDF</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="exportAllData('excel')">Export All as Excel</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-search me-1"></i>Advanced Search
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="openAdvancedSearch()">Search Records</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="openAdvancedFilter()">Filter Data</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <button class="btn btn-link nav-link theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+                            <i class="fas fa-moon" id="themeIcon"></i>
+                        </button>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-globe me-1"></i>Language
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="setLanguage('en')">English</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="setLanguage('es')">Español</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="setLanguage('fr')">Français</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container-fluid">
+            <!-- Page Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="page-header">
+                        <h1 class="display-6 mb-3">
+                            <i class="fas fa-undo-alt me-3"></i>
+                            <span data-translate="service_return">Service Invoice Return</span>
+                        </h1>
+                        <p class="lead" data-translate="service_return_desc">Handle service returns and credits</p>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- Standardized Table Component -->
+            <div class="row">
+                <div class="col-12">
+                    <div id="serviceReturnTableContainer">
+                        <!-- Table will be rendered here by the component -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modals and Components will be loaded here -->
+    <div id="modal-container"></div>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/themes.js"></script>
+    <script src="../assets/js/language.js"></script>
+    <script src="../assets/js/export-utils.js"></script>
+    <script src="../assets/js/table-component.js"></script>
+    <script src="../assets/js/table-manager.js"></script>
+
+    <script>
+        // Page-specific initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeServiceReturnPage();
+        });
+
+        function initializeServiceReturnPage() {
+            // Initialize the standardized table component
+            const tableConfig = {
+                title: 'Service Invoice Return Management',
+                columns: [
+                    { key: 'id', label: 'Service Return ID', sortable: true },
+                    { key: 'customerInvoice', label: 'Customer Invoice', sortable: true },
+                    { key: 'returnDate', label: 'Return Date', sortable: true, format: (value) => formatDate(value) },
+                    { key: 'isFullReturn', label: 'Is Full Return', sortable: true, format: (value) => `<span class="badge ${value ? 'bg-dark text-white' : 'bg-light text-dark border border-dark'}">${value ? 'Yes' : 'No'}</span>` },
+                    { key: 'serial', label: 'Serial', sortable: true },
+                    { key: 'model', label: 'Model', sortable: true },
+                    { key: 'customerName', label: 'Customer Name', sortable: true },
+                    { key: 'generatedThrough', label: 'Generated Through', sortable: true, format: (value) => `<span class="badge bg-light text-dark border border-dark">${value}</span>` },
+                    { key: 'creditAmount', label: 'Credit Amount', sortable: true, format: (value) => `<strong>$${parseFloat(value).toFixed(2)}</strong>` }
+                ],
+                data: generateServiceReturnData(),
+                actions: ['view'],
+                exportable: true,
+                cardViewEnabled: true,
+                defaultView: 'card', // Set card view as default
+                searchable: true,
+                filterable: true,
+                pagination: true,
+                pageSize: 25,
+                onView: (row) => viewRecord(row.id)
+            };
+
+            // Create the table
+            window.serviceReturnTable = createInvoiceTable('serviceReturnTableContainer', tableConfig);
+        }
+
+        // Data generation
+        function generateServiceReturnData() {
+            const data = [];
+            const customers = ['John Doe', 'Jane Smith', 'Bob Johnson', 'Alice Brown', 'Charlie Wilson', 'Diana Prince', 'Bruce Wayne', 'Clark Kent'];
+            const generatedThrough = ['Manual', 'Automatic', 'System'];
+            const models = ['Model-A', 'Model-B', 'Model-C', 'Model-D', 'Model-E'];
+
+            for (let i = 1; i <= 50; i++) {
+                const creditAmount = Math.floor(Math.random() * 3000) + 200;
+                const isFullReturn = Math.random() > 0.5;
+
+                data.push({
+                    id: `SR${String(i).padStart(4, '0')}`,
+                    customerInvoice: `CI${String(i).padStart(4, '0')}`,
+                    returnDate: new Date(2024, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString().split('T')[0],
+                    isFullReturn: isFullReturn,
+                    serial: `SN${String(i).padStart(8, '0')}`,
+                    model: models[Math.floor(Math.random() * models.length)],
+                    customerName: customers[Math.floor(Math.random() * customers.length)],
+                    generatedThrough: generatedThrough[Math.floor(Math.random() * generatedThrough.length)],
+                    creditAmount: creditAmount
+                });
+            }
+
+            return data;
+        }
+
+        // Record operations
+        function viewRecord(recordId) {
+            // Find the record data
+            const data = generateServiceReturnData();
+            const record = data.find(item => item.id === recordId);
+
+            if (record) {
+                const recordData = {
+                    serviceReturnId: record.id,
+                    customerInvoice: record.customerInvoice,
+                    returnDate: formatDate(record.returnDate),
+                    isFullReturn: record.isFullReturn ? 'Yes' : 'No',
+                    serial: record.serial,
+                    model: record.model,
+                    customerName: record.customerName,
+                    generatedThrough: record.generatedThrough,
+                    creditAmount: `$${record.creditAmount.toFixed(2)}`
+                };
+
+                openDetailModal(recordData);
+            } else {
+                showToast('Record not found', 'error');
+            }
+        }
+
+        function openDetailModal(data) {
+            const modal = document.createElement('div');
+            modal.className = 'modal fade';
+            modal.id = 'detailModal';
+            modal.tabIndex = -1;
+
+            modal.innerHTML = `
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="detailModalLabel">Service Return Details - ${data.serviceReturnId}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body" id="detailModalBody">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="detail-section">
+                                            <h6 class="detail-section-title">Return Information</h6>
+                                            <div class="detail-item">
+                                                <label>Service Return ID:</label>
+                                                <span>${data.serviceReturnId}</span>
+                                            </div>
+                                            <div class="detail-item">
+                                                <label>Customer Invoice:</label>
+                                                <span>${data.customerInvoice}</span>
+                                            </div>
+                                            <div class="detail-item">
+                                                <label>Return Date:</label>
+                                                <span>${data.returnDate}</span>
+                                            </div>
+                                            <div class="detail-item">
+                                                <label>Is Full Return:</label>
+                                                <span class="badge ${data.isFullReturn === 'Yes' ? 'bg-dark text-white' : 'bg-light text-dark border border-dark'}">${data.isFullReturn}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="detail-section">
+                                            <h6 class="detail-section-title">Product Information</h6>
+                                            <div class="detail-item">
+                                                <label>Serial:</label>
+                                                <span>${data.serial}</span>
+                                            </div>
+                                            <div class="detail-item">
+                                                <label>Model:</label>
+                                                <span>${data.model}</span>
+                                            </div>
+                                            <div class="detail-item">
+                                                <label>Customer Name:</label>
+                                                <span>${data.customerName}</span>
+                                            </div>
+                                            <div class="detail-item">
+                                                <label>Generated Through:</label>
+                                                <span class="badge bg-light text-dark border border-dark">${data.generatedThrough}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="detail-section">
+                                            <h6 class="detail-section-title">Financial Information</h6>
+                                            <div class="detail-item">
+                                                <label>Credit Amount:</label>
+                                                <span class="fw-bold text-success">${data.creditAmount}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-outline-success" onclick="exportModalData('pdf')">
+                                <i class="fas fa-file-pdf me-1"></i>Export PDF
+                            </button>
+                            <button type="button" class="btn btn-outline-success" onclick="exportModalData('excel')">
+                                <i class="fas fa-file-excel me-1"></i>Export Excel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+            const bootstrapModal = new bootstrap.Modal(modal);
+            bootstrapModal.show();
+
+            // Clean up modal when closed
+            modal.addEventListener('hidden.bs.modal', function() {
+                document.body.removeChild(modal);
+            });
+        }
+
+        // Export functions for modal
+        function exportModalData(format) {
+            const modalBody = document.getElementById('detailModalBody');
+            const modalTitle = document.getElementById('detailModalLabel').textContent;
+
+            if (format === 'pdf') {
+                exportModalToPDF(modalBody, modalTitle);
+            } else if (format === 'excel') {
+                exportModalToExcel(modalBody, modalTitle);
+            }
+        }
+
+        function exportModalToPDF(modalBody, title) {
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>${title}</title>
+                        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+                        <style>
+                            body { font-family: Arial, sans-serif; margin: 20px; color: #000000; }
+                            .detail-section { margin-bottom: 1.5rem; border: 2px solid #000000; padding: 1rem; }
+                            .detail-section-title { border-bottom: 2px solid #000000; padding-bottom: 0.5rem; margin-bottom: 1rem; font-weight: bold; background-color: #000000; color: #ffffff; padding: 0.5rem; margin: -1rem -1rem 1rem -1rem; }
+                            .detail-item { display: flex; justify-content: space-between; margin-bottom: 0.5rem; border-bottom: 1px solid #000000; padding-bottom: 0.25rem; }
+                            .detail-item label { font-weight: bold; color: #000000; }
+                            .badge { background-color: #000000 !important; color: #ffffff !important; border: 1px solid #000000; padding: 0.25rem 0.5rem; }
+                            @media print { body { margin: 0; } .detail-section { break-inside: avoid; } }
+                            h2 { text-align: center; border: 3px solid #000000; padding: 1rem; background-color: #000000; color: #ffffff; }
+                        </style>
+                    </head>
+                    <body>
+                        <h2>${title}</h2>
+                        ${modalBody.innerHTML}
+                        <div style="margin-top: 2rem; text-align: center; border-top: 2px solid #000000; padding-top: 1rem;">
+                            <small>Generated on ${new Date().toLocaleString()}</small>
+                        </div>
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+            setTimeout(() => {
+                printWindow.print();
+                showToast('PDF export initiated', 'success');
+            }, 500);
+        }
+
+        function exportModalToExcel(modalBody, title) {
+            const data = extractModalDataForExcel(modalBody);
+            let csvContent = `${title}\nGenerated on: ${new Date().toLocaleString()}\n\n`;
+
+            data.forEach(section => {
+                csvContent += `${section.title}\n`;
+                section.items.forEach(item => {
+                    csvContent += `"${item.label}","${item.value}"\n`;
+                });
+                csvContent += '\n';
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `${title.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            showToast('Excel export completed', 'success');
+        }
+
+        function extractModalDataForExcel(modalBody) {
+            const sections = [];
+            const detailSections = modalBody.querySelectorAll('.detail-section');
+
+            detailSections.forEach(section => {
+                const title = section.querySelector('.detail-section-title')?.textContent || 'Section';
+                const items = [];
+
+                const detailItems = section.querySelectorAll('.detail-item');
+                detailItems.forEach(item => {
+                    const label = item.querySelector('label')?.textContent || '';
+                    const value = item.querySelector('span')?.textContent || '';
+                    items.push({ label: label.replace(':', ''), value: value });
+                });
+
+                sections.push({ title, items });
+            });
+
+            return sections;
+        }
+
+        // Utility functions
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: '2-digit'
+            });
+        }
+
+
+    </script>
+</body>
+</html>
